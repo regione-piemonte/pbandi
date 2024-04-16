@@ -1,0 +1,51 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <h3 class="bold-text blueText">L'opinione dei nostri utenti - la tua opinione - è importante.</h3>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    Con una frequenza annuale vorremmo poterti contattare per proporti la valutazione di aspetti particolari dei
+    nostri applicativi. Ma per poterti offrire la compilazione dei questionari abbiamo bisogno di acquisire il tuo
+    consenso.
+    <br>
+    <br>
+    Se vuoi aiutarci a migliorare e a crescere, ti chiediamo di lascirci un indirizzo di posta elettronica al quale
+    contattarti e di darci la tua autorizzazione a usarlo per questo scopo.
+    <form #consensoForm="ngForm" (submit)="invia()">
+        <div class="flexDirectionColumn alignItemsCenter marginTop10">
+            <mat-form-field style="width: 50%;">
+                <input type="email" email placeholder="e-mail" [(ngModel)]="email" matInput name="mail" #mail=ngModel
+                    pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+                    [disabled]="autorizzato==='N'" [required]="autorizzato==='S'">
+                <mat-error *ngIf="mail.errors?.required">
+                    Campo obbligatorio.
+                </mat-error>
+                <mat-error *ngIf="mail.errors?.pattern">
+                    Indirizzo e-mail non valido.
+                </mat-error>
+            </mat-form-field>
+            <div style="width: 50%;">
+                <mat-radio-group class="flexDirectionColumn" style="width: 10%;" [(ngModel)]="autorizzato"
+                    name="autorizzato" (change)="email = autorizzato === 'N' ? null : email; resetMessageError();">
+                    <mat-radio-button value="S">Sì, autorizzo
+                    </mat-radio-button>
+                    <mat-radio-button value="N">No, non autorizzo</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <br>
+        <span>
+            Per revocare in qualsiasi momento il consenso oppure modificare l'e-mail indicata, potrai farlo inviando una
+            mail a
+            <a class="blueText noUnderline" href="mailto:gestione.finanziamenti@csi.it"
+                target="_blank">gestione.finanziamenti@csi.it</a>
+        </span>
+        <div class="marginTop10 justifyContentFlexEnd">
+            <div matTooltip="Selezionare una delle due opzioni presentate." [matTooltipDisabled]="autorizzato">
+                <button class="button-style-2 " mat-raised-button [disabled]="!autorizzato"> INVIA </button>
+            </div>
+        </div>
+    </form>
+</div>

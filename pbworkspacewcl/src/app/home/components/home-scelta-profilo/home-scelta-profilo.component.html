@@ -1,0 +1,23 @@
+<div class="page">
+    <mat-spinner-pbandi *ngIf="isLoading(); else pageContent"></mat-spinner-pbandi>
+    <ng-template #pageContent>
+
+      <div class="scelta">
+        <div class="title">
+            <h2>Scelta profilo</h2>
+        </div>
+        <div class="content">
+
+            <div *ngFor="let profilo of profili">
+                <button mat-raised-button (click)="goToHomeOperatore(profilo.id)">
+                    <div class="insideButton">
+                        <span class="operatoreText">{{profilo.descrizione}}</span>
+                        <mat-icon class="arrow" aria-label="Vai al profilo">arrow_forward</mat-icon>
+                    </div>
+                </button>
+            </div>
+          </div>
+        </div>
+
+    </ng-template>
+</div>

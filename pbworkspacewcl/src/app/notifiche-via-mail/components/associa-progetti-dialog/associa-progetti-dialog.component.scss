@@ -1,0 +1,94 @@
+.title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.contentFilter {
+    display: flex;
+    align-items: flex-end;
+}
+
+.contentResults {
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+}
+
+.caricamento {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+mat-divider {
+    margin: 5px 5px 5px 0px;
+}
+
+.bold-text {
+    font-weight: bold;;
+}
+
+.blueText {
+    color: #0060C1;
+}
+
+.rigthText {
+    text-align: right;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0px 0px 8px 0px;
+}
+
+
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.marginRight25 {
+    margin-right: 25px;
+}
+
+
+.messageSuccessContent {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+
+    p {
+        margin-bottom: 0px;
+    }
+}
+
+
+.messageErrorContent {
+    display: flex;
+    align-items: center;
+
+    p {
+        margin-bottom: 0px;
+    }
+}
+
+::ng-deep .mat-dialog-container {
+    overflow: hidden !important;
+}

@@ -1,0 +1,93 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Rappresentante legale trovato</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+Il Codice Fiscale: {{codiceFiscale}} risulta già associato ai seguenti dati:
+
+<div class="overflow-auto height-300-px">
+    <table mat-table [dataSource]="dataSource" class="fullWidth marginTop20"
+        [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+        <ng-container matColumnDef="radio">
+            <td mat-cell *matCellDef="let row" class="width-30-px">
+                <mat-radio-group [(ngModel)]="rappresentanteSelected">
+                    <mat-radio-button [value]="row"></mat-radio-button>
+                </mat-radio-group>
+        </ng-container>
+
+        <ng-container matColumnDef="desc">
+            <td mat-cell *matCellDef="let row; let i = index;">
+                <table class="fullWidth">
+                    <tr>
+                        <td class="bold-text text-align-right width-190-px">Cognome</td>
+                        <td class="width-190-px padding-left-2-px">{{row.cognome}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-190-px">Nome</td>
+                        <td class="width-190-px padding-left-2-px">{{row.nome}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-190-px">Data di nascita</td>
+                        <td class="width-190-px padding-left-2-px">{{row.dtNascitaStringa}}</td>
+                        <td class="bold-text text-align-right width-190-px">Sesso</td>
+                        <td class="padding-left-2-px">{{row.sesso}}</td>
+                    </tr>
+                </table>
+                <table class="fullWidth">
+                    <tr *ngFor="let indirizzo of row.indirizzi">
+                        <td class="width-30-px">
+                            <mat-radio-group [(ngModel)]="row.indirizzoSelected" name="indirizzo{{i}}">
+                                <mat-radio-button [value]="indirizzo"></mat-radio-button>
+                            </mat-radio-group>
+                        </td>
+                        <table class="fullWidth">
+                            <tr class="fullWidth">
+                                <td class="bold-text text-align-right width-157-px">Dati di nascita</td>
+                                <td class="padding-left-2-px">
+                                    <span *ngIf="indirizzo.descNazioneNascita">
+                                        {{indirizzo.descNazioneNascita}},
+                                        <span
+                                            *ngIf="indirizzo.descNazioneNascita==='ITALIA'">{{indirizzo.descRegioneNascita}},
+                                            {{indirizzo.descProvinciaNascita}}, {{indirizzo.descComuneNascita}}</span>
+                                        <span
+                                            *ngIf="indirizzo.descNazioneNascita!=='ITALIA'">{{indirizzo.descComuneEsteroNascita}}</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bold-text text-align-right width-157-px">Dati di residenza</td>
+                                <td class="padding-left-2-px">
+                                    <span *ngIf="indirizzo.descIndirizzo">{{indirizzo.descIndirizzo}},
+                                        {{indirizzo.civico}} </span>
+                                    <span *ngIf="indirizzo.descIndirizzo && indirizzo.cap"> - </span>
+                                    <span *ngIf="indirizzo.cap"> {{indirizzo.cap}} </span>
+                                    <span *ngIf="indirizzo.descIndirizzo || indirizzo.cap"> - </span>
+                                    <span *ngIf="indirizzo.descNazioneRes">{{indirizzo.descNazioneRes}}, </span>
+                                    <span *ngIf="indirizzo.descNazioneRes==='ITALIA'">{{indirizzo.descRegioneRes}},
+                                        {{indirizzo.descProvinciaRes}}, {{indirizzo.descComuneRes}}</span>
+                                    <span
+                                        *ngIf="indirizzo.descNazioneRes!=='ITALIA'">{{indirizzo.descComuneEsteroRes}}</span>
+                                    <span *ngIf="indirizzo.email"> - {{indirizzo.email}}</span>
+                                    <span *ngIf="indirizzo.fax"> - fax: {{indirizzo.fax}}</span>
+                                    <span *ngIf="indirizzo.telefono"> - tel. {{indirizzo.telefono}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-divider class="fullWidth"></mat-divider>
+                    </tr>
+                </table>
+            </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></tr>
+    </table>
+</div>
+
+<div class="flexEnd marginTop20">
+    <button class="button-style-1 marginRight10" mat-button (click)="close()">ANNULLA</button>
+    <button class="button-style-2" mat-raised-button (click)="seleziona()">
+        SELEZIONA
+    </button>
+</div>

@@ -1,0 +1,53 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'display-none': isLoading()}" id="scrollId">
+    <div [ngClass]="{'display-flex justify-content-space-between align-items-center': impostazioniSaved}">
+        <div class="title">
+            <h2>Home di {{user?.nome}} {{user?.cognome}} - {{user?.ruolo}}</h2>
+        </div>
+        <div class="display-flex flex-direction-column justify-content-center" *ngIf="impostazioniSaved">
+            <button mat-raised-button class="button-style-2" (click)="goToSettings()">
+                <mat-icon>settings</mat-icon>
+                <span>IMPOSTAZIONI</span></button>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'display-none':impostazioniSaved}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Benvenuto nella tua area personale!</h3>
+                <p>Attraverso le <span class="bold-text">Impostazioni</span>, da oggi puoi creare la tua <span
+                        class="bold-text">scrivania virtuale</span> configurandola secondo le tue preferenze e le tue
+                    necessità: puoi inserire, spostare, personalizzare o nascondere i <span
+                        class="bold-text">widget</span> presenti nel catalogo del tuo profilo, in modo da essere <span
+                        class="bold-text">sempre aggiornato</span>, <span class="bold-text">gestire più
+                        velocemente</span> le tue attività, <span class="bold-text">organizzare meglio</span> la tua
+                    giornata.</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" *ngFor="let widget of widgetsAttivi">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>{{widget.titoloWidget}}</h3>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" *ngIf="!impostazioniSaved">
+        <button mat-raised-button class="button-style-2" (click)="goToSettings()">
+            <mat-icon>settings</mat-icon>
+            <span>IMPOSTAZIONI</span></button>
+    </div>
+</div>

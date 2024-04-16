@@ -1,0 +1,135 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Nuova sede intervento</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <form #sedeForm="ngForm">
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <input matInput type="text" placeholder="Partita IVA **" [(ngModel)]="partitaIva"
+                    (keyup)="partitaIva = partitaIva.toUpperCase()" name="partitaIva" #pIva="ngModel" />
+                <mat-error *ngIf="pIva?.errors?.error ==='notValidPF'">
+                    La partita IVA non è formalmente corretta
+                </mat-error>
+                <mat-error *ngIf="pIva?.errors?.error ==='notValidEG'">
+                    La partita IVA contiene dei caratteri non ammessi: la partita IVA
+                    dovrebbe contenere solo cifre
+                </mat-error>
+                <mat-error *ngIf="pIva?.errors?.error ==='length'">
+                    La partita IVA della persona giuridica deve essere lunga 11
+                    caratteri
+                </mat-error>
+                <mat-error *ngIf="pIva?.errors?.error ==='codControllo'">
+                    La partita IVA della persona giuridica non valido: il codice di
+                    controllo non corrisponde
+                </mat-error>
+                <mat-error *ngIf="pIva?.errors?.error ==='requiredAvvio'">
+                    {{errorNecessarioAvvio}}
+                </mat-error>
+            </mat-form-field>
+            <div class="fullWidth"></div>
+        </div>
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <input matInput type="text" placeholder="Indirizzo" [(ngModel)]="indirizzo" name="indirizzo" />
+            </mat-form-field>
+            <div class="fullWidth">
+                <mat-form-field class="marginRight10 width-40-perc">
+                    <input matInput type="text" placeholder="N. civico" [(ngModel)]="civico" name="civico" />
+                </mat-form-field>
+                <mat-form-field class="marginRight10 width-40-perc">
+                    <input matInput type="text" placeholder="CAP" [(ngModel)]="cap" name="cap" #cp="ngModel"
+                        maxlength="5" />
+                    <mat-error *ngIf="cp?.errors?.error ==='notValid'">
+                        CAP non valido.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <mat-label>Selezionare una nazione</mat-label>
+                <mat-select [(ngModel)]="nazioneSelected" name="nazione" (selectionChange)="changeNazione()">
+                    <mat-option *ngFor="let option of nazioni" [value]="option">
+                        {{ option.descEstesa }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <mat-label>Selezionare una regione</mat-label>
+                <mat-select [(ngModel)]="regioneSelected" name="regione"
+                    [disabled]="nazioneSelected?.descEstesa!=='ITALIA'" (selectionChange)="changeRegione()">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let option of regioni" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <mat-label>Selezionare una provincia</mat-label>
+                <mat-select [(ngModel)]="provinciaSelected" name="provincia" [disabled]="!regioneSelected"
+                    (selectionChange)="changeProvincia()">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let option of province" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <mat-label>Selezionare un comune</mat-label>
+                <mat-select *ngIf="nazioneSelected?.descEstesa==='ITALIA'" [(ngModel)]="comuneSelected" name="comune"
+                    [disabled]="!provinciaSelected">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let option of comuni" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </mat-select>
+                <mat-select *ngIf="nazioneSelected?.descEstesa!=='ITALIA'" [(ngModel)]="comuneSelected"
+                    name="comuneEstero">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let option of comuniEsteri" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <input matInput type="text" placeholder="Email" [(ngModel)]="email" name="email" #mail="ngModel" />
+                <mat-error *ngIf="mail?.errors?.error ==='notValid'">
+                    Indirizzo e-mail non valido.
+                </mat-error>
+            </mat-form-field>
+            <div class="fullWidth"></div>
+        </div>
+        <div class="display-flex margin-bottom-6">
+            <mat-form-field class="fullWidth marginRight10">
+                <input matInput type="text" placeholder="Telefono" [(ngModel)]="telefono" name="telefono" #tel="ngModel"
+                    maxlength="20" />
+                <mat-error *ngIf="tel?.errors?.error ==='notValid'">
+                    Telefono non valido.
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <input matInput type="text" placeholder="Fax" [(ngModel)]="fax" name="fax" #fx="ngModel" />
+                <mat-error *ngIf="fx?.errors?.error ==='notValid'">
+                    Telefono non valido.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+            <button mat-raised-button class="button-style-2" (click)="salva()">SALVA</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,130 @@
+<div class="page">
+    <mat-spinner-pbandi *ngIf="isLoading(); else pageContent"></mat-spinner-pbandi>
+    <ng-template #pageContent>
+        <div class="operatore">
+            <div class="title">
+                <h2>{{ user.ruolo }}</h2>
+            </div>
+        </div>
+        <app-show-news></app-show-news>
+        <div class="operatore">
+            <div class="content">
+                <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+                    <mat-card-content class="messageSuccessContent">
+                        <p>{{messageSuccess}}</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                    <mat-card-content class="messageErrorContent">
+                        <p [innerHTML]="messageError"></p>
+                    </mat-card-content>
+                </mat-card>
+                <button mat-raised-button *ngFor="let op of operazioni;" (click)="goToOperazione(op)">
+                    <div class="insideButton"
+                        *ngIf="op.id!==1 && op.id!==6 && op.id!==70 && op.id!==74 && op.id!==78 && op.id!=82">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===1" [matMenuTriggerFor]="menuCertificazione"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===6" [matMenuTriggerFor]="menuBilancio"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===70" [matMenuTriggerFor]="menuCampionamento"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===74" [matMenuTriggerFor]="menuGestioneErogazioni"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===78" [matMenuTriggerFor]="menuGestioneRevoche"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                    <div class="insideButton" *ngIf="op.id===82" [matMenuTriggerFor]="menuGestioneAreaControlliLoco"
+                        #menu="matMenuTrigger" (menuClosed)="op.isExpanded=false">
+                        <img src="{{op.icona}}" role="presentation" />
+                        <span class="operazioniText">{{op.descrizione}}</span>
+                        <mat-icon *ngIf="!op.isExpanded">expand_more</mat-icon>
+                        <mat-icon *ngIf="op.isExpanded">expand_less</mat-icon>
+                    </div>
+                </button>
+                <button class="transparent-button" [ngClass]="{'height-0': operazioni?.length % 2 !== 1 }"></button>
+                <!--serve per dare un po' di margine al fondo della pagina-->
+                <button class="transparent-button height-0" *ngIf="operazioni?.length % 2 === 1"></button>
+                <!--serve per dare un po' di margine al fondo della pagina-->
+                <mat-menu #menuCertificazione="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" *ngIf="adg_cert"
+                        (click)="goToCertificazione(32)">Crea proposta</button>
+                    <button mat-menu-item class="blue-color bold-text" *ngIf="adc_cert"
+                        (click)="goToCertificazione(33)">Carica check-list</button>
+                    <button mat-menu-item class="blue-color bold-text" *ngIf="adc_cert"
+                        (click)="goToCertificazione(34)">Gestione proposte</button>
+                    <button mat-menu-item class="blue-color bold-text" *ngIf="adc_cert"
+                        (click)="goToCertificazione(35)">Carica dichiarazione finale</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToCertificazione(36)">Ricerca
+                        documenti</button>
+                    <button mat-menu-item class="blue-color bold-text" *ngIf="adc_cert"
+                        (click)="goToCertificazione(37)">Campionamento</button>
+                </mat-menu>
+                <mat-menu #menuBilancio="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToBilancio(48)">Gestione
+                        impegni</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToBilancio(49)">Ricerca atti di
+                        liquidazione</button>
+                </mat-menu>
+                <mat-menu #menuCampionamento="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToCampionamento(71)">Ricerca
+                        campionamenti</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToCampionamento(72)">Nuovo
+                        campionamento</button>
+                </mat-menu>
+                <mat-menu #menuGestioneErogazioni="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneErogazioni(75)">Proposte di
+                        erogazione</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneErogazioni(76)">Caricamento
+                        distinte</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneErogazioni(77)">Elenco
+                        distinte</button>
+                </mat-menu>
+                <mat-menu #menuGestioneRevoche="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneRevoche(79)">Proposte di
+                        revoca</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneRevoche(80)">Procedimenti di
+                        revoca</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToGestioneRevoche(81)">Provvedimenti
+                        di revoca</button>
+                </mat-menu>
+                <mat-menu #menuGestioneAreaControlliLoco="matMenu" xPosition="before">
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToAreaControlliLoco(93)">Acquisizione
+                        progetti campionati da Finpiemonte</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToAreaControlliLoco(83)">Ricerca
+                        controlli progetti Finpiemonte</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToAreaControlliLoco(84)">Ricerca altri
+                        controlli</button>
+                    <button mat-menu-item class="blue-color bold-text" (click)="goToAreaControlliLoco(85)">Inserimento
+                        altri controlli</button>
+                </mat-menu>
+            </div>
+        </div>
+    </ng-template>
+</div>

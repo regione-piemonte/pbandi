@@ -1,0 +1,154 @@
+<div class="page" id="scrollId">
+    <mat-spinner-pbandi *ngIf="isLoading(); else pageContent"></mat-spinner-pbandi>
+    <ng-template #pageContent>
+        <div class="content margin-bottom-0">
+            <div class="display-flex justify-content-space-between align-items-center">
+                <div class="title">
+                    <h2>Attività da svolgere</h2>
+                </div>
+                <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                    [descBrevePagina]="descBrevePagina"></pbcommon-help>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                <mat-card-content class="messageErrorContent">
+                    <p [innerHTML]="messageError"></p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <div class="header">
+
+                        <h3 class="search">Criteri di ricerca
+                            <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                                <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                                <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                            </button>
+                        </h3>
+                    </div>
+                    <div *ngIf="criteriRicercaOpened">
+                        <form #ricercaForm="ngForm" (submit)="ricerca()">
+                            <div class="row">
+                                <mat-form-field [formGroup]="beneficiarioGroup" class="col">
+                                    <input type="text"
+                                        wai-aria="Selezionare il beneficiario per il quale si intende operare"
+                                        placeholder="Selezionare un beneficiario" aria-label="Number" matInput
+                                        formControlName="beneficiarioControl" [matAutocomplete]="auto"
+                                        (input)="loadBeneficiari()" (blur)="check()">
+                                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                        [displayWith]="displayFn" (optionSelected)="click($event)">
+                                        <mat-option disabled *ngIf="!this.loadedBeneficiari">Caricamento...</mat-option>
+                                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                            {{ option.denominazione }} - {{ option.codiceFiscale }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un bando</mat-label>
+                                    <mat-select [(ngModel)]="bandoSelected" name="bando"
+                                        (selectionChange)="onSelectBando()"
+                                        [disabled]="!beneficiarioSelected?.value?.idBeneficiario">
+                                        <mat-option *ngFor="let bando of bandi" [value]="bando">
+                                            {{ bando.nomeBandoLinea }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un progetto</mat-label>
+                                    <mat-select [(ngModel)]="progettoSelected" name="progetto"
+                                        (selectionChange)="onSelectProgetto()"
+                                        [disabled]="!beneficiarioSelected?.value?.idBeneficiario">
+                                        <mat-option *ngFor="let progetto of progetti" [value]="progetto">
+                                            {{ progetto.codiceVisualizzato }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="col">
+                                    <input type="text" placeholder="Attività" [(ngModel)]="descAttivita" matInput
+                                        name="attivita">
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <div matTooltip="Selezionare un beneficiario e un bando"
+                                    [matTooltipDisabled]="bandoSelected">
+                                    <button class="button-style-2 margin0" mat-raised-button type="submit"
+                                        [disabled]="!bandoSelected">
+                                        CERCA
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="content-cards" *ngIf="progettiSearched?.length>0">
+            <div class="bandoNotifiche">
+                <div>
+                    <div class="p-bando margin-bottom-10">Beneficiario: <span>{{
+                            beneficiarioSelected?.value?.denominazione }} - {{
+                            beneficiarioSelected?.value?.codiceFiscale }}</span></div>
+                    <div class="p-bando">Bando: <span>{{ bandoSelected?.nomeBandoLinea }}</span></div>
+                </div>
+                <button mat-icon-button (click)="goToNotifiche()"
+                    *ngIf="nNotificheDaLeggere!==0 || nNotificheLetteOArchiviate !==0">
+                    <mat-icon matBadge="{{nNotificheDaLeggere}}" matBadgeColor="warn">notifications_none</mat-icon>
+                </button>
+            </div>
+            <mat-grid-list cols="3" rowHeight="380px">
+                <mat-grid-tile *ngFor="let progetto of progettiSearched" [colspan]="1" [rowspan]="1">
+                    <mat-card class="mat-elevation-z2">
+                        <div class="spaceBetween alignItemsCenter cod-prog">
+                            <p>{{progetto.codiceVisualizzato}}</p>
+                            <p *ngIf="isBandoFinpiemonte && isCostanteFinpiemonte">
+                                <button class="button-style-1 paddingLeft20" mat-button
+                                    (click)="goToDatiProgettoEAttivitaPregresse(progetto.id)">
+                                    <mat-icon matTooltip=" DATI PROGETTO ATTIVIT&Agrave; PREGRESSE">view_list</mat-icon>
+                                </button>
+                            </p>
+                        </div>
+                        <div class="divAttivita">
+                            <div *ngIf="progetto.attivita?.length>0; else noAttivita">
+                                <div class="singolaAttivita" *ngFor="let att of progetto.attivita">
+                                    <button mat-button (click)="goToAttivita(progetto.id,att)"
+                                        [disabled]="att.flagLock==='S'"
+                                        *ngIf="!(att.descrBreveTask === descBreveTaskComunicazioneRinuncia && isBR59)">
+                                        <span *ngIf="att.descrBreveTask===descBreveTaskValidazione || att.descrBreveTask===descBreveTaskValidazioneIntegrativa
+                                            || att.descrBreveTask===descBreveTaskVerificaRichErogazione">{{
+                                            att.descrTask }}
+                                            {{att.idBusiness}}</span>
+                                        <span *ngIf="att.descrBreveTask!==descBreveTaskValidazione && att.descrBreveTask!==descBreveTaskValidazioneIntegrativa 
+                                             && att.descrBreveTask!==descBreveTaskVerificaRichErogazione">{{
+                                            att.descrTask }}</span>
+                                    </button>
+                                    <div>
+                                        <mat-icon
+                                            matTooltip="Inserire o confermare l'indirizzo email nei dati del beneficiario per poter ricevere le notifiche di progetto"
+                                            *ngIf="att.flagUpdRecapito==='S'" class="red-color">info</mat-icon>
+                                        <!--il servizio mi ritorna il flagRichAbilitazUtente = "S" per tutte le attività del progetto, 
+                                                ma io devo mostrare l'icona solo su Gestione dati del progetto-->
+                                        <mat-icon
+                                            matTooltip="Sono presenti una o più richieste di abilitazione in attesa nella sezione SOGGETTI"
+                                            *ngIf="att.flagRichAbilitazUtente==='S' && att.descrBreveTask==='DATI-PROG'"
+                                            class="orange-color">warning
+                                        </mat-icon>
+                                        <mat-icon matTooltip="Attività già in uso da {{att.denominazioneLock}}"
+                                            *ngIf="att.flagLock==='S'">lock</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #noAttivita>
+                                <span>Nessuna attività disponibile</span>
+                            </ng-template>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+    </ng-template>
+</div>

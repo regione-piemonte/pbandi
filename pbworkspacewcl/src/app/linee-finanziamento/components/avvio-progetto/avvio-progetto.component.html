@@ -1,0 +1,137 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToLinee()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle linee di finanziamento</span>
+            </button>
+        </div>
+        <h2>Avvio progetto</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="linea">
+                    <p>Linea di finanziamento: <span>{{ lineaFinanziamento }}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+                    <mat-card-content class="messageSuccessContent">
+                        <p [innerHTML]="messageSuccess"></p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                    <mat-card-content class="messageErrorContent">
+                        <p [innerHTML]="messageError"></p>
+                    </mat-card-content>
+                </mat-card>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <mat-grid-list cols="2" rowHeight="60">
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" placeholder="Codice progetto" [(ngModel)]="codiceProgetto"
+                                        matInput name="codiceProgetto">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" placeholder="CUP" [(ngModel)]="cup" matInput name="cup">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" placeholder="Titolo progetto" [(ngModel)]="titoloProgetto"
+                                        matInput name="titoloProgetto">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" placeholder="Beneficiario" [(ngModel)]="beneficiario" matInput
+                                        name="beneficiario">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <button class="button-style-2" mat-raised-button type="submit">
+                            CERCA
+                        </button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !isResultVisible}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <table mat-table [dataSource]="dataSource" class="fullWidth" matSort #sort="matSort"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="codice">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice progetto </th>
+                        <td mat-cell *matCellDef="let row"> {{row.codice}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cup">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> CUP </th>
+                        <td mat-cell *matCellDef="let row"> {{row.cup}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="titolo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo progetto </th>
+                        <td mat-cell *matCellDef="let row"> {{row.titolo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
+                        <td mat-cell *matCellDef="let row"> {{row.beneficiario}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let row">
+                            <button *ngIf="inserimentoModificaProgettoAbilitati" mat-icon-button matTooltip="Modifica"
+                                (click)="modificaProgetto(row.id)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Avvia gestione progetto" (click)="avvia(row)">
+                                <mat-icon>assistant_direction</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    #paginator
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <div class="flexEnd marginBottom20">
+            <button *ngIf="isResultVisible" (click)="avvia()" mat-button class="button-style-1">AVVIA TUTTI
+                NELL'ELENCO</button>
+            <button *ngIf="inserimentoModificaProgettoAbilitati && !esistonoProgettiSifAvviati" mat-stroked-button
+                class="button-style-3" (click)="goToNuovoProgetto()">NUOVO
+                PROGETTO</button>
+        </div>
+    </div>
+</div>

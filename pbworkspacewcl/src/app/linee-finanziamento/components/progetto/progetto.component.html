@@ -1,0 +1,1915 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToAvvioProgetto()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna all'avvio progetto</span>
+            </button>
+        </div>
+        <h2 *ngIf="!idProgetto">Nuovo progetto</h2>
+        <h2 *ngIf="idProgetto">Modifica progetto</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="linea">
+                    <p>Linea di finanziamento: <span>{{ lineaFinanziamento }}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-tab-group dynamicHeight #tabs>
+                    <mat-tab label="DATI GENERALI">
+                        <div class="marginTop20">
+                            <p>(*) obbligatorio</p>
+                            <p>(**) necessario per avviare il progetto</p>
+                        </div>
+                        <form #datiGeneraliForm="ngForm">
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" matInput placeholder="CUP" [(ngModel)]="datiGen.cup" name="cup"
+                                        #cupGen="ngModel" maxlength="15" />
+                                    <mat-error *ngIf="cupGen?.errors?.error ==='notUnico'">
+                                        Il CUP inserito è già presente nel sistema.
+                                    </mat-error>
+                                    <mat-error *ngIf="cupGen?.errors?.error ==='length'">
+                                        Il CUP è formalmente errato: sono previsti 15 caratteri
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="fullWidth">
+                                    <input type="text" matInput placeholder="Titolo progetto *"
+                                        [(ngModel)]="datiGen.titoloProgetto" name="titoloProgetto" #titolo="ngModel" />
+                                    <mat-error *ngIf="titolo?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth marginRight10">
+                                    <input type="text" matInput placeholder="Codice Progetto / Numero domanda"
+                                        [(ngModel)]="datiGen.codProgettoNumDomanda" name="codProgettoNumDomanda"
+                                        #codNum="ngModel" />
+                                    <mat-error *ngIf="codNum?.errors?.error ==='notUnico'">
+                                        Il numero domanda inserito è già presente nel sistema.
+                                    </mat-error>
+                                </mat-form-field>
+                                <div class="fullWidth"></div>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="marginRight10 dataDatiGenerali">
+                                    <mat-label>Data presentazione domanda *</mat-label>
+                                    <input matInput [matDatepicker]="picker1"
+                                        [formControl]="datiGen.dataPresentazioneDomanda">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                    <mat-error *ngIf="datiGen.dataPresentazioneDomanda?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="datiGen.dataPresentazioneDomanda?.errors?.error ==='maggioreToday'">
+                                        La data non deve superare la data odierna
+                                    </mat-error>
+                                    <mat-error class="font-size-15 display-flex" matTooltip="La data inserita deve essere precedente alla data comitato e alla data
+                                    concessione, se presenti."
+                                        *ngIf="datiGen.dataPresentazioneDomanda?.errors?.error ==='maggioreConcessioneComitato'">
+                                        <mat-icon class="red-color">warning</mat-icon> <span
+                                            class="font-size-10-5 padding-left-3">Errore</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="marginRight10 dataDatiGenerali">
+                                    <mat-label>Data comitato</mat-label>
+                                    <input matInput [matDatepicker]="picker2" [formControl]="datiGen.dataComitato">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <mat-error *ngIf="datiGen.dataComitato?.errors?.error ==='maggioreToday'">
+                                        La data non deve superare la data odierna
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="dataDatiGenerali">
+                                    <mat-label>Data concessione **</mat-label>
+                                    <input matInput [matDatepicker]="picker3" [formControl]="datiGen.dataConcessione">
+                                    <mat-datepicker-toggle matSuffix [for]="picker3">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                    <mat-error *ngIf="datiGen.dataConcessione?.errors?.error ==='maggioreToday'">
+                                        La data non deve superare la data odierna
+                                    </mat-error>
+                                    <mat-error *ngIf="datiGen.dataConcessione?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un settore attività **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.settoreAttivita" name="settoreAttivitaDatiGen"
+                                        (selectionChange)="changeSettoreAttivitaDatiGen()" #settAttDatiGen="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboSettoreAttivita" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="settAttDatiGen?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un'attività Ateco **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.attivitaAteco" name="attivitaAtecoDatiGen"
+                                        #attAtecoDatiGen="ngModel" [disabled]="!datiGen.settoreAttivita">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of attivitaAtecoDatiGen" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="attAtecoDatiGen?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un tipo di operazione *</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.tipoOperazione" name="tipoOperazione" disabled
+                                        #tipoOp="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboTipoOperazione" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoOp?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso === 1">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una priorità Qsn **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.prioritaQsn" name="prioritaQsn" #priotQsn="ngModel"
+                                        (selectionChange)="changePrioritaQsn()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of prioritaQsn" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="priotQsn?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso === 1">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un obiettivo generale Qsn **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.obiettivoGenQsn" name="obiettivoGenQsn"
+                                        #obietGenQsn="ngModel" [disabled]="!datiGen.prioritaQsn"
+                                        (selectionChange)="changeObiettivoGenQsn()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of obiettiviGenQsn" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="obietGenQsn?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso === 1">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un obiettivo specifico Qsn **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.obiettivoSpecQsn" name="obiettivoSpecQsn"
+                                        #obietSpecQsn="ngModel"
+                                        [disabled]="!datiGen.prioritaQsn || !datiGen.obiettivoGenQsn">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of obiettiviSpecQsn" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="obietSpecQsn?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare uno strumento / programma attuativo *</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.strumento" name="strumento" #strum="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboStrumentoAttuativo"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="strum?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un settore Cpt *</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.settoreCpt" name="settoreCpt" #cpt="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboSettoreCpt" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="cpt?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un tema prioritario **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.temaPrioritario" name="temaPrioritario"
+                                        #temaPrior="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboTemaPrioritario" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="temaPrior?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un indicatore risultato programma **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.indicatoreRisProg" name="indicatoreRisProg"
+                                        #indRisProg="ngModel">
+                                        <mat-option *ngFor="let option of combo?.comboIndicatoreRisultatoProgramma"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="indRisProg?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un indicatore Qsn **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.indicatoreQsn" name="indicatoreQsn"
+                                        #indQsn="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboIndicatoreQsn" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="indQsn?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un tipo aiuto **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.tipoAiuto" name="tipoAiuto" #tipoAiut="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboTipoAiuto" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoAiut?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un tipo strumento di programmazione *</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.tipoStrumentoProg" name="tipoStrumentoProg"
+                                        #tipoStrumProg="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboStrumentoProgrammazione"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoStrumProg?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una dimensione territoriale **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.dimTerritoriale" name="dimTerritoriale"
+                                        #dimTerr="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboDimensioneTerritoriale"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="dimTerr?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un progetto complesso</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.progettoComplesso" name="progettoComplesso"
+                                        #dimTerr="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboProgettoComplesso"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso!==1">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un obiettivo tematico **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.obiettivoTematico" name="obiettivoTematico"
+                                        #obietTemat="ngModel" (selectionChange)="changeObiettivoTematico()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboObiettivoTematico"
+                                            [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="obietTemat?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso!==1">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una classificazione RA **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.classificazioneRA" name="classificazioneRA"
+                                        #classRA="ngModel" [disabled]="!datiGen.obiettivoTematico">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of classificazioniRA" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="classRA?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un settore CIPE **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.settoreCipe" name="settoreCipe" #settCipe="ngModel"
+                                        (selectionChange)="changeSettoreCipe()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboSettoreCipe" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="settCipe?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un sotto-settore CIPE **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.sottoSettoreCipe" name="sottoSettoreCipe"
+                                        #sottoSettCipe="ngModel" [disabled]="!datiGen.settoreCipe"
+                                        (selectionChange)="changeSottoSettoreCipe()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of sottoSettoriCipe" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="sottoSettCipe?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una categoria CIPE **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.categoriaCipe" name="categoriaCipe"
+                                        #catCipe="ngModel"
+                                        [disabled]="!datiGen.settoreCipe || !datiGen.sottoSettoreCipe">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of categorieCipe" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="catCipe?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6" *ngIf="idProcesso!==1">
+                                <mat-form-field class="fullWidth">
+                                    <!--JIRA PBANDI-3015: grande progetto non obbligatorio per avvio-->
+                                    <mat-label>Selezionare un grande progetto</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.grandeProgetto" name="grandeProgetto">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboGrandeProgetto" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una natura CIPE **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.naturaCipe" name="naturaCipe" #natCipe="ngModel"
+                                        [disabled]="idProcesso !== 1" (selectionChange)="changeNaturaCipe()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of combo?.comboNaturaCipe" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="natCipe?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare una tipologia CIPE **</mat-label>
+                                    <mat-select [(ngModel)]="datiGen.tipologiaCipe" name="tipologiaCipe"
+                                        #tipoCipe="ngModel" [disabled]="!datiGen.naturaCipe">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let option of tipologieCipe" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoCipe?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="display-flex marginTop20">
+                                <mat-radio-group class="fullWidth alignItemsCenter"
+                                    [(ngModel)]="datiGen.flagProgettoDaInviareAlMonitoraggio"
+                                    name="flagProgettoDaInviareAlMonitoraggio">
+                                    <mat-label class="marginRight10">Progetto da inviare al monitoraggio *</mat-label>
+                                    <mat-radio-button class="marginRight10" value="S">sì</mat-radio-button>
+                                    <mat-radio-button value="N">no</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-radio-group class="fullWidth alignItemsCenter"
+                                    [(ngModel)]="datiGen.flagRichiestaAutomaticaDelCup"
+                                    name="flagRichiestaAutomaticaDelCup">
+                                    <mat-label class="marginRight10">Richiesta automatica del CUP *</mat-label>
+                                    <mat-radio-button class="marginRight10" value="S">sì</mat-radio-button>
+                                    <mat-radio-button value="N">no</mat-radio-button>
+                                </mat-radio-group>
+                                <!--gli altri radio button sono stati rimossi ma devono essere comunque presenti su db con i valori di default-->
+                            </div>
+                            <div class="display-flex marginTop20" *ngIf="isProgrammazione2127">
+                                <div class="fullWidth">
+                                    <mat-radio-group class="fullWidth flex-direction-column" [(ngModel)]="datiGen.ppp"
+                                        name="ppp" #pppp="ngModel">
+                                        <div class="display-flex">
+                                            <mat-label class="marginRight10">PPP **</mat-label>
+                                            <mat-radio-button class="marginRight10" value="S">sì</mat-radio-button>
+                                            <mat-radio-button value="N">no</mat-radio-button>
+                                        </div>
+                                        <mat-error *ngIf="pppp?.errors?.error ==='requiredAvvio'">
+                                            {{errorNecessarioAvvio}}
+                                        </mat-error>
+                                    </mat-radio-group>
+                                </div>
+                                <div class="fullWidth">
+                                    <mat-radio-group class="fullWidth flex-direction-column"
+                                        [(ngModel)]="datiGen.flagImportanzaStrategica" name="flagImportanzaStrategica"
+                                        #flagIS="ngModel">
+                                        <div class="display-flex">
+                                            <mat-label class="marginRight10">Progetto di Importanza Strategica
+                                                **</mat-label>
+                                            <mat-radio-button class="marginRight10" value="S">sì</mat-radio-button>
+                                            <mat-radio-button value="N">no</mat-radio-button>
+                                        </div>
+                                        <mat-error *ngIf="flagIS?.errors?.error ==='requiredAvvio'">
+                                            {{errorNecessarioAvvio}}
+                                        </mat-error>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="SOGGETTI">
+                        <div class="marginTop20">
+                            <p>(*) obbligatorio</p>
+                            <p>(**) necessario per avviare il progetto</p>
+                        </div>
+                        <mat-horizontal-stepper linear #stepper class="backgroundTransparent">
+                            <form #soggettiForm="ngForm">
+                                <mat-step>
+                                    <ng-template matStepLabel>Beneficiario</ng-template>
+
+                                    <div class="display-flex marginTop20">
+                                        <mat-radio-group class="fullWidth alignItemsCenter"
+                                            [(ngModel)]="beneficiario.tipoSoggetto" name="tipoSoggetto">
+                                            <mat-label class="bold-text marginRight10">Soggetto</mat-label>
+                                            <mat-radio-button class="marginRight10" value="PF">persona fisica
+                                            </mat-radio-button>
+                                            <mat-radio-button value="EG">persona giuridica</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <h3 class="bold-text">Beneficiario: {{beneficiario.tipoSoggetto==="PF" ? "persona
+                                        fisica" :
+                                        "persona giuridica"}}</h3>
+                                    <div class="display-flex marginTop20 marginBottom20"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG'">
+                                        <mat-radio-group class="fullWidth alignItemsCenter"
+                                            [(ngModel)]="beneficiario.tipoSoggGiur" name="tipoSoggGiur">
+                                            <mat-radio-button class="marginRight10" value="DU">Dip. universitario
+                                            </mat-radio-button>
+                                            <mat-radio-button class="marginRight10" value="DR">Dir. regionale
+                                            </mat-radio-button>
+                                            <mat-radio-button class="marginRight10" value="PA">P.A.
+                                            </mat-radio-button>
+                                            <mat-radio-button value="NA">Altro (imprese, società
+                                                cooperative, associazioni, fondazioni, consorzi, etc.)
+                                            </mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div class="marginTop15" *ngIf="beneficiario.tipoSoggetto==='PF'">
+                                        <mat-form-field class="width-50-perc">
+                                            <input type="text" matInput placeholder="Codice Fiscale **"
+                                                [(ngModel)]="beneficiario.codiceFiscalePF"
+                                                (keyup)="beneficiario.codiceFiscalePF = beneficiario.codiceFiscalePF.toUpperCase()"
+                                                name="codiceFiscaleBenPF" #cfBenPF="ngModel" maxlength="16" />
+                                            <mat-error *ngIf="cfBenPF?.errors?.error ==='notValidPF'">
+                                                Il codice fiscale non è formalmente corretto
+                                            </mat-error>
+                                            <mat-error *ngIf="cfBenPF?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="alignItemsCenter marginTop15"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA'">
+                                        <mat-form-field class="fullWidth marginRight10">
+                                            <input type="text" matInput placeholder="Codice Fiscale **"
+                                                [(ngModel)]="beneficiario.codiceFiscaleEG" (keyup)="keyUpCfBenEG()"
+                                                name="codiceFiscaleBenEG" #cfBenEG="ngModel" maxlength="16" />
+                                            <mat-error *ngIf="cfBenEG?.errors?.error ==='notValidPF'">
+                                                Il codice fiscale non è formalmente corretto
+                                            </mat-error>
+                                            <mat-error *ngIf="cfBenEG?.errors?.error ==='notValidEG'">
+                                                Il codice fiscale contiene dei caratteri non ammessi: il codice fiscale
+                                                dovrebbe contenere solo cifre
+                                            </mat-error>
+                                            <mat-error *ngIf="cfBenEG?.errors?.error ==='length'">
+                                                Il codice fiscale della persona giuridica deve essere lungo 11 caratteri
+                                            </mat-error>
+                                            <mat-error *ngIf="cfBenEG?.errors?.error ==='codControllo'">
+                                                Codice fiscale della persona giuridica non valido: il codice di
+                                                controllo non corrisponde
+                                            </mat-error>
+                                            <mat-error *ngIf="cfBenEG?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div class="fullWidth">
+                                            <button mat-button class="button-style-1"
+                                                [disabled]="!beneficiario.codiceFiscaleEG"
+                                                (click)="confermaCfBen()">CONFERMA</button>
+                                        </div>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6 marginTop15"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='DU'">
+                                        <mat-form-field class="fullWidth">
+                                            <mat-label>Selezionare un Ateneo **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.ateneo" name="ateneo" #aten="ngModel"
+                                                (selectionChange)="changeAteneo()">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of combo?.comboAteneo" [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="aten?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='DU'">
+                                        <mat-form-field class="fullWidth">
+                                            <mat-label>Selezionare un dipartimento **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.dipartimento" name="dipartimento"
+                                                #dip="ngModel" [disabled]="!beneficiario.ateneo">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of dipartimenti" [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="dip?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6 marginTop15"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && (beneficiario.tipoSoggGiur==='DR' || beneficiario.tipoSoggGiur==='PA')">
+                                        <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                            <mat-label>Selezionare un Ente **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.enteDR" name="enteDR" #entDR="ngModel"
+                                                (selectionChange)="changeEnteDR(true)">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of combo?.comboDenominazioneEnteDipReg"
+                                                    [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="entDR?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                            <mat-label>Selezionare un Ente **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.entePA" name="entePA" #entPA="ngModel"
+                                                (selectionChange)="changeEntePA(true)">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of combo?.comboDenominazioneEntePA"
+                                                    [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="entPA?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && (beneficiario.tipoSoggGiur==='DR' || beneficiario.tipoSoggGiur==='PA')">
+                                        <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                            <mat-label>Selezionare un settore **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.settoreDR" name="settoreDR"
+                                                #settDR="ngModel" [disabled]="!beneficiario.enteDR">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of settoriDR" [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="settDR?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                            <mat-label>Selezionare un settore</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.settorePA" name="settorePA"
+                                                [disabled]="!beneficiario.entePA">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of settoriPA" [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="alignItemsCenter marginTop10">
+                                        <mat-label class="marginRight10">Ruolo</mat-label>
+                                        <mat-checkbox class="marginRight10" *ngFor="let option of combo?.comboRuoli"
+                                            [(ngModel)]="option.checked" name="ruolo{{option.codice}}"
+                                            (change)="changeRuoli($event,option)">
+                                            {{option.descrizione}}</mat-checkbox>
+
+                                    </div>
+                                    <div class="display-flex margin-bottom-6 marginTop10"
+                                        *ngIf="beneficiario.tipoSoggetto==='PF'">
+                                        <mat-form-field class="fullWidth marginRight10">
+                                            <input type="text" matInput placeholder="Cognome"
+                                                [(ngModel)]="beneficiario.cognome" name="cognomeBen" />
+                                        </mat-form-field>
+                                        <mat-form-field class="fullWidth">
+                                            <input type="text" matInput placeholder="Nome"
+                                                [(ngModel)]="beneficiario.nome" name="nomeBen" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="display-flex marginTop10" *ngIf="beneficiario.tipoSoggetto==='PF'">
+                                        <mat-radio-group class="fullWidth alignItemsCenter"
+                                            [(ngModel)]="beneficiario.sesso" name="sessoBen">
+                                            <mat-label class="marginRight10">Sesso</mat-label>
+                                            <mat-radio-button class="marginRight10" value="M">Maschio
+                                            </mat-radio-button>
+                                            <mat-radio-button value="F">Femmina</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div class="alignItemsCenter marginTop15"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA'">
+                                        <mat-form-field class="fullWidth marginRight10">
+                                            <input type="text" matInput placeholder="Denominazione **"
+                                                [(ngModel)]="beneficiario.denominazione" name="denominazione"
+                                                #denom="ngModel" [disabled]="!isCfConfirmedBen" />
+                                            <mat-error *ngIf="denom?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div class="fullWidth">
+                                            <mat-form-field class="dataCostituzione">
+                                                <mat-label>Data costituzione</mat-label>
+                                                <input matInput [matDatepicker]="picker5"
+                                                    [formControl]="beneficiario.dataCostituzione"
+                                                    [disabled]="!isCfConfirmedBen">
+                                                <mat-datepicker-toggle matSuffix [for]="picker5">
+                                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker5></mat-datepicker>
+                                                <mat-error
+                                                    *ngIf="beneficiario.dataCostituzione?.errors?.error ==='maggioreToday'">
+                                                    La data non deve superare la data odierna
+                                                </mat-error>
+                                                <mat-error
+                                                    *ngIf="beneficiario.dataCostituzione?.errors?.error ==='maggioreConcessioneComitato'">
+                                                    La data inserita deve essere precedente alla data comitato e alla
+                                                    data
+                                                    concessione, se presenti.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="alignItemsCenter"
+                                        *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA'">
+                                        <mat-form-field class="fullWidth">
+                                            <mat-label>Selezionare una forma giuridica **</mat-label>
+                                            <mat-select [(ngModel)]="beneficiario.formaGiuridica" name="formaGiuridica"
+                                                #formaGiur="ngModel" [disabled]="!isCfConfirmedBen">
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let option of combo?.comboFormaGiuridica"
+                                                    [value]="option">
+                                                    {{ option.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="formaGiur?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div class="fullWidth"></div>
+                                    </div>
+                                    <div class="alignItemsCenter"
+                                        [ngClass]="{'marginTop15': beneficiario.tipoSoggetto === 'PF' || (beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur!=='NA')}">
+                                        <mat-form-field class="fullWidth"
+                                            *ngIf="beneficiario.tipoSoggetto === 'PF' || (beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA')">
+                                            <input type="text" matInput placeholder="IBAN **"
+                                                [(ngModel)]="beneficiario.iban" name="iban" #ibn="ngModel"
+                                                maxlength="27"
+                                                [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                            <mat-error *ngIf="ibn?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="fullWidth"
+                                            *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur!=='NA'">
+                                            <input type="text" matInput placeholder="IBAN" maxlength="27"
+                                                [(ngModel)]="beneficiario.iban" name="iban">
+                                        </mat-form-field>
+                                        <div class="fullWidth"></div>
+                                    </div>
+                                    <div class="marginTop20" *ngIf="beneficiario.tipoSoggetto==='PF'">
+                                        <h4>Dati nascita</h4>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="marginRight10 dataSoggetti">
+                                                <mat-label>Data di nascita</mat-label>
+                                                <input matInput [matDatepicker]="picker4"
+                                                    [formControl]="beneficiario.dataNascita">
+                                                <mat-datepicker-toggle matSuffix [for]="picker4">
+                                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker4></mat-datepicker>
+                                                <mat-error
+                                                    *ngIf="beneficiario.dataNascita?.errors?.error ==='maggioreToday'">
+                                                    La data non deve superare la data odierna
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.nazioneNascita"
+                                                    name="nazioneNascitaBen" #nazNascBen="ngModel"
+                                                    (selectionChange)="changeNazioneNascitaBen()">
+                                                    <mat-option *ngFor="let option of combo?.comboNazioneNascita"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="nazNascBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.regioneNascita"
+                                                    name="regioneNascitaBen" #regNascBen="ngModel"
+                                                    (selectionChange)="changeRegioneNascitaBen()"
+                                                    [disabled]="beneficiario.nazioneNascita?.descEstesa!=='ITALIA'">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniNascitaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="regNascBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.provinciaNascita"
+                                                    name="provinciaNascitaBen" #provNascBen="ngModel"
+                                                    (selectionChange)="changeProvinciaNascitaBen()"
+                                                    [disabled]="!beneficiario.regioneNascita">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceNascitaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="provNascBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select *ngIf="beneficiario.nazioneNascita?.descEstesa==='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneNascita" name="comuneNascitaBen"
+                                                    #comNascBen="ngModel" [disabled]="!beneficiario.provinciaNascita">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniNascitaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-select *ngIf="beneficiario.nazioneNascita?.descEstesa!=='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneNascita"
+                                                    name="comuneNascitaEsteroBen" #comNascBen="ngModel">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniNascitaEsteriBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comNascBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="marginTop20" *ngIf="beneficiario.tipoSoggetto==='PF'">
+                                        <h4>Dati residenza</h4>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Indirizzo **"
+                                                    [(ngModel)]="beneficiario.indirizzoResidenza"
+                                                    name="indirizzoResidenzaBen" #indResBen="ngModel" />
+                                                <mat-error *ngIf="indResBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <div class="fullWidth">
+                                                <mat-form-field class="marginRight10 width-40-perc">
+                                                    <input matInput type="text" placeholder="N. civico **"
+                                                        [(ngModel)]="beneficiario.civicoResidenza"
+                                                        name="civicoResidenzaBen" #civResBen="ngModel" />
+                                                    <mat-error *ngIf="civResBen?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc">
+                                                    <input matInput type="text" placeholder="CAP **"
+                                                        [(ngModel)]="beneficiario.capResidenza" name="capResidenzaBen"
+                                                        #capResBen="ngModel" maxlength="5" />
+                                                    <mat-error *ngIf="capResBen?.errors?.error ==='notValid'">
+                                                        CAP non valido.
+                                                    </mat-error>
+                                                    <mat-error *ngIf="capResBen?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.nazioneResidenza"
+                                                    name="nazioneResidenzaBen" #nazResBen="ngModel"
+                                                    (selectionChange)="changeNazioneResidenzaBen()">
+                                                    <mat-option *ngFor="let option of combo?.comboNazione"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="nazResBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.regioneResidenza"
+                                                    name="regioneResidenzaBen" #regResBen="ngModel"
+                                                    [disabled]="beneficiario.nazioneResidenza?.descEstesa!=='ITALIA'"
+                                                    (selectionChange)="changeRegioneResidenzaBen()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniResidenzaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="regResBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.provinciaResidenza"
+                                                    name="provinciaResidenzaBen" #provResBen="ngModel"
+                                                    [disabled]="!beneficiario.regioneResidenza"
+                                                    (selectionChange)="changeProvinciaResidenzaBen()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceResidenzaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="provResBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select *ngIf="beneficiario.nazioneResidenza?.descEstesa==='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneResidenza" name="comuneResidenzaBen"
+                                                    #comResBen="ngModel" [disabled]="!beneficiario.provinciaResidenza">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniResidenzaBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-select *ngIf="beneficiario.nazioneResidenza?.descEstesa!=='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneResidenza"
+                                                    name="comuneResidenzaEsteroBen" #comResBen="ngModel">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniResidenzaEsteriBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comResBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Email"
+                                                    [(ngModel)]="beneficiario.email" name="emailBen"
+                                                    #mailBen="ngModel" />
+                                                <mat-error *ngIf="mailBen?.errors?.error ==='notValid'">
+                                                    Indirizzo e-mail non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <div class="fullWidth"></div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Telefono"
+                                                    [(ngModel)]="beneficiario.telefono" maxlength="20"
+                                                    name="telefonoBen" #telBen="ngModel" />
+                                                <mat-error *ngIf="telBen?.errors?.error ==='notValid'">
+                                                    Telefono non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <input matInput type="text" placeholder="Fax"
+                                                    [(ngModel)]="beneficiario.fax" name="faxBen" #fxBen="ngModel" />
+                                                <mat-error *ngIf="fxBen?.errors?.error ==='notValid'">
+                                                    Fax non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="marginTop20" *ngIf="beneficiario.tipoSoggetto==='EG'">
+                                        <h4>Sede legale</h4>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="Partita IVA **"
+                                                    [(ngModel)]="beneficiario.partitaIva"
+                                                    (keyup)="beneficiario.partitaIva = beneficiario.partitaIva.toUpperCase()"
+                                                    name="partitaIva" #pIva="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="pIva?.errors?.error ==='notValidPF'">
+                                                    La partita IVA non è formalmente corretta
+                                                </mat-error>
+                                                <mat-error *ngIf="pIva?.errors?.error ==='notValidEG'">
+                                                    La partita IVA contiene dei caratteri non ammessi: la partita IVA
+                                                    dovrebbe contenere solo cifre
+                                                </mat-error>
+                                                <mat-error *ngIf="pIva?.errors?.error ==='length'">
+                                                    La partita IVA della persona giuridica deve essere lunga 11
+                                                    caratteri
+                                                </mat-error>
+                                                <mat-error *ngIf="pIva?.errors?.error ==='codControllo'">
+                                                    La partita IVA della persona giuridica non valido: il codice di
+                                                    controllo non corrisponde
+                                                </mat-error>
+                                                <mat-error *ngIf="pIva?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="Partita IVA **"
+                                                    [(ngModel)]="beneficiario.partitaIvaDR" name="partitaIvaDR"
+                                                    disabled />
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="Partita IVA **"
+                                                    [(ngModel)]="beneficiario.partitaIvaPA" name="partitaIvaPA"
+                                                    disabled />
+                                            </mat-form-field>
+                                            <div class="fullWidth"></div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="Indirizzo **"
+                                                    [(ngModel)]="beneficiario.indirizzoSedeLegale"
+                                                    name="indirizzoSedeLegaleBen" #indSedeBen="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="indSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="Indirizzo"
+                                                    [(ngModel)]="beneficiario.indirizzoSedeLegaleDR"
+                                                    name="indirizzoSedeLegaleBenDR" disabled />
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="Indirizzo"
+                                                    [(ngModel)]="beneficiario.indirizzoSedeLegalePA"
+                                                    name="indirizzoSedeLegaleBenPA" disabled />
+                                            </mat-form-field>
+                                            <div class="fullWidth">
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                    <input matInput type="text" placeholder="N. civico **"
+                                                        [(ngModel)]="beneficiario.civicoSedeLegale"
+                                                        name="civicoSedeLegaleBen" #civSedeBen="ngModel"
+                                                        [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                    <mat-error *ngIf="civSedeBen?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                    <input matInput type="text" placeholder="N. civico"
+                                                        [(ngModel)]="beneficiario.civicoSedeLegaleDR"
+                                                        name="civicoSedeLegaleBenDR" disabled />
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                    <input matInput type="text" placeholder="N. civico"
+                                                        [(ngModel)]="beneficiario.civicoSedeLegalePA"
+                                                        name="civicoSedeLegaleBenPA" disabled />
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                    <input matInput type="text" placeholder="CAP **"
+                                                        [(ngModel)]="beneficiario.capSedeLegale" name="capSedeLegaleBen"
+                                                        #capSedeBen="ngModel" maxlength="5"
+                                                        [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                    <mat-error *ngIf="capSedeBen?.errors?.error ==='notValid'">
+                                                        CAP non valido.
+                                                    </mat-error>
+                                                    <mat-error *ngIf="capSedeBen?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                    <input matInput type="text" placeholder="CAP **"
+                                                        [(ngModel)]="beneficiario.capSedeLegaleDR"
+                                                        name="capSedeLegaleBenDR" maxlength="5" disabled />
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc"
+                                                    *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                    <input matInput type="text" placeholder="CAP **"
+                                                        [(ngModel)]="beneficiario.capSedeLegalePA"
+                                                        name="capSedeLegaleBenPA" maxlength="5" disabled />
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.nazioneSedeLegale"
+                                                    name="nazioneSedeLegaleBen" #nazSedeBen="ngModel"
+                                                    (selectionChange)="changeNazioneSedeLegale()"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen">
+                                                    <mat-option *ngFor="let option of combo?.comboNazione"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="nazSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.nazioneSedeLegaleDR"
+                                                    name="nazioneSedeLegaleBenDR" disabled>
+                                                    <mat-option *ngFor="let option of combo?.comboNazione"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.nazioneSedeLegalePA"
+                                                    name="nazioneSedeLegaleBenPA" disabled>
+                                                    <mat-option *ngFor="let option of combo?.comboNazione"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.regioneSedeLegale"
+                                                    name="regioneSedeLegaleBen" #regSedeBen="ngModel"
+                                                    [disabled]="beneficiario.nazioneSedeLegale?.descEstesa!=='ITALIA' || (beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen)"
+                                                    (selectionChange)="changeRegioneSedeLegale()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniSedeLegaleBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="regSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.regioneSedeLegaleDR"
+                                                    name="regioneSedeLegaleBenDR" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniSedeLegaleBenDR"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.regioneSedeLegalePA"
+                                                    name="regioneSedeLegaleBenPA" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniSedeLegaleBenPA"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.provinciaSedeLegale"
+                                                    name="provinciaSedeLegaleBen" #provSedeBen="ngModel"
+                                                    [disabled]="!beneficiario.regioneSedeLegale || (beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen)"
+                                                    (selectionChange)="changeProvinciaSedeLegale()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceSedeLegaleBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="provSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.provinciaSedeLegaleDR"
+                                                    name="provinciaSedeLegaleBenDR" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceSedeLegaleBenDR"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.provinciaSedeLegalePA"
+                                                    name="provinciaSedeLegaleBenDPA" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceSedeLegaleBenPA"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegale?.descEstesa==='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegale"
+                                                    name="comuneSedeLegaleBen" #comSedeBen="ngModel"
+                                                    [disabled]="!beneficiario.provinciaSedeLegale || (beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen)">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegale?.descEstesa!=='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegale"
+                                                    name="comuneSedeLegaleEsteroBen" #comSedeBen="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleEsteriBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <mat-label>Selezionare un comune</mat-label>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegaleDR?.descEstesa==='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegaleDR"
+                                                    name="comuneSedeLegaleBenDR" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleBenDR"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegaleDR?.descEstesa!=='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegaleDR"
+                                                    name="comuneSedeLegaleEsteroBenDR" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleEsteriBenDR"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth" *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <mat-label>Selezionare un comune</mat-label>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegalePA?.descEstesa==='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegalePA"
+                                                    name="comuneSedeLegaleBenPA" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleBenPA"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-select
+                                                    *ngIf="beneficiario.nazioneSedeLegalePA?.descEstesa!=='ITALIA'"
+                                                    [(ngModel)]="beneficiario.comuneSedeLegalePA"
+                                                    name="comuneSedeLegaleEsteroBenPA" disabled>
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniSedeLegaleEsteriBenPA"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="Email **"
+                                                    [(ngModel)]="beneficiario.emailSedeLegale" name="emailSedeLegale"
+                                                    #mailSede="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="mailSede?.errors?.error ==='notValid'">
+                                                    Indirizzo e-mail non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="mailSede?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="Email **"
+                                                    [(ngModel)]="beneficiario.emailSedeLegaleDR"
+                                                    name="emailSedeLegaleDR" #mailSedeDR="ngModel" />
+                                                <mat-error *ngIf="mailSedeDR?.errors?.error ==='notValid'">
+                                                    Indirizzo e-mail non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="mailSedeDR?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="Email **"
+                                                    [(ngModel)]="beneficiario.emailSedeLegalePA"
+                                                    name="emailSedeLegalePA" #mailSedePA="ngModel" />
+                                                <mat-error *ngIf="mailSedePA?.errors?.error ==='notValid'">
+                                                    Indirizzo e-mail non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="mailSedePA?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="PEC"
+                                                    [(ngModel)]="beneficiario.pecSedeLegale" name="pecSedeLegale"
+                                                    #pcSede="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="pcSede?.errors?.error ==='notValid'">
+                                                    Indirizzo PEC non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="PEC"
+                                                    [(ngModel)]="beneficiario.pecSedeLegaleDR" name="pecSedeLegaleDR"
+                                                    #pcSedeDR="ngModel" />
+                                                <mat-error *ngIf="pcSedeDR?.errors?.error ==='notValid'">
+                                                    Indirizzo PEC non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="PEC"
+                                                    [(ngModel)]="beneficiario.pecSedeLegalePA" name="pecSedeLegalePA"
+                                                    #pcSedePA="ngModel" />
+                                                <mat-error *ngIf="pcSedePA?.errors?.error ==='notValid'">
+                                                    Indirizzo PEC non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="Telefono **"
+                                                    [(ngModel)]="beneficiario.telefonoSedeLegale"
+                                                    name="telefonoSedeLegaleBen" #telSedeBen="ngModel" maxlength="20"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="telSedeBen?.errors?.error ==='notValid'">
+                                                    Telefono non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="telSedeBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="Telefono **"
+                                                    [(ngModel)]="beneficiario.telefonoSedeLegaleDR"
+                                                    name="telefonoSedeLegaleBenDR" #telSedeBenDR="ngModel"
+                                                    maxlength="20" />
+                                                <mat-error *ngIf="telSedeBenDR?.errors?.error ==='notValid'">
+                                                    Telefono non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="telSedeBenDR?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="Telefono **"
+                                                    [(ngModel)]="beneficiario.telefonoSedeLegalePA"
+                                                    name="telefonoSedeLegaleBenPA" #telSedeBenPA="ngModel"
+                                                    maxlength="20" />
+                                                <mat-error *ngIf="telSedeBenPA?.errors?.error ==='notValid'">
+                                                    Telefono non valido.
+                                                </mat-error>
+                                                <mat-error *ngIf="telSedeBenPA?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DU' || beneficiario.tipoSoggGiur==='NA'">
+                                                <input matInput type="text" placeholder="Fax"
+                                                    [(ngModel)]="beneficiario.faxSedeLegale" name="faxSedeLegaleBen"
+                                                    #faxSedeBen="ngModel"
+                                                    [disabled]="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA' && !isCfConfirmedBen" />
+                                                <mat-error *ngIf="faxSedeBen?.errors?.error ==='notValid'">
+                                                    Fax non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='DR'">
+                                                <input matInput type="text" placeholder="Fax"
+                                                    [(ngModel)]="beneficiario.faxSedeLegaleDR" name="faxSedeLegaleBenDR"
+                                                    #faxSedeBenDR="ngModel" />
+                                                <mat-error *ngIf="faxSedeBenDR?.errors?.error ==='notValid'">
+                                                    Fax non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth marginRight10"
+                                                *ngIf="beneficiario.tipoSoggGiur==='PA'">
+                                                <input matInput type="text" placeholder="Fax"
+                                                    [(ngModel)]="beneficiario.faxSedeLegalePA" name="faxSedeLegaleBenPA"
+                                                    #faxSedeBenPA="ngModel" />
+                                                <mat-error *ngIf="faxSedeBenPA?.errors?.error ==='notValid'">
+                                                    Fax non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6"
+                                            *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA'">
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare un settore attività **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.settoreAttivita"
+                                                    name="settoreAttivitaBen" #settAttBen="ngModel"
+                                                    [disabled]="!isCfConfirmedBen"
+                                                    (selectionChange)="changeSettoreAttivitaBen()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of combo?.comboSettoreAttivita"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="settAttBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="alignItemsCenter"
+                                            *ngIf="beneficiario.tipoSoggetto==='EG' && beneficiario.tipoSoggGiur==='NA'">
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare un'attività Ateco **</mat-label>
+                                                <mat-select [(ngModel)]="beneficiario.attivitaAteco"
+                                                    name="attivitaAtecoBen" #attAtecoBen="ngModel"
+                                                    [disabled]="!beneficiario.settoreAttivita || !isCfConfirmedBen">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of attivitaAtecoBen"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="attAtecoBen?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="marginTop20">
+                                        <h4>Sedi intervento</h4>
+                                        <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Nessuna
+                                            sede associata.
+                                            <span class="bold-text">Per avviare il progetto, è necessario associare
+                                                almeno una sede intervento.</span>
+                                        </p>
+                                        <table mat-table [dataSource]="dataSource" class="fullWidth"
+                                            [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                                            <ng-container matColumnDef="piva">
+                                                <th mat-header-cell *matHeaderCellDef> P. IVA
+                                                </th>
+                                                <td mat-cell *matCellDef="let row"> {{row.partitaIva}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="indirizzo">
+                                                <th mat-header-cell *matHeaderCellDef> Indirizzo </th>
+                                                <td mat-cell *matCellDef="let row"> {{row.indirizzo}}
+                                                    <span *ngIf="row.numeroCivico">, {{row.numeroCivico}}</span>
+                                                    <span *ngIf="row.indirizzo"> - </span>
+                                                    {{row.cap}}
+                                                    <span *ngIf="row.cap"> - </span>
+                                                    {{row.comuneSede.descComune}}
+                                                    <span
+                                                        *ngIf="row.comuneSede.descProvincia">({{row.comuneSede.descProvincia}})</span>
+                                                    <span
+                                                        *ngIf="row.comuneSede.descComune || row.comuneSede.descProvincia">,
+                                                    </span>
+                                                    {{row.comuneSede.descNazione}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="email">
+                                                <th mat-header-cell *matHeaderCellDef> Email
+                                                </th>
+                                                <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="telefono">
+                                                <th mat-header-cell *matHeaderCellDef> Telefono
+                                                </th>
+                                                <td mat-cell *matCellDef="let row"> {{row.telefono}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="fax">
+                                                <th mat-header-cell *matHeaderCellDef> Fax
+                                                </th>
+                                                <td mat-cell *matCellDef="let row"> {{row.fax}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="azioni">
+                                                <th mat-header-cell *matHeaderCellDef></th>
+                                                <td mat-cell *matCellDef="let row; let i = index">
+                                                    <button mat-icon-button matTooltip="Elimina"
+                                                        (click)="eliminaSedeIntervento(i)">
+                                                        <mat-icon class="red-color">delete</mat-icon>
+                                                    </button>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index">
+                                            </tr>
+                                        </table>
+                                        <div class="spaceBetween">
+                                            <button mat-button class="button-style-1"
+                                                (click)="aggiungiSedeIntervento()">AGGIUNGI SEDE</button>
+                                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                                                [showFirstLastButtons]="true" #paginator
+                                                [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                                            </mat-paginator>
+                                        </div>
+                                    </div>
+
+                                </mat-step>
+                                <mat-step>
+                                    <ng-template matStepLabel>Rappresentante legale / Responsabile dell'intervento
+                                    </ng-template>
+                                    <div class="alignItemsCenter marginTop15">
+                                        <mat-form-field class="fullWidth marginRight10">
+                                            <input type="text" matInput placeholder="Codice Fiscale **"
+                                                [(ngModel)]="rappresentante.codiceFiscale" (keyup)="keyUpCfRappr()"
+                                                name="codiceFiscaleRappr" #cfRappr="ngModel" maxlength="16" />
+                                            <mat-error *ngIf="cfRappr?.errors?.error ==='notValidPF'">
+                                                Il codice fiscale non è formalmente corretto
+                                            </mat-error>
+                                            <mat-error *ngIf="cfRappr?.errors?.error ==='requiredAvvio'">
+                                                {{errorNecessarioAvvio}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div class="fullWidth">
+                                            <button mat-button class="button-style-1"
+                                                [disabled]="!rappresentante.codiceFiscale"
+                                                (click)="confermaCfRappr()">CONFERMA</button>
+                                        </div>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6 marginTop10">
+                                        <mat-form-field class="fullWidth marginRight10">
+                                            <input type="text" matInput placeholder="Cognome"
+                                                [(ngModel)]="rappresentante.cognome" name="cognomeRappr"
+                                                [disabled]="!isCfConfirmedRappr" />
+                                        </mat-form-field>
+                                        <mat-form-field class="fullWidth">
+                                            <input type="text" matInput placeholder="Nome"
+                                                [(ngModel)]="rappresentante.nome" name="nomeRappr"
+                                                [disabled]="!isCfConfirmedRappr" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="display-flex margin-bottom-6 marginTop10">
+                                        <mat-radio-group class="fullWidth alignItemsCenter"
+                                            [(ngModel)]="rappresentante.sesso" name="sessoRappr"
+                                            [disabled]="!isCfConfirmedRappr">
+                                            <mat-label class="marginRight10">Sesso</mat-label>
+                                            <mat-radio-button class="marginRight10" value="M">Maschio
+                                            </mat-radio-button>
+                                            <mat-radio-button value="F">Femmina</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div class="marginTop20">
+                                        <h4>Dati nascita</h4>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="marginRight10 dataSoggetti">
+                                                <mat-label>Data di nascita</mat-label>
+                                                <input matInput [matDatepicker]="picker4"
+                                                    [formControl]="rappresentante.dataNascita"
+                                                    [disabled]="!isCfConfirmedRappr">
+                                                <mat-datepicker-toggle matSuffix [for]="picker4">
+                                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker4></mat-datepicker>
+                                                <mat-error
+                                                    *ngIf="rappresentante.dataNascita?.errors?.error ==='maggioreToday'">
+                                                    La data non deve superare la data odierna
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.nazioneNascita"
+                                                    name="nazioneNascitaRappr" #nazNascRappr="ngModel"
+                                                    (selectionChange)="changeNazioneNascitaRappr()"
+                                                    [disabled]="!isCfConfirmedRappr">
+                                                    <mat-option *ngFor="let option of combo?.comboNazioneNascita"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="nazNascRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.regioneNascita"
+                                                    name="regioneNascitaRappr" #regNascRappr="ngModel"
+                                                    (selectionChange)="changeRegioneNascitaRappr()"
+                                                    [disabled]="rappresentante.nazioneNascita?.descEstesa!=='ITALIA' || !isCfConfirmedRappr">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniNascitaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="regNascRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.provinciaNascita"
+                                                    name="provinciaNascitaRappr" #provNascRappr="ngModel"
+                                                    (selectionChange)="changeProvinciaNascitaRappr()"
+                                                    [disabled]="!rappresentante.regioneNascita || !isCfConfirmedRappr">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceNascitaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="provNascRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="rappresentante.nazioneNascita?.descEstesa==='ITALIA'">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.comuneNascita"
+                                                    name="comuneNascitaRappr" #comNascRappr="ngModel"
+                                                    [disabled]="!rappresentante.provinciaNascita">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniNascitaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comNascRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="rappresentante.nazioneNascita?.descEstesa!=='ITALIA'">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.comuneNascita"
+                                                    name="comuneNascitaEsteroRappr" #comNascEstRappr="ngModel">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniNascitaEsteriRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comNascEstRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="marginTop20">
+                                        <h4>Dati residenza</h4>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Indirizzo **"
+                                                    [(ngModel)]="rappresentante.indirizzoResidenza"
+                                                    name="indirizzoResidenzaRappr" #indResRappr="ngModel"
+                                                    [disabled]="!isCfConfirmedRappr" />
+                                                <mat-error *ngIf="indResRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <div class="fullWidth">
+                                                <mat-form-field class="marginRight10 width-40-perc">
+                                                    <input matInput type="text" placeholder="N. civico **"
+                                                        [(ngModel)]="rappresentante.civicoResidenza"
+                                                        name="civicoResidenzaRappr" #civResRappr="ngModel"
+                                                        [disabled]="!isCfConfirmedRappr" />
+                                                    <mat-error *ngIf="civResRappr?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="marginRight10 width-40-perc">
+                                                    <input matInput type="text" placeholder="CAP **"
+                                                        [(ngModel)]="rappresentante.capResidenza"
+                                                        name="capResidenzaRappr" #capResRappr="ngModel"
+                                                        [disabled]="!isCfConfirmedRappr" maxlength="5" />
+                                                    <mat-error *ngIf="capResRappr?.errors?.error ==='notValid'">
+                                                        CAP non valido.
+                                                    </mat-error>
+                                                    <mat-error *ngIf="capResRappr?.errors?.error ==='requiredAvvio'">
+                                                        {{errorNecessarioAvvio}}
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una nazione **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.nazioneResidenza"
+                                                    name="nazioneResidenzaRappr" #nazResRappr="ngModel"
+                                                    (selectionChange)="changeNazioneResidenzaRappr()"
+                                                    [disabled]="!isCfConfirmedRappr">
+                                                    <mat-option *ngFor="let option of combo?.comboNazione"
+                                                        [value]="option">
+                                                        {{ option.descEstesa }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="nazResRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <mat-label>Selezionare una regione **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.regioneResidenza"
+                                                    name="regioneResidenzaRappr" #regResRappr="ngModel"
+                                                    [disabled]="rappresentante.nazioneResidenza?.descEstesa!=='ITALIA' || !isCfConfirmedRappr"
+                                                    (selectionChange)="changeRegioneResidenzaRappr()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of regioniResidenzaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="regResRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <mat-label>Selezionare una provincia **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.provinciaResidenza"
+                                                    name="provinciaResidenzaRappr" #provResRappr="ngModel"
+                                                    [disabled]="!rappresentante.regioneResidenza || !isCfConfirmedRappr"
+                                                    (selectionChange)="changeProvinciaResidenzaRappr()">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of provinceResidenzaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="provResRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="rappresentante.nazioneResidenza?.descEstesa==='ITALIA'">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.comuneResidenza"
+                                                    name="comuneResidenzaRappr" #comResRappr="ngModel"
+                                                    [disabled]="!rappresentante.provinciaResidenza || !isCfConfirmedRappr">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniResidenzaRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comResRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth"
+                                                *ngIf="rappresentante.nazioneResidenza?.descEstesa!=='ITALIA'">
+                                                <mat-label>Selezionare un comune **</mat-label>
+                                                <mat-select [(ngModel)]="rappresentante.comuneResidenza"
+                                                    name="comuneResidenzaEsteroRappr" #comResEstRappr="ngModel"
+                                                    [disabled]="!isCfConfirmedRappr">
+                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let option of comuniResidenzaEsteriRappr"
+                                                        [value]="option">
+                                                        {{ option.descrizione }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="comResEstRappr?.errors?.error ==='requiredAvvio'">
+                                                    {{errorNecessarioAvvio}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Email"
+                                                    [(ngModel)]="rappresentante.email" name="emailRappr"
+                                                    [disabled]="!isCfConfirmedRappr" #mailRappr="ngModel" />
+                                                <mat-error *ngIf="mailRappr?.errors?.error ==='notValid'">
+                                                    Indirizzo e-mail non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <div class="fullWidth"></div>
+                                        </div>
+                                        <div class="display-flex margin-bottom-6">
+                                            <mat-form-field class="fullWidth marginRight10">
+                                                <input matInput type="text" placeholder="Telefono"
+                                                    [(ngModel)]="rappresentante.telefono" name="telefonoRappr"
+                                                    #telRappr="ngModel" maxlength="20"
+                                                    [disabled]="!isCfConfirmedRappr" />
+                                                <mat-error *ngIf="telRappr?.errors?.error ==='notValid'">
+                                                    Telefono non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="fullWidth">
+                                                <input matInput type="text" placeholder="Fax"
+                                                    [(ngModel)]="rappresentante.fax" name="faxRappr"
+                                                    [disabled]="!isCfConfirmedRappr" #faxRapp="ngModel" />
+                                                <mat-error *ngIf="faxRapp?.errors?.error ==='notValid'">
+                                                    Fax non valido.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-step>
+                            </form>
+                        </mat-horizontal-stepper>
+                    </mat-tab>
+                    <mat-tab label="DATI SIF" *ngIf="isBandoSif">
+                        <div class="marginTop20">
+                            <p>(*) obbligatorio</p>
+                            <p>(**) necessario per avviare il progetto</p>
+                        </div>
+                        <form #datiSifForm="ngForm">
+                            <div class="display-flex margin-bottom-6">
+                                <mat-form-field class="marginRight10 dataDatiSif">
+                                    <mat-label>Data della firma dell'accordo **</mat-label>
+                                    <input matInput [matDatepicker]="picker6" [formControl]="datiSif.dataFirmaAccordo">
+                                    <mat-datepicker-toggle matSuffix [for]="picker6">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker6></mat-datepicker>
+                                    <mat-error *ngIf="datiSif.dataFirmaAccordo?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="dataDatiSif">
+                                    <mat-label>Data di completamento della valutazione ex-ante **</mat-label>
+                                    <input matInput [matDatepicker]="picker7" [formControl]="datiSif.dataComplValut">
+                                    <mat-datepicker-toggle matSuffix [for]="picker7">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker7></mat-datepicker>
+                                    <mat-error *ngIf="datiSif.dataComplValut?.errors?.error ==='requiredAvvio'">
+                                        {{errorNecessarioAvvio}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </form>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <div class="flexEnd marginBottom20">
+            <button mat-stroked-button class="button-style-3" (click)="salvaVerifica()">SALVA</button>
+        </div>
+    </div>
+</div>

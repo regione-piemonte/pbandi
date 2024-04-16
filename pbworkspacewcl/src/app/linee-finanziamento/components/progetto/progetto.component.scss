@@ -1,0 +1,80 @@
+.linea {
+    p {
+        margin: 0px;
+        font-size: 16px;
+        display: inline;
+    }
+
+    span {
+        font-weight: bold;
+        font-size: 16px;
+    }
+}
+
+.display-flex {
+    display: flex;
+}
+
+::ng-deep.mat-horizontal-stepper-header-container {
+    width: 50%;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.marginTop15 {
+    margin-top: 15px;
+}
+
+.dataDatiGenerali {
+    width: 230px;
+}
+
+.dataSoggetti {
+    width: 130px;
+}
+
+.dataCostituzione {
+    width: 140px;
+}
+
+.dataDatiSif {
+    width: 360px;
+}
+
+.width-40-perc {
+    width: 40%;
+}
+
+.width-50-perc {
+    width: 50%;
+}
+
+h3 {
+    margin-top: 20px;
+}
+
+h4 {
+    font-weight: bold;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+.font-size-15 {
+    font-size: 15px !important;
+}
+
+.font-size-10-5 {
+    font-size: 10.5px;
+}
+
+.padding-left-3 {
+    padding-left: 3px;
+}
+
+.margin-bottom-6 {
+    margin-bottom: 6px;
+}

@@ -1,0 +1,40 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone':isLoading()}" *ngIf="news?.length>0">
+    <div class="display-flex justify-content-center">
+        <div class="display-flex align-items-center width-100-perc margin-bottom-20 max-width-1020">
+            <button [ngClass]="{'visibility-hidden':isSingleNews}" mat-icon-button (click)="newsPrecedente()"
+                appEllipsis class="arrow">
+                <mat-icon class="padding-left-15">arrow_back_ios</mat-icon>
+            </button>
+            <div class="content width-100-perc margin-0 max-width-89-perc">
+                <mat-card
+                    [ngClass]="{'messageInfo': currentNews?.tipoNews==='INFO','messageWarning': currentNews?.tipoNews==='WARN'}">
+                    <mat-card-content
+                        [ngClass]="{'messagInfoContent': currentNews?.tipoNews==='INFO','messageWarningContent': currentNews?.tipoNews==='WARN'}">
+                        <div class="display-flex align-items-center justify-content-space-between">
+                            <h3 class="bold-text margin-bottom-5">{{currentNews?.titolo}}</h3>
+                            <p class="margin-bottom-5 font-size-12">{{currentNews?.dtInizio | date: "dd/MM/yyyy"}}</p>
+                        </div>
+
+                        <p id="ellipsisP" class="text-overflow-ellipsis overflow-hidden display-2-lines">
+                            {{currentNews?.descrizione}}</p>
+                        <div class="display-flex align-items-center"
+                            [ngClass]="{'justify-content-space-between': !isSingleNews, 'justify-content-flex-end': isSingleNews}">
+                            <p *ngIf="!isSingleNews" class="margin-0 font-size-12">{{ (currentNewsIndex + 1) }} di
+                                {{news?.length}}
+                            </p>
+                            <div id="leggiTutto">
+                                <button mat-button class="button-style-1 color-black" (click)="leggiTutto()">Leggi
+                                    tutto</button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <button [ngClass]="{'visibility-hidden':isSingleNews}" mat-icon-button (click)="newsSuccessiva()"
+                appEllipsis class="arrow">
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

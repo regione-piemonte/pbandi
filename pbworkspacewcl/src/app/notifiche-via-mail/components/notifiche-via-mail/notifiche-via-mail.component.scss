@@ -1,0 +1,52 @@
+.page {
+    .content {
+        mat-card-content {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+}
+
+.textBold {
+    font-weight: bold;
+}
+
+.blueText {
+    color: #0060C1;
+}
+.paddingLeft10 {
+    padding-left: 10px;
+}
+
+.paddingTop10 {
+    padding-top: 10px;
+}
+
+.margin0 {
+    margin: 0px !important;
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+p {
+    font-size: 15px;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060C1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color:  #0058B1 !important; /*click effect color change*/
+}
+

@@ -1,0 +1,62 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+td {
+    vertical-align: top;
+    padding: 0;
+}
+
+.padding-left-2-px {
+    padding-left: 2px;
+}
+
+.width-190-px {
+    width: 190px;
+}
+
+.width-30-px {
+    width: 30px;
+}
+
+.width-157-px {
+    width: 157px;
+}
+
+.height-300-px {
+    height: 300px;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+::ng-deep .mat-radio-label {
+    white-space: normal !important;
+}
+
+::ng-deep .mat-radio-container {
+    align-self: normal !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

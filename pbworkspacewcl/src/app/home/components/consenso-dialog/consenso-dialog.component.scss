@@ -1,0 +1,37 @@
+.bold-text {
+    font-weight: bold;;
+}
+
+.blueText {
+    color: #0060C1;
+}
+
+.noUnderline {
+    text-decoration: none !important;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.displayNone {
+    display: none;
+}
+
+.flexDirectionColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.alignItemsCenter {
+    align-items: center;
+}
+
+mat-radio-button {
+    margin: 5px 0px 5px 0px;
+}
+
+.justifyContentFlexEnd {
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,0 +1,55 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
+export class InformazioniBase {
+    constructor(
+        public titoloProgetto: string,
+        public numeroDomanda: string,
+        public cup: string,
+        public dataDecorrenza: string,
+        public dataGenerazione: string,
+        public dataConcessione: string,
+        public dataComitato: string,
+        public idSettoreAttivita: string,
+        public idAttivitaAteco: string,
+        public idPrioritaQsn: string,
+        public idObiettivoGeneraleQsn: string,
+        public idObiettivoSpecificoQsn: string,
+        public idStrumentoAttuativo: string,
+        public idSettoreCpt: string,
+        public idTemaPrioritario: string,
+        public idIndicatoreRisultatoProgramma: string,
+        public idIndicatoreQsn: string,
+        public idTipoAiuto: string,
+        public idTipoStrumentoProgrammazione: string,
+        public idDimensioneTerritoriale: string,
+        public idProgettoComplesso: string,
+        public idSettoreCipe: string,
+        public idSottoSettoreCipe: string,
+        public idCategoriaCipe: string,
+        public idNaturaCipe: string,
+        public idTipologiaCipe: string,
+        public flagCardine: string,
+        public flagGeneratoreEntrate: string,
+        public flagLeggeObiettivo: string,
+        public flagAltroFondo: string,
+        public flagStatoProgettoProgramma: string,
+        public flagDettaglioCup: string,
+        public idTipoOperazione: string,
+        public flagAggiungiCup: string,
+        public flagBeneficiarioCup: string,
+        public annoConcessioneOld: string,
+        public dataPresentazioneDomanda: string,
+        public flagProgettoDaInviareAlMonitoraggio: string,
+        public flagRichiestaAutomaticaDelCup: string,
+        public idObiettivoTematico: string,
+        public idClassificazioneRA: string,
+        public idGrandeProgetto: string,
+        public flagPPP: string,
+        public flagStrategico: string,
+        public dtFirmaAccordo: Date,
+        public dtCompletamentoValutazione: Date
+    ) { }
+}

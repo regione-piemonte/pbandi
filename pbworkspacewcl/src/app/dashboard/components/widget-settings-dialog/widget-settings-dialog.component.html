@@ -1,0 +1,70 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Impostazioni {{widget.titoloWidget}}</h3>
+        <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <form>
+        <mat-form-field [formGroup]="bandoGroup" class="width-100-perc">
+            <input type="text" placeholder="Selezionare un bando" aria-label="Number" matInput
+                formControlName="bandoControl" [matAutocomplete]="auto" (blur)="check()">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
+                (optionSelected)="click($event)">
+                <mat-option *ngFor="let option of filteredBandiOptions | async" [value]="option">
+                    {{option.nomeBandoLinea}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <button mat-raised-button class="button-style-2 float-right" (click)="associa()"
+            [disabled]="!bandoSelected?.value">ASSOCIA</button>
+    </form>
+    <br />
+    <br />
+    <h4 class="bold-text">Bandi associati</h4>
+
+    <p *ngIf="!(dataSource?.data?.length>0)">Nessun dato da visualizzare</p>
+
+    <table mat-table [dataSource]="dataSource" class="width-100-perc"
+        [ngClass]="{'display-none': !(dataSource?.data?.length>0)}">
+
+        <ng-container matColumnDef="nomeBandoLinea">
+            <th mat-header-cell *matHeaderCellDef> Nome bando </th>
+            <td mat-cell *matCellDef="let row"> {{row.nomeBandoLinea}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="azioni">
+            <th mat-header-cell *matHeaderCellDef style="width: 12%;"> </th>
+            <td mat-cell *matCellDef="let row" style="width: 12%;">
+                <button mat-icon-button matTooltip="Disassocia" class="red-color" (click)=" elimina(row)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator #paginatorNotifiche [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+        [showFirstLastButtons]="true" [ngClass]="{'display-none': !(dataSource?.data?.length>0)}">
+    </mat-paginator>
+
+    <button class="button-style-1" mat-button mat-dialog-close>
+        CHIUDI
+    </button>
+</div>

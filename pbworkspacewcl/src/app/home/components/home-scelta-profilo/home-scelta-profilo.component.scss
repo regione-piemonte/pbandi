@@ -1,0 +1,60 @@
+
+
+      .scelta {
+
+        margin:0 auto !important;
+        max-width:900px;
+
+        .content{
+          padding: 0;
+          margin: 0 -12px !important;
+
+          @media (max-width: 992px){
+            margin:0 !important;
+          }
+
+          button {
+            height: 70px;
+            background-color: #0060C1;
+            color:  #FFFFFF;
+            width: 48%;
+            margin:0 1% 20px 1%;
+            float: left;
+
+            .insideButton {
+              display: flex;
+              align-items: center;
+
+              .arrow {
+                  flex-grow: 1;
+                  text-align: end;
+              }
+
+            }
+
+            @media (max-width: 992px){
+              width: 100%;
+              float: none;
+              margin:0 0 10px 0;
+
+              .operatoreText {
+                font-size: 16px;
+              }
+
+          }
+
+
+          }//button
+
+            .operatoreText {
+              font-size: 18px;
+              font-weight: bold;
+            }
+
+          }//content
+        }//scelta
+
+
+
+
+

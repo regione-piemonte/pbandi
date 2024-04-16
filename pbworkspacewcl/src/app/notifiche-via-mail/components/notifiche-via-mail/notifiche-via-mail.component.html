@@ -1,0 +1,113 @@
+<div class="page">
+    <mat-spinner-pbandi *ngIf="isLoading(); else pageContent"></mat-spinner-pbandi>
+    <ng-template #pageContent>
+        <div class="title">
+            <h2>Report via email</h2>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+                <mat-card-content class="messageSuccessContent">
+                    <p>{{messageSuccess}}</p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                <mat-card-content class="messageErrorContent">
+                    <p>{{messageError}}</p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <h2 class="textBold">Report 'notifiche progetti'</h2>
+                    <p>I report 'notifiche progetti' sono resoconti che vengono elaborati dal sistema e trasmessi via
+                        mail permettendo il controllo di particolari classi di progetti soggette a possibili criticità.
+                    </p>
+                    <p>Indicare di seguito un indirizzo e-mail al quale si desidera che vengano inviate le notifiche.
+                    </p>
+                    <form #ricercaForm="ngForm" (submit)="salvaEmail()">
+                        <mat-form-field style="width: 40%; padding-right: 10px;">
+                            <input type="email" email placeholder="e-mail" [(ngModel)]="email" matInput name="mail"
+                                #mail=ngModel
+                                pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+                                [disabled]="isEmailSaved && isEmailEditable">
+                            <mat-error *ngIf="mail.invalid && (mail.dirty || mail.touched)">
+                                Indirizzo e-mail non valido.
+                            </mat-error>
+                        </mat-form-field>
+                        <button class="button-style-1 margin0" mat-button type="button" (click)="modificaEmail()"
+                            *ngIf="isEmailEditable">
+                            MODIFICA
+                        </button>
+                        <button class="button-style-1 margin0" mat-button type="submit"
+                            *ngIf="!isEmailSaved || !isEmailEditable"
+                            [disabled]="email==null || email.length===0 || mail.errors">
+                            SALVA
+                        </button>
+                    </form>
+                    <p>Selezionare la tipologia di notifica da abilitare e la frequenza di invio per poter gestire i
+                        progetti da monitorare.</p>
+
+                    <p class="alert alert-warning"><span class="textBold">Attenzione!</span> Disabilitando una tipologia
+                        di notifica, al salvataggio
+                        cancellati tutti i progetti da monitorare ad essa associati</p>
+
+                    <table mat-table [dataSource]="dataSource">
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef class="radio">
+                                <mat-checkbox (change)="selectAllCheckbox($event)" [(ngModel)]="allChecked">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="radio">
+                                <mat-checkbox value="{{row.selected}}" [(ngModel)]="row.selected"></mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipologia">
+                            <th mat-header-cell *matHeaderCellDef style="width: 60%;"> Tipologia </th>
+                            <td mat-cell *matCellDef="let row" style="width: 60%;">
+                                {{row.descrNotifica}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="frequenza">
+                            <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Frequenza invio
+                            </th>
+                            <td mat-cell *matCellDef="let row" style="width: 15%;">
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="row.idFrequenza" name="freq" [disabled]="!row.selected">
+                                        <mat-option *ngFor="let option of frequenze" [value]="option.idFrequenza">
+                                            {{option.descrFrequenza}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="azioni">
+                            <th mat-header-cell *matHeaderCellDef style="width: 5%;"></th>
+                            <td mat-cell *matCellDef="let row" class="paddingLeft10" style="width: 5%;">
+                                <button mat-icon-button matTooltip="Gestisci progetti da monitorare" class="blueText"
+                                    style="width: 30px;"
+                                    *ngIf="row.hasProgettiAssociated==='S' && row.idSoggettoNotifica!==0"
+                                    (click)="openAssociaProgetto(row.idSoggettoNotifica)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <div class="flexEnd paddingTop10">
+                        <div matTooltip="Compilare l'indirizzo email per poter salvare"
+                            [matTooltipDisabled]="isEmailSaved">
+                            <button class="button-style-2" mat-raised-button (click)="associateNotificheIstruttore()"
+                                [disabled]="!isEmailSaved">
+                                SALVA
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,83 @@
+.page {
+  overflow: auto;
+  height: 100%;
+
+  .operatore {
+    margin: 0 auto 30px auto !important;
+    max-width: 900px;
+
+    .content {
+      margin: 0 -12px !important;
+
+      @media (max-width: 992px) {
+        margin: 0 !important;
+      }
+
+      mat-card {
+        margin: 0 1% 20px 1%;
+      }
+
+      button {
+        width: 48%;
+        height: 112px;
+        margin: 0 1% 20px 1%;
+        float: left;
+
+        @media (max-width: 992px) {
+          width: 100%;
+          margin: 0 0 10px 0;
+          float: none;
+        }
+
+        .insideButton {
+          display: flex;
+          align-items: center;
+          padding-left: 10px;
+          height: 100%;
+          width: 100%;
+
+          span {
+            padding-left: 20px;
+          }
+
+          mat-icon {
+            padding-left: 10px;
+          }
+        }
+      } //button
+    } //content
+
+    @media (max-width: 992px) {
+      margin: 0 24px 24px 24px !important;
+    }
+  } //operatore
+} //page
+
+.operazioniText {
+  font-size: 20px;
+  font-weight: bold;
+  white-space: break-spaces;
+  text-align: left;
+}
+
+.messageSuccessContent {
+  display: flex;
+  align-items: center;
+
+  p {
+    margin-bottom: 0px;
+  }
+}
+
+.transparent-button {
+  background-color: transparent !important;
+  border: 0px !important;
+
+  &:focus {
+    outline: 0px !important;
+  }
+}
+
+.height-0 {
+  height: 0 !important;
+}

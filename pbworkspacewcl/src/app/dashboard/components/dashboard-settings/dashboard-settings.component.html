@@ -1,0 +1,57 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToHome()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla home</span>
+            </button>
+        </div>
+
+        <h2>Impostazioni</h2>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <p>Decidi quali <span class="bold-text">widget</span> del tuo profilo attivare e rendere visibili nella
+                    tua area personale e configura i dati da visualizzare modificando le <span class="bold-text">
+                        impostazioni</span>.</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-grid-list cols="3" rowHeight="180">
+                    <mat-grid-tile colspan="1" *ngFor="let widget of widgets">
+                        <div class="margin-right-20 height-100-perc">
+                            <div class="display-flex justify-content-space-between">
+                                <h3>{{widget.titoloWidget}}</h3>
+                                <mat-slide-toggle [checked]="widget.flagWidgetAttivo"
+                                    (change)="changeToggleWidget(widget, $event)"></mat-slide-toggle>
+                            </div>
+                            <p>{{widget.descWidget}}</p>
+                            <button *ngIf="widget.flagWidgetAttivo && widget.flagModifica" mat-button
+                                class="button-style-1" (click)="impostazioniWidget(widget)">MODIFICA</button>
+                        </div>
+                    </mat-grid-tile>
+
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

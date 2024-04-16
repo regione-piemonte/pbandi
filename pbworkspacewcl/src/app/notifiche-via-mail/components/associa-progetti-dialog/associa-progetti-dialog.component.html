@@ -1,0 +1,76 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading(); else pageContent"></mat-spinner-pbandi>
+<ng-template #pageContent>
+    <div class="title">
+        <h3 class="bold-text">Associa Progetti</h3>
+        <button mat-icon-button (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div class="messageSuccess" *ngIf="isMessageSuccessVisible">
+        <div class="messageSuccessContent">
+            <p>{{messageSuccess}}</p>
+        </div>
+    </div>
+    <div class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <div class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </div>
+    </div>
+    <form #ricercaForm="ngForm" (ngSubmit)="viewAll()">
+        <div class="contentFilter">
+            <div class="input">
+                <mat-form-field>
+                    <input type="text" placeholder="Bando" [(ngModel)]="bando" matInput name="bando"
+                        (keyup)="filterBando()">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" placeholder="Progetto" [(ngModel)]="progetto" matInput name="progetto"
+                        (keyup)="filterProgetto()">
+                </mat-form-field>
+            </div>
+            <button class="button-style-1" mat-button type="submit" *ngIf="!allVisible">
+                VISUALIZZA TUTTI
+            </button>
+        </div>
+    </form>
+    <div *ngIf="allVisible || filteredVisible">
+        <div class="contentResults">
+            <div class="column" *ngFor="let bando of bandiProgettiFiltered">
+                <div class="row">
+                    <button mat-icon-button [attr.aria-label]="'Toggle ' + bando.nomeBandoLinea"
+                        (click)="bando.isExpanded = !bando.isExpanded">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                            {{bando.isExpanded ? 'expand_less' : 'expand_more'}}
+                        </mat-icon>
+                    </button>
+                    <div class="column">
+                        <div class="bold-text">
+                            {{bando.nomeBandoLinea}}
+                        </div>
+                        <div *ngIf="bando.isExpanded">
+                            <mat-checkbox class="bold-text" [(ngModel)]="bando.allSelected"
+                                name="all {{bando.progrBandoLineaIntervento}}"
+                                (change)="selectAll(bando.progrBandoLineaIntervento)">SELEZIONA
+                                TUTTI I PROGETTI DEL BANDO</mat-checkbox>
+                            <div *ngFor="let progetto of bando.progetti">
+                                <mat-checkbox [(ngModel)]="progetto.isAssociated"
+                                    name="progetto {{progetto.idProgetto}}">
+                                    {{progetto.codiceVisualizzato}} - {{progetto.titoloProgetto}}
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+        <div class="marginTop10 marginRight25 spaceBetween">
+            <button class="button-style-1" mat-button type="button" (click)="close()">
+                ANNULLA
+            </button>
+            <button class="button-style-2" mat-raised-button type="button" (click)="salva()">
+                SALVA
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,13 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Dettaglio notifica</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<p class="bold-text">{{notifica.subjectNotifica}}</p>
+<div [innerHTML]="notifica.messageNotifica"></div>
+<div class="textAlignRight">
+    <button class="button-style-1" mat-button (click)="close()">
+        CHIUDI
+    </button>
+</div>

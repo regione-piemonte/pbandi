@@ -1,0 +1,84 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Beneficiario presente a sistema</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+Con il Codice Fiscale: {{codiceFiscale}} sono state trovate a sistema le seguenti anagrafiche:
+<br>
+Selezionare un'anagrafica esistente per non duplicare i dati dello stesso soggetto.
+
+<div class="overflow-auto height-300-px">
+    <table mat-table [dataSource]="dataSource" class="fullWidth marginTop20"
+        [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+        <ng-container matColumnDef="radio">
+            <td mat-cell *matCellDef="let row">
+                <mat-radio-group [(ngModel)]="beneficiarioSelected">
+                    <mat-radio-button [value]="row"></mat-radio-button>
+                </mat-radio-group>
+        </ng-container>
+
+        <ng-container matColumnDef="desc">
+            <td mat-cell *matCellDef="let row; let i = index;">
+                <table class="fullWidth">
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Denominazione</td>
+                        <td>{{row.denominazioneEnteGiuridico}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">IBAN</td>
+                        <td>{{row.iban}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Data costituzione azienda</td>
+                        <td>{{row.dtCostituzione | date: "dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Forma giuridica</td>
+                        <td>{{row.descFormaGiuridica}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Settore attività</td>
+                        <td>{{row.descSettore}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Attività ATECO</td>
+                        <td>{{row.descAteco}}</td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-align-right width-30-perc">Sede Legale</td>
+                        <td>
+                            <mat-radio-group [(ngModel)]="row.sedeSelected" name="sede{{i}}" class="fullWidth">
+                                <mat-radio-button *ngFor="let sede of row.sediLegali" [value]="sede" class="fullWidth">
+                                    P. Iva {{sede.partitaIva}}
+                                    <br>
+                                    <span *ngIf="sede.descIndirizzo && sede.descComune">{{sede.descIndirizzo}},
+                                        {{sede.civico}} - {{sede.cap}} - {{ sede.descComune}},
+                                        {{sede.descNazione}}<br></span>
+                                    <span *ngIf="sede.descIndirizzo && sede.descComuneEstero">{{sede.descIndirizzo}}
+                                        {{sede.civico}} - {{ sede.cap}} - {{sede.descComuneEstero}},
+                                        {{sede.descNazione}}<br></span>
+                                    <span *ngIf="sede.email"> {{sede.email}}</span>
+                                    <span *ngIf="sede.email && (sede.telefono || sede.fax)"> - </span>
+                                    <span *ngIf="sede.telefono"> tel. {{sede.telefono}}</span>
+                                    <span *ngIf="sede.telefono && sede.fax"> - </span>
+                                    <span *ngIf="sede.fax"> fax {{sede.fax}}</span>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></tr>
+    </table>
+</div>
+
+<div class="flexEnd marginTop20">
+    <button class="button-style-1 marginRight10" mat-button (click)="close()">ANNULLA</button>
+    <button class="button-style-2" mat-raised-button (click)="seleziona()">
+        SELEZIONA
+    </button>
+</div>
