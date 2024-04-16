@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+<!-- PK : non lo specifico cosi' vengono presi 30 min di default
+	<session-config>
+		<session-timeout>2</session-timeout>
+	</session-config>
+-->
+	<listener>
+		<listener-class>it.csi.pbandi.pbworkspace.util.AppServletContextListener</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml /WEB-INF/applicationContext-pbservizit.xml </param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- filtro di protezione ad attacchi XSRF -->
+	<filter>
+		<filter-name>XSRFProtectionFilter</filter-name>
+		<filter-class>it.csi.pbandi.pbworkspace.filter.XSRFProtectionFilter</filter-class>
+		<init-param>
+			<param-name>disabled</param-name>
+			<param-value>${XSRFFILTER.DISABLED}</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>XSRFProtectionFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- filtro di recepimento token autenticazione -->
+	<filter>
+		<filter-name>IrideIdAdapterFilter</filter-name>
+		<filter-class>it.csi.pbandi.pbworkspace.filter.IrideIdAdapterFilter</filter-class>
+		<init-param>
+			<param-name>devmode</param-name>
+			<param-value>${IDADAPTERFILTER.DEVMODE}</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>IrideIdAdapterFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+
+	<!-- replica della sessione (pur essendo i servizi stateless, serve per 
+		replicare il contesto di autenticazione e il token xsrf, quindi e' necessario 
+		solo nello scenario SPA-REST -->
+	<distributable />  
+
+</web-app>
