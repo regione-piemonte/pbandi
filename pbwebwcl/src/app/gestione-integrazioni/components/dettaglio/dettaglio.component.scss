@@ -1,0 +1,26 @@
+table {
+    width: 100%;
+  }
+  
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .tableDoc {
+    th,
+    td {
+        width: 11%;
+        color: #000;
+    }
+
+    th {
+        font-weight: bold;
+        padding-right: 10px;
+        color: #000;
+    }
+}
+
+.end{
+  display: flex;
+  justify-content: flex-end;
+}

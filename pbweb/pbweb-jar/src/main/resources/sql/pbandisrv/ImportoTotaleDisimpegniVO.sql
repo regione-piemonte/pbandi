@@ -1,0 +1,1 @@
+SELECT id_progetto, SUM(importo) importo_totale_disimpegni FROM PBANDI_T_REVOCA GROUP BY id_progetto

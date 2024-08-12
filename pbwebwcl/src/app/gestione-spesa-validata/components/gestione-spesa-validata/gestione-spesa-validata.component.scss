@@ -1,0 +1,96 @@
+.row {
+    display: flex;
+
+    .col50 {
+        width: 48%;
+    }
+
+    .col25 {
+        width: 24%;
+    }
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.alignItemsCenter {
+    display: flex !important;
+    align-items: center;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.width-30px {
+    width: 30px;
+}
+
+.margin0 {
+    margin: 0px;
+}
+
+.margin-top-0 {
+    margin-top: 0 !important;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.marginLeft4 {
+    margin-left: 4px;
+}
+
+.marginLeft5 {
+    margin-left: 5px;
+}
+
+.marginLeft10 {
+    margin-left: 10px;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.marginBottom20 {
+    margin-bottom: 20px;
+}
+
+.green-color {
+    color: #065c00;
+}
+
+.purple-color {
+    color: #90f;
+}
+
+.width-40 {
+    width: 40%;
+}
+
+mat-grid-tile {
+    div {
+        width: 100%;
+    }
+}
+
+.width-30-perc {
+    width: 30%;
+}

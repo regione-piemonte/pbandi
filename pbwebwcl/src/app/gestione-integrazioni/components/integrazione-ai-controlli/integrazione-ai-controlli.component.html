@@ -1,0 +1,179 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading"></mat-spinner-pbandi>
+<div class="page" *ngIf="!isLoading" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a gestione integrazioni</span>
+            </button>
+        </div>
+        <div class="content"*ngIf="messaggioLettera === true">
+            <mat-card-content class="messageError">
+            <p >ATTENZIONE</p>
+            <span>E' necessario inserire la lettera accompagnatoria prima di procedere con la conferma</span>
+            </mat-card-content>
+          </div>
+          <div mat-dialog-content *ngIf="!isLoading">
+            <div class="content"*ngIf="showError">
+              <mat-card-content class="messageError">
+              <p >ERRORE</p>
+              <span>{{messageError}}</span>
+              </mat-card-content>
+            </div>
+            <div class="content" *ngIf="showSucc">
+                <mat-card-content class="messageSuccess">
+                <p >SUCCESSO</p>
+                <span>{{messageSuccess}}</span>
+                </mat-card-content>
+            </div>
+          </div>
+        <div class="reportingContainerUp" >
+            <h2>Integrazione controlli in loco </h2>
+        </div>
+        <mat-divider></mat-divider> 
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+            <mat-card-content class="padding-left-10">
+                <span>
+                    <table class="content-table" style="font-size: 16px; padding-top: 1em;">
+                        <tr>
+                            <td>Beneficiario: <b>{{user?.beneficiarioSelezionato.denominazione}}</b></td>
+                        </tr>
+                        <tr >
+                            <td style="padding-top: 1em; padding-bottom:1em;">Codice progetto: <b>{{codiceProgetto}}</b></td>
+                        </tr>
+                    </table>
+                </span>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+      <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+        <mat-card-content class="padding-left-10">
+          <div>
+            <div class="reportingContainerUp" >
+              <h2>Sezione " <b>Allegati Istruttore</b> "</h2>
+            </div>
+            <mat-card-title>
+                <span *ngFor="let lettera of lettaraIstruttore" style="display: flex;align-items: baseline;">
+                <h3> <b>Lettera inviata da Istruttore : </b>  {{lettera.nomeFile}}</h3>
+                <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(lettera)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                </span>
+            </mat-card-title>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+
+
+    <div class="content">
+      <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+        <mat-card-content class="padding-left-10">
+            <span>
+              <div class="reportingContainerUp" >
+                <h2>Sezione " <b>Allegati</b> "</h2>
+              </div>
+                <div style="display: flex; margin-top: 3em;">
+                  <div class="row">
+                    <div class="col">
+                        <button [disabled]="allegatoDaSalvare?.length > 0  || letteraAccompagnatoria?.length > 0" mat-button class="button-style-2" type='button' (click)="aggiungiAllegato()">AGGIUNGI
+                          LETTERA ACCOMPAGNATORIA 
+                        </button>
+                    </div>
+                  </div>
+                </div>
+                <!--LETTERA ACCOMPAGNATORIA INIZIO-->
+                  <div>
+                    <ul>
+                      <li *ngFor="let file of allegatoDaSalvare; let i = index">
+                        <div class="alignItemsCenter">
+                         <!-- <span> <a href="" (click)="scaricaFile(file)">{{file.nome}} - {{file.dimensione}} </a></span> -->
+                          <span class="bold-text">{{file.nome}}</span>
+                          <button mat-icon-button class="blue-color" matTooltip="Elimina" (click)="rimuoviAllegatoDaSalvare(file.idDocumentoIndex)">
+                            <mat-icon>link_off</mat-icon>
+                          </button>
+                          <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(file)">
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+              
+                  <div>
+                    <ul>
+                      <li *ngFor="let files of letteraAccompagnatoria; let y = index">
+                        <div class="alignItemsCenter">
+                       <!--   <span> <a href="" (click)="scaricaFile(file)">{{files.nome}} - {{files.dimensione}} </a></span> -->
+                          <span class="bold-text">{{files.nomeFile}}</span>
+                          <button mat-icon-button class="blue-color" matTooltip="Elimina" (click)="deleteAllegato(files.idFileEntita)">
+                            <mat-icon>link_off</mat-icon>
+                          </button>
+                          <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(files)">
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                    <!--LETTERA ACCOMPAGNATORIA FINE-->
+                    <!--ALTRI ALLEGATI INIZIO-->
+                  <div style="margin-top: 1em; margin-bottom: 2em;">
+                      <mat-divider></mat-divider>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <button mat-button class="button-style-2" type='button' (click)="aggiungiAllegati()">AGGIUNGI
+                            ALLEGATI
+                          </button>
+                      </div>
+                  </div>
+                  <div>
+                        <ul>
+                          <li *ngFor="let files of allegatiDaSalvare; let y = index">
+                            <div class="alignItemsCenter">
+                              <span class="bold-text">{{files.nome}}</span>
+                              <button mat-icon-button class="blue-color" matTooltip="Elimina" (click)="rimuoviAllegatiDaSalvare(files.idDocumentoIndex)">
+                                <mat-icon>link_off</mat-icon>
+                              </button>
+                              <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(files)">
+                                <mat-icon>visibility</mat-icon>
+                              </button>
+                            </div>
+                          </li>
+                        </ul>
+                  </div>
+                  <div>
+                        <ul>
+                          <li *ngFor="let files of allegatiGenerici; let y = index">
+                            <div class="alignItemsCenter">
+                           <!--   <span> <a href="" (click)="scaricaFile(file)">{{files.nome}} - {{files.dimensione}} </a></span> -->
+                              <span class="bold-text">{{files.nomeFile}}</span>
+                              <button mat-icon-button class="blue-color" matTooltip="Elimina" (click)="deleteAllegato(files.idFileEntita)">
+                                <mat-icon>link_off</mat-icon>
+                              </button>
+                              <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(files)">
+                                <mat-icon>visibility</mat-icon>
+                              </button>
+                            </div>
+                          </li>
+                        </ul>
+                  </div>
+                    <!--ALTRI ALLEGATI FINE-->
+            </span>
+        </mat-card-content>
+        <div class="spaceBetween" style="    display: flex; justify-content: flex-end;">
+            <button mat-button class="button-style-2" (click)="confermaAllegati()">CONFERMA</button>
+        </div>
+    </mat-card>
+    </div>
+    
+    
+    
+</div> 

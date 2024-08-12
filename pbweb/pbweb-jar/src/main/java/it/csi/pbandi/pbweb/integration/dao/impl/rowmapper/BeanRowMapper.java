@@ -1,0 +1,29 @@
+package it.csi.pbandi.pbweb.integration.dao.impl.rowmapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
+
+import it.csi.pbandi.pbweb.util.BeanMapper;
+
+public class BeanRowMapper<T> implements RowMapper {
+	private Class className;
+
+   public BeanRowMapper(final Class<T> className){
+        this.className = className;
+       }
+
+    @Override
+    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+    	BeanMapper beanMapper = new BeanMapper();
+        try {
+        	T vo = (T) beanMapper.toBean(rs, className);
+			return vo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+	
+}

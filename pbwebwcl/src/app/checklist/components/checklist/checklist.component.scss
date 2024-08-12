@@ -1,0 +1,146 @@
+.page {
+    .content {
+        mat-card {
+            mat-card-content {
+                padding-left: 10px;
+
+                mat-divider {
+                    margin-top: 15px;
+                }
+            }
+
+            .row {
+                width: 100%;
+                display: flex;
+
+                .col {
+                    width: 48%;
+                    padding-right: 10px;
+                }
+
+                .date {
+                    display: flex;
+                    justify-content: space-between;
+
+                    mat-form-field {
+                        flex-grow: 1;
+                        max-width: 48.5%;
+                    }
+
+                    mat-icon {
+                        color: #0060c1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+mat-radio-button {
+    margin-right: 20px;
+}
+
+.tableRadio {
+    padding: 0px;
+    height: 70px;
+    width: 100%;
+
+    mat-label {
+        font-weight: bold;
+    }
+
+    td {
+        padding: 0px;
+    }
+}
+
+.tableElenco {
+    th,
+    td {
+        padding-right: 10px !important;
+    }
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.blueIcon {
+    color: #0060c1;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button-style-3 {
+    border: 2px solid #1844a8 !important;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0060c1;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060c1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+.displayNone {
+    display: none;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.marginRadioButton {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.marginRight20 {
+    margin-right: 20px;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}

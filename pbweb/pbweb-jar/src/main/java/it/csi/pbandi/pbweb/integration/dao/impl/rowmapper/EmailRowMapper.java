@@ -1,0 +1,21 @@
+package it.csi.pbandi.pbweb.integration.dao.impl.rowmapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import it.csi.pbandi.pbweb.integration.vo.Email;
+
+public class EmailRowMapper implements RowMapper<Email> {
+
+	@Override
+	public Email mapRow(ResultSet rs, int rowNum) throws SQLException {
+		Email cm = new Email();
+
+		cm.setMail(rs.getString("INDIRIZZO_MAIL"));
+
+		return cm;
+	}
+
+}

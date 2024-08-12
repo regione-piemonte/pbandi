@@ -1,0 +1,774 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+
+    <!-- titolo -->
+    <div class="title content">
+        <div class="reportingContainerUp">
+            <div class="display-flex justify-content-space-between">
+                <h2>Documenti di progetto</h2>
+                <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                    [descBrevePagina]="descBrevePagina"></pbcommon-help>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message error / succes -->
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- criteri di ricerca -->
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="display-flex">
+                            <!--mat-form-field [formGroup]="beneficiarioGroup" class="fullWidth">
+                                <input type="text" placeholder="Selezionare un beneficiario" aria-label="Number"
+                                    matInput formControlName="beneficiarioControl" [matAutocomplete]="autoBen"
+                                    (blur)="check('B')">
+                                <mat-autocomplete autoActiveFirstOption #autoBen="matAutocomplete"
+                                    [displayWith]="displayFn" (optionSelected)="click($event,'B')">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsBen | async)?.length>4,
+                                        'viewport-1': (filteredOptionsBen | async)?.length==1,
+                                        'viewport-2': (filteredOptionsBen | async)?.length==2,
+                                        'viewport-3': (filteredOptionsBen | async)?.length==3,
+                                        'viewport-4': (filteredOptionsBen | async)?.length==4 }">
+                                        <mat-option class="viewport-item"
+                                            *cdkVirtualFor="let option of filteredOptionsBen | async" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                            </mat-form-field-->
+                            <mat-form-field [formGroup]="beneficiarioGroup" class="fullWidth">
+                                <input type="text"
+                                    wai-aria="Selezionare il beneficiario per il quale si intende operare"
+                                    placeholder="Selezionare un beneficiario" aria-label="Number" matInput
+                                    formControlName="beneficiarioControl" [matAutocomplete]="auto"
+                                    (input)="loadBeneficiari()" (blur)="check('B')" required>
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    [displayWith]="displayFn" (optionSelected)="click($event,'B')">
+                                    <mat-option disabled *ngIf="!this.loadedBeneficiari">Caricamento...</mat-option>
+                                    <mat-option *ngFor="let option of filteredOptionsBen | async" [value]="option">
+                                        {{ option.descrizione }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="beneficiarioGroup?.get('beneficiarioControl')?.errors?.required">
+                                    Campo obbligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="display-flex">
+                            <mat-form-field [formGroup]="progettoGroup" class="fullWidth">
+                                <input type="text" placeholder="Selezionare un progetto" aria-label="Number" matInput
+                                    formControlName="progettoControl" [matAutocomplete]="autoProg" (blur)="check('P')">
+                                <mat-hint>Selezionando un progetto sarà possibile ricercare i file della domanda se
+                                    presentata su FINDOM
+                                </mat-hint>
+                                <mat-autocomplete autoActiveFirstOption #autoProg="matAutocomplete"
+                                    [displayWith]="displayFn" (optionSelected)="click($event,'P')">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsProg | async)?.length>4,
+                                        'viewport-1': (filteredOptionsProg | async)?.length==1,
+                                        'viewport-2': (filteredOptionsProg | async)?.length==2,
+                                        'viewport-3': (filteredOptionsProg | async)?.length==3,
+                                        'viewport-4': (filteredOptionsProg | async)?.length==4 }">
+                                        <mat-option class="viewport-item"
+                                            *cdkVirtualFor="let option of filteredOptionsProg | async" [value]="option">
+                                            {{ option.descrizione }}
+                                        </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-form-field class="fullWidth margin-left-20">
+                                <mat-label>Selezionare un tipo di documento</mat-label>
+                                <mat-select [(ngModel)]="tipoDocumentoSelected" name="tipoDocumento">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let tipoDocumento of tipiDocumento" [value]="tipoDocumento">
+                                        {{ tipoDocumento.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="display-flex">
+                            <div class="fullWidth">
+                                <mat-form-field class="width-data">
+                                    <mat-label>Data dal</mat-label>
+                                    <input matInput [matDatepicker]="pickerDal" [formControl]="dataDa">
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDal">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDal></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field class="width-data margin-left-20">
+                                    <mat-label>Data al</mat-label>
+                                    <input matInput [matDatepicker]="pickerAl" [formControl]="dataA">
+                                    <mat-datepicker-toggle matSuffix [for]="pickerAl">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerAl></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="fullWidth margin-left-20">
+                                <div>
+                                    <mat-checkbox [(ngModel)]="isDigitaliInFirmaChecked" name="digitaliInFirma">Digitali
+                                        in
+                                        firma</mat-checkbox>
+                                    <mat-checkbox class="margin-left-20" [(ngModel)]="isDigitaliInviatiChecked"
+                                        name="isDigitaliInviatiChecked">
+                                        Digitali inviati
+                                    </mat-checkbox>
+                                </div>
+                                <a class="font-size-11">Solo per documenti in bandi con flusso dematerializzato</a>
+                            </div>
+                        </div>
+
+                        <div class="display-flex justify-content-space-between">
+                            <button class="button-style-2 margin-top-20" mat-raised-button type="submit">
+                                CERCA
+                            </button>
+                            <div *ngIf="isIstrLinkActa" matTooltip="Selezionare un beneficiario e un progetto"
+                                [matTooltipDisabled]="beneficiarioSelected?.value && progettoSelected?.value">
+                                <button class="button-style-2 margin-top-20" mat-raised-button type="button"
+                                    (click)="openLinkDocActa()"
+                                    [disabled]="!beneficiarioSelected || !beneficiarioSelected.value || !progettoSelected || !progettoSelected.value">
+                                    LINK DOCUMENTO ACTA
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Tabella -->
+    <div [ngClass]="{'displayNone': !isDocVisible, 'content': isDocVisible}">
+        <mat-card class="mat-elevation-z4">
+            <mat-card-content>
+
+                <mat-tab-group #tabs [(selectedIndex)]="selectedTabIndex">
+                    <mat-tab label="Elenco documenti di progetto">
+                        <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                            visualizzare.</p>
+                        <div *ngIf="isMessageExtraProcVisible">
+                            <mat-icon>toggle_on</mat-icon>
+                            <span class="aligned-with-icon">
+                                = invio documento extra procedura (ove previsto). L'eventuale scelta, di inviare extra
+                                procedura
+                                una dichiarazione o altro documento, sarà revocabile entro e non oltre le ore 23.00 del
+                                {{today
+                                | date: "dd/MM/yyyy"}}</span>
+                        </div>
+
+                        <!-- tabella  -->
+                        <table mat-table [dataSource]="dataSource" matSort matSortActive="tipoDocumento"
+                            #sortProg="matSort" class="fullWidth"
+                            [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                            <ng-container matColumnDef="allegati">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <button
+                                        *ngIf="(row.signable && row.codTipoDoc!=='RIN') || row.codTipoDoc==='CLIL' || row.codTipoDoc==='CLILA' || row.codTipoDoc==='CL' || row.codTipoDoc==='CLA'"
+                                        mat-icon-button matTooltip="Visualizza file allegati"
+                                        (click)="openAllegati(row)">
+                                        <mat-icon>attachment</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo documento </th>
+                                <td mat-cell *matCellDef="let row"
+                                    [ngClass]="{'green-color': isBeneficiario && row.signed, 'red-color':row.signValid===false && row.signable, 
+                                'bold-text': (isBeneficiario && row.signed) || (row.signValid===false && row.signable) }">
+                                    {{row.descTipoDocumento}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="progetto">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.codiceProgettoVisualizzato}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="documento">
+                                <th mat-header-cell *matHeaderCellDef class="width-30-perc"> Documento </th>
+                                <td mat-cell *matCellDef="let row" class="width-30-perc">
+
+                                    <mat-grid-list cols="1" rowHeight="30">
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon
+                                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(row.documento,row.codTipoDoc)}"
+                                                    class="cursor-pointer margin-right-5"
+                                                    (click)="anteprimaAllegato(row)">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegato(row)">
+                                                    download</mat-icon>
+                                                <a class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegato(row)">
+                                                    {{row.documento}}
+                                                </a>
+                                            </div>
+                                        </mat-grid-tile>
+
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="row.timeStamped">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon
+                                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(row.documento,row.codTipoDoc)}"
+                                                    class="cursor-pointer margin-right-5"
+                                                    (click)="anteprimaAllegato(row)">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex,row.documento)">
+                                                    download</mat-icon>
+                                                <a [matTooltip]="'Data invio: '+ row.dtTimestamp"
+                                                    class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex,row.documento)">
+                                                    {{row.documento}}.p7m.tsd
+                                                </a>
+                                                <mat-icon matTooltip="File con marca temporale"
+                                                    class="green-color cursor-pointer"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex)">
+                                                    info</mat-icon>
+                                            </div>
+                                        </mat-grid-tile>
+
+
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="row.flagFirmaAutografa">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon class="visibility-hidden margin-right-5">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex,row.documento)">
+                                                    download</mat-icon>
+                                                <a [matTooltip]="'Data invio: '+ row.dtTimestamp"
+                                                    class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex,row.documento)">
+                                                    {{row.documento}}
+                                                </a>
+                                                <mat-icon matTooltip="File con firma Autografa"
+                                                    class="green-color cursor-pointer"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex)">
+                                                    info</mat-icon>
+                                            </div>
+                                        </mat-grid-tile>
+
+
+                                    </mat-grid-list>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let row">
+                                    <button
+                                        *ngIf="(row.idCategAnagraficaMitt!==null && isIstrProg) || (row.codTipoDoc==='ACTA' && isIstrLinkActa)"
+                                        mat-icon-button matTooltip="Elimina documento" class="red-color"
+                                        (click)="eliminaDocumento(row.idDocumentoIndex)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="beneficiario">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.beneficiario}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. protocollo </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span *ngIf="row.protocollo">{{row.protocollo}} </span>
+                                    <span *ngIf="!row.protocollo && !row.flagFirmaCartacea && row.signed">
+                                        <mat-icon class="orange-color" matTooltip="Documento in protocollazione">
+                                            schedule
+                                        </mat-icon>
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="stato">
+                                <th mat-header-cell *matHeaderCellDef> Stato </th>
+                                <td mat-cell *matCellDef="let row" class="text-align-center">
+
+
+                                    <!-- icon send -->
+                                    <mat-icon *ngIf="(!row.signable && row.timeStamped) || row.flagFirmaAutografa"
+                                        class="green-color"
+                                        [matTooltip]="isBeneficiario ? 'Inviato' : 'Il documento è stato correttamente firmato ed inviato dal Beneficiario'">
+                                        send
+                                    </mat-icon>
+                                    <span class="green-color bold-text"
+                                        *ngIf="(!row.signable && row.timeStamped) || row.flagFirmaAutografa">
+                                        <br>
+                                        INVIATO
+                                    </span>
+
+                                    <!-- icon send -->
+                                    <mat-icon *ngIf="row.signable && row.timeStamped" class="green-color"
+                                        [matTooltip]="isBeneficiario ? 'Inviato' : 'Il documento è stato correttamente firmato ed inviato dal Beneficiario'">
+                                        send
+                                    </mat-icon>
+                                    <span class="green-color bold-text" *ngIf="row.signable && row.timeStamped">
+                                        <br>
+                                        INVIATO
+                                    </span>
+
+                                    <!-- icon schedule -->
+                                    <mat-icon *ngIf="row?.codStatoDoc === 'IN VERIFICA'" class="orange-color"
+                                        matTooltip="In verifica">schedule
+                                    </mat-icon>
+
+                                    <!-- button e icon upload red -->
+                                    <button
+                                        *ngIf="isBeneficiario && row.signable && !row.timeStamped && !row.signed && row.signValid===false && !row.flagFirmaCartacea && row?.codStatoDoc !== 'IN VERIFICA'"
+                                        mat-icon-button class="red-color"
+                                        matTooltip="Documento non valido: ricaricare il documento firmato digitalmente"
+                                        (click)="upload(row,true)">
+                                        <mat-icon id="upload{{row.idDocumentoIndex}}">
+                                            upload
+                                        </mat-icon>
+                                    </button>
+
+                                    <!-- button e icon upload  -->
+                                    <button
+                                        *ngIf="isBeneficiario && row.signable && !row.timeStamped && !row.signed && row.signValid!==false && !row.flagFirmaCartacea  && row?.codStatoDoc !== 'IN VERIFICA' && row?.flagFirmaAutografa != true"
+                                        mat-icon-button matTooltip="Upload documento firmato digitalmente"
+                                        (click)="upload(row,false)">
+                                        <mat-icon id="upload{{row.idDocumentoIndex}}">upload</mat-icon>
+                                    </button>
+
+                                    <!-- icon upload  -->
+                                    <div *ngIf="isAltro && row.signable && !row.timeStamped && !row.signed && !row.flagFirmaCartacea  && row?.flagFirmaAutografa != true"
+                                        matTooltip="Documento in firma">
+                                        <mat-icon>upload</mat-icon>
+                                        <mat-icon class="orange-color margin-left-meno-7">schedule</mat-icon>
+                                    </div>
+
+                                    <!-- icon send extraprocedura -->
+                                    <mat-icon
+                                        *ngIf="!row.timeStamped && !row.signed && row.signable && (row.signValid!==false || (row.signValid===false  && !row.flagTrasmDest)) && row.flagFirmaCartacea && row?.codStatoDoc !== 'IN VERIFICA'"
+                                        class="grey-color"
+                                        [matTooltip]="isBeneficiario ? 'Invio extra-procedura' : 'Documento ad invio extra-procedura'">
+                                        send
+                                    </mat-icon>
+
+                                    <!-- icon send e icon warning errore dati -->
+                                    <div *ngIf="(isAltro || isBeneficiario) && !row.timeStamped && !row.signed && row.signable && row.signValid===false && row.flagTrasmDest && row.flagFirmaCartacea"
+                                        matTooltip="Possibile incoerenza dei dati. Contattare il servizio di assistenza">
+                                        <mat-icon class="grey-color">send</mat-icon>
+                                        <mat-icon class="red-color margin-left-meno-7">warning</mat-icon>
+                                    </div>
+
+                                </td>
+                            </ng-container>
+
+                            <!-- switch send extraprocedura -->
+                            <ng-container matColumnDef="invioextraproc">
+                                <th mat-header-cell *matHeaderCellDef class="width-30-px"> Invio extra-procedura </th>
+                                <td mat-cell *matCellDef="let row" class="width-30-px">
+                                    <mat-slide-toggle
+                                        *ngIf="!row.timeStamped && !row.signed && (row.signable || row.signValid===false) && !row.flagTrasmDest && !row.isBR50"
+                                        color="primary" [(ngModel)]="row.flagFirmaCartacea"
+                                        name="cartaceo{{row.idDocumentoIndex}}"
+                                        (change)="changeInvioExtraProcedura($event,row)">
+                                    </mat-slide-toggle>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+                        <!-- paginator -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                            [showFirstLastButtons]="true" #paginatorProg>
+                        </mat-paginator>
+
+                    </mat-tab>
+
+                    <mat-tab label="Elenco documenti della domanda" *ngIf="progettoSearched">
+                        <button *ngIf="isIstruttore" class="button-style-2 margin-top-20" mat-raised-button
+                            type="button" (click)="openUploadDocumentiProgetto('DOM')">
+                            UPLOAD
+                        </button>
+                        <p class=" margin-top-20"
+                            *ngIf="!dataSourceDom || !dataSourceDom.data || dataSourceDom.data.length===0">Non ci sono
+                            elementi da
+                            visualizzare.</p>
+
+                        <!-- tabella  -->
+                        <table mat-table [dataSource]="dataSourceDom" matSort matSortActive="tipoDocumento"
+                            #sortDom="matSort" class="fullWidth"
+                            [ngClass]="{'displayNone': !dataSourceDom || !dataSourceDom.data || dataSourceDom.data.length===0}">
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo documento </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.tipoDocumento}} </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="documento">
+                                <th mat-header-cell *matHeaderCellDef class="width-30-perc"> Documento </th>
+                                <td mat-cell *matCellDef="let row" class="width-30-perc">
+                                    <div class="fullWidth alignItemsCenter">
+                                        <mat-icon class="cursor-pointer" (click)="downloadDocDomandaIstruttoria(row)">
+                                            download</mat-icon>
+                                        <a class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                            (click)="downloadDocDomandaIstruttoria(row)">
+                                            {{row.nomeFile}}
+                                        </a>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataMarcaTemp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data marca temporale </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataMarcaturaTemporale | date:"dd/MM/yyyy HH:mm"}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataVerificaFirma">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data verifica firma </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataVerificaFirma }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data protocollo </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataProtocollo }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="numeroProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. protocollo </th>
+                                <td mat-cell *matCellDef="let row">{{row.numeroProtocollo}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsDom"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsDom;"></tr>
+                        </table>
+
+                        <!-- paginator -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                            [showFirstLastButtons]="true" #paginatorDom
+                            [ngClass]="{'displayNone': !dataSourceDom || !dataSourceDom.data || dataSourceDom.data.length===0}">
+                        </mat-paginator>
+                    </mat-tab>
+
+                    <mat-tab label="Elenco documenti dell'istruttoria" *ngIf="docIstruttoriaVisible()">
+                        <button *ngIf="isIstruttore" class="button-style-2 margin-top-20" mat-raised-button
+                            type="button" (click)="openUploadDocumentiProgetto('ISTR')">
+                            UPLOAD
+                        </button>
+                        <p class=" margin-top-20"
+                            *ngIf="!dataSourceIstr || !dataSourceIstr.data || dataSourceIstr.data.length===0">
+                            Non ci sono elementi da visualizzare.</p>
+
+                        <!-- tabella  -->
+                        <table mat-table [dataSource]="dataSourceIstr" matSort matSortActive="tipoDocumento"
+                            #sortIstr="matSort" class="fullWidth"
+                            [ngClass]="{'displayNone': !dataSourceIstr || !dataSourceIstr.data || dataSourceIstr.data.length===0}">
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo documento </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.tipoDocumento}} </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="documento">
+                                <th mat-header-cell *matHeaderCellDef class="width-30-perc"> Documento </th>
+                                <td mat-cell *matCellDef="let row" class="width-30-perc">
+                                    <div class="fullWidth alignItemsCenter">
+                                        <mat-icon class="cursor-pointer" (click)="downloadDocDomandaIstruttoria(row)">
+                                            download</mat-icon>
+                                        <a class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                            (click)="downloadDocDomandaIstruttoria(row)">
+                                            {{row.nomeFile}}
+                                        </a>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataMarcaTemp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data marca temporale </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataMarcaturaTemporale | date:"dd/MM/yyyy"}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataVerificaFirma">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data verifica firma </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataVerificaFirma | date:"dd/MM/yyyy"}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dataProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data protocollo </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.dataProtocollo | date:"dd/MM/yyyy"}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="numeroProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. protocollo </th>
+                                <td mat-cell *matCellDef="let row">{{row.numeroProtocollo}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsIstr"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsIstr;"></tr>
+                        </table>
+
+                        <!-- paginator -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                            [showFirstLastButtons]="true" #paginatorIstr
+                            [ngClass]="{'displayNone': !dataSourceIstr || !dataSourceIstr.data || dataSourceIstr.data.length===0}">
+                        </mat-paginator>
+
+                    </mat-tab>
+
+                    <mat-tab label="Elenco documenti ActiveInfo" *ngIf="isTabDocActiveInfoVisible">
+                        <p
+                            *ngIf="!dataSourceActiveInfo || !dataSourceActiveInfo.data || dataSourceActiveInfo.data.length===0">
+                            Non ci sono elementi da
+                            visualizzare.</p>
+                        <div *ngIf="isMessageExtraProcVisible">
+                            <mat-icon>toggle_on</mat-icon>
+                            <span class="aligned-with-icon">
+                                = invio documento extra procedura (ove previsto). L'eventuale scelta, di inviare extra
+                                procedura
+                                una dichiarazione o altro documento, sarà revocabile entro e non oltre le ore 23.00 del
+                                {{today
+                                | date: "dd/MM/yyyy"}}</span>
+                        </div>
+
+                        <!-- tabella  -->
+                        <table mat-table [dataSource]="dataSourceActiveInfo" matSort matSortActive="tipoDocumento"
+                            #sortActiveInfo="matSort" class="fullWidth"
+                            [ngClass]="{'displayNone': !dataSourceActiveInfo || !dataSourceActiveInfo.data || dataSourceActiveInfo.data.length===0}">
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo documento </th>
+                                <td mat-cell *matCellDef="let row"
+                                    [ngClass]="{'green-color': isBeneficiario && row.signed, 'red-color':row.signValid===false && row.signable, 
+                                'bold-text': (isBeneficiario && row.signed) || (row.signValid===false && row.signable) }">
+                                    {{row.descTipoDocumento}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="progetto">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.codiceProgettoVisualizzato}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="documento">
+                                <th mat-header-cell *matHeaderCellDef class="width-30-perc"> Documento </th>
+                                <td mat-cell *matCellDef="let row" class="width-30-perc">
+
+                                    <mat-grid-list cols="1" rowHeight="30">
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon
+                                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(row.documento,row.codTipoDoc)}"
+                                                    class="cursor-pointer margin-right-5"
+                                                    (click)="anteprimaAllegato(row)">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegato(row)">
+                                                    download</mat-icon>
+                                                <a class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegato(row)">
+                                                    {{row.documento}}
+                                                </a>
+                                            </div>
+                                        </mat-grid-tile>
+
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="row.timeStamped">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon
+                                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(row.documento,row.codTipoDoc)}"
+                                                    class="cursor-pointer margin-right-5"
+                                                    (click)="anteprimaAllegato(row)">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex,row.documento)">
+                                                    download</mat-icon>
+                                                <a [matTooltip]="'Data invio: '+ row.dtTimestamp"
+                                                    class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex,row.documento)">
+                                                    {{row.documento}}.p7m.tsd
+                                                </a>
+                                                <mat-icon matTooltip="File con marca temporale"
+                                                    class="green-color cursor-pointer"
+                                                    (click)="downloadAllegatoTimeStamped(row.idDocumentoIndex)">
+                                                    info</mat-icon>
+                                            </div>
+                                        </mat-grid-tile>
+
+
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="row.flagFirmaAutografa">
+                                            <div class="fullWidth alignItemsCenter">
+                                                <mat-icon class="visibility-hidden margin-right-5">
+                                                    remove_red_eye</mat-icon>
+                                                <mat-icon class="cursor-pointer margin-right-5"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex,row.documento)">
+                                                    download</mat-icon>
+                                                <a [matTooltip]="'Data invio: '+ row.dtTimestamp"
+                                                    class="blue-color text-overflow-ellipsis overflow-hidden cursor-pointer white-space-nowrap"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex,row.documento)">
+                                                    {{row.documento}}
+                                                </a>
+                                                <mat-icon matTooltip="File con firma Autografa"
+                                                    class="green-color cursor-pointer"
+                                                    (click)="downloadAllegatoTimeStampedFirmaAutografa(row.idDocumentoIndex)">
+                                                    info</mat-icon>
+                                            </div>
+                                        </mat-grid-tile>
+
+
+                                    </mat-grid-list>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="beneficiario">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.beneficiario}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nProtocollo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. protocollo </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span *ngIf="row.protocollo">{{row.protocollo}} </span>
+                                    <span *ngIf="!row.protocollo && !row.flagFirmaCartacea && row.signed">
+                                        <mat-icon class="orange-color" matTooltip="Documento in protocollazione">
+                                            schedule
+                                        </mat-icon>
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="stato">
+                                <th mat-header-cell *matHeaderCellDef> Stato </th>
+                                <td mat-cell *matCellDef="let row" class="text-align-center">
+
+
+                                    <!-- icon send -->
+                                    <mat-icon *ngIf="(!row.signable && row.timeStamped) || row.flagFirmaAutografa"
+                                        class="green-color"
+                                        [matTooltip]="isBeneficiario ? 'Inviato' : 'Il documento è stato correttamente firmato ed inviato dal Beneficiario'">
+                                        send
+                                    </mat-icon>
+                                    <span class="green-color bold-text"
+                                        *ngIf="(!row.signable && row.timeStamped) || row.flagFirmaAutografa">
+                                        <br>
+                                        INVIATO
+                                    </span>
+
+                                    <!-- icon send -->
+                                    <mat-icon *ngIf="row.signable && row.timeStamped" class="green-color"
+                                        [matTooltip]="isBeneficiario ? 'Inviato' : 'Il documento è stato correttamente firmato ed inviato dal Beneficiario'">
+                                        send
+                                    </mat-icon>
+                                    <span class="green-color bold-text" *ngIf="row.signable && row.timeStamped">
+                                        <br>
+                                        INVIATO
+                                    </span>
+
+                                    <!-- icon schedule -->
+                                    <mat-icon *ngIf="row?.codStatoDoc === 'IN VERIFICA'" class="orange-color"
+                                        matTooltip="In verifica">schedule
+                                    </mat-icon>
+
+                                    <!-- button e icon upload red -->
+                                    <button
+                                        *ngIf="isBeneficiario && row.signable && !row.timeStamped && !row.signed && row.signValid===false && !row.flagFirmaCartacea && row?.codStatoDoc !== 'IN VERIFICA'"
+                                        mat-icon-button class="red-color"
+                                        matTooltip="Documento non valido: ricaricare il documento firmato digitalmente"
+                                        (click)="upload(row,true)">
+                                        <mat-icon id="upload{{row.idDocumentoIndex}}">
+                                            upload
+                                        </mat-icon>
+                                    </button>
+
+                                    <!-- button e icon upload  -->
+                                    <button
+                                        *ngIf="isBeneficiario && row.signable && !row.timeStamped && !row.signed && row.signValid!==false && !row.flagFirmaCartacea  && row?.codStatoDoc !== 'IN VERIFICA' && row?.flagFirmaAutografa != true"
+                                        mat-icon-button matTooltip="Upload documento firmato digitalmente"
+                                        (click)="upload(row,false)">
+                                        <mat-icon id="upload{{row.idDocumentoIndex}}">upload</mat-icon>
+                                    </button>
+
+                                    <!-- icon upload  -->
+                                    <div *ngIf="isAltro && row.signable && !row.timeStamped && !row.signed && !row.flagFirmaCartacea  && row?.flagFirmaAutografa != true"
+                                        matTooltip="Documento in firma">
+                                        <mat-icon>upload</mat-icon>
+                                        <mat-icon class="orange-color margin-left-meno-7">schedule</mat-icon>
+                                    </div>
+
+                                    <!-- icon send extraprocedura -->
+                                    <mat-icon
+                                        *ngIf="!row.timeStamped && !row.signed && row.signable && (row.signValid!==false || (row.signValid===false  && !row.flagTrasmDest)) && row.flagFirmaCartacea && row?.codStatoDoc !== 'IN VERIFICA'"
+                                        class="grey-color"
+                                        [matTooltip]="isBeneficiario ? 'Invio extra-procedura' : 'Documento ad invio extra-procedura'">
+                                        send
+                                    </mat-icon>
+
+                                    <!-- icon send e icon warning errore dati -->
+                                    <div *ngIf="(isAltro || isBeneficiario) && !row.timeStamped && !row.signed && row.signable && row.signValid===false && row.flagTrasmDest && row.flagFirmaCartacea"
+                                        matTooltip="Possibile incoerenza dei dati. Contattare il servizio di assistenza">
+                                        <mat-icon class="grey-color">send</mat-icon>
+                                        <mat-icon class="red-color margin-left-meno-7">warning</mat-icon>
+                                    </div>
+
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsActiveInfo"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsActiveInfo;"></tr>
+                        </table>
+
+                        <!-- paginator -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                            [showFirstLastButtons]="true" #paginatorActiveInfo>
+                        </mat-paginator>
+                    </mat-tab>
+                </mat-tab-group>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+</div>

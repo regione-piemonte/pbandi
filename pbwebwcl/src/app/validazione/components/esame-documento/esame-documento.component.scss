@@ -1,0 +1,60 @@
+.card {
+    margin: 20px 0 0 0;
+
+    mat-card {
+        mat-card-content {
+            padding-left: 10px;
+        }
+    }
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-direction-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.max-width-100 {
+    max-width: 100%;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.margin-left-20 {
+    margin-left: 20px !important;
+}
+
+.margin-bottom-0 {
+    margin-bottom: 0px !important;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.green-color {
+    color: #008000;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+    /*click effect color change*/
+}

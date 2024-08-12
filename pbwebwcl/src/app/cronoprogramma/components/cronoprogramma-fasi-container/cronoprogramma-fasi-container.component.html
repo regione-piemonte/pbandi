@@ -1,0 +1,14 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}" id="scrollIdCrono">
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent" *ngFor="let msg of messageError">
+                <p>{{msg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <app-cronoprogramma-fasi [apiURL]="apiURL" [user]="user" [isBR58a]="isBR58a" [isBR58b]="isBR58b"
+        [idProgetto]="idProgetto" [idBandoLinea]="idBandoLinea" [isInvioDichiarazione]="true"
+        [salCorrente]="salCorrente" (saveSuccess)="saveSuccess($event)"></app-cronoprogramma-fasi>
+</div>

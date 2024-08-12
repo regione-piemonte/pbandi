@@ -1,0 +1,15 @@
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+.d-flex{
+    display: flex;
+    justify-content: flex-xend;
+
+}

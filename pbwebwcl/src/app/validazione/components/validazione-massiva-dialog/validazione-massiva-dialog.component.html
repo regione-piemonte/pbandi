@@ -1,0 +1,28 @@
+<div class="spaceBetween">
+    <h3 class="boldText">Validazione massiva documenti di spesa</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+Mediante la validazione massiva, il sistema processerà automaticamente <span class="boldText">tutti i documenti
+    selezionati</span>, ad eccezione di quelli eventualmente già elaborati singolarmente (sopra evidenziati nell'ultima
+colonna).
+<br>
+<br>
+Scegliendo di seguito il tipo di operazione che si intende avviare, è possibile procedere ad una validazione massiva dei
+documenti selezionati; oppure, selezionando <span class="boldText"> Applica a tutto</span>, si procederà ad una
+validazione massiva di <span class="boldText"> tutti i documenti</span> indipendentemente dalla selezione effettuata
+(fanno sempre eccezione i documenti già elaborati singolarmente).
+
+<div class="spaceBetween marginTop20">
+    <mat-checkbox [(ngModel)]="isApplicaATuttoChecked">Applica a tutto</mat-checkbox>
+    <div>
+        <button type="button" mat-button class="button-style-1" (click)="respingi()"
+            [disabled]="!isApplicaATuttoChecked && (!documentiSelezionati || documentiSelezionati.length===0)">RESPINGI</button>
+        <button mat-button class="button-style-1 marginLeft20" (click)="invalida()"
+            [disabled]="!isApplicaATuttoChecked && (!documentiSelezionati || documentiSelezionati.length===0)">INVALIDA</button>
+        <button mat-raised-button class="button-style-2 marginLeft20"
+            [disabled]="!isApplicaATuttoChecked && (!documentiSelezionati || documentiSelezionati.length===0)"
+            (click)="valida()">VALIDA</button>
+    </div>
+</div>

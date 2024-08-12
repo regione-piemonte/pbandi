@@ -1,0 +1,71 @@
+.blue-color {
+    color: #0060c1;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.endPageCancelButton {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.endPageButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+th,
+td {
+    padding-right: 10px !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+::ng-deep .data .mat-form-field-infix {
+    width: 12% !important;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+.font-size-15 {
+    font-size: 15px !important;
+}
+
+.font-size-10-5 {
+    font-size: 10.5px;
+}
+
+.padding-left-3 {
+    padding-left: 3px;
+}
+
+.display-flex {
+    display: flex;
+}

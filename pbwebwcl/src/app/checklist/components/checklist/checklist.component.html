@@ -1,0 +1,144 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Gestione CheckList</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una dichiarazione di spesa n°</mat-label>
+                                <mat-select [(ngModel)]="dichiarazioneSpesaSelected" name="dich">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of dichiarazioniSpesa" [value]="option">
+                                        {{ option.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <mat-label>Data controllo</mat-label>
+                                <input matInput [matDatepicker]="picker1" [formControl]="dataControllo">
+                                <mat-datepicker-toggle matSuffix [for]="picker1" class="blueIcon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <input matInput placeholder="Soggetto che ha effettuato il controllo"
+                                    [(ngModel)]="soggettoControllo" name="soggettoControllo" />
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare uno stato</mat-label>
+                                <mat-select [(ngModel)]="statoSelected" name="stato">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of stati" [value]="option">
+                                        {{ option.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <table class="tableRadio">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 20%;">
+                                        <mat-label>Tipologia</mat-label>
+                                    </td>
+                                    <td style="width: 80%;">
+                                        <mat-radio-group [(ngModel)]="tipologiaSelected" name="tipologia">
+                                            <mat-radio-button value="CL" style="width: 20%;">documentale
+                                            </mat-radio-button>
+                                            <mat-radio-button value="CLIL" style="width: 10%;">in loco
+                                            </mat-radio-button>
+                                            <mat-radio-button value="TUTTE">tutte</mat-radio-button>
+                                        </mat-radio-group>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">
+                                        <mat-label>Rilevazione di irregolarità</mat-label>
+                                    </td>
+                                    <td style="width: 80%;">
+                                        <mat-radio-group [(ngModel)]="rilevazioneSelected" name="rilevazione">
+                                            <mat-radio-button value="S" style="width: 20%;">checklist irregolari
+                                            </mat-radio-button>
+                                            <mat-radio-button value="N" style="width: 20%;">tutte</mat-radio-button>
+                                        </mat-radio-group>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <input matInput placeholder="Versione" [(ngModel)]="versione" name="versione" />
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <div class="marginTop10">
+                                <button class="button-style-2 margin0" mat-raised-button type="submit">
+                                    CERCA
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <app-checklist-table [elencoChecklist]="elencoChecklist" [isModificabile]="modificaChecklistAmmessa"
+        [isEliminabile]="eliminazioneChecklistAmmessa" [idProgetto]="idProgetto" (download)=" download($event)"
+        (elimina)="elimina($event)" (modifica)="modifica($event)">
+    </app-checklist-table>
+    <div class="content" *ngIf="(isAdgIstMaster || isOiIstMaster)">
+        <div class="flexEnd">
+            <button mat-stroked-button (click)="nuovaCheckList()" color="primary" class="button-style-3">NUOVA CHECKLIST
+            </button>
+        </div>
+    </div>
+</div>

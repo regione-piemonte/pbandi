@@ -1,0 +1,60 @@
+<mat-card class="mat-elevation-z2" style="margin-left: 25px; padding-top: 20px;">
+  <mat-card-title>
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+      <h3>Gestione richiesta integrazione</h3>
+      <div *ngIf="isFP">
+        <div *ngIf="prorogheDisponibili == true || prorogheDisponibiliStorico == true" (click)="gestioneProroga()"
+          style="display: flex;justify-content: space-between;align-items: baseline;">
+          <h3>
+            Gestione proroga
+          </h3>
+          <button mat-icon-button matTooltip="Gestione proroga">
+            <mat-icon>notifications_none</mat-icon>
+          </button>
+          <span class="notifica" *ngIf="notifica==true">{{notificaNumber}}</span>
+        </div>
+      </div>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <div style="display: flex;justify-content: space-between;">
+      <div style="display: flex;justify-content: space-between;flex-direction: column;">
+        <div>
+          <p>Stato Richiesta: <b>{{statoRichiesta ? statoRichiesta : ""}}</b></p>
+        </div>
+        <div>
+          <mat-form-field *ngIf="isFP" style="max-width: 113px;">
+            <mat-label>Data notifica</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="dataNotifica">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <button *ngIf="isFP" class="button-style-1" mat-button (click)="setDataNotifica()"
+            [disabled]="!dataNotifica || idStatoRichiestaInt != 1 ">SALVA
+          </button>
+        </div>
+      </div>
+      <div style="display: flex;justify-content: space-between;flex-direction: column; margin-right: 4em;">
+        <div>
+          <p>Inviata il: <b
+              *ngIf="idStatoRichiesta == 1 || idStatoRichiesta == 2 || idStatoRichiesta == 3 ">{{dataRichiesta ===
+              null ? "" : dataRichiesta | date:'dd/MM/yyyy'}}</b></p>
+        </div>
+        <div>
+          <p>Ricevuta il: <b>{{dataInvio === null ? "" : dataInvio | date:'dd/MM/yyyy'}}</b></p>
+        </div>
+        <div *ngIf="isFP">
+          <p>Data scadenza: <b>{{dataScadenza === null ? "" : dataScadenza | date:'dd/MM/yyyy'}}</b></p>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end" style="margin-bottom: 0px; padding-top: 10px;">
+    <button class="button-style-1 marginLeft20" mat-button (click)="chiudiRichiestaIntegrazione()"
+      [disabled]="idStatoRichiesta !== 1">
+      <span>
+        Chiudi richiesta
+      </span>
+    </button>
+  </mat-card-actions>
+</mat-card>

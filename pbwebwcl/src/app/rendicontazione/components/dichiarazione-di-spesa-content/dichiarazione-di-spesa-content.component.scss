@@ -1,0 +1,160 @@
+.content {
+    margin: 24px 0;
+
+    .avviso-content {
+        display: flex;
+        justify-content: flex-start;
+
+        mat-card {
+            background: #dbeef7 url("../../../../assets/info.png") 24px 20px no-repeat;
+            border-left: 8px solid #016cb4;
+            padding: 24px 24px 24px 70px;
+            width: 100%;
+        }
+
+        mat-card-content {
+            display: flex;
+            justify-content: space-between;
+
+            .avviso {
+                font-size: 14px;
+            }
+
+            .icon {
+                color: #0060c1;
+            }
+        }
+
+        //mat-card-content
+    }
+
+    //avviso-content
+
+    h3 {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    mat-card {
+        mat-card-content {
+            padding-left: 10px;
+
+            mat-divider {
+                margin-top: 15px;
+            }
+        }
+    }
+
+    .allegati {
+        align-items: baseline;
+        background-color: #178cd61a;
+        border-radius: 4px;
+    }
+}
+
+.linkAllegati {
+    padding-left: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.size13 {
+    font-size: 13px;
+}
+
+.noWrap {
+    white-space: nowrap;
+}
+
+.alignItemsCenter {
+    display: flex;
+    align-items: center;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+.paddingRight5 {
+    padding-right: 5px;
+}
+
+.paddingRight10 {
+    padding-right: 10px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.margin0 {
+    margin: 0px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.marginRight20 {
+    margin-right: 20px;
+}
+
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060c1;
+    opacity: 1 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+:host::ng-deep.mat-checkbox-layout {
+    white-space: normal !important;
+}
+
+:host::ng-deep.mat-checkbox-inner-container {
+    margin-top: 4px;
+}
+
+
+#denominazioneBeneficiario {
+
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}

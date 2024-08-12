@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="checklist_doc_14_20" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="79533da8-a074-4a84-adbd-fabae380a4a0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="1104"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="f12859e4-6e87-4231-86aa-6fbb6c1e0a8a"/>
+	<parameter name="CHECKLIST_ITEM_SUB" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
+	<parameter name="CHECKLIST_ITEM_DS" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
+	<parameter name="anagrafica" class="it.csi.pbandi.pbweb.pbandisrv.dto.manager.report.ChecklistHtmlAnagraficaDTO" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="irregolarita" class="it.csi.pbandi.pbweb.pbandisrv.dto.manager.report.ChecklistHtmlIrregolaritaDTO">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMG_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="settoreResponsabile" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descIrregolarita" class="java.lang.String">
+		<fieldDescription><![CDATA[descIrregolarita]]></fieldDescription>
+	</field>
+	<field name="importoIrregolarita" class="java.lang.String">
+		<fieldDescription><![CDATA[importoIrregolarita]]></fieldDescription>
+	</field>
+	<field name="idDichiarazione" class="java.lang.String">
+		<fieldDescription><![CDATA[idDichiarazione]]></fieldDescription>
+	</field>
+	<field name="attoConcessioneContributo" class="java.lang.String">
+		<fieldDescription><![CDATA[attoConcessioneContributo]]></fieldDescription>
+	</field>
+	<field name="assePrioritario" class="java.lang.String">
+		<fieldDescription><![CDATA[assePrioritario]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="referenteBeneficiario" class="java.lang.String">
+		<fieldDescription><![CDATA[referenteBeneficiario]]></fieldDescription>
+	</field>
+	<field name="lineaIntervento" class="java.lang.String">
+		<fieldDescription><![CDATA[lineaIntervento]]></fieldDescription>
+	</field>
+	<field name="dataControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[dataControllo]]></fieldDescription>
+	</field>
+	<field name="bandoRiferimento" class="java.lang.String">
+		<fieldDescription><![CDATA[bandoRiferimento]]></fieldDescription>
+	</field>
+	<field name="ammontareTotaleSpesaValidata" class="java.lang.String">
+		<fieldDescription><![CDATA[ammontareTotaleSpesaValidata]]></fieldDescription>
+	</field>
+	<field name="totaleSpesaRendicontataOperazione" class="java.lang.String">
+		<fieldDescription><![CDATA[totaleSpesaRendicontataOperazione]]></fieldDescription>
+	</field>
+	<field name="luogoControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[luogoControllo]]></fieldDescription>
+	</field>
+	<field name="costoTotaleAmmesso" class="java.lang.String">
+		<fieldDescription><![CDATA[costoTotaleAmmesso]]></fieldDescription>
+	</field>
+	<field name="denominazioneBeneficiario" class="java.lang.String">
+		<fieldDescription><![CDATA[denominazioneBeneficiario]]></fieldDescription>
+	</field>
+	<field name="contributoPubblicoConcesso" class="java.lang.String">
+		<fieldDescription><![CDATA[contributoPubblicoConcesso]]></fieldDescription>
+	</field>
+	<field name="titoloProgetto" class="java.lang.String">
+		<fieldDescription><![CDATA[titoloProgetto]]></fieldDescription>
+	</field>
+	<field name="titoloBando" class="java.lang.String">
+		<fieldDescription><![CDATA[titoloBando]]></fieldDescription>
+	</field>
+	<field name="cup" class="java.lang.String">
+		<fieldDescription><![CDATA[cup]]></fieldDescription>
+	</field>
+	<field name="strutturaResponsabile" class="java.lang.String">
+		<fieldDescription><![CDATA[strutturaResponsabile]]></fieldDescription>
+	</field>
+	<field name="campoIrregolarita" class="java.lang.String">
+		<fieldDescription><![CDATA[campoIrregolarita]]></fieldDescription>
+	</field>
+	<field name="descrizioneProgetto" class="java.lang.String">
+		<fieldDescription><![CDATA[descrizioneProgetto]]></fieldDescription>
+	</field>
+	<field name="ammontareTotaleSpesaRendicontata" class="java.lang.String">
+		<fieldDescription><![CDATA[ammontareTotaleSpesaRendicontata]]></fieldDescription>
+	</field>
+	<field name="firmaResponsabile" class="java.lang.String">
+		<fieldDescription><![CDATA[firmaResponsabile]]></fieldDescription>
+	</field>
+	<field name="irregolarita" class="java.lang.String">
+		<fieldDescription><![CDATA[irregolarita]]></fieldDescription>
+	</field>
+	<field name="codiceProgetto" class="java.lang.String">
+		<fieldDescription><![CDATA[codiceProgetto]]></fieldDescription>
+	</field>
+	<field name="flagIrregolarita" class="java.lang.String">
+		<fieldDescription><![CDATA[flagIrregolarita]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="435" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="802" height="413" uuid="e10c16b0-ab34-418a-b7b1-306c8baad225"/>
+			</frame>
+			<staticText>
+				<reportElement x="1" y="182" width="801" height="55" uuid="7f045a87-ba5e-452f-8793-eaea82897f57"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAR FSC 2007-2013
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="250" width="801" height="20" uuid="5c16955e-144d-466c-a88b-f066bd6e0913"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHECK LIST CONTROLLI DI 1° LIVELLO DOCUMENTALI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="299" width="801" height="40" uuid="ae92def2-ccd6-40e0-ae50-080953108720"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Macroprocesso:
+Acquisizione di beni/forniture e servizi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="377" width="801" height="20" uuid="52ec7227-ea57-4ca6-960a-2a54a1c398f9"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<image>
+				<reportElement x="21" y="12" width="58" height="65" uuid="7469e5f0-10f5-4371-aa47-b3e0ea8c9242"/>
+				<imageExpression><![CDATA[$P{IMG_PATH} + "/ris/css/finanziamenti/pbandi/im/checklist/ITALIA.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="597" y="12" width="183" height="59" uuid="ca6cba9e-2f27-44b1-a33d-0c3b21dcb77f"/>
+				<imageExpression><![CDATA[$P{IMG_PATH} + "/ris/css/finanziamenti/pbandi/im/checklist/REGIONE-PIEMONTE-LOGO.jpg"]]></imageExpression>
+			</image>
+			<break>
+				<reportElement x="0" y="423" width="100" height="1" uuid="0e3cdf44-1da2-4479-937e-e63bc8b2c51b"/>
+			</break>
+		</band>
+	</title>
+	<detail>
+		<band height="70">
+			<break>
+				<reportElement x="0" y="-1529" width="555" height="1" uuid="e5193d79-889b-45d7-ad4a-fe4fe78f28e3"/>
+			</break>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="802" height="36" uuid="21f59e2c-0bbb-4817-b99c-575ac2248b1f"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SCHEDA ANAGRAFICA PROGETTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Transparent" x="0" y="50" width="335" height="20" uuid="9aae2978-5c6e-430c-879d-c21c6583d99f"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Asse Prioritario :"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" mode="Transparent" x="336" y="50" width="457" height="20" uuid="8defdc95-1d95-4d56-8511-e36453a9dd7d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getAssePrioritario()!=null?$P{anagrafica}.getAssePrioritario():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="20">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="0" y="0" width="335" height="20" uuid="569a1757-b282-4402-8bac-e36e0bf5b7e4"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Azione "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="a5f14b7a-9e65-4395-a6ed-0db4ea3db7d9"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getLineaIntervento()!=null?$P{anagrafica}.getLineaIntervento():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="20">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="1" y="0" width="335" height="20" uuid="2d06e64c-f062-4e19-a395-f0dc6c2fb3f0"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bando di riferimento "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="70ecb5bd-926b-4269-ba1f-38e3c7081d0e"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getBandoRiferimento()!=null?$P{anagrafica}.getBandoRiferimento():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="8cdfef3c-d6e1-4af3-ab06-cb905d39089e"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getDenominazioneBeneficiario()!=null?$P{anagrafica}.getDenominazioneBeneficiario():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="1" y="0" width="335" height="20" uuid="34a1af46-b5ae-4aaa-a0bd-ebd3f499640e"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Denominazione Beneficiario/Destinatario finale "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="42">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="0" y="0" width="335" height="20" uuid="8f477df7-20eb-487b-a826-f235a1b78f90"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CUP "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="539d502a-be86-4062-ae95-9c35b75ad7a7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getCup()!=null?$P{anagrafica}.getCup():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="0" y="21" width="335" height="20" uuid="9452ba07-5a6d-4218-bbf8-3fa5aadbf16d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Codice del Progetto "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="21" width="457" height="20" uuid="2e4acea1-cb06-454f-8b77-3c5476fb7667"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getCodiceProgetto()!=null?$P{anagrafica}.getCodiceProgetto():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="1" y="0" width="335" height="20" uuid="c1a80ce3-01c2-4ffc-9ee7-1287897b398c"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Titolo del Progetto "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="555ec9e6-728d-4614-837b-1fe59e958a9f"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getTitoloProgetto()!=null?$P{anagrafica}.getTitoloProgetto():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="0" y="0" width="335" height="20" uuid="a0c54204-96a1-4abb-b234-23ceed1d98ea"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Descrizione sintetica del progetto"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="405dfe92-c7c3-4d68-8598-865b4950d09b"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getDescrizioneProgetto()!=null?$P{anagrafica}.getDescrizioneProgetto():""]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="167">
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="375" y="135" width="139" height="20" uuid="53c17bdd-0bec-4bf7-b92c-8d413d2cab8a"/>
+				<textElement>
+					<font size="10"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getDataControllo()!=null?$P{anagrafica}.getDataControllo():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="1" y="0" width="335" height="20" uuid="98820f3d-6c7a-400f-aa30-c36bd5c8b73e"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Contributo pubblico Concesso"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="63" width="457" height="20" uuid="0aaca1cb-de5b-4f70-b853-364639d1a91c"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getAttoConcessioneContributo()!=null?$P{anagrafica}.getAttoConcessioneContributo():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="336" y="0" width="457" height="20" uuid="b57bcdc6-4d86-41a4-ac30-1f7a15d5b785"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getContributoPubblicoConcesso()!=null?$P{anagrafica}.getContributoPubblicoConcesso():""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="63" width="335" height="20" uuid="662109c3-3634-4c7c-8408-72db577a9b0b"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Estremi atto di concessione del contributo ed eventuali ss.mm.ii."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="84" width="335" height="20" uuid="d5f9f0b8-7fa9-4c6d-a11e-c8f3501e923e"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Denominazione del Soggetto che ha effettuato il controllo"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="42" width="335" height="20" uuid="773a2e9c-2e81-4f0c-98ca-b7498b61c617"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Costo totale ammesso"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="84" width="457" height="20" uuid="3d11441e-deab-4d81-90a8-03d3878be71d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getFirmaResponsabile()!=null?$P{anagrafica}.getFirmaResponsabile():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="42" width="457" height="20" uuid="f3547dfa-8a01-4045-9538-98318c31a75c"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getCostoTotaleAmmesso()!=null?$P{anagrafica}.getCostoTotaleAmmesso():""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="21" width="335" height="20" uuid="c6d7c6bb-363d-4f66-b408-faaa566c68fb"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Totale spesa rendicontata dall'operazione"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="21" width="457" height="20" uuid="40019675-79cf-4b65-95e4-3186e1567e11"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getAmmontareTotaleSpesaRendicontata()!=null?$P{anagrafica}.getAmmontareTotaleSpesaRendicontata():""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="135" width="39" height="20" uuid="ad2bdcd1-d3fd-495a-a38a-680881d654a7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data"]]></textFieldExpression>
+			</textField>
+			<break>
+				<reportElement x="0" y="140" width="100" height="1" uuid="bd8db040-d334-431e-a25d-3720b4127c15"/>
+			</break>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="336" y="105" width="457" height="20" uuid="67807eed-88cd-4fd4-b0cc-86ce46edfe40"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{settoreResponsabile}!=null? $P{settoreResponsabile} : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="105" width="335" height="20" uuid="648a0fd2-f816-4c85-af34-fedb339ac4ff"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Struttura Responsabile del controllo"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="50">
+			<subreport>
+				<reportElement x="1" y="0" width="801" height="50" uuid="d524d494-5327-4b80-8952-7287ba267eb4"/>
+				<dataSourceExpression><![CDATA[$P{CHECKLIST_ITEM_DS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{CHECKLIST_ITEM_SUB}]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="68">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="28" width="171" height="20" uuid="2a6ead83-6a85-4f45-8b75-6dbed4b11aad"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Irregolarità rilevate"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="174" y="28" width="423" height="20" uuid="262f23ad-ba93-446e-b39a-12f397ea952b"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{irregolarita}.getFlagIrregolarita()!=null?$P{irregolarita}.getFlagIrregolarita():""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="174" y="47" width="619" height="20" uuid="8821c8c8-d9ed-43a8-9254-3bd99b7f1920"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{irregolarita}.getDescIrregolarita()!=null?$P{irregolarita}.getDescIrregolarita():""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="48" width="171" height="20" uuid="88b0215e-2db7-44c3-874f-2dd9902e82ad"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Descrizione"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="5" width="500" height="20" uuid="f84468b1-5136-4eb3-b2ce-0c4d094ba2e9"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Eventuale rilevazione di irregolarità e giudizio finale del controllo"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="171" height="20" uuid="84c16217-30ed-4ef2-8f25-e2ca4400a8a9"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ammontare della spesa irregolare"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="174" y="0" width="257" height="20" uuid="f3c71526-7875-4fbb-95a7-41a7421d86d4"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{irregolarita}.getImportoIrregolarita()!=null?$P{irregolarita}.getImportoIrregolarita():""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="675" y="9" width="80" height="20" forecolor="#999999" uuid="62443572-4d3e-4e3b-a2ab-63dfa612195b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" di"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="755" y="9" width="40" height="20" forecolor="#999999" uuid="c696554d-fc38-46e0-8c85-6ceb49f80a25"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="9" y="9" width="100" height="20" forecolor="#999999" uuid="f29a5e92-c6dd-4e2a-8231-ca09e22765bd"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="109" y="9" width="100" height="20" forecolor="#999999" uuid="ebb33e22-2f13-4e50-9a0e-4e465540d06e"/>
+				<textFieldExpression><![CDATA["Dichiarazione"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="209" y="9" width="388" height="20" forecolor="#999999" uuid="ee511d28-ecfb-419e-887a-8b1b25e690a2"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anagrafica}.getIdDichiarazione()!=null?$P{anagrafica}.getIdDichiarazione():""]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

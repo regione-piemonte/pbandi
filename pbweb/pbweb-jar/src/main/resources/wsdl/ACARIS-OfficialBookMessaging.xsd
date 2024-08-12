@@ -1,0 +1,724 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0"
+    xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            targetNamespace="officialbookservice.acaris.acta.doqui.it"
+            xmlns:tns="officialbookservice.acaris.acta.doqui.it"
+			xmlns:prt="prt.common.acaris.acta.doqui.it"
+            xmlns:common="common.acaris.acta.doqui.it">
+
+    <xs:include schemaLocation="ACARIS-OfficialBook.xsd"/>
+	<xs:import namespace="prt.common.acaris.acta.doqui.it"  schemaLocation="ACARIS-Common-PRT.xsd"/>
+    <xs:import namespace="common.acaris.acta.doqui.it"  schemaLocation="ACARIS-Common.xsd"/>
+
+	
+
+	<!--===============-->
+	<!-- tipi semplici -->
+	<!--===============-->
+	
+	<xs:simpleType name="enumTipoRegistrazioneDaCreare">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="RegistrazionRapida"/>
+			<xs:enumeration value="Protocollazione"/>
+			<xs:enumeration value="ProtocollazioneDocumentoEsistente"/>
+			<xs:enumeration value="ProtocollazioneDaSmistamento"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="enumTipoAPI">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="Arrivo"/>
+			<xs:enumeration value="Partenza"/>
+			<xs:enumeration value="Interna"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="enumTipoPFPG">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="PersonaFisica"/>
+			<xs:enumeration value="PersonaGiuridica"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="enumTipologiaSoggettoAssociato">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="SoggettoActa"/>
+			<xs:enumeration value="Struttura"/>
+			<xs:enumeration value="Nodo"/>
+			<xs:enumeration value="Utente"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="enumTipoContenitore">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="fascicoloTemporaneoTitolario"/>
+			<xs:enumeration value="fascicoloTemporaneoVoce"/>
+			<xs:enumeration value="strutturaAggregativa"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="enumTipologiaTargetAnnotazioneOB">
+		<xs:restriction base="common:string">
+			<xs:enumeration value="Registrazione"/>
+			<xs:enumeration value="Registro"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- INIZIO MODIFICHE NLG 2021 -->
+	<xs:simpleType name="enumTipoIndirizzoTelematico">
+		<xs:restriction base="common:string">							
+			<xs:enumeration value="smtp"/>
+			<xs:enumeration value="url"/>
+			<xs:enumeration value="other"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="enumTipologiaCorrispondente">
+		<xs:restriction base="common:string">							
+			<xs:enumeration value="PA"/> <!-- Amministrazione -->
+			<xs:enumeration value="AE"/> <!-- Amministrazione Estera -->
+			<xs:enumeration value="PG"/> <!-- Persona Giuridica -->
+			<xs:enumeration value="PF"/> <!-- Persona Fisica -->
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- FINE MODIFICHE NLG 2021 -->
+	
+	<!--================-->
+	<!-- classi locali allo schema -->
+	<!--================-->
+	
+	<xs:complexType name="RegistrazioneRequest" abstract="true">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="registroId" 							type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+		      <xs:element name="aooProtocollanteId" 					type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+			  <xs:element name="senzaCreazioneSoggettiEsterni" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="RegistrazioneRapida">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneRequest">
+				<xs:sequence>
+					<!-- internal properties -->
+					<xs:element name="oggetto" 									type="common:string" minOccurs="1" maxOccurs="1"/> 
+					<xs:element name="cognomeSoggetto" 							type="common:string" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="nomeSoggetto" 							type="common:string" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="denominazionePG" 							type="common:string" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="inserimentoMittenteInAnagrafica" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+					<xs:element name="classificazioneEstesaPerArchiviazione" 	type="common:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="collocazioneCartacea" 					type="common:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="folderId" 						type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="folderType" 						type="tns:enumTipoContenitore" minOccurs="0" maxOccurs="1"/> 
+					<!-- external properties -->
+					<xs:element name="tipoSoggetto" 							type="tns:enumTipoPFPG"/> 
+					<xs:element name="protocollante" 						type="tns:IdentificazioneProtocollante" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="annotazione" 							type="tns:InfoCreazioneAnnotazioneOB" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="mittenteEsterno" 						type="tns:MittenteEsterno" minOccurs="1" maxOccurs="1"/> 
+					<xs:element name="destinatarioInterno" 					type="tns:DestinatarioInterno" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="stampaRicevuta" 							type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+					<xs:element name="forzareSePresenzaInviti" 					type="common:boolean" minOccurs="1" maxOccurs="1"/>  
+					<xs:element name="creazioneAsincronaDocumento" 				type="common:boolean" minOccurs="1" maxOccurs="1"/>  
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="Protocollazione">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneRequest">
+				<xs:sequence>
+					<!-- internal properties -->
+					<xs:element name="creazioneAsincronaDocumento" 		type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+					<xs:element name="folderId" 						type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="folderType" 						type="tns:enumTipoContenitore" minOccurs="0" maxOccurs="1"/> 
+					<!-- external properties -->
+					<xs:element name="registrazioneAPI" 				type="tns:RegistrazioneAPI" minOccurs="1" maxOccurs="1"/> 
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="ProtocollazioneDocumentoEsistente">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneRequest">
+				<xs:sequence>
+					<!-- internal properties -->
+					<xs:element name="classificazioneId" 				type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/> 
+					<!-- external properties -->
+					<xs:element name="registrazioneAPI" 				type="tns:RegistrazioneAPI" minOccurs="1" maxOccurs="1"/> 
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="ProtocollazioneDaSmistamento">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneRequest">
+				<xs:sequence>
+					<!-- internal properties -->
+					<xs:element name="smistamentoId" 				type="common:IDDBType" minOccurs="1" maxOccurs="1"/> 
+					<!-- external properties -->
+					<xs:element name="registrazioneAPI" 				type="tns:RegistrazioneAPI" minOccurs="1" maxOccurs="1"/> 
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="RegistrazioneAPI">
+		<xs:sequence>
+			<!-- external properties -->
+			<xs:element name="tipoRegistrazione" 	type="tns:enumTipoAPI" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="infoCreazione" 		type="tns:InfoCreazioneRegistrazione" minOccurs="1" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="RegistrazioneInterna">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneAPI">
+				<xs:sequence>
+					<!-- internal properties -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="RegistrazionePartenza">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneAPI">
+				<xs:sequence>
+					<!-- internal properties -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="RegistrazioneArrivo">
+		<xs:complexContent>
+			<xs:extension base="tns:RegistrazioneAPI">
+				<xs:sequence>
+					<!-- external properties -->
+					<xs:element name="infoDateArrivo" 					type="tns:InfoDateArrivo" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="infoProtocolloMittente" 			type="tns:InfoProtocolloMittente" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="mittenteEsterno" 					type="tns:MittenteEsterno" minOccurs="0" maxOccurs="unbounded"/> 
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="IdentificazioneRegistrazione">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="registrazioneId" 				type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/> 
+		      <xs:element name="folderId" 						type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+			  <xs:element name="folderType" 					type="tns:enumTipoContenitore" minOccurs="0" maxOccurs="1"/> 
+			  <xs:element name="dataUltimoAggiornamento" 		type="common:ChangeTokenType" minOccurs="1" maxOccurs="1"/> 
+			  <xs:element name="numero" 						type="common:string" minOccurs="1" maxOccurs="1"/> 
+			  <xs:element name="classificazioneId" 				type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="IdentificazioneAnnotazioneOB">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="idAnnotazioneOB" 				type="common:ObjectIdType"/> 
+		      <xs:element name="target" 						type="common:ObjectIdType"/> 
+			  <xs:element name="tipologiaTarget" 				type="tns:enumTipologiaTargetAnnotazioneOB"/> 
+			  <xs:element name="dataUltimoAggiornamento" 		type="common:ChangeTokenType"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="IdentificazioneProtocollante">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="strutturaId" 				type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/> 
+		      <xs:element name="nodoId" 					type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoCreazioneAnnotazioneOB">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="descrizione" 				type="common:string" minOccurs="1" maxOccurs="1"/> 
+		      <xs:element name="formale" 					type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoCreazioneRegistrazione">
+		<xs:sequence>
+			<!-- internal properties -->
+			<xs:element name="numeroRegistrazionePrecedente" 			type="common:string" minOccurs="0" maxOccurs="1"/> 
+		    <xs:element name="annoRegistrazionePrecedente" 				type="common:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="registrazioneRiservata" 					type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="oggetto" 									type="common:string" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="collocazioneCartacea" 					type="common:string" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="mezzoTrasmissivoId" 						type="common:IDDBType" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="forzareSeRegistrazioneSimile" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="documentoRiservato" 						type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="classificazioneProposta" 					type="common:string" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="forzareSeRegistrazionePropostaInvalida" 	type="common:boolean" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dataDocumento" 							type="common:date" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="descrizioneAllegato" 						type="common:string" minOccurs="0" maxOccurs="unbounded"/> 
+			<!-- external properties -->
+			<xs:element name="mittenteInterno" 		type="tns:MittenteInterno" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="destinatarioInterno" 	type="tns:DestinatarioInterno" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="destinatarioEsterno" 	type="tns:DestinatarioEsterno" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="protocollante" 		type="tns:IdentificazioneProtocollante" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="annotazione" 			type="tns:InfoCreazioneAnnotazioneOB" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="forzareSePresenzaInviti" 					type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="forzareSePresenzaDaInoltrare" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoDateArrivo">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+			  <xs:element name="dataRicezione" 								type="common:date" minOccurs="0" maxOccurs="1"/> 
+			  <xs:element name="dataTimbroPostale" 							type="common:date" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoProtocolloMittente">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="numero" 								type="common:string" minOccurs="1" maxOccurs="1"/> 
+			  <xs:element name="anno" 									type="common:string" minOccurs="1" maxOccurs="1"/> 
+			  <xs:element name="data" 									type="common:date" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="MittenteEsterno">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="corrispondente" 						type="tns:InfoCreazioneCorrispondente" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="MittenteInterno">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="corrispondente" 						type="tns:InfoCreazioneCorrispondente" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="DestinatarioInterno">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="corrispondente" 						type="tns:InfoCreazioneCorrispondente" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="idRuoloCorrispondente" 					type="common:IDDBType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="DestinatarioEsterno">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="corrispondente" 						type="tns:InfoCreazioneCorrispondente" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="idRuoloCorrispondente" 					type="common:IDDBType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoCreazioneCorrispondente">
+		<xs:sequence>
+		      <!-- properties -->
+		      <xs:element name="denominazione" 							type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="nome" 									type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="cognome" 								type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="ordinale" 								type="common:integer" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="carica" 								type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="persona" 								type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="testoFoglioTrasmissione" 				type="common:string" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="infoSoggettoAssociato" 					type="tns:InfoSoggettoAssociato" minOccurs="0" maxOccurs="1"/>
+  			  <!-- INIZIO MODIFICHE NLG 2021 -->
+			  <xs:element name="tipologiaCorrispondente"				type="tns:enumTipologiaCorrispondente"	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="codiceFiscale" 							type="common:string"	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="PIVA" 									type="common:string"	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="codiceIPAPA" 							type="common:string" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="codiceIPAAOO" 							type="common:string" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="codiceIPAUO" 							type="common:string" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="indirizzoTelematicoPA" 					type="tns:IndirizzoTelematicoType" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="indirizzoTelematicoAOO" 				type="tns:IndirizzoTelematicoType" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="indirizzoTelematicoUO" 					type="tns:IndirizzoTelematicoType" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="denominazioneAmministrazione"			type="common:string" 				minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="denominazioneUfficio"					type="common:string" 				minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="indirizzoTelematico" 					type="tns:IndirizzoTelematicoType" 	minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="richiestaConferma" 						type="common:boolean" 				minOccurs="0" maxOccurs="1"/>
+			  <!-- FINE MODIFICHE -->
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoSoggettoAssociato" abstract="true">
+		<xs:sequence>
+		      
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="RiferimentoSoggettoEsistente">
+		<xs:complexContent>
+			<xs:extension base="tns:InfoSoggettoAssociato">
+			<xs:sequence>
+			      <!-- objectName:propertyName -->
+			      <xs:element name="soggettoId" 							type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/>
+				  <xs:element name="nodoIdSeTipologiaUtente" 				type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/>
+				  <xs:element name="tipologia" 								type="tns:enumTipologiaSoggettoAssociato" minOccurs="1" maxOccurs="1"/>
+				  <xs:element name="idPFPGUL" 								type="prt:enumPFPGUL" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- TODO servono due viste per gestire codiceTipoSoggetto e codiceFonte -->
+	<xs:complexType name="SoggettoEsterno">
+		<xs:complexContent>
+			<xs:extension base="tns:InfoSoggettoAssociato">
+			<xs:sequence>
+			      <!-- objectName:propertyName -->
+			      <xs:element name="chiaveEsterna" 							type="common:string" minOccurs="1" maxOccurs="1"/>
+				  <xs:element name="idPFPGUL" 								type="prt:enumPFPGUL" minOccurs="1" maxOccurs="1"/>
+				  <xs:element name="codiceTipoSoggetto" 					type="common:string" minOccurs="1" maxOccurs="1"/> 
+				  <xs:element name="codiceFonte" 							type="common:string" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoRegistrazione">
+		<xs:sequence>
+			<!-- internal properties -->
+			<xs:element name="dataProtocollo" 							type="common:date" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="codice" 									type="common:string" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="annullata" 								type="common:boolean" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="numeroRegistrazionePrecedente" 			type="common:string" minOccurs="0" maxOccurs="1"/> 
+		    <xs:element name="annoRegistrazionePrecedente" 				type="common:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="registrazionePrecedenteId" 				type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="registrazioneRiservata" 					type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="mezzoTrasmissivoId" 						type="common:IDDBType" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="oggetto" 									type="common:string" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="collocazioneCartacea" 					type="common:string" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="forzareSeRegistrazioneSimile" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="documentoRiservato" 						type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<!-- external properties -->
+			<xs:element name="protocollante" 							type="tns:IdentificazioneProtocollanteEstesa" 
+																			minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="tipoRegistrazione" 						type="tns:enumTipoAPI" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="infoAggiuntiveRegistrazioneInArrivo" 		type="tns:RegistrazioneArrivo" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="annotazione" 								type="tns:InfoCreazioneAnnotazioneOB" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="infoAnnullamento" 						type="tns:InfoAnnullamentoRegistrazione" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="mittenteInterno" 							type="tns:MittenteInterno" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="destinatarioInterno" 						type="tns:DestinatarioInterno" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="destinatarioEsterno" 						type="tns:DestinatarioEsterno" minOccurs="0" maxOccurs="unbounded"/> 
+			<xs:element name="forzareSePresenzaInviti" 					type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+			<xs:element name="forzareSePresenzaDaInoltrare" 			type="common:boolean" minOccurs="1" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="IdentificazioneProtocollanteEstesa">
+		<xs:complexContent>
+			<xs:extension base="tns:IdentificazioneProtocollante">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="idAoo" 									type="common:ObjectIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoAnnullamentoRegistrazione">
+		<xs:sequence>
+		      <xs:element name="annotazione" 							type="tns:InfoCreazioneAnnotazioneOB" minOccurs="1" maxOccurs="1"/> 
+			  <xs:element name="dataAnnullamento" 						type="common:date" minOccurs="0" maxOccurs="1"/> 
+			  <xs:element name="utenteAnnullamento" 					type="common:string" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoMittenteIS">
+		<xs:sequence>
+		      <!-- properties -->
+		      <xs:element name="identificatore" 							type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="casella" 									type="common:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="InfoDestinatarioIS">
+		<xs:sequence>
+		      <!-- properties -->
+		      <xs:element name="identificatore" 							type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="emailPec" 									type="common:string" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="confermaRicezione" 							type="common:boolean" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- INIZIO MODIFICHE NLG 2021 -->
+	<xs:complexType name="IndirizzoTelematicoType">
+		<xs:sequence>
+		      <!-- objectName:propertyName -->
+		      <xs:element name="indirizzo" 						type="common:string" 					minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="tipo" 							type="tns:enumTipoIndirizzoTelematico" 	minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- FINE MODIFICHE NLG 2021 -->
+	
+	<!--=====================-->
+	<!-- Service operations  -->
+	<!--=====================-->
+
+	<!-- creaRegistrazione operation -->
+	<xs:element name="creaRegistrazione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="tipologiaCreazione" 		type="tns:enumTipoRegistrazioneDaCreare" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="infoRichiestaCreazione" 	type="tns:RegistrazioneRequest" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="creaRegistrazioneResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="identificazioneCreazione" type="tns:IdentificazioneRegistrazione"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- importaRegistrazione operation -->
+	<xs:element name="importaRegistrazione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="classificazioneId" 		type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="registroId" 				type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="infoRegistrazione" 		type="tns:InfoRegistrazione" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="senzaCreazioneSoggetti" 	type="common:boolean" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="importaRegistrazioneResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="identificazioneCreazione" type="tns:IdentificazioneRegistrazione"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- getRegistries operation -->
+	<xs:element name="getRegistries">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="aooId" 					type="common:ObjectIdType" 
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="anno" 					type="common:integer" 
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="filter" 					type="common:PropertyFilterType" 
+					minOccurs="1" maxOccurs="1" />
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getRegistriesResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="object" type="common:PagingResponseType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- getProperties Operation -->
+	<xs:element name="getProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="objectId" 				type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="filter" 					type="common:PropertyFilterType" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getPropertiesResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="object" 					type="common:ObjectResponseType"
+					minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- updateProperties Operation -->
+	<xs:element name="updateProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="objectId" 				type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="changeToken" 				type="common:ChangeTokenType"
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="properties" 				type="common:PropertyType"
+					minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="updatePropertiesResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="response" 				type="common:SimpleResponseType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+
+	<!-- navigaRegistrazioni operation -->
+	<xs:element name="navigaRegistrazioni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="navigaRegistrazioniResponse">
+		<xs:complexType>
+			<xs:sequence>
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- creaAnnotazioneOB operation -->
+	<xs:element name="creaAnnotazioneOB">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="target" 					type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="tipologiaTarget" 			type="tns:enumTipologiaTargetAnnotazioneOB" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="properties" 				type="common:PropertiesType" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="creaAnnotazioneOBResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="identificazioneCreazione" type="tns:IdentificazioneAnnotazioneOB"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- inviaSegnatura operation -->
+	<xs:element name="inviaSegnatura">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 			type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 				type="common:PrincipalIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="origine" 					type="common:string" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="identificatoreRegistraizone" 	type="common:ObjectIdType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="mittente" 				type="tns:InfoMittenteIS" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="destinatari" 				type="tns:InfoDestinatarioIS" 
+					minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="identitaDigitale" 		type="common:string" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="inviaSegnaturaResponse">
+		<xs:complexType>
+			<xs:sequence>
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- INIZIO MODIFICHE NLG 2021 -->
+	<!-- inviaSegnaturaRegistrazione operation -->
+	<!-- supponiamo che il servizio di invio segnatura sia SOLO tramite job (quindi asincrono per natura) -->
+	<!-- 
+	<xs:element name="inviaSegnaturaRegistrazione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" 				type="common:ObjectIdType"				minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" 					type="common:PrincipalIdType"			minOccurs="1" maxOccurs="1" />
+				<xs:element name="identificatoreRegistrazione" 	type="common:ObjectIdType"				minOccurs="1" maxOccurs="1" />
+				<xs:element name="mittente" 					type="tns:InfoMittenteRegistrazione"	minOccurs="1" maxOccurs="1" />
+				<xs:element name="destinatari" 				type="tns:InfoDestinatarioRegistrazione"	minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="info" 						type="tns:InfoInvioSegnatura"			minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="inviaSegnaturaRegistrazioneResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="identificatoreInvioSegnatura"		type="common:ObjectIdType" minOccurs="1" maxOccurs="1"/>	
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="InfoMittenteRegistrazione">
+		<xs:sequence>
+			<xs:element name="identificatore" type="common:ObjectIdType" minOccurs="1" maxOccurs="1" />
+			<xs:element name="emailPec" type="common:string" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="InfoDestinatarioRegistrazione">
+		<xs:sequence>
+			<xs:element name="identificatore" type="common:ObjectIdType" minOccurs="1" maxOccurs="1" />
+			<xs:element name="emailPec" type="common:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="confermaRicezione" type="common:boolean" 	minOccurs="1" maxOccurs="1" />
+			- utilizzato solo nel caso di infoInvioSegnatura.invioMultiplo -
+			<xs:element name="usaCanalePec" type="common:boolean" minOccurs="1" maxOccurs="1" />
+			- forza l'uso del canale pec per il dato destinatario -
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="InfoInvioSegnatura">
+		<xs:sequence>
+			<xs:element name="invioMultiplo" type="common:boolean" minOccurs="1" maxOccurs="1" />
+			<xs:element name="forzaturaSigillo" type="common:boolean" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	-->
+	<!-- FINE MODIFICHE NLG 2021 -->
+	
+</xs:schema>

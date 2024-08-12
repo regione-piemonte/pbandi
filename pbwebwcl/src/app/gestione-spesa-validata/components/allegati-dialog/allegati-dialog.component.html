@@ -1,0 +1,88 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Allegati</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <!--allegati documento-->
+    <p *ngIf="!allegatiDoc || allegatiDoc.length===0">
+        Non sono presenti allegati.
+    </p>
+    <table class="fullWidth" *ngIf="allegatiDoc?.length>0">
+        <tbody>
+            <tr *ngFor="let allegato of allegatiDoc">
+                <td
+                    class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap width-1-perc cursor-pointer">
+                    <a class=" blue-color bold-text" matTooltip="Download allegato"
+                        (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                </td>
+            </tr>
+            <mat-divider></mat-divider>
+        </tbody>
+    </table>
+    <h3 class="bold-text margin-h3">Quietanze</h3>
+    <p *ngIf="!quietanze || quietanze.length===0">
+        Non sono presenti allegati per le quietanze.
+    </p>
+    <table class="fullWidth">
+        <tbody>
+            <div *ngFor="let quietanza of quietanze">
+                <tr>
+                    <td>
+                        {{quietanza.descrizioneModalitaPagamento}} - {{quietanza.dtPagamento}} -
+                        <span class="bold-text">€ {{quietanza.importoPagamento | number:
+                            '1.2-2' : 'it'}}</span>
+                    </td>
+                </tr>
+                <!--nessun allegato presente se ! allegati -->
+                <tr *ngFor="let allegato of quietanza.allegati">
+                    <td
+                        class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap width-1-perc cursor-pointer">
+                        <a class=" blue-color bold-text" matTooltip="Download allegato"
+                            (click)="downloadAllegato(allegato.id,allegato.nomeFile)">{{allegato.nomeFile}}</a>
+                    </td>
+                </tr>
+                <mat-divider></mat-divider>
+            </div>
+        </tbody>
+    </table>
+    <h3 class="bold-text margin-h3">Note di credito</h3>
+    <p *ngIf="!allegatiNoteDiCredito || allegatiNoteDiCredito.length===0">
+        Non sono presenti allegati.
+    </p>
+    <table class="fullWidth" *ngIf="allegatiNoteDiCredito?.length>0">
+        <tbody>
+            <tr *ngFor="let allegato of allegatiNoteDiCredito">
+                <td
+                    class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap width-1-perc cursor-pointer">
+                    <a class=" blue-color bold-text" matTooltip="Download allegato"
+                        (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                </td>
+            </tr>
+            <mat-divider></mat-divider>
+        </tbody>
+    </table>
+    <h3 class="bold-text margin-h3">Fornitore</h3>
+    <p *ngIf="!allegatiFornitore || allegatiFornitore.length===0">
+        Non sono presenti allegati.
+    </p>
+    <table class="fullWidth" *ngIf="allegatiFornitore?.length>0">
+        <tbody>
+            <tr *ngFor="let allegato of allegatiFornitore">
+                <td
+                    class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap width-1-perc cursor-pointer">
+                    <a class=" blue-color bold-text" matTooltip="Download allegato"
+                        (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                </td>
+            </tr>
+            <mat-divider></mat-divider>
+        </tbody>
+    </table>
+</div>

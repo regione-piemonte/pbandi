@@ -1,0 +1,189 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div *ngIf="isLoading()" style="height: 333px;"></div>
+
+<div [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Richiesta integrazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+    <mat-card-content class="messageSuccessContent">
+      <p [innerHTML]="messageSuccess"></p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+      <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+  </mat-card>
+  <!--buono dom (BR79) e' finpiemonte ma  deve vedere la parte vecchia perche chiama servizi esterni-->
+  <div *ngIf="isVisible || !isFP; else notProd"> <!-- Controlla l'ambiente, prod = nuovi sviluppi -->
+
+    <!--
+    <p>Inserire la motivazione per cui si richiede l’integrazione</p>
+    <quill-editor [(ngModel)]="motivazione" [modules]="modules" [placeholder]="'Scrivi qui...'"
+      [styles]="{height: '200px'}"></quill-editor>
+    -->
+
+    <mat-form-field class=" fullWidth marginTop20">
+      <mat-label>Motivazione</mat-label>
+      <input matInput type="text" [(ngModel)]="motivazione" #mot="ngModel" [required]="!isFP">
+      <mat-error *ngIf="mot?.errors?.required">
+        Campo obbligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isFP" class="marginTop20">
+      <mat-label>Giorni scadenza</mat-label>
+      <input matInput type="number" [(ngModel)]="ggScadenza" required min="0">
+    </mat-form-field>
+
+    <br>
+
+    <div class="fullWidth marginTop20" *ngIf="nDocSospesi > 0">
+      <p>Numero documenti di spesa sospesi: <b>{{nDocSospesi}}</b></p>
+    </div>
+
+    <br>
+
+
+
+    <!-- CARICA LETTERA ACCOMPAGNATORIA -->
+    <div class="fullWidth">
+
+      <div class="fullWidth marginTop20">
+        <mat-label class="bold">Lettera accompagnatoria</mat-label>
+      </div>
+      <div class="fullWidth">
+
+        <div class="row" [hidden]="letteraAccompagnatoria">
+          <div class="col">
+            <button mat-button class="button-style-1" (click)="uploadLetteraAccompagnatoria.click()">AGGIUNGI LETTERA
+              ACCOMPAGNATORIA</button>
+            <input type="file" [hidden]="true" #uploadLetteraAccompagnatoria id="uploadLetteraAccompagnatoria"
+              name="uploadLetteraAccompagnatoria" (change)="handleLetteraAccompagnatoria($event.target.files)" />
+          </div>
+        </div>
+        <div>
+          <ul>
+
+            <li [hidden]="!letteraAccompagnatoria">
+              <div class="alignItemsCenter">
+                <span>
+                  <span *ngIf="isFP">Flag visibilità: <input [checked]="visibilitaLettera" type="checkbox"
+                      (click)="toggleCheckbox(1)"></span>
+                  <span class="bold-text">{{letteraAccompagnatoria?.name}}</span> - {{letteraAccompagnatoria?.size}}
+                  bytes
+                </span>
+                <button mat-icon-button class="red-color" matTooltip="Elimina"
+                  (click)="eliminaLetteraAccompagnatoria()">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="isFP">
+
+      <!-- CARICA REPORT VALIDAZIONE -->
+      <div class="fullWidth">
+
+        <div class="fullWidth marginTop20">
+          <mat-label class="bold">Carica report validazione</mat-label>
+        </div>
+        <div class="fullWidth">
+
+          <div class="row" [hidden]="reportValidazione">
+            <div class="col">
+              <button mat-button class="button-style-1" (click)="uploadReportValidazione.click()">AGGIUNGI
+                ALLEGATO</button>
+              <input type="file" [hidden]="true" #uploadReportValidazione id="uploadReportValidazione"
+                name="uploadreportValidazione" (change)="handleReportValidazione($event.target.files)" />
+            </div>
+          </div>
+          <div>
+            <ul>
+
+              <li [hidden]="!reportValidazione">
+                <div class="alignItemsCenter">
+                  <span>
+                    Flag visibilità: <input [checked]="visibilitaReport" type="checkbox" (click)="toggleCheckbox(3)">
+                    <span class="bold-text">{{reportValidazione?.name}}</span> - {{reportValidazione?.size}} bytes
+                  </span>
+                  <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaReportValidazione()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CARICA CHECK LIST -->
+      <!--<div class="fullWidth" *ngIf="br55"> COMMENTATO PER TEST -->
+      <div class="fullWidth">
+
+        <div class="fullWidth marginTop20">
+          <mat-label class="bold">Carica checklist interna</mat-label>
+        </div>
+        <div class="fullWidth">
+
+          <div class="row" [hidden]="checklistInterna">
+            <div class="col">
+              <button mat-button class="button-style-1" (click)="uploadCheckList.click()">AGGIUNGI ALLEGATO</button>
+              <input type="file" [hidden]="true" #uploadCheckList id="uploadCheckList" name="uploadCheckList"
+                (change)="handleChecklistInterna($event.target.files)" />
+            </div>
+          </div>
+          <div>
+            <ul>
+
+              <li [hidden]="!checklistInterna">
+                <div class="alignItemsCenter">
+                  <span>
+                    Flag visibilità: <input [checked]="visibilitaChecklist" type="checkbox" (click)="toggleCheckbox(2)">
+                    <span class="bold-text">{{checklistInterna?.name}}</span> - {{checklistInterna?.size}} bytes
+                  </span>
+                  <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaChecklistInterna()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="flexEnd fullWidth marginTop20">
+      <button type="button" mat-button class="button-style-1" (click)="close()" [disabled]="disableAll">ANNULLA</button>
+      <button mat-button class="button-style-1" [disabled]="mot?.errors ||disableAll" (click)="newInvia()"
+        *ngIf="!isFP">INVIA</button>
+      <button mat-button class="button-style-1" [disabled]="!letteraAccompagnatoria || !ggScadenza || disableAll"
+        (click)="newInvia()" *ngIf="isFP">AVVIA ITER</button>
+    </div>
+  </div>
+
+  <ng-template #notProd> <!-- vecchio sviluppo, non in prod -->
+    <p>Inserire la motivazione per cui si richiede l'integrazione</p>
+    <quill-editor [(ngModel)]="motivazione" [modules]="modules" [placeholder]="'Scrivi qui...'"
+      [styles]="{height: '200px'}"></quill-editor>
+    <div class="spaceBetween marginTop20" *ngIf="!disableAll">
+      <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+      <button mat-button class="button-style-1" [disabled]="!motivazione" (click)="inviaRichiesta()">INVIA
+        RICHIESTA</button>
+    </div>
+  </ng-template>
+</div>

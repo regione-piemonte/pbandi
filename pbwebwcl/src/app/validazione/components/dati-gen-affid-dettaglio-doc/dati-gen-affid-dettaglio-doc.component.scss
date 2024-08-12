@@ -1,0 +1,20 @@
+.card {
+    margin: 20px 0 0 0;
+
+    mat-card {
+        mat-card-content {
+            padding-left: 10px;
+        }
+    }
+}
+
+mat-grid-tile,
+.affidamento {
+    p {
+        margin: 0;
+    }
+
+    span {
+        font-weight: bold;
+    }
+}

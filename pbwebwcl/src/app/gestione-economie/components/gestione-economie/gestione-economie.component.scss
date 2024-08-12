@@ -1,0 +1,38 @@
+.display-flex {
+    display: flex;
+}
+
+.flex-direction-column {
+    flex-direction: column;
+}
+
+.margin-top-15 {
+    margin-top: 15px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.width-40-perc {
+    width: 40%;
+}
+
+.width-60-perc {
+    width: 60%;
+}
+
+::ng-deep .mat-radio-label-content {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+::ng-deep .mat-form-field:not(.mat-form-field-has-label) .mat-form-field-infix {
+    border-top-width: 0;
+}

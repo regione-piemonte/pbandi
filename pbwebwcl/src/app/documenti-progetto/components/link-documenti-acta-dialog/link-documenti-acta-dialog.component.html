@@ -1,0 +1,20 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Link documento ACTA</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <p>Copiare l'indice di classificazione esteso di ACTA e incollarlo nello spazio sottostante</p>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-form-field class="margin-right-10" class="fullWidth">
+        <input type="text" matInput placeholder="Link" [(ngModel)]="link" name="link" />
+    </mat-form-field>
+    <button mat-raised-button class=" button-style-2" (click)="salva()"
+        [disabled]="!link || link.length===0">SALVA</button>
+</div>

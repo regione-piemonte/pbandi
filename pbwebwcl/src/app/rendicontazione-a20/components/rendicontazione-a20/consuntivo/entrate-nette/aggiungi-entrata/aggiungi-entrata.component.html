@@ -1,0 +1,44 @@
+<div>
+	<div class="spaceBetween">
+		<h3 class="bold-text">Nuova entrata</h3>
+		<button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+			<mat-icon>clear</mat-icon>
+		</button>
+	</div>
+	<div class="content" *ngIf="errore === false">
+		<mat-card-content class="messageSuccess">
+			<p>SUCCESSO</p>
+			<span>{{ message }}</span>
+		</mat-card-content>
+	</div>
+	<div class="content" *ngIf="errore === true">
+		<mat-card-content class="messageError">
+			<p>ERRORE</p>
+			<span>{{ message }}</span>
+		</mat-card-content>
+	</div>
+	<form [formGroup]="formEntrate">
+		<table class="fullWidth">
+			<tr>
+				<p class="flecs">
+					<mat-form-field appearance="standard" class="fullWidth">
+						<mat-label>Denominazione</mat-label>
+						<input matInput type="text" formControlName="completamento" class="noDecoration" />
+					</mat-form-field>
+				</p>
+			</tr>
+			<tr>
+				<p class="flecs">
+					<mat-form-field appearance="standard" class="fullWidth">
+						<mat-label>Importo</mat-label>
+						<input matInput type="number" formControlName="importo" class="noDecoration" />
+					</mat-form-field>
+				</p>
+			</tr>
+		</table>
+	</form>
+</div>
+<div class="spaceBetween">
+	<button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+	<button [disabled]="caricamento" mat-button class="button-style-2" (click)="onConfirmClick()">CONFERMA</button>
+</div>

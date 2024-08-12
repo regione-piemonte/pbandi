@@ -1,0 +1,231 @@
+      <div class="content" *ngIf="ambito ==='controlli'" >
+        <div class="spaceBetween">
+            <h3 class="bold-text">Dettaglio {{ambito}}</h3>
+        </div>
+          <mat-card-content class="mat-card-content" style="display: flex; justify-content: space-between;">
+            <div style="width: 100%;">
+                <table mat-table [dataSource]="dataSource" style="width: 100%;"class="tableDoc">
+
+                    <!-- Numero protocollo -->
+                    <ng-container matColumnDef="nProtocollo">
+                        <th mat-header-cell *matHeaderCellDef > Numero protocollo </th>
+                        <td mat-cell *matCellDef="let row"> {{row.numProtocollo}} </td>
+                    </ng-container>
+
+                    <!-- Data richiesta -->
+                    <ng-container matColumnDef="dataRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row.dtRich  | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data notifica -->
+                    <ng-container matColumnDef="dataNotifica">
+                        <th mat-header-cell *matHeaderCellDef > Data notifica </th>
+                        <td mat-cell *matCellDef="let row"> {{row.dtNotifica  | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data Scadenza -->
+                    <ng-container matColumnDef="dataScadenza">
+                        <th mat-header-cell *matHeaderCellDef > Data Scadenza </th>
+                        <td mat-cell *matCellDef="let row"> {{row.dtScadenza  | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data invio -->
+                    <ng-container matColumnDef="dataInvio">
+                        <th mat-header-cell *matHeaderCellDef> Data invio </th>
+                        <td mat-cell *matCellDef="let row"> {{row.dtInvio  | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Stato richiesta -->
+                    <ng-container matColumnDef="statoRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row.descStatoRich}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="contDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: contDisplayedColumns;"></tr>
+                </table>
+            </div>
+          </mat-card-content>
+
+          <div >
+            <div class="spaceBetween">
+                <h3 class="bold-text">Proroga inviata</h3>
+            </div>
+                  <table mat-table [dataSource]="inviataDataSource" class="tableDoc"   >
+        
+                   <ng-container matColumnDef="dtRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="ggRichiesti">
+                        <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.ggRichiesti }} </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="motivazione">
+                        <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                        <td mat-cell *matCellDef="let row"> {{row?.motivazione}} </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="ggApprovati">
+                        <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.ggApprovati}} </td>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="statoProroga">
+                        <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.statoProroga}} </td>
+                    </ng-container>
+        
+                    <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+                </table>
+        </div>
+        
+      </div>
+
+      <div class="content" *ngIf="ambito === 'revoca'" >
+        <div class="spaceBetween">
+            <h3 class="bold-text">Dettaglio integrazione</h3>
+        </div>
+        <mat-card-content class="mat-card-content" style="display: flex; justify-content: space-between;">
+            <div style="width: 100%;">
+                <table mat-table [dataSource]="dataSource" style="width: 100%;"class="tableDoc">
+
+                    <!-- Numero protocollo -->
+                    <ng-container matColumnDef="nRevoca">
+                        <th mat-header-cell *matHeaderCellDef > Numero proc di revoca </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.nRevoca}}</td>
+                    </ng-container>
+
+                    <!-- Data richiesta -->
+                    <ng-container matColumnDef="dataRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataRichiesta | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data notifica -->
+                    <ng-container matColumnDef="dataNotifica">
+                        <th mat-header-cell *matHeaderCellDef > Data notifica </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataNotifica | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data Scadenza -->
+                    <ng-container matColumnDef="dataScadenza">
+                        <th mat-header-cell *matHeaderCellDef > Data Scadenza </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataScadenza | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data invio -->
+                    <ng-container matColumnDef="dataInvio">
+                        <th mat-header-cell *matHeaderCellDef > Data invio </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataInvio | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Stato richiesta -->
+                    <ng-container matColumnDef="statoRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.statoRichiesta}} </td>
+                    </ng-container>
+ 
+
+                    <tr mat-header-row *matHeaderRowDef="revDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: revDisplayedColumns;"></tr>
+                </table>
+            </div>
+        </mat-card-content>
+      </div>
+
+      <div class="content" *ngIf="ambito === 'rendicontazione'" >
+        <div class="spaceBetween">
+            <h3 class="bold-text">Dettaglio {{ambito}}</h3>
+        </div>
+        <mat-card-content class="mat-card-content" style="display: flex; justify-content: space-between;">
+            <div style="width: 100%;">
+                <table mat-table [dataSource]="dataSource" style="width: 100%;"class="tableDoc">
+
+                    <!-- Numero protocollo -->
+                    <ng-container matColumnDef="nDichiarazioneSpesa">
+                        <th mat-header-cell *matHeaderCellDef > Numero dichiarazione spesa </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.nDichiarazioneSpesa}}</td>
+                    </ng-container>
+
+                    <!-- Data richiesta -->
+                    <ng-container matColumnDef="dataRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataRichiesta | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data notifica -->
+                    <ng-container matColumnDef="dataNotifica">
+                        <th mat-header-cell *matHeaderCellDef > Data notifica </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataNotifica | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data Scadenza -->
+                    <ng-container matColumnDef="dataScadenza">
+                        <th mat-header-cell *matHeaderCellDef > Data Scadenza </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataScadenza | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Data invio -->
+                    <ng-container matColumnDef="dataInvio">
+                        <th mat-header-cell *matHeaderCellDef > Data invio </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.dataInvio | date:'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Stato richiesta -->
+                    <ng-container matColumnDef="statoRichiesta">
+                        <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.longStatoRichiesta}} </td>
+                    </ng-container>
+ 
+
+                    <tr mat-header-row *matHeaderRowDef="rendicontazioneDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: rendicontazioneDisplayedColumns;"></tr>
+                </table>
+            </div>
+        </mat-card-content>
+      </div>
+      <mat-divider></mat-divider>
+      <div>
+        <mat-card-title>
+            <span *ngFor="let lettera of lettaraIstruttore" style="display: flex;align-items: baseline;">
+            <h3> <b>Lettera inviata da Istruttore :</b>  {{lettera.nomeFile}}</h3>
+            <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(lettera)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            </span>
+        </mat-card-title>
+      </div>
+      <div >
+        <div *ngIf="letteraAccompagnatoria.length > 0 || allegatiGenerici.length > 0">
+          <mat-card-title>
+              <span *ngFor="let lettera of letteraAccompagnatoria" style="display: flex;align-items: baseline;">
+              <h3> <b>Lettera accompagnatoria :</b>  {{lettera.nomeFile}}</h3>
+              <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(lettera)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              </span>
+          </mat-card-title>
+          <mat-card-title>
+              <span *ngFor="let lettera of allegatiGenerici" style="display: flex;align-items: baseline;">
+              <h3> <b>Altri allegati :</b>  {{lettera.nomeFile}}</h3>
+              <button mat-icon-button class="blue-color" matTooltip="Anteprima" (click)="anteprimaAllegato(lettera)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              </span>
+          </mat-card-title>
+        </div>
+        <div *ngIf="letteraAccompagnatoria.length <= 0 && allegatiGenerici.length <= 0">
+          <p>Nessun allegato disponibile</p>
+        </div>
+      </div>
+      <div class="end">
+        <button style="margin-top: 2em;" type="button" class="button-style-2" mat-button mat-dialog-close>
+        CHIUDI
+        </button>
+      </div>
+    

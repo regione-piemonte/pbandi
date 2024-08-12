@@ -1,0 +1,1495 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button
+                *ngIf="!tipoOperazioneFrom || tipoOperazioneFrom==='inserisci' || tipoOperazioneFrom==='clona' || tipoOperazioneFrom==='dettaglio'"
+                (click)="tornaAlleRendicontazioni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla rendicontazione</span>
+            </button>
+            <button *ngIf="tipoOperazioneFrom==='dichiarazione'" (click)="tornaAInvioDichiarazione()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a invio dichiarazione</span>
+            </button>
+            <button *ngIf="tipoOperazioneFrom==='validazione'" (click)="tornaAValidazione()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla validazione</span>
+            </button>
+        </div>
+        <div>
+            <h2 *ngIf="!idDocumentoDiSpesa || (idDocumentoDiSpesa && tipoOperazioneCurrent==='clona')">Nuovo documento
+                di spesa</h2>
+            <h2 *ngIf="tipoOperazioneCurrent==='modifica' || tipoOperazioneFrom==='validazione'">Modifica documento di
+                spesa</h2>
+            <h2 *ngIf="tipoOperazioneCurrent==='dettaglio'">Dettaglio documento di
+                spesa</h2>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                            <button class="button-style-1 paddingLeft20" mat-button
+                                (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave;
+                                PREGRESSE</button>
+                            <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                                ECONOMICO</button>
+                            <button *ngIf="!isBR58" class="button-style-1 paddingLeft20" mat-button
+                                (click)="gestioneFornitori()">GESTIONE
+                                FORNITORI</button>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <div class="avviso-content marginBottom25" *ngIf="tipoOperazioneCurrent==='clona'">
+            <mat-card class="mat-elevation-z0">
+                <mat-card-content>
+                    <div class="avviso">
+                        Il documento è stato duplicato. Inserire i dati necessari e salvare per creare il nuovo
+                        documento.
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <mat-card class="mat-elevation-z2" id="scroll2Id">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Documento di spesa</h3>
+                </div>
+                <p *ngIf="isBR58 && salCorrente">SAL: <span class="bold-text">{{salCorrente?.descIter}}</span></p>
+                <form #ricercaForm="ngForm" (submit)="salva()">
+                    <div class="fullWidth display-flex">
+                        <mat-form-field class="width-50">
+                            <mat-label>Selezionare una tipologia *</mat-label>
+                            <mat-select [(ngModel)]="tipologiaSelected" name="tipologia"
+                                (ngModelChange)="changeTipoDocumento()"
+                                [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione'">
+                                <mat-option *ngFor="let tipologia of tipologie" [value]="tipologia">
+                                    {{ tipologia.descTipoDocumentoSpesa }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="width-50 display-flex">
+                            <mat-form-field class="marginLeft20 width-45" *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 && tipologiaSelected.idTipoDocumentoSpesa != 73
+                            && tipologiaSelected.idTipoDocumentoSpesa != 57 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante 
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ">
+                                <input type="text" placeholder="Numero (max 70 car.) *" [(ngModel)]="numero"
+                                    name="numero" #num="ngModel" matInput
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-error *ngIf="num?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="num?.errors?.error ==='wrongLength'">
+                                    Numero massimo caratteri: 70
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="marginLeft20"
+                                *ngIf="(tipologiaSelected !== undefined) && (tipologiaSelected.idTipoDocumentoSpesa == 73 || tipologiaSelected.idTipoDocumentoSpesa == 57
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese 
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoImpArtigiana
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoSoggGestore)">
+                                <input type="text" placeholder="Periodo (1)* (max 70 car.)" aria-label="Number" matInput
+                                    [(ngModel)]="periodo" name="periodo" #period="ngModel" matInput
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-error *ngIf="period?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="period?.errors?.error ==='wrongLength'">
+                                    Numero massimo caratteri: 70
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="marginLeft20 width-data" month-year-date
+                                *ngIf="tipologiaSelected !== undefined && tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante">
+                                <mat-label>Periodo (1) *</mat-label>
+                                <input matInput [matDatepicker]="pickerMeseAnno" [formControl]="periodoMeseAnno"
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-datepicker-toggle matSuffix [for]="pickerMeseAnno"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerMeseAnno startView="multi-year"
+                                    (yearSelected)="chosenYearHandler($event)"
+                                    (monthSelected)="chosenMonthHandler($event, pickerMeseAnno)"
+                                    panelClass="example-month-picker">
+                                </mat-datepicker>
+                                <mat-error *ngIf="periodoMeseAnno?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="marginLeft20 width-data"
+                                *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 73
+                                    && tipologiaSelected.idTipoDocumentoSpesa != 57 && tipologiaSelected.idTipoDocumentoSpesa != 8
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                <mat-label>Data *</mat-label>
+                                <input matInput [matDatepicker]="picker" [formControl]="data"
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error *ngIf="data?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="data?.errors?.error ==='maggioreToday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="marginLeft20 width-data"
+                                *ngIf="(!(tipologiaSelected == undefined)) && (tipologiaSelected.idTipoDocumentoSpesa == 8)">
+                                <mat-label>Data (1) *</mat-label>
+                                <input matInput [matDatepicker]="picker1" [formControl]="data"
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-datepicker-toggle matSuffix [for]="picker1">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                                <mat-error *ngIf="data?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="data?.errors?.error ==='maggioreToday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="marginLeft20 width-data"
+                                *ngIf="tipologiaSelected !== undefined && (tipologiaSelected.idTipoDocumentoSpesa == 73 
+                                    || tipologiaSelected.idTipoDocumentoSpesa == 57 || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoImpArtigiana
+                                    || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoSoggGestore)">
+                                <mat-label>Data (2) *</mat-label>
+                                <input matInput [matDatepicker]="picker2" [formControl]="data"
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-datepicker-toggle matSuffix [for]="picker2">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                                <mat-error *ngIf="data?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="data?.errors?.error ==='maggioreToday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="display-flex align-items-center" *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                        <mat-radio-group aria-label="Select an option" class="row" [(ngModel)]="documentoSelected"
+                            name="documento" (change)="changeDocumento($event)"
+                            [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+
+                            <div *ngIf="isBR42 === true || isBR51 === true" class="alignLeft m-bt10">
+                                <label class="marginRight10">Documento</label>
+
+                                <mat-radio-button value="1" class="marginRight10">Informatico nativamente digitale
+                                    (1)
+                                </mat-radio-button>
+
+                                <mat-radio-button value="2">Copia informatica (2) / Formato cartaceo
+                                </mat-radio-button>
+                            </div>
+                        </mat-radio-group>
+                        <div class="paddingLeft20"
+                            *ngIf="isLetturaXmlVisible() && !(tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare)">
+                            <button mat-button class="button-style-1 paddingLeft20" type='button'
+                                (click)="letturaXml()">LEGGI I DATI DA FILE XML</button>
+                        </div>
+                    </div>
+
+                    <h4 *ngIf="tipologiaSelected?.idTipoDocumentoSpesa===2 && noteDiCreditoFattura?.length>0">
+                        <b>Note di credito associate alla fattura selezionata:</b>
+                    </h4>
+                    <table *ngIf="tipologiaSelected?.idTipoDocumentoSpesa===2 && noteDiCreditoFattura?.length>0"
+                        mat-table [dataSource]="dataSourceNoteDiCreditoFattura"
+                        class="marginBottom20 mat-elevation-z4 qualificheTable">
+                        <!-- index Column -->
+                        <ng-container matColumnDef="index">
+                            <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 10%;"> </th>
+                            <td mat-cell *matCellDef="let element; let i=index" style="width: 10%;">
+                                {{i+1}}
+                            </td>
+                        </ng-container>
+                        <!-- data Column -->
+                        <ng-container matColumnDef="data">
+                            <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 27%;">
+                                <b>Data documento</b>
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="width: 27%;">
+                                {{element.dataDocumentoDiSpesa | date:
+                                "dd/MM/yyyy"}}</td>
+                        </ng-container>
+                        <!-- numero Column -->
+                        <ng-container matColumnDef="numero">
+                            <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 27%;">
+                                <b>Numero</b>
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="width: 27%;"> {{element.numeroDocumento |
+                                number:
+                                '0.2' : 'it'}}</td>
+                        </ng-container>
+                        <!-- importo Column -->
+                        <ng-container matColumnDef="importo">
+                            <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 27%;">
+                                <b>Importo</b>
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="width: 27%;">
+                                {{element.importoTotaleDocumentoIvato |
+                                number: '0.2' : 'it'}} </td>
+                        </ng-container>
+
+                        <!-- azioni Column -->
+                        <ng-container matColumnDef="azioni">
+                            <th class="colorBlack" mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element">
+                                <button type="button" class="marginLeft20" mat-icon-button class="blue-color"
+                                    matTooltip="Vai alla nota di credito" style="width: 30px;"
+                                    (click)="vaiAllaNotaDiCreditoAssociata(element.idDocumentoDiSpesa)">
+                                    <mat-icon>redo</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsNoteDiCreditoFattura"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsNoteDiCreditoFattura;">
+                        </tr>
+                    </table>
+
+                    <mat-grid-list cols="8" rowHeight="60px" *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                        && tipologiaSelected.idTipoDocumentoSpesa != 73
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field>
+                                <input type="text" placeholder="Descrizione *" aria-label="Number" matInput
+                                    [(ngModel)]="descrizione" name="descrizione" #desc="ngModel" maxlength="200"
+                                    [disabled]="tipoOperazioneCurrent==='dettaglio' || isStatoDaCompletare">
+                                <mat-hint>{{descrizione ? descrizione.length : 0}} / 200
+                                </mat-hint>
+                                <mat-error *ngIf="desc?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div *ngIf="!visualizzaInCulturaPubblico">
+                        <mat-grid-list cols="8" rowHeight="60px" *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                            && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 78
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field>
+                                    <mat-label>Selezionare un tipo fornitore *</mat-label>
+                                    <mat-select (ngModelChange)="changeTipoFornitore($event)"
+                                        [(ngModel)]="tipoFornitoreSelected" name="tipologiaFornitore"
+                                        #tipoFornitore="ngModel"
+                                        [disabled]="(tipoOperazioneCurrent==='modifica'
+                                                && (tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57
+                                                || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante)) 
+                                                || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-option *ngFor="let tipoFornitore of tipologieFornitore"
+                                            [value]="tipoFornitore">
+                                            {{ tipoFornitore.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoFornitore?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="4" [rowspan]="1"
+                                *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                    && tipologiaSelected.idTipoDocumentoSpesa != 73
+                                    && tipologiaSelected.idTipoDocumentoSpesa != 78
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                <mat-form-field class="marginLeft20">
+                                    <mat-label>Selezionare un fornitore *</mat-label>
+                                    <mat-select [(ngModel)]="fornitoreSelected" name="fornitore" #fornit="ngModel"
+                                        (ngModelChange)="changeFornitore()"
+                                        [disabled]="tipoFornitoreSelected == null || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione'
+                                                || (tipoOperazioneCurrent==='modifica'
+                                                && (tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57
+                                                || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante)) || isStatoDaCompletare">
+                                        <mat-option *ngFor=" let fornitore of fornitori" [value]="fornitore"
+                                            [ngStyle]="{'color': (fornitore.formaGiuridicaValida && fornitore.cfValido) ? 'black' : 'red'}">
+                                            {{ fornitore.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="fornit?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="!(tipoOperazioneCurrent==='modifica' &&
+                                    (tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57 
+                                    || tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                            || tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante)) && tipoOperazioneCurrent!=='dettaglio'
+                                        && tipoOperazioneFrom!=='validazione'
+                                        && tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 && tipologiaSelected.idTipoDocumentoSpesa != 73
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 78
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore
+                                        && !isStatoDaCompletare">
+                                <button mat-button class="button-style-1 paddingLeft20" type='button'
+                                    matTooltip="Nuovo fornitore" (click)="nuovoFornitore()">NUOVO</button>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione'
+                                        && !isStatoDaCompletare
+                                        && tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 78
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore
+                                        && !(tipoOperazioneCurrent==='modifica' && (tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCedolino 
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCedolinoCostiStandard
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocSALSQ))">
+                                <button *ngIf="fornitoreSelected" mat-button class="button-style-1 paddingLeft20"
+                                    type='button' matTooltip="Modifica fornitore"
+                                    (click)="modificaFornitore()">MODIFICA</button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageError2Visible">
+                        <mat-card-content class="messageErrorContent">
+                            <p [innerHTML]="messageError2"></p>
+                        </mat-card-content>
+                    </mat-card>
+                    <div
+                        *ngIf="!fornitoreSelected || (fornitoreSelected.formaGiuridicaValida && fornitoreSelected.cfValido)">
+                        <div
+                            *ngIf="(!(tipologiaSelected == undefined)) && ((tipologiaSelected.idTipoDocumentoSpesa == 1) || (tipologiaSelected.idTipoDocumentoSpesa == 57)) && showQualificheTable">
+                            <mat-grid-list cols="1" rowHeight="40px" class="paddingLeft20">
+                                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                    <a class="fullWidth">Qualifiche definite per
+                                        <b>{{fornitoreSelected.descrizione}}</b></a>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="1" [rowspan]="1"
+                                    *ngIf="!dataSourceQualifiche || !dataSourceQualifiche.data || dataSourceQualifiche.data.length===0">
+                                    <p class="fullWidth">
+                                        Nessuna qualifica associata</p>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <div *ngIf="dataSourceQualifiche?.data?.length>0" class="qualificheDiv">
+                                <table mat-table [dataSource]="dataSourceQualifiche"
+                                    class="marginBottom20 mat-elevation-z4 qualificheTable">
+                                    <!-- checked Column -->
+                                    <ng-container matColumnDef="checked">
+                                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="radio">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="radio">
+                                            <mat-radio-group
+                                                [disabled]="(tipoOperazioneCurrent==='modifica'
+                                                    && (tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57))
+                                                    || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                                <mat-radio-button value='element.comodoIdTabella'
+                                                    (change)="clickRadio($event, element.comodoIdTabella)"
+                                                    [checked]="element.comodoIdTabella == radioSelected">
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </ng-container>
+                                    <!-- qualifica Column -->
+                                    <ng-container matColumnDef="qualifica">
+                                        <th class="colorBlack" mat-header-cell *matHeaderCellDef>
+                                            <b>Qualifica</b>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.descQualifica}}</td>
+                                    </ng-container>
+                                    <!-- costoOrario Column -->
+                                    <ng-container matColumnDef="costoOrario">
+                                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> <b>Costo
+                                                orario</b>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.costoOrario | number:
+                                            '0.2' :
+                                            'it'
+                                            }} </td>
+                                    </ng-container>
+                                    <!-- note Column -->
+                                    <ng-container matColumnDef="note">
+                                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> <b>Note</b>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.noteQualifica}} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsQualifiche"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsQualifiche;"></tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        <mat-grid-list cols="8" rowHeight="60px"
+                            *ngIf="(!(tipologiaSelected == undefined)) && ((tipologiaSelected.idTipoDocumentoSpesa == 1) || (tipologiaSelected.idTipoDocumentoSpesa == 57))">
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field>
+                                    <input type="number" placeholder="Ore lavorate" aria-label="Number" matInput
+                                        [(ngModel)]="oreLavorate" name="oreLavorate" #oreLav="ngModel"
+                                        (change)="calcolaRendicontabileQualifiche()" [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio'
+                                            || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-hint>hh,mm</mat-hint>
+                                    <mat-error *ngIf="oreLav?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Costo orario" [(ngModel)]="costoOrarioFormatted"
+                                        name="costoOrario" matInput disabled>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <button mat-button class="button-style-1 paddingLeft20" type='button'
+                                    *ngIf="!(tipoOperazioneCurrent==='modifica'
+                                     && (tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57))
+                                        && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare" (click)="nuovaQualifica()">NUOVA
+                                    QUALIFICA</button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <mat-grid-list cols="8" rowHeight="60px" *ngIf="idProcessoBandoLinea===2 && (idTipoOperazioneProgetto===1 || idTipoOperazioneProgetto===2) &&
+                                tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 && tipologiaSelected.idTipoDocumentoSpesa != 1 &&
+                                tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57
+                                 && tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <mat-form-field>
+                                    <input [readonly]="true" type="text" placeholder="CIG/CPA Affidamento *"
+                                        aria-label="Number" matInput [ngModel]="cigCpaAffidamentoData"
+                                        name="affidamento" #affid="ngModel" class="readOnly">
+                                    <mat-error *ngIf="affid?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <button mat-button class="button-style-1 paddingLeft20" type='button'
+                                    *ngIf="tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare"
+                                    (click)="associaAffidamento()">ASSOCIA AFFIDAMENTO</button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <mat-grid-list cols="8" rowHeight="60px"
+                            *ngIf="(!(tipologiaSelected == undefined)) && taskVisibile">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <mat-form-field>
+                                    <mat-label>Selezionare un task</mat-label>
+                                    <mat-select [(ngModel)]="taskSelected" name="task"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-option *ngFor="let task of tasks" [value]="task">
+                                            {{ task }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <mat-grid-list cols="8" rowHeight="60px"
+                            *ngIf="(!(tipologiaSelected == undefined)) && ((tipologiaSelected.idTipoDocumentoSpesa == 5))">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field>
+                                    <input type="text" [(ngModel)]="destinazioneTrasferta"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare"
+                                        placeholder="Destinazione trasferta" name="destinazioneTrasferta" matInput>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <mat-form-field>
+                                    <mat-label>Selezionare un'attività</mat-label>
+                                    <mat-select [(ngModel)]="attivitaSelected" name="attivitaSelected"
+                                        (selectionChange)="selectAttivita()"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-option *ngFor="let attivita of attivitas" [value]="attivita">
+                                            {{ attivita.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <mat-form-field class="paddingLeft20">
+                                    <input type="text" placeholder="Durata" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="durataTrasfertaFormatted"
+                                        name="durataTrasferta" #durata="ngModel" (blur)="setDurata()"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="durata?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="durata?.errors?.error ==='wrongLength'">
+                                        Numero massimo caratteri: 4
+                                    </mat-error>
+                                    <mat-error *ngIf="durata?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <mat-card class="mat-elevation-z2 marginBottom20"
+                            *ngIf="(!(tipologiaSelected == undefined)) && (tipologiaSelected.idTipoDocumentoSpesa == 4)">
+                            <mat-card-content>
+                                Fattura di riferimento
+                                <mat-grid-list cols="9" rowHeight="60px">
+                                    <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                        <mat-form-field>
+                                            <mat-label>Selezionare un riferimento alla fattura *</mat-label>
+                                            <mat-select [(ngModel)]="riferimentoFatturaSelected"
+                                                name="riferimentoFatturaSelected" #rifFattura="ngModel"
+                                                (selectionChange)="setImportiFatturaRif()"
+                                                [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                                <mat-option *ngFor="let riferimentoFattura of riferimentoFatture"
+                                                    [value]="riferimentoFattura">
+                                                    {{ riferimentoFattura.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="rifFattura?.errors?.error ==='required'">
+                                                Campo obbligatorio
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="6" [rowspan]="1"
+                                        *ngIf="!idDocumentoDiSpesa || (idDocumentoDiSpesa  && tipoOperazioneCurrent==='clona')">
+                                        <p class="marginLeft20">
+                                            ATTENZIONE: per la fattura di riferimento le quietanze dovranno
+                                            essere
+                                            inserite
+                                            solo dopo aver associato la nota di credito.
+                                        </p>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1" [rowspan]="1"
+                                        *ngIf="idDocumentoDiSpesa  && tipoOperazioneCurrent==='modifica'">
+                                        <button type="button" class="marginLeft20" mat-icon-button class="blue-color"
+                                            matTooltip="Vai alla fattura corrispondente" style="width: 30px;"
+                                            (click)="vaiAllaFatturaRiferimento()">
+                                            <mat-icon>redo</mat-icon>
+                                        </button>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                                <mat-grid-list cols="9" rowHeight="60px">
+                                    <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                        <mat-form-field>
+                                            <input type="text" placeholder="Rendicontabile"
+                                                [(ngModel)]="rendicontabileFatturaRifFormatted"
+                                                name="rendicontabileFatturaRif" matInput disabled>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                        <mat-form-field class="marginLeft20">
+                                            <input type="text" placeholder="Totale documento"
+                                                [(ngModel)]="totaleDocumentoFatturaRifFormatted" name="totDocFatturaRif"
+                                                matInput disabled>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                        <mat-form-field class="marginLeft20">
+                                            <input type="text" placeholder="Totale quietanzato"
+                                                [(ngModel)]="totaleQuietanzatoFatturaRifFormatted"
+                                                name="totQuietanzatoFatturaRif" matInput disabled>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <mat-grid-list cols="4" rowHeight="60px"
+                            *ngIf="tipologiaSelected !== undefined && tipologiaSelected.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante">
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field>
+                                    <mat-label>Selezionare una categoria *</mat-label>
+                                    <mat-select [(ngModel)]="categoriaSelected" name="categoria" #cat="ngModel"
+                                        (selectionChange)="calcolaCompensoMensileDovuto()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-option *ngFor="let categoria of categorie" [value]="categoria">
+                                            {{ categoria }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="cat?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Ore settimanali" matInput
+                                        [(ngModel)]="oreSettimanali" name="oreSettimanali" disabled>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Giorni lavorabili a settimana" matInput
+                                        [(ngModel)]="giorniLavorabiliSettimanali" name="giorniLavorabiliSettimanali"
+                                        disabled>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Compenso mensile" matInput
+                                        [(ngModel)]="compensoMensile" name="compensoMensile" disabled>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field>
+                                    <input type="text" placeholder="Orario medio giornaliero" matInput
+                                        [(ngModel)]="orarioMedioGiornaliero" name="orarioMedioGiornaliero" disabled>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Giorni lavorabili mensili *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="giorniLavorabiliMensiliFormatted" name="giorniLavMens"
+                                        #giorniLavM="ngModel" (blur)="setGiorniLavorabiliMensili()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="giorniLavM?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="giorniLavM?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="giorniLavM?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Ore mensili lavorate *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="oreMensiliLavorateFormatted" name="oreMensLav" #oreMensL="ngModel"
+                                        (blur)="setOreMensiliLavorate()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="oreMensL?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="oreMensL?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="oreMensL?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Sospensioni brevi *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="sospensioniBreviFormatted" name="sospBrevi" #sospBr="ngModel"
+                                        (blur)="setSospensioniBrevi()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="sospBr?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="sospBr?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="sospBr?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field>
+                                    <input type="text" placeholder="Sospensioni lunghe giorni totali *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="sospensioniLungheGgTotaliFormatted" name="sospLungheGgTotali"
+                                        #sospLungheGgTot="ngModel" (blur)="setSospensioniLungheGgTotali()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="sospLungheGgTot?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="sospLungheGgTot?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="sospLungheGgTot?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <mat-form-field class="marginLeft20">
+                                    <input type="text" placeholder="Sospensioni lunghe giorni lavorativi *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="sospensioniLungheGgLavFormatted" name="sospLungheGgLav"
+                                        #sospLungheGgL="ngModel" (blur)="setSospensioniLungheGgLav()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="sospLungheGgL?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="sospLungheGgL?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="sospLungheGgL?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <mat-grid-list cols="6" rowHeight="60px" style="width: 75%;"
+                            *ngIf="!(tipologiaSelected == undefined)">
+                            <div *ngIf="!visualizzaInCulturaPubblico">
+                                <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                    *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 1 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 23 && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                    <mat-form-field>
+                                        <input type=" text" placeholder="Imponibile *" matInput
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="imponibileFormatted"
+                                            name="imponibile" #impon="ngModel" (keyup)="calcolaTotaleDocumento()"
+                                            (blur)="setImponibile()"
+                                            [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-error *ngIf="impon?.errors?.error ==='required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <mat-error *ngIf="impon?.errors?.error ==='negative'">
+                                            Il valore deve essere maggiore o uguale di 0
+                                        </mat-error>
+                                        <mat-error *ngIf="impon?.errors?.error ==='wrongLength'">
+                                            Numero massimo caratteri: 17
+                                        </mat-error>
+                                        <mat-error *ngIf="impon?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                    *ngIf="(!(tipologiaSelected == undefined)) && ((tipologiaSelected.idTipoDocumentoSpesa == 1) || (tipologiaSelected.idTipoDocumentoSpesa == 23))">
+                                    <mat-form-field
+                                        [ngClass]="{'marginLeft20': tipologiaSelected.idTipoDocumentoSpesa != 1 && tipologiaSelected.idTipoDocumentoSpesa != 23}">
+                                        <input type="text" placeholder="Imponibile (+ rit.acc.)*" matInput
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            [(ngModel)]="imponibileRitAccFormatted" name="imponibileRitAcc"
+                                            #imponRitAcc="ngModel" (keyup)="calcolaTotaleDocumento()"
+                                            (blur)="setImponibileRitAcc()"
+                                            [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-error *ngIf="imponRitAcc?.errors?.error ==='required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <mat-error *ngIf="imponRitAcc?.errors?.error ==='negative'">
+                                            Il valore deve essere maggiore o uguale di 0
+                                        </mat-error>
+                                        <mat-error *ngIf="imponRitAcc?.errors?.error ==='wrongLength'">
+                                            Numero massimo caratteri: 17
+                                        </mat-error>
+                                        <mat-error *ngIf="imponRitAcc?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                    *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 1 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 23 && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                    <mat-form-field class="marginLeft20">
+                                        <input type="text" placeholder="Importo IVA" matInput
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="importoIvaFormatted"
+                                            name="impIva" #iva="ngModel" (keyup)="calcolaTotaleDocumento()"
+                                            (blur)="setImportoIva()"
+                                            [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-error *ngIf="iva?.errors?.error ==='negative'">
+                                            Il valore deve essere maggiore o uguale di 0
+                                        </mat-error>
+                                        <mat-error *ngIf="iva?.errors?.error ==='wrongLength'">
+                                            Numero massimo caratteri: 17
+                                        </mat-error>
+                                        <mat-error *ngIf="iva?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <!-- per iva indetrabile uso displaynone per evitare di rompere la visualizzazione degli altri campi quando isBR65 && isSpesaAmmessaInf5Milioni-->
+                                <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                    [ngClass]="{'displayNone': isBR65 && isSpesaAmmessaInf5Milioni}"
+                                    *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 1 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 23 && tipologiaSelected.idTipoDocumentoSpesa != 8
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                    <mat-form-field class="marginLeft20">
+                                        <input type="text" placeholder="Importo IVA indetraibile" matInput
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            [(ngModel)]="importoIvaIndetraibileFormatted" name="impIvaInd"
+                                            #ivaInd="ngModel" (blur)="setImportoIvaIndetraibile()"
+                                            [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        <mat-error *ngIf="ivaInd?.errors?.error ==='negative'">
+                                            Il valore deve essere maggiore o uguale di 0
+                                        </mat-error>
+                                        <mat-error *ngIf="ivaInd?.errors?.error ==='wrongLength'">
+                                            Numero massimo caratteri: 17
+                                        </mat-error>
+                                        <mat-error *ngIf="ivaInd?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                    *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                                        && tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                    <mat-form-field
+                                        [ngClass]="{'marginLeft20': tipologiaSelected.idTipoDocumentoSpesa == 1 || tipologiaSelected.idTipoDocumentoSpesa == 23}">
+                                        <input type="text" placeholder="Totale documento" matInput
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            [(ngModel)]="totaleDocumentoFormatted" name="totaleDocumento"
+                                            #totDoc="ngModel" readonly class="readOnly">
+                                        <mat-error *ngIf="totDoc?.errors?.error ==='negative'">
+                                            Il valore deve essere maggiore o uguale di 0
+                                        </mat-error>
+                                        <mat-error *ngIf="totDoc?.errors?.error ==='wrongLength'">
+                                            Numero massimo caratteri: 17
+                                        </mat-error>
+                                        <mat-error *ngIf="totDoc?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </div>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                                    && tipologiaSelected.idTipoDocumentoSpesa != 4 && tipologiaSelected.idTipoDocumentoSpesa != 73
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                                <mat-form-field
+                                    [ngClass]="{'marginLeft20': tipologiaSelected.idTipoDocumentoSpesa != 78 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante}">
+                                    <mat-label
+                                        *ngIf="tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante">Rendicontabile
+                                        *</mat-label>
+                                    <mat-label
+                                        *ngIf="tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante">Compenso
+                                        mensile dovuto *</mat-label>
+                                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="rendicontabileFormatted" name="rendicontabile" #rendic="ngModel"
+                                        (blur)="setRendicontabile()" [readonly]="tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57
+                                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante
+                                            || ((tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocSALSQ) 
+                                            && tipoOperazioneCurrent==='modifica')" [ngClass]="{'readOnly': tipologiaSelected.idTipoDocumentoSpesa===1 || tipologiaSelected.idTipoDocumentoSpesa===57
+                                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante
+                                            || ((tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocSALSQ) 
+                                            && tipoOperazioneCurrent==='modifica')}"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione'  || isStatoDaCompletare"
+                                        (keyup)="calcolaTotaleDocumentoRendicontabile()">
+                                    <mat-error *ngIf="rendic?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                    <mat-error *ngIf="rendic?.errors?.error ==='negativeOrZero'">
+                                        Il valore deve essere maggiore di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="rendic?.errors?.error ==='wrongLength'">
+                                        Numero massimo caratteri: 17
+                                    </mat-error>
+                                    <mat-error *ngIf="rendic?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1"
+                                *ngIf="(!(tipologiaSelected == undefined)) && (tipologiaSelected.idTipoDocumentoSpesa == 8)">
+                                <mat-form-field
+                                    [ngClass]="{'marginLeft20': tipologiaSelected.idTipoDocumentoSpesa != 8}">
+                                    <input type="text" placeholder="Importo rendicontabile *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="importoRendicontabileFormatted" name="importoRendicontabile"
+                                        #impRendic="ngModel" (blur)="setImportoRendicontabile()"
+                                        (keyup)="calcolaTotaleDocumentoRendicontabile()">
+                                    <mat-error *ngIf="impRendic?.errors?.error ==='required'"
+                                        [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                    <mat-error *ngIf="rendic?.errors?.error ==='negativeOrZero'">
+                                        Il valore deve essere maggiore di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="impRendic?.errors?.error ==='wrongLength'">
+                                        Numero massimo caratteri: 17
+                                    </mat-error>
+                                    <mat-error *ngIf="impRendic?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="6" [rowspan]="1"
+                                *ngIf="tipologiaSelected !== undefined && (tipologiaSelected.idTipoDocumentoSpesa == 73
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoImpArtigiana
+                                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoSoggGestore)">
+                                <mat-form-field
+                                    [ngClass]="{'marginLeft20': tipologiaSelected.idTipoDocumentoSpesa != 73 
+                                                && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                                && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore}">
+                                    <input type="text" placeholder="Importo *" matInput
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="importoFormatted"
+                                        name="importo" #imp="ngModel" (blur)="setImporto()"
+                                        [disabled]="tipoOperazioneCurrent==='modifica' || tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+                                    <mat-error *ngIf="imp?.errors?.error ==='required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                    <mat-error *ngIf="imp?.errors?.error ==='negative'">
+                                        Il valore deve essere maggiore o uguale di 0
+                                    </mat-error>
+                                    <mat-error *ngIf="imp?.errors?.error ==='wrongLength'">
+                                        Numero massimo caratteri: 17
+                                    </mat-error>
+                                    <mat-error *ngIf="imp?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                                <p class="marginLeft20" *ngIf="tipologiaSelected.idTipoDocumentoSpesa == 73">Attenzione!
+                                    Le spese generali sono pari al 15% dei costi rendicontati alla voce personale</p>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+
+                        <div *ngIf="tipoOperazioneFrom==='validazione' || noteValidatore?.length > 0">
+                            <mat-form-field style="width: 99%;">
+                                <textarea type="text" placeholder="Note validatore" matInput
+                                    [(ngModel)]="noteValidatore" name="noteValidatore" maxlength="4000"
+                                    [disabled]="tipoOperazioneFrom!=='validazione'"></textarea>
+                                <mat-hint *ngIf="tipoOperazioneFrom==='validazione'">{{4000-noteValidatore?.length}}
+                                    caratteri disponibili</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarning2Visible">
+                            <mat-card-content class="messageWarningContent">
+                                <p>{{messageWarning2}}</p>
+                            </mat-card-content>
+                        </mat-card>
+                        <mat-grid-list cols="8" rowHeight="60px" *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 73 
+                            && tipologiaSelected.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante">
+                            <mat-radio-group aria-label="Select an option" class="row" [(ngModel)]="tipoInvioSelected"
+                                name="tipoInvio" (change)="changeTipoInvio($event)"
+                                [disabled]="tipoOperazioneCurrent==='dettaglio' || tipoOperazioneFrom==='validazione' || isStatoDaCompletare">
+
+                                <div *ngIf="isBR42 === true || isBR51 === true" class="alignLeft m-bt10">
+
+                                    <div
+                                        *ngIf="!isBR50 && !isBR48
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                                    && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+
+                                        <mat-radio-button value="1" [disabled]="documentoSelected === '1'"
+                                            class="marginRight10">
+                                            Invio allegati in formato cartaceo
+                                        </mat-radio-button>
+
+
+                                        <mat-radio-button value="2">Invio allegati digitali</mat-radio-button>
+
+                                    </div>
+
+                                    <button mat-button
+                                        *ngIf="(isBR42  || isBR51 ) && tipoInvioSelected==='2' && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare"
+                                        class="button-style-1 paddingLeft20" type='button'
+                                        (click)="aggiungiAllegati()">AGGIUNGI ALLEGATI
+                                    </button>
+                                </div>
+
+                            </mat-radio-group>
+                        </mat-grid-list>
+                    </div>
+                    <div *ngIf="isBR42 === true || isBR51 === true">
+                        <div *ngIf="tipologiaSelected && tipologiaSelected.idTipoDocumentoSpesa != 73 
+                            && tipologiaSelected.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                            && (isBR42  || isBR51 ) && tipoInvioSelected==='2'">
+                            <h3 class="marginTop20">Allegati al documento di spesa</h3>
+                            <p
+                                *ngIf="(!allegatiDocumentoDiSpesaDaSalvare || allegatiDocumentoDiSpesaDaSalvare.length===0) && (!allegatiDocumentoDiSpesa || allegatiDocumentoDiSpesa.length===0)">
+                                Non ci sono elementi da visualizzare.</p>
+                            <div
+                                *ngIf="allegatiDocumentoDiSpesaDaSalvare?.length>0 || allegatiDocumentoDiSpesa?.length>0">
+                                <mat-grid-list cols="2" rowHeight="45" style="margin-bottom: 10px;">
+                                    <mat-grid-tile *ngFor="let allegato of allegatiDocumentoDiSpesaDaSalvare"
+                                        [colspan]="1" [rowspan]="1">
+                                        <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                            <a matTooltip="Download file" class="size13 linkAllegati"
+                                                (click)="downloadAllegato(allegato.idDocumentoIndex,allegato.nome)">{{allegato.nome}}</a>
+                                            <button type="button" mat-icon-button class="blue-color"
+                                                matTooltip="Disassocia allegato" style="width: 30px;"
+                                                (click)="rimuoviAllegatoDocumentoDiSpesaDaSalvare(allegato.idDocumentoIndex)">
+                                                <mat-icon>link_off</mat-icon>
+                                            </button>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile *ngFor="let allegato of allegatiDocumentoDiSpesa" [colspan]="1"
+                                        [rowspan]="1">
+                                        <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                            <a matTooltip="Download file" class="size13 linkAllegati"
+                                                (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                                            <button type="button" mat-icon-button class="blue-color"
+                                                matTooltip="Disassocia allegato"
+                                                *ngIf="allegato.disassociabile && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare"
+                                                style="width: 30px;"
+                                                (click)="disassociaAllegatoDocumentoDiSpesa(allegato.id)">
+                                                <mat-icon>link_off</mat-icon>
+                                            </button>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="fornitoreSelected">
+                        <h3><b>Allegati - Fornitore</b></h3>
+                        <p *ngIf="!allegatiFornitore || allegatiFornitore.length===0">Non ci
+                            sono elementi da visualizzare.</p>
+                        <div *ngIf="allegatiFornitore?.length>0">
+                            <mat-grid-list cols="3" rowHeight="45" style="margin-bottom: 10px;">
+                                <mat-grid-tile *ngFor="let allegato of allegatiFornitore" [colspan]="1" [rowspan]="1">
+                                    <div class="allegati" style="width: 98%; height: 80%;">
+                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                            (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </div>
+
+                    <mat-accordion *ngIf="documentazioneDaAllegare?.length > 0">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="bold-text">
+                                    Quale documentazione devo allegare?
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div [innerHTML]="documentazioneDaAllegare"></div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <div class="marginTop20 flexEnd"
+                        *ngIf="tipoOperazioneCurrent!=='dettaglio' && !isStatoDaCompletare">
+                        <div matTooltip="Selezionare una tipologia" [matTooltipDisabled]="tipologiaSelected">
+                            <button class="button-style-2" mat-raised-button type="submit"
+                                [disabled]="!tipologiaSelected || isMessageError2Visible || warningBloccante">
+                                SALVA
+                            </button>
+                        </div>
+                    </div>
+                    <p *ngIf="tipologiaSelected !== undefined">Tutti gli importi sono da intendersi in euro
+                        <br>
+                    </p>
+                    <div *ngIf="isBR42 === true || isBR51 === true">
+                        <p *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                            && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                            (1) Documenti nativamente digitali (art. 20 d.l. 7 marzo 2005 n. 82)<br></p>
+                        <p *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                            && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                            && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+                            (2) Duplicati informatici, Copie informatiche di documenti informatici o Copia informatica
+                            di documento analogico (cartaceo) (art. 22 e art. 23 bis comma 1 e 2 d.l. 7 marzo 2005 n.
+                            82)<br>
+                        </p>
+                        <!-- nascosto per issue 2024-IM013529 -->
+                        <!--p *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa != 8 
+                        && tipologiaSelected.idTipoDocumentoSpesa != 73 && tipologiaSelected.idTipoDocumentoSpesa != 57 
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese && !isBR56
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALCQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+                        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore
+                        && idProcessoBandoLinea !== 3">
+                            ATTENZIONE! Per documenti informatici (1)(2), sui quali non è possibile apporre il timbro di
+                            annullamento sulla copia originale, sarà necessario compilare ed inviare anche la
+                            DICHIARAZIONE SOSTITUTIVA DELL'ATTO DI NOTORIETÀ <a
+                                class="blue-color text-decoration-none bold-text"
+                                href="https://secure.sistemapiemonte.it/ris/finanziamenti/bandi/dwd/allegato-a-dichiarazione-fatture-elettroniche.doc">scaricabile
+                                qui</a>.<br></p-->
+
+                        <p *ngIf="(!(tipologiaSelected == undefined)) && (tipologiaSelected.idTipoDocumentoSpesa == 8)">
+                            (1) Data di rendicontazione<br></p>
+                        <p *ngIf="tipologiaSelected !== undefined && (tipologiaSelected.idTipoDocumentoSpesa == 73 
+                            || tipologiaSelected.idTipoDocumentoSpesa == 57 || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese 
+                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante
+                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoImpArtigiana
+                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoSoggGestore)">
+                            (1) Periodo oggetto di rendicontazione<br></p>
+                        <p *ngIf="tipologiaSelected !== undefined && tipologiaSelected.idTipoDocumentoSpesa == 57">
+                            (2) Data del cedolino dell'ultimo mese rendicontato<br></p>
+                        <p *ngIf="tipologiaSelected !== undefined && (tipologiaSelected.idTipoDocumentoSpesa == 73
+                        || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoImpArtigiana
+                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoSoggGestore)">
+                            (2) Data di rendicontazione</p>
+                        <p *ngIf="tipologiaSelected !== undefined && (tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocAutocertificazioneSpese
+                            || tipologiaSelected?.descBreveTipoDocSpesa === descBreveTipoDocCompensoMensTirocinante)">
+                            (2) Data oggetto di rendicontazione</p>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="tipologiaSelected?.idTipoDocumentoSpesa!==4">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Voci di spesa</h3>
+                </div>
+                <mat-grid-list cols="8" rowHeight="60px" class="paddingLeft20">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <b class="fullWidth">Voce di spesa associata a
+                            {{tipologiaSelected?.descTipoDocumentoSpesa}}<span *ngIf="numero || periodo">, {{numero?
+                                numero : periodo}} </span>
+                            del {{data?.value | date:"dd/MM/yyyy"}}
+                        </b>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="alignRightButton fullWidth"
+                            *ngIf="utenteAbilitatoAdAssociareVociDiSpesa && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare">
+                            <button (click)="nuovaVoceDiSpesa()" class="button-style-2 marginTop20" mat-raised-button
+                                type="submit"
+                                [disabled]="!idDocumentoDiSpesa || (idDocumentoDiSpesa &&  tipoOperazioneCurrent==='clona') || residuoRendicontabile===0">
+                                NUOVA VOCE DI SPESA
+                            </button>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-card class="mat-elevation-z2 marginTop20">
+                    <mat-card-content>
+                        <mat-grid-list cols="3" rowHeight="30px">
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Rendicontabile (A): </b>{{(rendicontabile ? rendicontabile :
+                                    (importoRendicontabile ? importoRendicontabile : (importo ? importo : 0))) | number:
+                                    '0.2' : 'it'}} </a>
+                                <!--rendicontabile del documento-->
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Totale rendicontato (B): </b>{{totaleRendicontato | number: '0.2' : 'it'}} </a>
+                                <!--totale rendicontato nelle voci spesa-->
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Residuo rendicontabile (A-B): </b><span
+                                        [ngStyle]="{'color': residuoRendicontabile>0 ? 'red' : 'green'}">{{residuoRendicontabile
+                                        | number: '0.2' :
+                                        'it'}} </span></a>
+                                <!--differenenza tra A e B: -->
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </mat-card-content>
+                </mat-card>
+                <table mat-table [dataSource]="dataSourceVociSpesa" class="marginTop20 mat-elevation-z4 fullWidth"
+                    *ngIf="dataSourceVociSpesa?.data?.length>0">
+                    <!-- voceDiSpesa Column -->
+                    <ng-container matColumnDef="voceDiSpesa">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> <b>Voce di
+                                spesa</b> </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descVoceDiSpesaCompleta}}
+                        </td>
+                    </ng-container>
+                    <!-- ammesso Column -->
+                    <ng-container matColumnDef="ammesso">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="text-right">
+                            <b>Ammesso</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            {{element.importoFinanziamento |
+                            number: '0.2' : 'it' }}
+                        </td>
+                    </ng-container>
+                    <!-- residuo Column -->
+                    <ng-container matColumnDef="residuo">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="text-right">
+                            <b>Residuo</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-right"
+                            [ngStyle]="{'color': element.importoResiduoAmmesso>=0 ? 'black' : 'red'}">
+                            {{element.importoResiduoAmmesso |
+                            number: '0.2' : 'it'
+                            }} </td>
+                    </ng-container>
+                    <!-- rendicontato Column -->
+                    <ng-container matColumnDef="rendicontato">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="text-right">
+                            <b>Rendicontato</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-right"> {{element.importo
+                            | number: '0.2' :
+                            'it'}} </td>
+                    </ng-container>
+                    <!-- azioni Column -->
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="width-60-px"> </th>
+                        <td mat-cell *matCellDef="let element" class="width-60-px">
+                            <button type="button" mat-icon-button class="blue-color" *ngIf="element.modificaAbilitata"
+                                (click)="modificaVoceDiSpesa(element)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button class="red-color"
+                                *ngIf="element.cancellazioneAbilitata" (click)="cancellaVoceDiSpesa(element)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsVociSpesa"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsVociSpesa;"></tr>
+                </table>
+                <mat-grid-list cols="8" rowHeight="60px" class="paddingLeft20">
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="alignRightButton fullWidth"
+                            *ngIf="utenteAbilitatoAdAssociareVociDiSpesa && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione' && !isStatoDaCompletare">
+                            <button (click)="nuovaVoceDiSpesa()" class="button-style-2 marginTop20" mat-raised-button
+                                type="submit"
+                                [disabled]="!idDocumentoDiSpesa ||(idDocumentoDiSpesa  && tipoOperazioneCurrent==='clona') || residuoRendicontabile===0">
+                                NUOVA VOCE DI SPESA
+                            </button>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="tipologiaSelected?.idTipoDocumentoSpesa!==4 && tipologiaSelected?.idTipoDocumentoSpesa!==57 
+        && tipologiaSelected?.idTipoDocumentoSpesa!==73 && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocAutocertificazioneSpese
+        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocSALSQ && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoMensTirocinante
+        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoImpArtigiana
+        && tipologiaSelected?.descBreveTipoDocSpesa !== descBreveTipoDocCompensoSoggGestore">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Quietanze</h3>
+                </div>
+                <mat-grid-list cols="8" rowHeight="60px" class="paddingLeft20">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <b class="fullWidth">Quietanze associate a
+                            {{tipologiaSelected?.descTipoDocumentoSpesa}}<span *ngIf="numero || periodo">, {{numero?
+                                numero : periodo}} </span>
+                            del {{data?.value | date:"dd/MM/yyyy"}}
+                        </b>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="alignRightButton fullWidth"
+                            *ngIf="utenteAbilitatoAdAssociarePagamenti && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione'">
+                            <button (click)="nuovaQuietanza()" class="button-style-2 marginTop20" mat-raised-button
+                                type="submit"
+                                [disabled]="!idDocumentoDiSpesa || (idDocumentoDiSpesa  && tipoOperazioneCurrent==='clona') || residuoQuietanzabile===0 || checkFlagS()">
+                                NUOVA QUIETANZA
+                            </button>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-card class="mat-elevation-z2 marginTop20">
+                    <mat-card-content>
+                        <mat-grid-list cols="6" rowHeight="45px" id="quietanze">
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Totale documento </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Totale note credito </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Totale rendicontato </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Totale quietanzato </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Rendicontato quietanzato </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> <b>Residuo quietanzabile </b></a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> {{totaleDocumento || 0 | number: '0.2' : 'it'}}</a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> {{totaleNoteCredito | number: '0.2' : 'it'}}</a>
+                                <!--mostrare solo se presente una nota di credito-->
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> {{totaleRendicontato || 0 | number: '0.2' : 'it'}}</a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> {{totaleQuietanzato || 0 | number: '0.2' : 'it'}} </a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a> {{rendicontatoQuietanzato || 0 | number: '0.2' : 'it'}} </a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                <a><span [ngStyle]="{'color': residuoQuietanzabile>0 ? 'red' : 'green'}">{{residuoQuietanzabile
+                                        | number: '0.2' :
+                                        'it'}} </span></a>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </mat-card-content>
+                </mat-card>
+
+                <table mat-table [dataSource]="dataSourceQuietanziato" class="marginTop20 mat-elevation-z4 fullWidth"
+                    *ngIf="dataSourceQuietanziato?.data?.length>0">
+                    <!-- modalita Column -->
+                    <ng-container matColumnDef="modalita">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> <b>Modalità</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.descrizioneModalitaPagamento}}</td>
+                    </ng-container>
+                    <!-- data Column -->
+                    <ng-container matColumnDef="data">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dtPagamento}} </td>
+                    </ng-container>
+                    <!-- importo Column -->
+                    <ng-container matColumnDef="importo">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="text-right">
+                            <b>Importo</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            {{element.importoPagamento | number:
+                            '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <!-- residuo Column -->
+                    <ng-container matColumnDef="residuo">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="text-right">
+                            <b>Residuo</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-right"><span
+                                *ngIf="!element.importoResiduoUtilizzabileVuoto">{{element.importoResiduoUtilizzabile |
+                                number: '0.2' : 'it'}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- allegati Column -->
+                    <ng-container matColumnDef="allegati">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="width-38-perc"> <b>Allegati</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="width-38-perc">
+                            <p *ngIf="!element.documentiAllegati || element.documentiAllegati.length===0">Nessun
+                                documento allegato</p>
+                            <div *ngIf=" element.documentiAllegati?.length>0">
+                                <mat-grid-list cols="1" rowHeight="30">
+                                    <mat-grid-tile *ngFor="let allegato of  element.documentiAllegati" [colspan]="1"
+                                        [rowspan]="1">
+                                        <div style="width: 100%; display: flex; align-items: center;">
+                                            <button type="button" mat-icon-button class="blue-color"
+                                                *ngIf="allegato.disassociabile" matTooltip="Disassocia allegato"
+                                                style="width: 30px;"
+                                                (click)="disassociaAllegatoQuietanza(allegato.id,element.id)">
+                                                <mat-icon>link_off</mat-icon>
+                                            </button>
+                                            <a matTooltip="Download allegato"
+                                                style="padding: 0; text-overflow: ellipsis; overflow: hidden; cursor: pointer;"
+                                                (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- azioni Column -->
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="width-100-px"> </th>
+                        <td mat-cell *matCellDef="let element" class="width-100-px">
+                            <button type="button" mat-icon-button class="blue-color"
+                                *ngIf="element.pagamentoModificabile" (click)="modificaQuietanza(element)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button class="red-color" *ngIf="element.pagamentoEliminabile"
+                                (click)="cancellaQuietanza(element)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button class="blue-color"
+                                *ngIf="element.linkAllegaFileVisible && (isBR42 || isBR52) && element.pagamentoModificabile"
+                                (click)="aggiungiAllegatiQuietanza(element)" [disabled]="checkAttachment(element)">
+                                <mat-icon>attachment</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsQuietanziato"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsQuietanziato;"></tr>
+                </table>
+                <mat-grid-list cols="8" rowHeight="60px" class="paddingLeft20">
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="alignRightButton fullWidth"
+                            *ngIf="utenteAbilitatoAdAssociarePagamenti && tipoOperazioneCurrent!=='dettaglio' && tipoOperazioneFrom!=='validazione'">
+                            <button (click)="nuovaQuietanza()" class="button-style-2 marginTop20" mat-raised-button
+                                type="submit"
+                                [disabled]="!idDocumentoDiSpesa || (idDocumentoDiSpesa  && tipoOperazioneCurrent==='clona') || residuoQuietanzabile===0 || checkFlagS()">
+                                NUOVA QUIETANZA
+                            </button>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <div class="title spaceBetween" style="padding: 0;">
+            <div class="backContainer">
+                <button
+                    *ngIf="!tipoOperazioneFrom || tipoOperazioneFrom==='inserisci' || tipoOperazioneFrom==='clona' || tipoOperazioneFrom==='dettaglio'"
+                    (click)="tornaAlleRendicontazioni()" mat-button>
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna alla rendicontazione</span>
+                </button>
+                <button *ngIf="tipoOperazioneFrom==='dichiarazione'" (click)="tornaAInvioDichiarazione()" mat-button>
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna a invio dichiarazione</span>
+                </button>
+            </div>
+            <button mat-stroked-button
+                *ngIf="idDocumentoDiSpesa && tipoOperazioneCurrent!=='clona' && tipoOperazioneFrom!=='validazione' && !isReadOnly && !isBR58"
+                (click)="nuovoDocumentoDiSpesa()" class="button-style-3">NUOVO DOCUMENTO DI
+                SPESA</button>
+        </div>
+    </div>
+</div>

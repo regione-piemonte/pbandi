@@ -1,0 +1,28 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Dettaglio Rettifiche</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<p class="bold-text">Spese per attività di implementazione nel limite complessivo massimo del 10% del costo totale del
+    progetto di investimento ammesso, di cui al paragrafo 2.3 lettera d) del bando</p>
+
+<table class="fullWidth marginBottom20">
+    <thead>
+        <tr>
+            <th>Importo rettifica</th>
+            <th>Data rettifica</th>
+            <th>Riferimento</th>
+            <th>Utente</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let ret of rettifiche">
+            <td>{{ret.importoRettifica | number: '1.2-2' : 'it'}}</td>
+            <td>{{ret.dtRettifica}}</td>
+            <td>{{ret.riferimento}}</td>
+            <td>{{ret.codiceFiscaleSoggetto}}</td>
+        </tr>
+    </tbody>
+</table>

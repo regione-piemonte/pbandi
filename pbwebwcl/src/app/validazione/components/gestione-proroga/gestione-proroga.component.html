@@ -1,0 +1,265 @@
+<mat-card-content>
+  
+    <div *ngIf="stepProrogaSecond == 1">
+      <div style="display: flex;justify-content: space-between;">
+        <div class="spaceBetween">
+          <h3 class="bold-text">Gestione proroga</h3>
+        </div>
+        <div style="display: flex;
+        justify-content: space-between;
+        align-items: baseline;" >
+          <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+      </div>
+        <div mat-dialog-content *ngIf="!isLoading">
+          <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+              <p>{{errorMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="content"*ngIf="errore === true">
+          <mat-card-content class="messageError">
+          <p >ERRORE</p>
+          <span>{{message}}</span>
+          </mat-card-content>
+      </div>
+      
+      <div class="content" *ngIf="errore === false">
+          <mat-card-content class="messageSuccess">
+          <p >SUCCESSO</p>
+          <span>{{message}}</span>
+          </mat-card-content>
+      </div>
+        <mat-divider></mat-divider>
+        <br>
+        <div *ngFor="let element of prorogaDaElaborare">
+            <mat-card-content>
+            <mat-card-title >
+                <h3> <b>Richiesta proroga del :</b>  {{element.dtRichiestaProroga | date:'dd/MM/yyyy'}}</h3>
+                <div class="d-flex-marty">
+                    <h3><b>Motivazione :</b></h3>
+                    <h3>{{element.motivazioneProroga}}</h3>
+                </div>
+                <br><br>
+                <div class="d-flex-marty">
+                    <span style="font-size: 16px;"><b>Numero giorni di proroga </b></span>
+                    
+                  <div class="d-flex-marty2">
+                    <div class="d-flex-marty2" style="margin-right: 3em;">
+                        <div style="margin: 0.2em;"><h3><b>Richiesti: </b></h3></div>
+                        <div><h3>{{element.numGiorniRichProroga}}</h3></div>
+                    </div>
+                    <form [formGroup]="myForm"  *ngIf="errore == null">
+                    <div class="d-flex-marty2">
+                        <div style="display: flex; justify-content: space-between;" class="font" style="width: 20em;">
+                            <mat-form-field class="example-full-width" appearance="standard">
+                              <mat-label>Approvati</mat-label>
+                              <input  type="number" min="0" matInput placeholder="" value=""
+                                formControlName="numGiorni" #giorni>
+                            </mat-form-field>
+                        </div>
+                        <div  class="dialog-footer-buttons" style="padding-right: 3em;">
+                          <button  *ngIf="myForm.invalid" mat-raised-button class="button-style-2"
+                          (click)="controllaForm()">APPROVA
+                        </button>
+                        <button  *ngIf="myForm.valid" mat-raised-button class="button-style-2"
+                        (click)="approvaProroga()">
+                          APPROVA
+                        </button>
+                            <button style="margin-left: 3em;" mat-raised-button class="button-style-4"
+                              (click)="respingiProroga()">RESPINGI
+                            </button>
+                          </div> 
+
+                    </div>
+                    </form>
+                  </div>
+                </div>
+                
+            </mat-card-title>
+            </mat-card-content>
+            
+        </div>
+    </div> 
+    
+
+    <div *ngIf="stepProrogaSecond == 2" class="tableDoc">
+      <div style="display: flex;justify-content: space-between;">
+        <div class="spaceBetween">
+          <h3 class="bold-text">Gestione proroga</h3>
+        </div>
+        <div class="end">
+          <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+            <span class="material-icons">
+              close
+            </span>
+          </button>
+        </div>
+      </div>
+        <div mat-dialog-content *ngIf="!isLoading">
+          <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+              <p>{{errorMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="content"*ngIf="errore === true">
+          <mat-card-content class="messageError">
+          <p >ERRORE</p>
+          <span>{{message}}</span>
+          </mat-card-content>
+      </div>
+      
+      <div class="content" *ngIf="errore === false">
+          <mat-card-content class="messageSuccess">
+          <p >SUCCESSO</p>
+          <span>{{message}}</span>
+          </mat-card-content>
+      </div>
+        <mat-divider></mat-divider>
+        
+        <div>
+            <table mat-table [dataSource]="dataSource"  style="width: 100%;" >
+                <ng-container matColumnDef="dtRichiesta">
+                    <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row.dtRichiestaProroga  | date:'dd/MM/yyyy'}}</td>
+                </ng-container>
+    
+                <ng-container matColumnDef="ggRichiesti">
+                    <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row.numGiorniRichProroga }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="motivazione">
+                    <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                    <td mat-cell *matCellDef="let row"> {{row.motivazioneProroga}} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="ggApprovati">
+                    <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                    <td mat-cell *matCellDef="let row"> {{row.numGiorniApprovProroga }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="statoProroga">
+                    <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row.descStatoProroga}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dtRichiestaIntegrazione">
+                  <th mat-header-cell *matHeaderCellDef > Data richiesta integrazione </th>
+                  <td mat-cell *matCellDef="let row"> {{row.dtRichiestaIntegrazione  | date:'dd/MM/yyyy'}} </td>
+               </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[3, 6]" [pageSize]="3" [showFirstLastButtons]="true">
+            </mat-paginator>
+        </div>
+        <mat-divider></mat-divider>
+        <div>
+            <mat-card-content>
+            
+            <mat-card-title>
+              <mat-divider></mat-divider>
+              <div *ngFor="let element of prorogaDaElaborare">
+                  <mat-card-content>
+                  <mat-card-title >
+                      <h3> <b>Richiesta proroga del :</b>  {{element.dtRichiestaProroga | date:'dd/MM/yyyy'}}</h3>
+                      <div class="d-flex-marty">
+                          <h3> <b>Motivazione :</b> </h3>
+                          <h3>{{element.motivazioneProroga}}</h3>
+                      </div>
+                      <div class="d-flex-marty">
+                          <h3> <b>Numero giorni di proroga :</b> </h3>
+                          
+                        <div class="d-flex-marty2" style="margin-right: 3em;">
+                          <div >
+                              <div><h3> <b>Richiesti</b> </h3></div>
+                              <div><h3>{{element.numGiorniRichProroga}}</h3></div>
+                          </div>
+                          <form [formGroup]="myForm"  *ngIf="errore == null">
+                          <div class="d-flex-marty2">
+                              <div style="display: flex; justify-content: space-between;" class="font" style="width: 20em;">
+                                  <mat-form-field class="example-full-width" appearance="standard">
+                                    <mat-label>Approvati</mat-label>
+                                    <input  type="number" min="0" matInput placeholder="" value=""
+                                      formControlName="numGiorni" #giorni>
+                                  </mat-form-field>
+                              </div>
+                              <div  class="dialog-footer-buttons" style="padding-right: 3em;">
+                                  <button  *ngIf="myForm.invalid" mat-raised-button class="button-style-2"
+                                    (click)="controllaForm()">APPROVA
+                                  </button>
+                                  <button  *ngIf="myForm.valid" mat-raised-button class="button-style-2"
+                                  (click)="approvaProroga()">
+                                    APPROVA
+                                  </button>
+                                  <button style="margin-left: 3em;"  mat-raised-button class="button-style-4"
+                                    (click)="respingiProroga()">RESPINGI
+                                  </button>
+                                </div> 
+      
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                      
+                  </mat-card-title>
+                  </mat-card-content>
+                  
+              </div>
+            </mat-card-title>
+          </mat-card-content>
+            
+        </div>
+    </div> 
+
+    <div *ngIf="stepProrogaSecond == 3" class="tableDoc">
+        <div class="spaceBetween">
+          <h3 class="bold-text">Gestione proroga</h3>
+        </div>
+        <div>
+            <table mat-table [dataSource]="dataSource"  style="width: 100%;" >
+                <ng-container matColumnDef="dtRichiesta">
+                    <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.dtRichiestaProroga  | date:'dd/MM/yyyy'}}</td>
+                </ng-container>
+                <ng-container matColumnDef="ggRichiesti">
+                    <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.numGiorniRichProroga}} </td>
+                </ng-container>
+                <ng-container matColumnDef="motivazione">
+                    <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                    <td mat-cell *matCellDef="let row"> {{row?.motivazioneProroga}} </td>
+                </ng-container>
+                <ng-container matColumnDef="ggApprovati">
+                    <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.numGiorniApprovProroga}} </td>
+                </ng-container>
+                <ng-container matColumnDef="statoProroga">
+                    <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.descStatoProroga}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dtRichiestaIntegrazione">
+                  <th mat-header-cell *matHeaderCellDef > Data richiesta integrazione </th>
+                  <td mat-cell *matCellDef="let row"> {{row.dtRichiestaIntegrazione  | date:'dd/MM/yyyy'}} </td>
+               </ng-container>
+                <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[3, 6]" [pageSize]="3" [showFirstLastButtons]="true">
+            </mat-paginator>
+        </div>
+        <div class="end">
+          <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+          CHIUDI
+          </button>
+        </div>
+    
+    </div> 
+    </mat-card-content>

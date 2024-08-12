@@ -1,0 +1,72 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Affidamenti associabili al documento</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content class="mat-typography">
+    <p *ngIf="showErrorMessage" class="colorTextRed">Selezionare un affidamento</p>
+    <p *ngIf="!elencoAffidamenti || elencoAffidamenti.length===0">Nessun affidamento risulta associabile al documento.
+    </p>
+    <p *ngIf="elencoAffidamenti?.length>0">Solo gli affidamenti che presentano il fornitore associato al documento sono
+      selezionabili.</p>
+
+    <table mat-table [dataSource]="elencoAffidamenti" class="mat-elevation-z8" *ngIf="elencoAffidamenti?.length>0">
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- checked Column -->
+      <ng-container matColumnDef="checked">
+        <th class="colorBlack" mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-radio-group>
+            <mat-radio-button value='element.idAppalto' (click)="clickRadio($event, element.idAppalto)"
+              [checked]="element.idAppalto == radioSelected" *ngIf="element.selezionabile"></mat-radio-button>
+          </mat-radio-group>
+        </td>
+      </ng-container>
+
+      <!-- CPA Column -->
+      <ng-container matColumnDef="CPA">
+        <th mat-header-cell *matHeaderCellDef class="width12Perc paddingLeft10"> CPA </th>
+        <td mat-cell *matCellDef="let element" class="paddingLeft10"
+          [ngClass]="{'colorTextDisabled': !element.selezionabile}"> {{element.codProcAgg}} </td>
+      </ng-container>
+
+      <!-- CIG Column -->
+      <ng-container matColumnDef="CIG">
+        <th mat-header-cell *matHeaderCellDef class="width12Perc"> CIG </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'colorTextDisabled': !element.selezionabile}">
+          {{element.cigProcAgg}} </td>
+      </ng-container>
+
+      <!-- Oggetto Column -->
+      <ng-container matColumnDef="Oggetto">
+        <th mat-header-cell *matHeaderCellDef class="width37Perc"> Oggetto </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'colorTextDisabled': !element.selezionabile}">
+          {{element.oggettoAppalto}} </td>
+      </ng-container>
+
+      <!-- Fornitori Column -->
+      <ng-container matColumnDef="Fornitori">
+        <th mat-header-cell *matHeaderCellDef class="width37Perc"> Fornitori </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'colorTextDisabled': !element.selezionabile}">
+          <div *ngFor="let item of element.fornitori">
+            - {{item}}
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-dialog-content>
+  <div class="spaceBetween margin-top-10">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button cdkFocusInitial class="button-style-1" (click)="associa()"
+      *ngIf="elencoAffidamenti?.length>0">ASSOCIA</button>
+  </div>
+</div>

@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<wsdl:definitions name="SMSService"
+	targetNamespace="smsservice.acaris.acta.doqui.it"
+	xmlns:tns="smsservice.acaris.acta.doqui.it"
+	xmlns:common="common.acaris.acta.doqui.it"
+	xmlns:sms="sms.acaris.acta.doqui.it"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="common.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Common.xsd" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="sms.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-SMS.xsd" />
+			<xsd:include schemaLocation="ACARIS-SMSMessaging.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- messaggi -->
+
+	<wsdl:message name="acarisException">
+		<wsdl:part name="fault" element="common:acarisFault" />
+	</wsdl:message>
+
+	<!-- creaSmistamento -->
+	<wsdl:message name="creaSmistamentoRequest">
+		<wsdl:part name="input" element="sms:creaSmistamento" />
+	</wsdl:message>
+	<wsdl:message name="creaSmistamentoResponse">
+		<wsdl:part name="output"
+			element="sms:creaSmistamentoResponse" />
+	</wsdl:message>
+
+	<!-- query -->
+	<wsdl:message name="queryRequest">
+		<wsdl:part name="input" element="common:query" />
+	</wsdl:message>
+	<wsdl:message name="queryResponse">
+		<wsdl:part name="output" element="common:queryResponse" />
+	</wsdl:message>
+
+	<!-- completaSmistamentoFirmaDwd -->
+	<wsdl:message name="completaSmistamentoFirmaDwdRequest">
+		<wsdl:part name="input"
+			element="sms:completaSmistamentoFirmaDwd" />
+	</wsdl:message>
+	<wsdl:message name="completaSmistamentoFirmaDwdResponse">
+		<wsdl:part name="output"
+			element="sms:completaSmistamentoFirmaDwdResponse" />
+	</wsdl:message>
+
+	<!-- annullaSmistamentoFirmaDwd -->
+	<wsdl:message name="annullaSmistamentoFirmaDwdRequest">
+		<wsdl:part name="input"
+			element="sms:annullaSmistamentoFirmaDwd" />
+	</wsdl:message>
+	<wsdl:message name="annullaSmistamentoFirmaDwdResponse">
+		<wsdl:part name="output"
+			element="sms:annullaSmistamentoFirmaDwdResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="SMSServicePort">
+		<!-- creaSmistamento operation -->
+		<wsdl:operation name="creaSmistamento">
+			<wsdl:input message="tns:creaSmistamentoRequest" />
+			<wsdl:output message="tns:creaSmistamentoResponse" />
+			<wsdl:fault name="creaSmistamentoFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- query -->
+		<wsdl:operation name="query">
+			<wsdl:input message="tns:queryRequest" />
+			<wsdl:output message="tns:queryResponse" />
+			<wsdl:fault name="queryFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- completaSmistamentoFirmaDwd operation -->
+		<wsdl:operation name="completaSmistamentoFirmaDwd">
+			<wsdl:input
+				message="tns:completaSmistamentoFirmaDwdRequest" />
+			<wsdl:output
+				message="tns:completaSmistamentoFirmaDwdResponse" />
+			<wsdl:fault name="completaSmistamentoFirmaDwdFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- annullaSmistamentoFirmaDwd operation -->
+		<wsdl:operation name="annullaSmistamentoFirmaDwd">
+			<wsdl:input
+				message="tns:annullaSmistamentoFirmaDwdRequest" />
+			<wsdl:output
+				message="tns:annullaSmistamentoFirmaDwdResponse" />
+			<wsdl:fault name="annullaSmistamentoFirmaDwdFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="SMSServiceBinding"
+		type="tns:SMSServicePort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<!-- creaSmistamento -->
+		<wsdl:operation name="creaSmistamento">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="creaSmistamentoFault">
+				<soap:fault name="creaSmistamentoFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- query -->
+		<wsdl:operation name="query">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="queryFault">
+				<soap:fault name="queryFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- completaSmistamentoFirmaDwd -->
+		<wsdl:operation name="completaSmistamentoFirmaDwd">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="completaSmistamentoFirmaDwdFault">
+				<soap:fault name="completaSmistamentoFirmaDwdFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- annullaSmistamentoFirmaDwd -->
+		<wsdl:operation name="annullaSmistamentoFirmaDwd">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="annullaSmistamentoFirmaDwdFault">
+				<soap:fault name="annullaSmistamentoFirmaDwdFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="SMSService">
+		<wsdl:port name="SMSServicePort"
+			binding="tns:SMSServiceBinding">
+			<soap:address
+				location="http://localhost:${HttpDefaultPort}/smsservice/smsserviceaPort" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final utlizzo versione della libreria JasperReports6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5218d60c-f690-485c-ab20-6e6903c0b86c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="ritenuta_acconto" class="java.lang.String"/>
+	<parameter name="iva" class="java.lang.String"/>
+	<parameter name="organi" class="java.lang.String"/>
+	<parameter name="documento_unico" class="java.lang.String"/>
+	<parameter name="richiesta_contributi" class="java.lang.String"/>
+	<parameter name="denominazione_settore" class="java.lang.String"/>
+	<parameter name="richiesta_contributi_statali" class="java.lang.String"/>
+	<parameter name="denominazione_settore_statali" class="java.lang.String"/>
+	<parameter name="eventuali_contributi" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<detail>
+		<band height="800" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="50" width="540" height="20" uuid="8793f3e2-caae-4d54-a30e-70e41b564f41"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ritenuta d'acconto IRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="540" height="20" uuid="5729a204-ed46-48bf-a3b4-83ddf17fc419"/>
+				<text><![CDATA[in merito alla ritenuta d’acconto IRES prevista dall’art. 28 del D.p.r. 600/1973 e s.m.i. l’ente rappresentato :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="540" height="20" uuid="a9b430c9-ea55-4f54-8c38-4f43f6c9c0f8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DECLARATORIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="540" height="20" uuid="868275a8-0655-49bf-ad10-431d98a67205">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Si dichiara quanto segue:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="90" width="545" height="30" isRemoveLineWhenBlank="true" uuid="6355cb52-188c-4966-94c5-b87908cfe225"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{ritenuta_acconto}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="540" height="20" uuid="c53cfd40-b8b3-4097-9b8d-815e6cf24741"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="550" height="30" uuid="2511388f-99b3-4173-ab4c-4666a16fde97"/>
+				<text><![CDATA[in base al regime di contabilità a cui è sottoposto l'ente e in relazione alle spese connesse alla realizzazione dell'iniziativa sopra indicata :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="170" width="540" height="30" isRemoveLineWhenBlank="true" uuid="d1a64692-0219-4413-aa55-8dfe4df4e0ba"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{iva}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="200" width="540" height="20" uuid="98f7ac45-f369-4322-a93d-1293d36f45a8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Organi collegiali]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="220" width="550" height="40" uuid="12bdf6af-b57d-4136-b318-1411b28f2ae0"/>
+				<text><![CDATA[in riferimento all'art. 6 della legge 30 luglio 2010, n. 122 "Conversione in legge, con modificazioni, del decreto-legge 31 maggio 2010, n. 78 (…)”, la titolarità delle cariche interne agli organi collegiali dell'ente da me rappresentato e la partecipazione alle riunioni di detti organi:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="260" width="550" height="60" isRemoveLineWhenBlank="true" uuid="0dc3cf56-920f-498f-8c9b-520a8a5093e5"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{organi}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="320" width="540" height="20" uuid="37c31a07-96e2-452c-a790-e2e3eefcdcc0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento Unico di Regolarità Contributiva]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="370" width="540" height="30" isRemoveLineWhenBlank="true" uuid="7172d26e-7b93-4ef4-9e8b-454118db8fbe"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{documento_unico}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="340" width="550" height="30" uuid="e437d85a-1887-42ce-a46c-8306ff12d0c1"/>
+				<text><![CDATA[ai fini del rilascio del D.U.R.C. (Documento Unico di Regolarità Contributiva) attestante l'assolvimento degli obblighi contributivi nei confronti di INPS, INAIL e Cassa Edile:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="460" width="540" height="20" isRemoveLineWhenBlank="true" uuid="c231bc5b-2537-4204-be6f-db3331b78791"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{richiesta_contributi}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="410" width="540" height="20" uuid="190ddcbb-e44f-45ce-af65-5d6bfa70fa67"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Richiesta di contributi ad altre strutture della Regione Piemonte]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="430" width="550" height="30" uuid="48a5d99e-7151-4bd2-a17f-0f184746e796"/>
+				<text><![CDATA[per la realizzazione della stessa iniziativa/progetto, oltre a quella già presentata alla Direzione e al Settore regionali in indirizzo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="480" width="540" height="60" isRemoveLineWhenBlank="true" uuid="6a8afb15-7f21-41b9-9a63-130447f62940"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{denominazione_settore}+""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="600" width="540" height="20" isRemoveLineWhenBlank="true" uuid="fcc1673f-8e9f-4574-b32a-66b1259cdc21"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{richiesta_contributi_statali}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="550" width="540" height="20" uuid="cfa5e907-35d7-4cbb-8f9f-7182185311f3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Richiesta di contributi di natura statale o comunitaria]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="620" width="540" height="60" isRemoveLineWhenBlank="true" uuid="830b635f-082b-4b8b-867f-1dbf8dcfd733"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{denominazione_settore_statali}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="570" width="550" height="30" uuid="6ba008b8-7032-43b2-afd4-487eb6541613"/>
+				<text><![CDATA[per la realizzazione della stessa iniziativa/progetto, oltre a quella già presentata alla Direzione e al Settore regionali in indirizzo :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="690" width="540" height="20" uuid="63abf5cc-f27e-4f23-b6b6-6ec8142dc0a5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eventuali contributi successivi]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="730" width="540" height="30" isRemoveLineWhenBlank="true" uuid="52b31849-afa5-4565-b226-e3dd4bc1bec4"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$P{eventuali_contributi}+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="710" width="550" height="20" uuid="a2bac16d-0ed4-4013-9014-e928ea9c94d1"/>
+				<text><![CDATA[le attività e le iniziative culturali proposte, su cui insiste la presente richiesta di contributo:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

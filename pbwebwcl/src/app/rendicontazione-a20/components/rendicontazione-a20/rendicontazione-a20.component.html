@@ -1,0 +1,99 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{ displayNone: isLoading() }" id="scrollId">
+	<div class="title">
+		<div class="backContainer">
+			<button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+				<mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+				<span class="backText">Torna alle attività da svolgere</span>
+			</button>
+		</div>
+		<div class="reportingContainerUp">
+			<div>
+				<h2>Rendicontazione</h2>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<div class="cod-progetto">
+					<p>
+						Beneficiario: <span class="bold-text">{{ beneficiario }}</span>
+					</p>
+				</div>
+				<div class="cod-progetto">
+					<p>
+						Codice progetto: <span class="bold-text">{{ codiceProgetto }}</span>
+					</p>
+					<button class="button-style-1 paddingLeft20" mat-button (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+					<button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO ECONOMICO</button>
+					<button *ngIf="!isBR58" class="button-style-1 paddingLeft20" mat-button (click)="gestioneFornitori()">GESTIONE FORNITORI</button>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="content">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<mat-tab-group>
+					<mat-tab label="DOCUMENTI DI SPESA" *ngIf="idProgetto">
+						<ng-template matTabContent>
+							<app-documenti-di-spesa
+								[idProgetto]="idProgetto"
+								[idBandoLinea]="idBandoLinea"
+								[idSoggetto]="idSoggetto"
+								[codiceRuolo]="codiceRuolo"
+								[isIntegrativa]="isIntegrativa"
+								[rendicontazioneInfo]="rendicontazioneInfo"
+								[codiceProgetto]="codiceProgetto"
+								[isReadOnly]="isReadOnly"
+								[isBandoCultura]="isBandoCultura"
+							></app-documenti-di-spesa>
+						</ng-template>
+					</mat-tab>
+					<mat-tab label="CONSUNTIVO" *ngIf="idProgetto">
+						<ng-template matTabContent>
+							<app-consuntivo></app-consuntivo>
+							<mat-tab-group>
+								<mat-tab label="SPESE">
+									<ng-template matTabContent>
+										<app-spese
+											[idProgetto]="idProgetto"
+											[isBandoCultura]="isBandoCultura"
+											[isValidazioneA20]="isValidazioneA20"
+											[spesaVo]="spesaVo"
+											[saldoSpeseConnesseAttivita]="saldoSpeseConnesseAttivita"
+											[dataTerminePreventivo]="dataTerminePreventivo"
+											[dataTermineDomanda]="dataTermineDomanda"
+											[isIntegrativa]="isIntegrativa"
+											(spesaVoEmit)="speseChange($event)"
+											(updateDati)="saldoAggiornato()"
+										></app-spese>
+									</ng-template>
+								</mat-tab>
+								<mat-tab label="ENTRATE NETTE">
+									<ng-template matTabContent>
+										<app-entrate-nette 
+											[idProgetto]="idProgetto"
+											[idBandoLinea]="idBandoLinea"
+											[isValidazioneA20]="isValidazioneA20"
+											[isBandoCultura]="isBandoCultura"
+											[totali]="totali"
+											[entrateVo]="entrateVo"
+											[dataTerminePreventivo]="dataTerminePreventivo"
+											[dataTermineDomanda]="dataTermineDomanda"
+											[isIntegrativa]="isIntegrativa"
+											(entrateVoEmit)="entrateChange($event)"
+											(updateDati)="saldoAggiornato()"
+										></app-entrate-nette>
+									</ng-template>
+								</mat-tab>
+							</mat-tab-group>
+							<app-specchietto-saldo></app-specchietto-saldo>
+						</ng-template>
+					</mat-tab>
+				</mat-tab-group>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

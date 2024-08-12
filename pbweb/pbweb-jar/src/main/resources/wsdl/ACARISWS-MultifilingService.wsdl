@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<wsdl:definitions name="MultifilingService"
+	targetNamespace="multifilingservice.acaris.acta.doqui.it"
+	xmlns:tns="multifilingservice.acaris.acta.doqui.it"
+	xmlns:common="common.acaris.acta.doqui.it"
+	xmlns:archive="archive.acaris.acta.doqui.it"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="common.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Common.xsd" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="archive.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Archive.xsd" />
+			<xsd:include schemaLocation="ACARIS-ArchiveMessaging.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- messaggi -->
+	<wsdl:message name="acarisException">
+		<wsdl:part name="fault" element="common:acarisFault" />
+	</wsdl:message>
+	
+	<!-- addAssociativeObjectToFolder -->
+	<wsdl:message name="addAssociativeObjectToFolderRequest">
+		<wsdl:part name="input"
+			element="archive:addAssociativeObjectToFolder" />
+	</wsdl:message>
+	<wsdl:message name="addAssociativeObjectToFolderResponse">
+		<wsdl:part name="output"
+			element="archive:addAssociativeObjectToFolderResponse" />
+	</wsdl:message>
+	<!-- aggiungiClassificazione -->
+	<wsdl:message name="aggiungiClassificazioneRequest">
+		<wsdl:part name="input"
+			element="archive:aggiungiClassificazione" />
+	</wsdl:message>
+	<wsdl:message name="aggiungiClassificazioneResponse">
+		<wsdl:part name="output"
+			element="archive:aggiungiClassificazioneResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="MultifilingServicePort">
+		<!-- addAssociativeObjectToFolder operation -->
+		<wsdl:operation name="addAssociativeObjectToFolder">
+			<wsdl:input
+				message="tns:addAssociativeObjectToFolderRequest" />
+			<wsdl:output
+				message="tns:addAssociativeObjectToFolderResponse" />
+			<wsdl:fault name="addAssociativeObjectToFolderFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- aggiungiClassificazione operation -->
+		<wsdl:operation name="aggiungiClassificazione">
+			<wsdl:input message="tns:aggiungiClassificazioneRequest" />
+			<wsdl:output
+				message="tns:aggiungiClassificazioneResponse" />
+			<wsdl:fault name="aggiungiClassificazioneFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="MultifilingServiceBinding"
+		type="tns:MultifilingServicePort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<!-- addAssociativeObjectToFolder -->
+		<wsdl:operation name="addAssociativeObjectToFolder">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="addAssociativeObjectToFolderFault">
+				<soap:fault name="addAssociativeObjectToFolderFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- aggiungiClassificazione -->
+		<wsdl:operation name="aggiungiClassificazione">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="aggiungiClassificazioneFault">
+				<soap:fault name="aggiungiClassificazioneFault"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="MultifilingService">
+		<wsdl:port name="MultifilingServicePort"
+			binding="tns:MultifilingServiceBinding">
+			<soap:address
+				location="http://localhost:${HttpDefaultPort}/multifilingservice/multifilingserviceaPort" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>
+
+
+

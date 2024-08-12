@@ -1,0 +1,4 @@
+<button *ngIf="richiestaIntegrazioneAbilitata && (isVisible || ((!isFP || isBR79)))" (click)="richiediIntegrazione()"
+    mat-raised-button class="button-style-2 margin-left-20" [matTooltip]="tooltipRichApertaBr79"
+    [disabled]="idStatoRichiesta == 1 || idStatoRichiesta == 4 || isRichApertaBr79">
+    RICHIEDI INTEGRAZIONE</button>

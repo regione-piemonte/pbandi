@@ -1,0 +1,107 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<form #quietanzaForm="ngForm" (submit)="salva()" [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="boldText" *ngIf="isNuovo">Nuova quietanza</h3>
+        <h3 class="boldText" *ngIf="!isNuovo">Modifica quietanza</h3>
+        <h3><span class="bold-text">Residuo quietanzabile:</span>
+            <span [ngClass]="{'red-color': residuoQuietanzabile>0, 'green-color': 0>=residuoQuietanzabile }">
+                {{residuoQuietanzabile | number: '0.2' : 'it'}} </span>
+        </h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="content" *ngIf="isMessageWarningVisible">
+        <mat-card class="mat-elevation-z2 messageWarning">
+          <mat-card-content class="messageWarningContent">
+            <p [innerHTML]="messageWarning"></p>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <mat-checkbox *ngIf="isVisibileCheckBox()" class="margin-bottom-20" [(ngModel)]="isQuietanzaNonDisponibileChecked" [checked]="isQuietanzaNonDisponibileChecked" name="quietanzaNonDisponibile" (click)="checkedQuietanzaNonDisponibile()">
+        Quietanza non disponibile
+    </mat-checkbox>
+    <mat-form-field class="margin-top-20" style="width: 100%;">
+        <mat-label>Selezionare una modalità</mat-label>
+            <mat-select [(ngModel)]="modalitaSelected" name="modalita" required #mod="ngModel" [disabled]="isQuietanzaNonDisponibileChecked">
+                <div *ngIf="isQuietanzaNonDisponibileChecked">
+                    <mat-option *ngFor="let option of modalitaDefault" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </div>
+                <div *ngIf="!isQuietanzaNonDisponibileChecked">
+                    <mat-option *ngFor="let option of modalita" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </div>
+            </mat-select>
+        <mat-error *ngIf="mod?.errors?.required">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <div>
+        <mat-form-field class="width-data marginRight20">
+            <mat-label>Data</mat-label>
+            <input matInput #ref [matDatepicker]="picker" [formControl]="date" (dateChange)="checkGgQuietanza()" required [disabled]="isQuietanzaNonDisponibileChecked">
+            <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="isQuietanzaNonDisponibileChecked">
+                <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="date?.errors?.required">
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" placeholder="Importo" matInput [(ngModel)]="importoFormatted" required name="importo"
+                pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #imp="ngModel" (blur)="setImporto()"
+                [disabled]="tipoOperazioneFrom==='validazione' || isQuietanzaNonDisponibileChecked" />
+            <mat-error *ngIf="imp?.errors?.required">
+                Campo obbligatorio
+            </mat-error>
+            <mat-error *ngIf="imp?.errors?.error ==='negative'">
+                Il valore deve essere maggiore di 0
+            </mat-error>
+            <mat-error *ngIf="imp?.errors?.error ==='wrongLength'">
+                Il campo non può essere superiore a 13 cifre intere e 2 decimali
+            </mat-error>
+            <mat-error *ngIf="imp?.errors?.pattern">
+                Valore non valido
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="spaceBetween" *ngIf="causaleQuietanzaVisibile">
+        <mat-form-field style="width: 48%;">
+            <mat-label>Selezionare una causale</mat-label>
+            <mat-select [(ngModel)]="causaleSelected" name="causale" required #caus="ngModel">
+                <mat-option *ngFor="let option of causali" [value]="option">
+                    {{ option.descrizione }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="caus?.errors?.required">
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 48%;">
+            <input type="text" placeholder="Riferimento" maxlength="20" matInput [(ngModel)]="riferimento"
+                name="riferimento" required #rif="ngModel" />
+            <mat-error *ngIf="rif?.errors?.required">
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="spaceBetween">
+        <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+        <div matTooltip="Compilare tutti i campi obbligatori"
+            [matTooltipDisabled]="modalitaSelected && date && importo && causaleSelected && riferimento?.length>0">
+            <button type="submit" mat-button class="button-style-1" *ngIf="!isConferma"
+                [disabled]="!modalitaSelected || !date.value || (importo == 0 && !isQuietanzaNonDisponibileChecked) || (causaleQuietanzaVisibile && (!causaleSelected || !riferimento || riferimento.length===0))">SALVA</button>
+            <button type="submit" mat-button class="button-style-1" *ngIf="isConferma"
+                [disabled]="!modalitaSelected || !date.value || (importo == 0 && !isQuietanzaNonDisponibileChecked) || (causaleQuietanzaVisibile && (!causaleSelected || !riferimento || riferimento.length===0))">CONFERMA</button>
+        </div>
+    </div>
+</form>

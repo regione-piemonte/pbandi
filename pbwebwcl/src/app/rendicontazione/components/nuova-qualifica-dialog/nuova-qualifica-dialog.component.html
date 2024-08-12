@@ -1,0 +1,50 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Qualifica Fornitore - inserimento</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="close()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<form #nuovaQualificaForm="ngForm" (submit)="salva()">
+  <mat-dialog-content class="mat-typography">
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile [colspan]="8" [rowspan]="1">
+        <mat-form-field class="fullWidth">
+          <mat-label>Selezionare una qualifica</mat-label>
+          <mat-select [(ngModel)]="qualificaSelected" name="qualifica" #qualifica="ngModel">
+            <mat-option *ngFor="let qualifica of qualifiche" [value]="qualifica">
+              {{ qualifica.descrizione }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile [colspan]="8" [rowspan]="1">
+        <mat-form-field class="fullWidth">
+          <input type="number" placeholder="Costo orario" aria-label="Number" matInput [(ngModel)]="costoOrario"
+            name="costoOrario" #numCosOr="ngModel">
+          <mat-error *ngIf="numCosOr?.errors?.error ==='required'">
+            Campo obbligatorio
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile [colspan]="8" [rowspan]="1">
+        <mat-form-field class="fullWidth">
+          <input type="text" placeholder="Nota" aria-label="Number" matInput [(ngModel)]="nota" name="nota"
+            #not="ngModel">
+          <mat-error *ngIf="not?.errors?.error ==='required'">
+            Campo obbligatorio
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-dialog-content>
+  <div>
+    <div class="spaceBetween marginTop20">
+      <button mat-button mat-dialog-close class="button-style-1">ANNULLA</button>
+      <button mat-button cdkFocusInitial class="button-style-1">ASSOCIA</button>
+    </div>
+  </div>
+</form>

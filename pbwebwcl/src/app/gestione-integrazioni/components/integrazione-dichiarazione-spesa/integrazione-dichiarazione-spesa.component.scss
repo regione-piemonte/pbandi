@@ -1,0 +1,142 @@
+.margin-but {
+  margin-left: 6em;
+}
+
+.parent {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.child {
+  margin: 1em;
+  height: 1em;
+}
+
+.mat-divider {
+  border-top-color: hsl(120deg 10% 71% / 66%);
+  margin-left: 20px;
+  width: 98%;
+}
+
+//TABELLA CSS
+
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+}
+
+.example-element-spesa {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-quietanze {
+  padding: 16px;
+}
+
+.my-elevation {
+  border: 1px solid #00000073;
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 2px 1px -1px rgb(0 0 0 / 20%) !important;
+    width: 97%;
+}
+
+.marty-top {
+  margin-top: 2em;
+}
+
+.direzione-marty-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.direzione-marty-end {
+  align-content: flex-end;
+  align-items: flex-end;
+}
+
+.padding-marty {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.font-marty {
+  font-size: 18px;
+}
+
+.margin-bottom-marty {
+  margin-bottom: 1em;
+}
+
+.margin-top-marty {
+  margin-top: 1em;
+}
+
+.spanLink {
+  font-size: 15px;
+  color: #2785d7;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.allegati {
+  align-items: baseline;
+  background-color: #178cd61a;
+  border-radius: 4px;
+}
+
+.linkAllegati {
+  padding-left: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.size13 {
+  font-size: 13px;
+}
+
+.width-99 {
+  width: 99%;
+}
+
+.font-size-3-em {
+  font-size: 3em;
+}
+
+.title-documento {
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #eaeaea;
+  display: block;
+  padding: 4px;
+}

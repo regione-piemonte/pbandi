@@ -1,0 +1,68 @@
+.bold-text {
+	font-weight: bold;
+}
+
+.page table th.mat-header-cell {
+	font-size: 13px;
+}
+
+.button-style-2 {
+	background-color: rgba(245, 124, 0, 1) !important;
+	border: 2px solid rgba(245, 124, 0, 1) !important;
+	font-size: 16px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.d-flex {
+	display: flex;
+}
+
+.d-flex-end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.button-style-11 {
+	color: #0060c1;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.option-radio-button {
+	width: auto; /* o utilizza width: 100% per una larghezza flessibile */
+	max-width: 100%; /* imposta un limite massimo alla larghezza */
+}
+
+.spazio {
+	white-space: normal !important;
+}
+
+::ng-deep .mat-radio-label {
+	display: inline-flex;
+	align-items: flex-start !important;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.example-section {
+	margin-top: 2em;
+}
+
+.mb-2 {
+	margin-bottom: 2em;
+}
+
+.bordo {
+	border-bottom: 1px solid;
+}
+
+.mr-1 {
+	margin-right: 1em;
+}
+
+.mat-form-field {
+    display: block;
+    position: relative;
+    text-align: left;
+}

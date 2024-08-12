@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx.xsd"
+>
+	<bean class="it.csi.pbandi.pbweb.business.SpringApplicationContextHelper"></bean>
+	
+	
+	<!-- bean di utility -->
+	<bean class="it.csi.pbandi.pbweb.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbweb.util.FileUtil"></bean>
+	<bean class="it.csi.pbandi.pbweb.util.FileSqlUtil"></bean>
+	<!-- bean class="it.csi.pbandi.pbweb.security.Dispatcher"></bean-->
+
+	
+	<bean class="it.csi.pbandi.pbweb.business.manager.DocumentoManager"/>
+	<bean class="it.csi.pbandi.pbweb.business.manager.InizializzazioneManager"/>
+	<bean class="it.csi.pbandi.pbweb.business.manager.DocManagerCheckList"/>
+	<bean class="it.csi.pbandi.pbweb.business.manager.FatturaElettronicaManager"/>
+	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- bean di pbservizit -->
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ProfilazioneDAOImpl"></bean>
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.TracciamentoDAOImpl"></bean>	
+
+	
+	
+	<!-- bean pbandisrv  -->
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.EjbSessionContextBean"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.archivio.ArchivioBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionedocumentidispesa.GestioneDocumentiDiSpesaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionedatididominio.GestioneDatiDiDominioBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.checklisthtml.ChecklistHtmlBusinessImpl" />
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.checklist.CheckListBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionefornitori.GestioneFornitoriBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.profilazione.ProfilazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionevocidispesa.GestioneVociDiSpesaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionepagamenti.GestionePagamentiBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.dichiarazionedispesa.DichiarazioneDiSpesaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.richiestaerogazione.RichiestaErogazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionecronoprogramma.GestioneCronoprogrammaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.neoflux.NeofluxBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.digitalsign.DigitalSignBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.validazionerendicontazione.ValidazioneRendicontazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionedatigenerali.GestioneDatiGeneraliBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestioneappalti.GestioneAppaltiBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestioneaffidamenti.GestioneAffidamentiBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.contoeconomico.ContoeconomicoBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.rettifica.RettificaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionedocumentazione.GestioneDocumentazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.gestionebackoffice.GestioneBackofficeBusinessImpl"/>
+
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DocumentoManager"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DecodificheManager"/>
+	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.ProgettoManager" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.CheckListManager" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.ContoEconomicoManager" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.ReportManager" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.SequenceManager" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.SoggettoManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.ConfigurationManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.RegolaManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.TimerManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DocumentoDiSpesaManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.RappresentanteLegaleManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DichiarazioneDiSpesaManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.PopolaTemplateManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.SedeManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.TipoAllegatiManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.EnteManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DynamicTemplateManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.TemplateDbManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.DoSignManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.CertificazioneManager"/> 	
+ 	
+
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.dao.GenericDAO"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiDAO"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiChecklistDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiDatiGeneraliDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiFornitoriDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiDocumentiDiSpesaDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiFornitoreQualificaDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiArchivioFileDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiProfilazioneDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiVociDiSpesaDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiPagamentiDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiDichiarazioneDiSpesaDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiValidazioneRendicontazioneDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.dao.PbandiRicercaDocumentiDAOImpl"/>
+ 	
+ 	
+ 	<!--
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.vo.DichiarazioneDiSpesaConTipoVO"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.vo.ProgettoBandoLineaVO"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.db.jdbctemplate.vo.TemplateJasperVO"/>
+  	 -->
+  	 
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.integration.util.BeanMapper"/>
+ 	<bean class="it.csi.pbandi.pbweb.pbandiutil.common.TimerUtil"/>
+ 	
+ 	<bean class="it.csi.pbandi.pbweb.pbandiutil.common.BeanUtil" />
+ 	<bean class="it.csi.pbandi.pbweb.pbandiutil.common.LoggerUtil" />
+ 	
+ 	<bean class="it.csi.pbandi.pbweb.pbandisrv.business.manager.RevocaRecuperoManager"/>
+ 	<bean class="it.csi.pbandi.pbweb.business.manager.ActaManager" />
+ 	
+	<bean id="decodificheDAOImpl"
+		class="it.csi.pbandi.pbweb.integration.dao.impl.DecodificheDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	
+	<bean class="it.csi.pbandi.pbweb.business.service.impl.DocumentiDiProgettoServiceImpl"/>
+	
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbweb.integration.dao" />
+	<context:component-scan base-package="it.doqui.acta" />
+
+	<context:property-placeholder location="classpath:/enviromentTest.properties" />
+	
+	<!-- Senza non funziona il rollback dopo una eccezione -->
+	<context:annotation-config/>
+	<tx:annotation-driven proxy-target-class="true"	transaction-manager="transactionManager" />
+	
+
+</beans>

@@ -1,0 +1,160 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [hidden]="isLoading()" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-color">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <h2>Richieste integrazioni</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--div class="content">
+        <div class="avviso-content">
+            <mat-card class="mat-elevation-z0">
+                <mat-card-content>
+                    <div class="avviso">
+                        Attenzione! Ad ogni richiesta di integrazione è necessario allegare la lettera accompagnatoria.
+                        Tale lettera dovrà essere compresa e selezionata tra i file allegati prima di poter inviare.
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div-->
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <table mat-table [dataSource]="dataSource" class="fullWidth">
+
+                    <ng-container matColumnDef="nota">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef>
+                            Nota alla richiesta di integrazione
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="max-width-0">
+                            <div class="spaceBetween">
+                                <span class="text-overflow-ellipsis overflow-hidden white-space-nowrap"
+                                    [innerHTML]="element.descrizione | safeHTML"></span>
+                                <!--queste classi non funzionano con innerHTML-->
+                                <button mat-icon-button matTooltip="Visualizza in nuova finestra"
+                                    (click)="visualizzaInDialog(element.descrizione)">
+                                    <mat-icon>open_in_new</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datarichiesta">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> Data richiesta
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dataRichiesta }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datanumdich">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> Data e num
+                            dichiarazione
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dataDichiarazione}}
+                            {{element.idDichiarazioneSpesa}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="allegati">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef class="width-30-perc">
+                            Allegati
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="width-30-perc">
+                            <div *ngIf="element.allegati?.length>0">
+                                <tr *ngFor="let allegato of  element.allegati">
+                                    <!--td>
+                                        <mat-checkbox class="marginRight10"
+                                            (change)="changeCheckbox($event,element,allegato.idDocumentoIndex)"
+                                            [matTooltip]="allegato.checked ? 'File marcato come Dichiarazione di Integrazione' : 'Marca il file come Dichiarazione di Integrazione'"
+                                            [(ngModel)]="allegato.checked" name="check{{allegato.idDocumentoIndex}}"
+                                            [disabled]="allegato.checked || element.dataInvio">
+                                        </mat-checkbox>
+                                    </td-->
+                                    <td
+                                        class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap fullWidth cursor-pointer">
+                                        <a class="blue-color bold-text" matTooltip="Download allegato"
+                                            (click)="downloadAllegato(allegato.idDocumentoIndex,allegato.nomeFile)">{{allegato.nomeFile}}</a>
+
+                                    </td>
+                                    <td>
+                                        <button type="button" mat-icon-button class="blue-color"
+                                            *ngIf="!element.dataInvio" matTooltip="Disassocia allegato"
+                                            style="width: 30px;"
+                                            (click)="disassociaAllegato(allegato.idDocumentoIndex,element.idIntegrazioneSpesa)">
+                                            <mat-icon>link_off</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </div>
+
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datainvio">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef> Data invio
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dataInvio }}
+                            <span *ngIf="!element.dataInvio">
+                                <mat-icon class="orange-color" matTooltip="In attesa di invio">schedule</mat-icon>
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button type="button" mat-icon-button class="blue-color" matTooltip="Allega file"
+                                *ngIf="!element.dataInvio" (click)="aggiungiAllegato(element)">
+                                <mat-icon>attachment</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button class="blue-color" matTooltip="Invia"
+                                *ngIf="isInvio(element)" (click)="invia(element.idIntegrazioneSpesa)">
+                                <mat-icon>send</mat-icon>
+                            </button>
+                            <mat-icon class="green-color" *ngIf="element.dataInvio" matTooltip="Trasmessa">done
+                            </mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

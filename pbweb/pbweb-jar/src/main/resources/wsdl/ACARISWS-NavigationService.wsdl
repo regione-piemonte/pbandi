@@ -1,0 +1,162 @@
+<?xml version="1.0" ?>
+<wsdl:definitions name="NavigationService"
+	targetNamespace="navigationservice.acaris.acta.doqui.it"
+	xmlns:tns="navigationservice.acaris.acta.doqui.it"
+	xmlns:common="common.acaris.acta.doqui.it"
+	xmlns:archive="archive.acaris.acta.doqui.it"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="common.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Common.xsd" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="archive.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Archive.xsd" />
+			<xsd:include schemaLocation="ACARIS-ArchiveMessaging.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- messaggi -->
+	
+	<wsdl:message name="acarisException">
+		<wsdl:part name="fault" element="common:acarisFault" />
+	</wsdl:message>
+	
+	<!-- getDescendants -->
+	<wsdl:message name="getDescendantsRequest">
+		<wsdl:part name="input" element="archive:getDescendants" />
+	</wsdl:message>
+	<wsdl:message name="getDescendantsResponse">
+		<wsdl:part name="output"
+			element="archive:getDescendantsResponse" />
+	</wsdl:message>
+
+	<!-- getChildren -->
+	<wsdl:message name="getChildrenRequest">
+		<wsdl:part name="input" element="archive:getChildren" />
+	</wsdl:message>
+	<wsdl:message name="getChildrenResponse">
+		<wsdl:part name="output"
+			element="archive:getChildrenResponse" />
+	</wsdl:message>
+
+	<!-- getFolderParent -->
+	<wsdl:message name="getFolderParentRequest">
+		<wsdl:part name="input" element="archive:getFolderParent" />
+	</wsdl:message>
+	<wsdl:message name="getFolderParentResponse">
+		<wsdl:part name="output"
+			element="archive:getFolderParentResponse" />
+	</wsdl:message>
+
+	<!-- getObjectParents -->
+	<wsdl:message name="getObjectParentsRequest">
+		<wsdl:part name="input" element="archive:getObjectParents" />
+	</wsdl:message>
+	<wsdl:message name="getObjectParentsResponse">
+		<wsdl:part name="output"
+			element="archive:getObjectParentsResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="NavigationServicePort">
+		<!-- getDescendants operation -->
+		<wsdl:operation name="getDescendants">
+			<wsdl:input message="tns:getDescendantsRequest" />
+			<wsdl:output message="tns:getDescendantsResponse" />
+			<wsdl:fault name="getDescendantsFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- getChildren operation -->
+		<wsdl:operation name="getChildren">
+			<wsdl:input message="tns:getChildrenRequest" />
+			<wsdl:output message="tns:getChildrenResponse" />
+			<wsdl:fault name="getChildrenFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- getFolderParent operation -->
+		<wsdl:operation name="getFolderParent">
+			<wsdl:input message="tns:getFolderParentRequest" />
+			<wsdl:output message="tns:getFolderParentResponse" />
+			<wsdl:fault name="getFolderParentFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		<!-- getObjectParents operation -->
+		<wsdl:operation name="getObjectParents">
+			<wsdl:input message="tns:getObjectParentsRequest" />
+			<wsdl:output message="tns:getObjectParentsResponse" />
+			<wsdl:fault name="getObjectParentsFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="NavigationServiceBinding"
+		type="tns:NavigationServicePort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<!-- getDescendants -->
+		<wsdl:operation name="getDescendants">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="getDescendantsFault">
+				<soap:fault name="getDescendantsFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- getChildren -->
+		<wsdl:operation name="getChildren">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="getChildrenFault">
+				<soap:fault name="getChildrenFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- getFolderParent -->
+		<wsdl:operation name="getFolderParent">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="getFolderParentFault">
+				<soap:fault name="getFolderParentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- getObjectParents -->
+		<wsdl:operation name="getObjectParents">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="getObjectParentsFault">
+				<soap:fault name="getObjectParentsFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="NavigationService">
+		<wsdl:port name="NavigationServicePort"
+			binding="tns:NavigationServiceBinding">
+			<soap:address
+				location="http://localhost:${HttpDefaultPort}/navigationservice/navigationserviceaPort" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>
+
+
+

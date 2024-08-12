@@ -1,0 +1,45 @@
+/* .mat-form-field {
+    font-size: initial;
+}
+.dialog-footer-buttons{
+   display: flex;
+justify-content: space-between; 
+}
+ */
+
+ 
+ .tableDoc {
+    th,
+    td {
+        width: auto;
+        min-width: 10em;
+        color: #000;
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+
+    th {
+        font-weight: bold;
+        padding-right: 10px;
+        color: #000;
+    }
+
+    ::ng-deep .mat-sort-header-button {
+        min-width: 15em;
+      }
+}
+.dialog-footer-buttons{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.font{
+    font-size: 16px;
+}
+
+
+.end{
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 3em;
+  }

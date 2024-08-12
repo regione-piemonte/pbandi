@@ -1,0 +1,140 @@
+.row {
+    display: flex;
+
+    .col50 {
+        width: 48%;
+    }
+
+    .col25 {
+        width: 24%;
+    }
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.tableDoc {
+
+    th,
+    td {
+        width: 25%;
+    }
+
+    th {
+        font-weight: bold;
+        text-align: end;
+        padding-right: 10px;
+    }
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.alignItemsCenter {
+    display: flex !important;
+    align-items: center;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.width-15-perc {
+    width: 15%;
+}
+
+.width-20-perc {
+    width: 20%;
+}
+
+.width-90-perc {
+    width: 90%;
+}
+
+.margin0 {
+    margin: 0px;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.marginLeft4 {
+    margin-left: 4px;
+}
+
+.marginLeft5 {
+    margin-left: 5px;
+}
+
+.marginLeft10 {
+    margin-left: 10px;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.marginBottom20 {
+    margin-bottom: 20px;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+::ng-deep .imp .mat-form-field-infix {
+    width: 15% !important;
+}
+
+::ng-deep .rif .mat-form-field-infix {
+    width: 20% !important;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+    /*click effect color change*/
+}
+
+.card {
+    margin: 20px 0 0 0;
+
+    mat-card {
+        mat-card-content {
+            padding-left: 10px;
+        }
+    }
+}
+
+.margin-bottom-0 {
+    margin-bottom: 0 !important;
+}
+
+.margin-top-0 {
+    margin-top: 0 !important;
+}

@@ -1,0 +1,89 @@
+.flex-contrario {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.flex-contrario-e-spazio {
+	display: flex;
+	justify-content: space-between;
+	width: 50%;
+	text-align: center;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-e-spazio {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.flex-normale {
+	display: flex;
+	align-items: center;
+	width: 40%;
+}
+
+.larghezza-marty {
+	width: inherit;
+}
+
+.larghezza-marty-due {
+	width: min-content;
+}
+
+.primoDiv {
+	border-left: 9px solid rgba(177, 236, 178, 1);
+	background-color: rgba(177, 236, 178, 1);
+	height: 4em;
+}
+
+.primoDivGiallo {
+	border-left: 9px solid rgba(255, 255, 204, 1);
+	background: rgba(255, 255, 204, 1);
+	height: 4em;
+}
+
+.secondoDiv {
+	margin-bottom: 0.2em;
+	margin-top: 0.2em;
+	border-left: 12px solid #f8d664;
+	margin-left: 10px;
+	width: 39%;
+	height: 4em;
+}
+
+.terzoDiv {
+	margin-bottom: 0.2em;
+	border-left: 12px solid rgba(248, 248, 99, 1);
+	margin-left: 22px;
+	width: 38.5%;
+	height: 4em;
+}
+
+.font-class {
+	font-size: 20px;
+}
+
+.normal-font {
+	font-weight: normal;
+}
+
+.ml-1 {
+	margin-left: 1em;
+}
+
+.flex-icona-occhio {
+	display: flex;
+	align-items: center;
+	width: 40%;
+	justify-content: space-between;
+}
+
+.centro {
+	text-align: center;
+}
+

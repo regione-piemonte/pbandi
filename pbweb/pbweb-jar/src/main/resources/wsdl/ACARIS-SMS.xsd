@@ -1,0 +1,99 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0"
+    xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            targetNamespace="sms.acaris.acta.doqui.it"
+            xmlns:tns="sms.acaris.acta.doqui.it"
+            xmlns:common="common.acaris.acta.doqui.it">
+
+    <xs:import namespace="common.acaris.acta.doqui.it"  schemaLocation="ACARIS-Common.xsd"/>
+   
+
+	<!--===============-->
+	<!-- tipi semplici -->
+	<!--===============-->
+
+
+	
+
+	<!--================-->
+	<!-- tipi complessi -->
+	<!--================-->
+	<xs:simpleType name="DataAggiornamentoType">
+		<xs:restriction base="common:date"/>
+	</xs:simpleType>
+	<xs:complexType name="IdNodoSmistamentoType">
+		<xs:sequence>
+			<xs:element name="value" type="common:IDDBType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="IdTipoSmistamentoType">
+		<xs:sequence>
+			<xs:element name="value" type="common:IDDBType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+
+	<!--================================-->
+	<!-- 	ACTA SMS Objects	-->
+	<!--================================-->	
+	<xs:complexType name="MittenteType">
+		<xs:sequence>
+			<!-- <xs:element name="parte"							type="tns:ParteType"/> -->
+			<xs:element name="utente"							type="common:IdUtenteType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="DestinatarioType">
+		<xs:sequence>
+			<!-- <xs:element name="parte"						type="tns:ParteType"/> -->
+			<xs:element name="utente"							type="common:IdUtenteType"/>
+			<xs:element name="nodoOrganizzativo"				type="common:IdNodoType"/>
+			<xs:element name="nodoSmistamento"					type="tns:IdNodoSmistamentoType"/>
+			<xs:element name="perConoscenza"					type="common:boolean"/>
+			<xs:element name="idFascTempDest"					type="common:ObjectIdType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="DestinatarioConNoteType">
+		<xs:complexContent>
+			<xs:extension base="tns:DestinatarioType">
+				<xs:sequence>
+					<xs:element name="note"						type="common:string"/>
+					<xs:element name="dataAggiornamento"		type="tns:DataAggiornamentoType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="OggettoSmistamentoType">
+		<xs:sequence>
+			<xs:element name="classificazione"					type="common:ObjectIdType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="registrazione"					type="common:IdRegistrazioneType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="InfoCreazioneType">
+		<xs:sequence>
+			<xs:element name="tipoSmistamento"					type="tns:IdTipoSmistamentoType"/>
+			<xs:element name="visibileATutti"					type="common:boolean"/>
+			<xs:element name="note"								type="common:string"/>
+			<xs:element name="modificaDoc"						type="common:boolean"/>
+			<!-- <xs:element name="modificaMetadatiDoc"				type="common:boolean"/> -->
+			<xs:element name="modificaConVersionamento"			type="common:boolean"/>
+			<!-- <xs:element name="rifiutabile"						type="common:boolean"/> -->
+			<xs:element name="smistamentoPadre"					type="common:IdSmistamentoType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+
+	<!--===================-->
+	<!-- 	Oggetti base   -->
+	<!--===================-->
+	
+
+	
+
+</xs:schema>

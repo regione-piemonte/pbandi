@@ -1,0 +1,649 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'display-none': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a gestione integrazioni</span>
+            </button>
+        </div>
+        <h2>Integrazione dichiarazione di spesa</h2>
+
+    </div>
+    <!--PRIMO QUADRATO-->
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span
+                                    class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{ codiceProgetto }}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Dichiarazione: <span class="bold-text">{{ idDichiarazioneSpesa }}</span></p>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--FINE PRIMO QUADRATO-->
+
+    <!--SECONDO QUADRATO-->
+    <div class="content">
+        <mat-card class="mat-elevation-z2" class="w-btn direzione-marty-end">
+            <mat-card-content class="padding-left-10">
+                <div *ngIf="letteraAccIntegrazRendicontEsiste === false">
+                    <div>
+                        <h3>Note alla richiesta di integrazione</h3>
+                    </div>
+                    <div>
+                        <p> - </p>
+                    </div>
+                </div>
+                <div>
+                    <div *ngIf="letteraAccIntegrazRendicontEsiste == true">
+                        <div *ngFor="let files of letteraAccIntegrazRendicont; let y = index">
+                            <div class="direzione-marty-column">
+                                <div>
+                                    <h3>Note alla richiesta di integrazione</h3>
+                                </div>
+                                <div>
+                                    <p>{{files.note}}</p>
+                                </div>
+                            </div>
+                            <mat-grid-list *ngIf="files.idDocumentoIndex != null && files.idDocumentoIndex != 0"
+                                cols="3" rowHeight="45" class="marginBottom10">
+                                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                    <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                            (click)="scaricaFile(files.idDocumentoIndex)">{{files.nomeFile}}</a>
+                                        <div class="alignItemsCenter">
+                                            <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                                (click)="anteprimaAllegato(files)"
+                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(files.nomeFile)}">
+                                                <mat-icon>visibility</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </div>
+                    <div *ngIf="infoReportValidazioneEsiste == true" class="padding-top-30">
+                        <div *ngFor="let files of infoReportValidazione; let y = index">
+                            <div class="direzione-marty-column">
+                                <div>
+                                    <h3>Report di validazione</h3>
+                                </div>
+                                <div>
+                                    <p>{{files.note}}</p>
+                                </div>
+                            </div>
+                            <mat-grid-list cols="3" rowHeight="45" class="marginBottom10">
+                                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                    <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                            (click)="scaricaFile(files.idDocumentoIndex)">{{files.nomeFile}}</a>
+                                        <div class="alignItemsCenter">
+                                            <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                                (click)="anteprimaAllegato(files)"
+                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(files.nomeFile)}">
+                                                <mat-icon>visibility</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--FINE SECONDO QUADRATO-->
+
+    <!--TERZO QUADRATO-->
+    <div class="content">
+        <mat-card class="mat-elevation-z2" class="w-btn direzione-marty-end">
+            <mat-card-content class="padding-left-10">
+                <div>
+                    <div>
+                        <h3>Allegati</h3>
+                    </div>
+                    <div
+                        *ngIf="!allegatiDichiarazioneSpesaEsiste && !allegatiIntegrazioneDSEsiste 
+                            && (!allegatiDaSalvare || allegatiDaSalvare?.length===0) && (!allegatiGenerici || allegatiGenerici?.length===0)">
+                        <p>Nessun risultato da visualizzare</p>
+                    </div>
+                    <div *ngIf="allegatiDichiarazioneSpesaEsiste">
+                        <p>File trasmessi il <b>{{dataInvioSpesa | date:'dd/MM/yyyy'}}</b> </p>
+                    </div>
+                    <!--ALLEGATI DS-->
+                    <mat-grid-list *ngIf="allegatiDichiarazioneSpesaEsiste" cols="3" rowHeight="45"
+                        class="marginBottom10">
+                        <mat-grid-tile *ngFor="let allegato of allegatiDichiarazioneSpesa" [colspan]="1" [rowspan]="1">
+                            <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                <a matTooltip="Download file" class="size13 linkAllegati"
+                                    (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                <div class="alignItemsCenter">
+                                    <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                        (click)="anteprimaAllegato(allegato)"
+                                        [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+
+                    <!--ALLEGATI INTEGRAZIONE DS-->
+                    <div *ngIf="allegatiIntegrazioneDSEsiste">
+                        <div *ngFor="let infoDS of allegatiIntegrazioneDS; let y = index">
+                            <div class="marty-top direzione-marty-column">
+                                <div>
+                                    <p>File trasmessi in integrazione il <b>{{infoDS[0].data |
+                                            date:'dd/MM/yyyy'}}</b> </p>
+                                </div>
+                            </div>
+                            <mat-grid-list cols="3" rowHeight="45" class="marginBottom10">
+                                <mat-grid-tile *ngFor="let allegato of infoDS" [colspan]="1" [rowspan]="1">
+                                    <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                            (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                        <div class="alignItemsCenter">
+                                            <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                                (click)="anteprimaAllegato(allegato)"
+                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                <mat-icon>visibility</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </div>
+
+                    <div *ngIf="stato === 'gestione'" class="row marty-top">
+                        <div class="col">
+                            <button mat-button class="button-style-2" type='button'
+                                (click)="aggiungiAllegatiSemplici()">
+                                AGGIUNGI ALLEGATI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--ALTRI ALLEGATI INIZIO-->
+                    <div *ngIf="stato === 'gestione'">
+                        <mat-grid-list cols="3" rowHeight="45" class="marginBottom10"
+                            *ngIf="allegatiDaSalvare?.length>0">
+                            <mat-grid-tile *ngFor="let allegato of allegatiDaSalvare" [colspan]="1" [rowspan]="1">
+                                <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                    <a matTooltip="Download file" class="size13 linkAllegati"
+                                        (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nome}}</a>
+                                    <div class="alignItemsCenter">
+                                        <button type="button" mat-icon-button class="blue-color"
+                                            matTooltip="Disassocia allegato" style="width: 30px;"
+                                            (click)="rimuoviAllegatiDaSalvare(allegato.idDocumentoIndex)">
+                                            <mat-icon>link_off</mat-icon>
+                                        </button>
+                                        <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                            (click)="anteprimaAllegato(allegato)"
+                                            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nome)}">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+
+                    <div *ngIf="allegatiGenerici?.length>0" class="marginTop20">
+                        <p>File da trasmettere in integrazione</p>
+                        <mat-grid-list cols="3" rowHeight="45" class="marginBottom10">
+                            <mat-grid-tile *ngFor="let allegato of allegatiGenerici" [colspan]="1" [rowspan]="1">
+                                <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                    <a matTooltip="Download file" class="size13 linkAllegati"
+                                        (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                    <div class="alignItemsCenter">
+                                        <button type="button" mat-icon-button class="blue-color"
+                                            matTooltip="Disassocia allegato" style="width: 30px;"
+                                            (click)="deleteAllegato(allegato.idFileEntita,1)">
+                                            <mat-icon>link_off</mat-icon>
+                                        </button>
+                                        <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                            (click)="anteprimaAllegato(allegato)"
+                                            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <!--ALTRI ALLEGATI FINE-->
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--FINE TERZO  QUADRATO-->
+
+    <!--QUARTO  QUADRATO-->
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>{{titoloDocumenti}}</h3>
+                <p *ngIf="!documentiDiSpesaSospesiEsiste">Nessun risultato da visualizzare</p>
+                <!--Documenti di spesa sospesi-->
+                <table [ngClass]="{'display-none': !documentiDiSpesaSospesiEsiste}" mat-table
+                    [dataSource]="documentiDiSpesaSospesi" multiTemplateDataRows class="fullWidth">
+                    <ng-container matColumnDef="documento">
+                        <th mat-header-cell *matHeaderCellDef>Tipologia e numero</th>
+                        <td mat-cell *matCellDef="let row"> {{row?.documento }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fornitore">
+                        <th mat-header-cell *matHeaderCellDef> Fornitore</th>
+                        <td mat-cell *matCellDef="let row"> {{row?.fornitore }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="importo">
+                        <th mat-header-cell *matHeaderCellDef> Importo </th>
+                        <td mat-cell *matCellDef="let row"> € {{row?.importo | number :'1.2-2' : 'it'}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="notaIstruttore">
+                        <th mat-header-cell *matHeaderCellDef> Nota dell’istruttore </th>
+                        <td mat-cell *matCellDef="let row"> {{row?.note }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="expand">
+                        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button aria-label="expand row"
+                                (click)="expandedElement !== element ? getAll(element.idDocumentoDiSpesa) : null">
+                                <mat-icon *ngIf="expandedElement !== element" class="font-size-3-em"
+                                    matTooltip="Visualizza dettaglio">expand_more</mat-icon>
+                                <mat-icon *ngIf="expandedElement === element" class="font-size-3-em"
+                                    matTooltip="Nascondi dettaglio">expand_less</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+                                <mat-card class="my-elevation fullWidth">
+                                    <mat-card-content class=" padding-left-10">
+                                        <div>
+                                            <span class="title-documento">Documento</span>
+
+                                            <div *ngIf="allegatiDocumentoSpesaDocSEsiste">
+                                                <p class="margin-top-marty">File trasmessi il
+                                                    <b>{{allegatiDocumentoSpesaDocSDataInvio |
+                                                        date:'dd/MM/yyyy'}}</b>
+                                                </p>
+                                            </div>
+                                            <mat-grid-list *ngIf="allegatiDocumentoSpesaDocSEsiste" cols="3"
+                                                rowHeight="45" class="marginBottom10 width-99">
+                                                <mat-grid-tile *ngFor="let allegato of allegatiDocumentoSpesaDocS"
+                                                    [colspan]="1" [rowspan]="1">
+                                                    <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                                            (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                        <div class="alignItemsCenter">
+                                                            <button mat-icon-button class="blue-color"
+                                                                matTooltip="Anteprima"
+                                                                (click)="anteprimaAllegato(allegato)"
+                                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                <mat-icon>visibility</mat-icon>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </mat-grid-tile>
+                                            </mat-grid-list>
+
+
+                                            <div *ngIf="allegatiIntegrazioneDocSEsiste">
+                                                <div *ngFor="let infoDS of allegatiIntegrazioneDocS; let y = index">
+                                                    <div class="marty-top direzione-marty-column">
+                                                        <div>
+                                                            <p>File trasmessi in integrazione il
+                                                                <b>{{infoDS[0].data |
+                                                                    date:'dd/MM/yyyy'}}</b>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <mat-grid-list cols="3" rowHeight="45"
+                                                        class="marginBottom10 width-99">
+                                                        <mat-grid-tile *ngFor="let allegato of infoDS" [colspan]="1"
+                                                            [rowspan]="1">
+                                                            <div class="allegati spaceBetween"
+                                                                style="width: 98%; height: 80%;">
+                                                                <a matTooltip="Download file"
+                                                                    class="size13 linkAllegati"
+                                                                    (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                                <div class="alignItemsCenter">
+                                                                    <button mat-icon-button class="blue-color"
+                                                                        matTooltip="Anteprima"
+                                                                        (click)="anteprimaAllegato(allegato)"
+                                                                        [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                        <mat-icon>visibility</mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </mat-grid-tile>
+                                                    </mat-grid-list>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="stato === 'gestione' && (BR42 == true || BR51 == true)"
+                                                class="row margin-bottom-marty">
+                                                <div class="col">
+                                                    <button mat-button
+                                                        class="button-style-2 margin-bottom-marty margin-top-marty"
+                                                        type='button'
+                                                        (click)="aggiungiAllegatiSpesa(2,element.idDocumentoDiSpesa)">
+                                                        AGGIUNGI ALLEGATI
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p *ngIf="allegatiNuovaIntegrazioneDocS?.length>0">File da trasmettere in
+                                                integrazione</p>
+                                            <mat-grid-list cols="3" rowHeight="45" class="marginBottom10 width-99"
+                                                *ngIf="allegatiNuovaIntegrazioneDocS?.length>0">
+                                                <mat-grid-tile *ngFor="let allegato of allegatiNuovaIntegrazioneDocS"
+                                                    [colspan]="1" [rowspan]="1">
+                                                    <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                                        <a matTooltip="Download file" class="size13 linkAllegati"
+                                                            (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                        <div class="alignItemsCenter">
+                                                            <button *ngIf="stato === 'gestione'" mat-icon-button
+                                                                class="blue-color" matTooltip="Disassocia"
+                                                                (click)="deleteAllegato(allegato.idFileEntita,2,element.idDocumentoDiSpesa)">
+                                                                <mat-icon>link_off</mat-icon>
+                                                            </button>
+                                                            <button mat-icon-button class="blue-color"
+                                                                matTooltip="Anteprima"
+                                                                (click)="anteprimaAllegato(allegato)"
+                                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                <mat-icon>visibility</mat-icon>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </mat-grid-tile>
+                                            </mat-grid-list>
+                                            <!--ALTRI ALLEGATI FINE-->
+                                        </div>
+
+                                        <div class="example-element-description" style="margin-top: 2em;">
+                                            <span class="title-documento">Quietanze</span>
+                                            <table mat-table [dataSource]="infoQuietanze" class="mat-elevation-z0"
+                                                multiTemplateDataRows>
+                                                <ng-container matColumnDef="modalita">
+                                                    <th mat-header-cell *matHeaderCellDef> Modalità </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        {{element.descModalitaPagamento}} </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="data">
+                                                    <th mat-header-cell *matHeaderCellDef> Data </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        {{element.dataPagamento | date:'dd/MM/yyyy'}} </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="importo">
+                                                    <th mat-header-cell *matHeaderCellDef> Importo </th>
+                                                    <td mat-cell *matCellDef="let element"> €
+                                                        {{element.importoPagamento | number :'1.2-2' :
+                                                        'it'}}</td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="expand2">
+                                                    <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+                                                        &nbsp;</th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <button mat-icon-button aria-label="expand row"
+                                                            (click)="expandedElement2 !== element ? getAllQuietanze(element.idPagamento) : null">
+                                                            <mat-icon *ngIf="expandedElement2 !== element"
+                                                                class="font-size-3-em"
+                                                                matTooltip="Visualizza dettaglio">expand_more</mat-icon>
+                                                            <mat-icon *ngIf="expandedElement2 === element"
+                                                                class="font-size-3-em"
+                                                                matTooltip="Nascondi dettaglio">expand_less</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                                                <ng-container matColumnDef="expandedDetail2">
+                                                    <td mat-cell *matCellDef="let element"
+                                                        [attr.colspan]="columnsToDisplayWithExpand2.length">
+                                                        <div class="example-element-detail"
+                                                            [@detailExpand]="element == expandedElement2 ? 'expanded' : 'collapsed'">
+                                                            <!--ALLEGATI QUIETANZE DENTRO BOX-->
+                                                            <div>
+                                                                <h3>Allegati </h3>
+                                                            </div>
+                                                            <div
+                                                                *ngIf="!allegatiQuietanzeEsiste && !allegatiIntegrazioneQuietanzaEsiste && !allegatiNuovaIntegrazioneQuietanzaInseriti">
+                                                                <p>Nessun risultato da
+                                                                    visualizzare</p>
+                                                            </div>
+                                                            <div *ngIf="allegatiQuietanzeEsiste">
+                                                                <p>File trasmessi il
+                                                                    <b>{{dataInvioQuietanze |
+                                                                        date:'dd/MM/yyyy'}}</b>
+                                                                </p>
+                                                                <mat-grid-list cols="3" rowHeight="45"
+                                                                    class="marginBottom10 width-99">
+                                                                    <mat-grid-tile
+                                                                        *ngFor="let allegato of allegatiQuietanze"
+                                                                        [colspan]="1" [rowspan]="1">
+                                                                        <div class="allegati spaceBetween"
+                                                                            style="width: 98%; height: 80%;">
+                                                                            <a matTooltip="Download file"
+                                                                                class="size13 linkAllegati"
+                                                                                (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                                            <div class="alignItemsCenter">
+                                                                                <button mat-icon-button
+                                                                                    class="blue-color"
+                                                                                    matTooltip="Anteprima"
+                                                                                    (click)="anteprimaAllegato(allegato)"
+                                                                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                                    <mat-icon>visibility</mat-icon>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </mat-grid-tile>
+                                                                </mat-grid-list>
+                                                            </div>
+                                                            <div *ngIf="allegatiIntegrazioneQuietanzaEsiste">
+                                                                <div
+                                                                    *ngFor="let infoDS of allegatiIntegrazioneQuietanza; let y = index">
+                                                                    <div class="marty-top direzione-marty">
+                                                                        <div>
+                                                                            <p>File trasmessi in integrazione il
+                                                                                <b>{{infoDS[0].data |
+                                                                                    date:'dd/MM/yyyy'}}</b>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <mat-grid-list cols="3" rowHeight="45"
+                                                                        class="marginBottom10 width-99">
+                                                                        <mat-grid-tile *ngFor="let allegato of infoDS"
+                                                                            [colspan]="1" [rowspan]="1">
+                                                                            <div class="allegati spaceBetween"
+                                                                                style="width: 98%; height: 80%;">
+                                                                                <a matTooltip="Download file"
+                                                                                    class="size13 linkAllegati"
+                                                                                    (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                                                <div class="alignItemsCenter">
+                                                                                    <button mat-icon-button
+                                                                                        class="blue-color"
+                                                                                        matTooltip="Anteprima"
+                                                                                        (click)="anteprimaAllegato(allegato)"
+                                                                                        [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                                        <mat-icon>visibility</mat-icon>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </mat-grid-tile>
+                                                                    </mat-grid-list>
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="stato === 'gestione' && (BR42 == true || BR52 == true)"
+                                                                class="row" style="margin-top: 2em;">
+                                                                <div class="col">
+                                                                    <button mat-button class="button-style-2"
+                                                                        type='button'
+                                                                        (click)="aggiungiAllegatiQuietanze(element,element.idPagamento)">
+                                                                        AGGIUNGI ALLEGATI
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <p *ngIf="allegatiNuovaIntegrazioneQuietanza?.length>0"
+                                                                class="marginTop20">File da trasmettere in integrazione
+                                                            </p>
+                                                            <mat-grid-list cols="3" rowHeight="45"
+                                                                class="marginBottom10 width-99"
+                                                                *ngIf="allegatiNuovaIntegrazioneQuietanza?.length>0">
+                                                                <mat-grid-tile
+                                                                    *ngFor="let allegato of allegatiNuovaIntegrazioneQuietanza"
+                                                                    [colspan]="1" [rowspan]="1">
+                                                                    <div class="allegati spaceBetween"
+                                                                        style="width: 98%; height: 80%;">
+                                                                        <a matTooltip="Download file"
+                                                                            class="size13 linkAllegati"
+                                                                            (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                                                                        <div class="alignItemsCenter">
+                                                                            <button *ngIf="stato === 'gestione'"
+                                                                                mat-icon-button class="blue-color"
+                                                                                matTooltip="Disassocia"
+                                                                                (click)="deleteAllegato(allegato.idFileEntita,3,element.idPagamento)">
+                                                                                <mat-icon>link_off</mat-icon>
+                                                                            </button>
+                                                                            <button mat-icon-button class="blue-color"
+                                                                                matTooltip="Anteprima"
+                                                                                (click)="anteprimaAllegato(allegato)"
+                                                                                [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                                                                <mat-icon>visibility</mat-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-grid-tile>
+                                                            </mat-grid-list>
+                                                            <!--ALTRI ALLEGATI FINE-->
+                                                            <!--FINE ALLEGATI QUIETANZE DENTRO BOX-->
+                                                        </div>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                                                    class="example-element-row"
+                                                    [class.example-expanded-row]="expandedElement2 === element"
+                                                    (click)="expandedElement2 = expandedElement2 === element ? null : element; expandedElement2 === element ? getAllQuietanze(element.idPagamento) : null">
+                                                </tr>
+                                                <tr mat-row *matRowDef="let row; columns: ['expandedDetail2']"
+                                                    class="example-detail-row"></tr>
+                                            </table>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+                    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                        class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                        (click)="expandedElement = expandedElement === element ? null : element; expandedElement === element ? getAll(element.idDocumentoDiSpesa) : null">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row">
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--FINE QUARTO  QUADRATO-->
+
+    <!--QUINTO QUADRATO-->
+    <div class="content" *ngIf="stato === 'gestione'">
+        <mat-card class="mat-elevation-z2" class="w-btn direzione-marty-end">
+            <mat-card-content class="padding-left-10">
+                <div>
+                    <h3>Lettera accompagnatoria</h3>
+                </div>
+                <div *ngIf="stato === 'gestione'" class="row">
+                    <div class="col">
+                        <button *ngIf="allegatoDaSalvare?.length===0 && letteraAccompagnatoria?.length===0" mat-button
+                            class="button-style-2" type='button' (click)="aggiungiLettera()">AGGIUNGI
+                            LETTERA ACCOMPAGNATORIA
+                        </button>
+                    </div>
+                </div>
+                <!--UNICIALLEGATI-->
+                <div *ngIf="stato === 'gestione'">
+                    <mat-grid-list cols="3" rowHeight="45" class="marginBottom10" *ngIf="allegatoDaSalvare?.length>0">
+                        <mat-grid-tile *ngFor="let allegato of allegatoDaSalvare" [colspan]="1" [rowspan]="1">
+                            <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                <a matTooltip="Download file" class="size13 linkAllegati"
+                                    (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nome}}</a>
+                                <div class="alignItemsCenter">
+                                    <button mat-icon-button class="blue-color" matTooltip="Disassocia"
+                                        (click)="rimuoviAllegatoDaSalvare(allegato.idDocumentoIndex)">
+                                        <mat-icon>link_off</mat-icon>
+                                    </button>
+                                    <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                        (click)="anteprimaAllegato(allegato)"
+                                        [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nome)}">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+                <mat-grid-list cols="3" rowHeight="45" class="marginBottom10" *ngIf="letteraAccompagnatoria?.length>0">
+                    <mat-grid-tile *ngFor="let allegato of letteraAccompagnatoria" [colspan]="1" [rowspan]="1">
+                        <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                            <a matTooltip="Download file" class="size13 linkAllegati"
+                                (click)="scaricaFile(allegato.idDocumentoIndex)">{{allegato.nomeFile}}</a>
+                            <div class="alignItemsCenter">
+                                <button *ngIf="stato === 'gestione'" mat-icon-button class="blue-color"
+                                    matTooltip="Disassocia" (click)="deleteAllegato(allegato.idFileEntita,4)">
+                                    <mat-icon>link_off</mat-icon>
+                                </button>
+                                <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                    (click)="anteprimaAllegato(allegato)"
+                                    [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <!--LETTERA ACCOMPAGNATORIA FINE-->
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <!--FINE QUINTO QUADRATO-->
+</div>

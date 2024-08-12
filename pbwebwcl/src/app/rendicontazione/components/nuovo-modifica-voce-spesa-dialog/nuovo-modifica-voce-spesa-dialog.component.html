@@ -1,0 +1,109 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<form #voceForm="ngForm" (submit)="salva()" [ngClass]="{ displayNone: isLoading() }">
+	<div class="spaceBetween">
+		<h3 class="boldText" *ngIf="isNuovo">Nuova voce di spesa</h3>
+		<h3 class="boldText" *ngIf="!isNuovo">Modifica voce di spesa</h3>
+		<h3>
+			<span class="bold-text">Residuo rendicontabile (A-B):</span>
+			<span [ngClass]="{ 'red-color': residuoRendicontabile > 0, 'green-color': 0 >= residuoRendicontabile }"> {{ residuoRendicontabile | number : '0.2' : 'it' }} </span>
+		</h3>
+		<button type="button" mat-icon-button class="blue-color" (click)="close()">
+			<mat-icon>clear</mat-icon>
+		</button>
+	</div>
+	<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+		<mat-card-content class="messageErrorContent">
+			<p [innerHTML]="messageError"></p>
+		</mat-card-content>
+	</mat-card>
+	<div *ngIf="macroVoci?.length > 0">
+		<div *ngIf="isBandoCultura">
+			<mat-form-field style="width: 100%">
+				<mat-label>Selezionare la categoria VdS</mat-label>
+				<mat-select [(ngModel)]="categoriaSelected" name="categoria" (selectionChange)="onSelectCategoria()" required>
+					<mat-option *ngFor="let option of categorieVoci" [value]="option.idTipologiaVoceDiSpesa">
+						{{ option.descrizione }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<mat-form-field style="width: 100%">
+			<mat-label>Selezionare una macro VdS</mat-label>
+			<mat-select [(ngModel)]="macroSelected" name="macro" (selectionChange)="onSelectMacro()" required>
+				<mat-option *ngFor="let option of macroVoci" [value]="option">
+					{{ option.descVoceDiSpesa }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field style="width: 100%">
+			<mat-label>Selezionare una micro VdS</mat-label>
+			<mat-select [(ngModel)]="microSelected" name="micro" (selectionChange)="onSelectMicro()" required [disabled]="!microVoci || microVoci.length === 0">
+				<mat-option *ngFor="let option of microVoci" [value]="option">
+					{{ option.descVoceDiSpesa }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field style="width: 100%" *ngIf="descBreveTipoDocumento === 'CD'">
+			<input
+				type="text"
+				placeholder="Ore lavorate"
+				matInput
+				[(ngModel)]="oreLavorateFormatted"
+				required
+				name="oreLavorate"
+				pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+				#ore="ngModel"
+				(blur)="setOreLavorate()"
+				[disabled]="tipoOperazioneFrom === 'validazione'"
+			/>
+			<mat-error *ngIf="ore?.errors?.required"> Campo obbligatorio </mat-error>
+			<mat-error *ngIf="ore?.errors?.error === 'negative'"> Il valore deve essere maggiore di 0 </mat-error>
+			<mat-error *ngIf="ore?.errors?.error === 'wrongLength'"> Il campo non può essere superiore a 15 cifre intere e 2 decimali </mat-error>
+			<mat-error *ngIf="ore?.errors?.pattern"> Valore non valido </mat-error>
+		</mat-form-field>
+		<mat-form-field style="width: 100%">
+			<input type="text" placeholder="Ammesso" matInput [(ngModel)]="importoAmmessoFinanziamentoFormatted" name="ammesso" disabled />
+		</mat-form-field>
+		<mat-form-field style="width: 100%">
+			<input
+				type="text"
+				placeholder="Quota parte"
+				matInput
+				[(ngModel)]="quotaParteFormatted"
+				required
+				name="quotaParte"
+				pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+				#quota="ngModel"
+				(blur)="setQuotaParte()"
+				[disabled]="tipoOperazioneFrom === 'validazione'"
+			/>
+			<mat-error *ngIf="quota?.errors?.required"> Campo obbligatorio </mat-error>
+			<mat-error *ngIf="quota?.errors?.error === 'negative'"> Il valore deve essere maggiore o uguale di 0 </mat-error>
+			<mat-error *ngIf="quota?.errors?.error === 'wrongLength'"> Il campo non può essere superiore a 15 cifre intere e 2 decimali </mat-error>
+			<mat-error *ngIf="quota?.errors?.pattern"> Valore non valido </mat-error>
+		</mat-form-field>
+		<mat-form-field style="width: 100%">
+			<input type="text" placeholder="Residuo ammesso" matInput [(ngModel)]="importoResiduoAmmessoFormatted" name="residuoAmmesso" disabled />
+		</mat-form-field>
+
+		<div class="spaceBetween">
+			<button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+			<div
+				matTooltip="Compilare tutti i campi obbligatori"
+				[matTooltipDisabled]="
+					(macroSelected && microSelected && microVoci?.length > 0 && quotaParte && descBreveTipoDocumento !== 'CD') ||
+					(macroSelected && microSelected && microVoci?.length > 0 && quotaParte && oreLavorate && descBreveTipoDocumento === 'CD')
+				"
+			>
+				<button
+					type="submit"
+					mat-button
+					class="button-style-1"
+					[disabled]="!macroSelected || (!microSelected && microVoci?.length > 0) || !quotaParte || (descBreveTipoDocumento === 'CD' && !oreLavorate)"
+				>
+					SALVA
+				</button>
+			</div>
+		</div>
+	</div>
+</form>

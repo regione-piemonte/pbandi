@@ -1,0 +1,7 @@
+<div [ngClass]="{'flexEnd': !(title?.length > 0),'spaceBetween': title?.length > 0}" class="flexEnd">
+    <h3 class="bold-text" *ngIf="title?.length > 0">{{title}}</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<div [innerHTML]="text"></div>

@@ -1,0 +1,475 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="content margin-top-0">
+        <div class="title">
+            <div class="backContainer">
+                <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna alle attività da svolgere</span>
+                </button>
+            </div>
+            <div class="spaceBetween">
+                <h2>Gestione spesa validata</h2>
+                <div>
+                    <button (click)="goToChecklistSpesaValidata()" mat-stroked-button class="button-style-3">GESTIONE
+                        CHECKLIST
+                        PER SPESA VALIDATA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                    <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                        ECONOMICO</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" *ngIf="isMessageWarningVisible || isMessageInfoVisible">
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageInfo" *ngIf="isMessageInfoVisible">
+            <mat-card-content class="messageInfoContent">
+                <p [innerHTML]="messageInfo"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="row">
+                            <mat-form-field class="fullWidth marginRight10">
+                                <mat-label>Selezionare una dichiarazione di spesa</mat-label>
+                                <mat-select [(ngModel)]="dichiarazioneDiSpesaSelected" name="dichSpesa"
+                                    matTooltip="{{dichiarazioneDiSpesaSelected?.descrizione}}"
+                                    (selectionChange)="changeDS()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of dichiarazioniDiSpesa" [value]="option"
+                                        matTooltip="{{option.descrizione}}">
+                                        {{option?.descrizione}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="fullWidth marginRight10">
+                                <mat-label>Selezionare una voce di spesa</mat-label>
+                                <mat-select [(ngModel)]="voceDiSpesaSelected" name="voceSpesa"
+                                    matTooltip="{{voceDiSpesaSelected?.descrizione}}">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of vociDiSpesa" [value]="option"
+                                        matTooltip="{{option.descrizione}}">
+                                        {{option?.descrizione}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col50 marginRight10">
+                                <mat-label>Selezionare una tipologia documento di spesa</mat-label>
+                                <mat-select [(ngModel)]="tipologiaDocSelected" name="tipoDoc">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of tipologieDoc" [value]="option">
+                                        {{option?.descrizione}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="col25 marginRight10">
+                                <input type="text" placeholder="Numero documento di spesa" [(ngModel)]="numDocSpesa"
+                                    name="numDocSpesa" matInput>
+                            </mat-form-field>
+                            <mat-form-field class="col25">
+                                <mat-label>Data documento</mat-label>
+                                <input matInput [matDatepicker]="picker" [formControl]="dataDoc">
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="row" *ngIf="taskVisibile">
+                            <mat-form-field class="col50">
+                                <mat-label>Selezionare una task</mat-label>
+                                <mat-select [(ngModel)]="taskSelected" name="task">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let task of elencoTask" [value]="task">
+                                        {{ task }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col50">
+                                <mat-label>Selezionare una tipologia fornitore</mat-label>
+                                <mat-select [(ngModel)]="tipologiaFornitoreSelected" name="tipoFornitore">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let tipologia of tipologieFornitori" [value]="tipologia">
+                                        {{ tipologia?.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col50 marginRight10">
+                                <input type="text" placeholder="Codice Fiscale fornitore" [(ngModel)]="cfFornitore"
+                                    name="cfFornitore" matInput>
+                            </mat-form-field>
+                            <mat-form-field class="col50">
+                                <input type="text" placeholder="Partita Iva fornitore" [(ngModel)]="pIvaFornitore"
+                                    name="pIvaFornitore" matInput>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col50 marginRight10">
+                                <input type="text" placeholder="Denominazione fornitore" [(ngModel)]="denomFornitore"
+                                    name="denomFornitore" matInput>
+                            </mat-form-field>
+                            <mat-form-field class="col25 marginRight10">
+                                <input type="text" placeholder="Cognome fornitore" [(ngModel)]="cognomeFornitore"
+                                    name="cognomeFornitore" matInput>
+                            </mat-form-field>
+                            <mat-form-field class="col25">
+                                <input type="text" placeholder="Nome fornitore" [(ngModel)]="nomeFornitore"
+                                    name="nomeFornitore" matInput>
+                            </mat-form-field>
+                        </div>
+                        <div class="row marginBottom20">
+                            <mat-radio-group [(ngModel)]="documenti" name="documenti">
+                                <mat-radio-button value="T">Documenti rettificati
+                                </mat-radio-button>
+                                <mat-radio-button value="F" class="marginLeft10">Tutti i documenti</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <div class="row">
+                            <button class="button-style-2 marginTop20" mat-raised-button type="submit">
+                                CERCA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content"
+        *ngIf="isResultVisible && dichiarazioneDiSpesaSelected?.codice && (isVisible || ((!isFP || isBR79)))"
+        style="display: flex; flex-direction: row;">
+        <mat-card class="mat-elevation-z2" style="width: 100%;">
+            <mat-card-content>
+                <div class="alignItemsCenter marginBottom10">
+                    <h3 class="margin0">
+                        <span>Dichiarazione di spesa<span *ngIf="isFinale">&nbsp;finale con <abbr
+                                    title="Comunicazione di Fine Progetto">CFP</abbr></span>
+                            {{ dichiarazioneDiSpesaSelected.codice }}</span>
+                    </h3>
+                    <button type="button" mat-icon-button class="blue-color marginLeft10" (click)="visualizzaAllegati()"
+                        matTooltip="Allegati alla dichiarazione di spesa">
+                        <mat-icon>attachment</mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="!isRagioneriaDelegata && isBR63">
+                    <p *ngIf="isNullaDaRilevareChecked">La ragioneria delegata ha
+                        confermato la validità della Dichiarazione di Spesa e dei documenti di spesa senza aggiungere
+                        dei rilievi.</p>
+                    <p *ngIf="!isNoteRilievo && !isNullaDaRilevareChecked">
+                        Nessun rilievo da visualizzare.</p>
+                    <p *ngIf="isNoteRilievo"><span class="bold-text">Rilievo
+                            contabile:&nbsp;</span>{{noteRilievo}}</p>
+                    <p *ngIf="isNoteRilievo"><span class="bold-text">Data
+                            rilievo:&nbsp;</span>{{dichiarazioneDiSpesaSelected.dtRilievoContabile ?
+                        (dichiarazioneDiSpesaSelected.dtRilievoContabile | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                    <p *ngIf="isNoteRilievo || hasDocSpesaConRilievo || dtChiusuraRilievi"><span class="bold-text">Data
+                            chiusura rilievi:&nbsp;</span>{{dtChiusuraRilievi ?
+                        (dtChiusuraRilievi | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                    <p *ngIf="isNoteRilievo || hasDocSpesaConRilievo"><span class="bold-text">Data
+                            conferma validità rilievi:&nbsp;</span>{{dtConfermaValiditaRilievi ?
+                        (dtConfermaValiditaRilievi | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                </div>
+                <div *ngIf="isRagioneriaDelegata && isBR63" class="display-flex align-items-center"
+                    [ngClass]="{'justify-content-space-between': !isNoteRilievo && !isNullaDaRilevareChecked && !dtChiusuraRilievi}">
+                    <!--space between se compare il pulsante aggiungi rilievo-->
+                    <mat-checkbox (change)="changeNullaDaRilevare($event)" [(ngModel)]="isNullaDaRilevareChecked"
+                        [disabled]="isNullaDaRilevareChecked || dichiarazioneDiSpesaSelected?.dtChiusuraRilievi"
+                        class="width-30-perc">Nulla da rilevare</mat-checkbox>
+                    <div *ngIf="isNoteRilievo || hasDocSpesaConRilievo || dtChiusuraRilievi">
+                        <div *ngIf="isNoteRilievo" class="display-flex align-items-center">
+                            <p [ngClass]="{'margin-0': !dtChiusuraRilievi}"><span class="bold-text">Rilievo
+                                    contabile:&nbsp;</span>{{noteRilievo}}
+                            </p>
+                            <button *ngIf="!dtChiusuraRilievi" mat-icon-button matTooltip="Modifica rilievo"
+                                (click)="aggiungiModificaRilievo()"><mat-icon>edit</mat-icon></button>
+                            <button *ngIf="!dtChiusuraRilievi" mat-icon-button matTooltip="Elimina rilievo"
+                                (click)="deleteRilievo()" class="red-color"><mat-icon>delete</mat-icon></button>
+                        </div>
+                        <p *ngIf="isNoteRilievo"><span class="bold-text">Data
+                                rilievo:&nbsp;</span>{{dichiarazioneDiSpesaSelected.dtRilievoContabile ?
+                            (dichiarazioneDiSpesaSelected.dtRilievoContabile | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                        <p><span class="bold-text">Data chiusura
+                                rilievi:&nbsp;</span>{{dtChiusuraRilievi ?
+                            (dtChiusuraRilievi | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                        <p *ngIf="!isNullaDaRilevareChecked"><span class="bold-text">Data conferma validità
+                                rilievi:&nbsp;</span>{{dtConfermaValiditaRilievi ?
+                            (dtConfermaValiditaRilievi | date:'dd/MM/yyyy') : 'n.d.'}}</p>
+                    </div>
+
+                    <button *ngIf="!isNoteRilievo && !isNullaDaRilevareChecked && !dtChiusuraRilievi" mat-raised-button
+                        class="button-style-2" (click)="aggiungiModificaRilievo()"> AGGIUNGI RILIEVO
+                        CONTABILE</button>
+                </div>
+            </mat-card-content>
+
+        </mat-card>
+
+
+        <app-richiesta-integrazione-box *ngIf="!isRagioneriaDelegata && (isVisible || !isFP)" class="fullWidth"
+            [isFP]="isFP" [isVisible]="isVisible" [idDichiarazioneDiSpesa]="+dichiarazioneDiSpesaSelected.codice"
+            (setIdStatoRichiesta)="setIdStatoRichiesta($event)" (messageSuccess)="showMessageSuccess($event)"
+            (messageError)="showMessageError($event)"
+            (resetMessageSuccessError)="resetMessageError(); resetMessageSuccess();"></app-richiesta-integrazione-box>
+
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !isResultVisible}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Documenti di spesa</h3>
+                <p *ngIf="(!dataSource || !dataSource.data || dataSource.data.length===0)">Non ci
+                    sono elementi da visualizzare.</p>
+                <div *ngIf="dataSource?.data?.length>0" class="alignItemsCenter">
+                    <mat-icon>edit</mat-icon> = modifica;
+                    <mat-icon class="orange-color marginLeft5">edit</mat-icon> = modifica documenti con rettifiche;
+                    <mat-icon class="marginLeft5">inventory</mat-icon> = dichiarazioni di spesa in cui il documento è
+                    stato incluso;
+                    <span *ngIf="isBR63 && hasDocSpesaConRilievo" class="alignItemsCenter">
+                        <mat-icon class="marginLeft5">flag</mat-icon> =
+                        dettaglio rilievo contabile;</span>
+                </div>
+                <table mat-table [dataSource]="dataSource" matSort matSortActive="tipologia" class="fullWidth"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="tipologia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+                        <td mat-cell *matCellDef="let row"> {{row.descrizioneTipologiaDocumento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="num">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> N° Documento </th>
+                        <td mat-cell *matCellDef="let row">{{row.numeroDocumento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="data">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+                        <td mat-cell *matCellDef="let row">{{row.dataDocumento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="task">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Task </th>
+                        <td mat-cell *matCellDef="let row"> {{row.task}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fornitore">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> DenominazioneFornitore </th>
+                        <td mat-cell *matCellDef="let row"> {{row.denominazioneFornitore}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="stato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato Validazione </th>
+                        <td mat-cell *matCellDef="let row" class="bold-text" [ngClass]="{'orange-color': row.descrizioneStato==='IN VALIDAZIONE',
+                            'red-color': row.descrizioneStato==='NON VALIDATO',
+                            'purple-color': row.descrizioneStato==='PARZIALMENTE VALIDATO',
+                            'blue-color': row.descrizioneStato==='RESPINTO',
+                            'green-color': row.descrizioneStato==='VALIDATO'}">
+                            {{row.descrizioneStato}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right" arrowPosition="before">
+                            Importo </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-grid-list cols="1" rowHeight="30">
+                                <mat-grid-tile *ngFor="let importo of row.importiValidati" [colspan]="1" [rowspan]="1">
+                                    <div class="fullWidth text-right">
+                                        {{importo | number: '1.2-2' : 'it'}}
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numds">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>N° DS</th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-grid-list cols="1" rowHeight="30">
+                                <mat-grid-tile *ngFor="let num of row.numDichiarazioni" [colspan]="1" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        {{num}}
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="azioni width-30px"></th>
+                        <td mat-cell *matCellDef="let row" class="width-30px">
+                            <mat-grid-list cols="1" rowHeight="30">
+                                <mat-grid-tile *ngFor="let ret of row.rettificatos; let i=index" [colspan]="1"
+                                    [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <button *ngIf="!ret && row.descrizioneStato!=='IN VALIDAZIONE'" mat-icon-button
+                                            matTooltip="Modifica"
+                                            (click)="goToModificaDocumento(row.id,row.numDichiarazioni[i],ret)">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button *ngIf="ret" mat-icon-button matTooltip="Rettificato"
+                                            (click)="goToModificaDocumento(row.id,row.numDichiarazioni[i],ret)">
+                                            <mat-icon class="orange-color">edit</mat-icon>
+                                        </button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dich">
+                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Dichiarazioni"
+                                (click)="openDichiarazioni(row.id,row.numDichiarazioni[0])">
+                                <mat-icon>inventory</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rilievi">
+                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Dettaglio rilievo contabile"
+                                *ngIf="row.rilievoContabile?.length > 0" (click)="openDettaglioRilievo(row)">
+                                <mat-icon>flag</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                </mat-paginator>
+                <div class="alignItemsCenter">
+                    <button class="button-style-1" *ngIf="dataSource?.data?.length>0" mat-button
+                        (click)="anteprimaReportDettaglio()">ESPORTA DETTAGLIO ELENCO</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !isBR79}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Esito per mensilità rendicontate</h3>
+                <p *ngIf="!elencoMensilita || 0 >= elencoMensilita?.length">Nessuna mensilità trovata.</p>
+                <mat-grid-list cols="16" rowHeight="80" class="">
+                    <div *ngFor="let mensilita of elencoMensilita">
+                        <mat-grid-tile colspan="2" *ngIf="hasIconsMensilita">
+                            <div><mat-icon *ngIf="mensilita?.sabbatico === 'S'" matTooltip="Mese sabbatico"
+                                    class="margin-right-5">event_busy</mat-icon>
+                                <mat-icon *ngIf="mensilita?.erogato" class="orange-color margin-right-5"
+                                    matTooltip="Erogato">euro</mat-icon>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="3">
+                            <div><mat-label class="margin-right-10">{{mesi[(+mensilita?.mese)-1]}}
+                                    {{mensilita?.anno}}</mat-label>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="11">
+                            <div><mat-radio-group aria-labelledby="example-radio-group-label"
+                                    [(ngModel)]="mensilita.esito" [disabled]="mensilita?.sabbatico === 'S'">
+                                    <mat-radio-button class="margin-right-10" value="OK">approvato</mat-radio-button>
+                                    <mat-radio-button class="margin-right-10" value="KO">non
+                                        approvato</mat-radio-button>
+                                    <mat-radio-button class="margin-right-10" value="NV">invalidato</mat-radio-button>
+                                    <mat-form-field class=" margin-bottom-6">
+                                        <textarea type="text" matInput placeholder="Note" [(ngModel)]="mensilita.note"
+                                            name="mensilita.note" #mensilita.note="ngModel"
+                                            [required]="mensilita.esito === 'KO' || mensilita.esito === 'NV'"></textarea>
+                                        <mat-error *ngIf="(mensilita.esito === 'KO' || mensilita.esito === 'NV')">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-radio-group></div>
+                        </mat-grid-tile>
+                    </div>
+                </mat-grid-list>
+                <div class="display-flex justify-content-flex-end">
+                    <button mat-raised-button class="button-style-2" *ngIf="isSalvaMensilitaVisible"
+                        [disabled]="!areTutteNoteObbligatorieCompilate()" (click)="salvaMensilita()">SALVA</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" *ngIf="isResultVisible && dichiarazioneDiSpesaSelected?.codice && !isRagioneriaDelegata">
+        <div class="flexEnd">
+            <!--visibile se è stata completata o chiusa d'ufficio la richiesta integrazione, se sono stati chiusi i rilievi ma non è ancora stata confermata la validita (devono essere presenti i rilievi)-->
+            <button *ngIf="(idStatoRichiesta === idStatoRichiestaCompletata || idStatoRichiesta === idStatoRichiestaChiusaUfficio) 
+                && isBR63 && dtChiusuraRilievi && !dtConfermaValiditaRilievi && (noteRilievo || hasDocSpesaConRilievo)"
+                mat-raised-button class="button-style-2" (click)="confermaValiditaRilievi()">CONFERMA VALIDITÀ
+                RILIEVI</button>
+
+            <app-richiesta-integrazione-button *ngIf="!dichiarazioneDiSpesaSelected?.dtConfermaValidita" [isFP]="isFP"
+                [isVisible]="isVisible" [idDichiarazioneDiSpesa]="+dichiarazioneDiSpesaSelected?.codice"
+                [idStatoRichiesta]="idStatoRichiesta" [idProgetto]="idProgetto" [idBandoLinea]="idBandoLinea"
+                [richiestaIntegrazioneAbilitata]="richiestaIntegrazioneAbilitata" [isBR79]="isBR79"
+                [nDocuSpesaSospesi]="nDocuSpesaSospesi" (refresh)="inizializzaGestioneSpesaValidata(true)"
+                (messageSuccess)="showMessageSuccess($event)" (messageError)="showMessageError($event)"
+                (messageWarning)="showMessageWarning($event)"
+                (resetMessageSuccessError)="resetMessageError(); resetMessageSuccess();"></app-richiesta-integrazione-button>
+        </div>
+    </div>
+    <div class="content"
+        *ngIf="isBR63 && isResultVisible && dichiarazioneDiSpesaSelected?.codice && !isNullaDaRilevareChecked && isRagioneriaDelegata && !dtChiusuraRilievi">
+        <div class="flexEnd">
+            <!--nascosto se nulla da rilevare checked o se dtChiusuraRilievi valorizzata-->
+            <button mat-raised-button class="button-style-2" (click)="chiudiRilievi()">CHIUDI RILIEVI</button>
+        </div>
+    </div>
+</div>

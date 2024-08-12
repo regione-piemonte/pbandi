@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sezione_intestazione" pageWidth="595" pageHeight="841" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="0">
+	<property name="ireport.zoom" value="3.1384283767210035"/>
+	<property name="ireport.x" value="499"/>
+	<property name="ireport.y" value="0"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="595" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

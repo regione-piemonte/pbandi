@@ -1,0 +1,22 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.padding-right-10 {
+    padding-right: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+
+#dialog{
+    width: 100%;
+}
+
+.margin15{
+    margin : 15px;
+}

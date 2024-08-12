@@ -1,0 +1,141 @@
+
+
+<div id="dialog">
+
+    <div class="spaceBetween">
+
+        <!-- titolo -->
+        <h3 class="bold-text">Upload documento firmato</h3>
+
+        <!-- tasto chiusura -->
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+
+    </div>
+
+    <!-- message error -->
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+
+
+
+
+    <div *ngIf = "!isBR50">
+
+
+        <!-- testo  -->
+        <div class="margin15">
+            Effettuare l'upload e quindi l'invio del documento <span class="bold-text">{{nomeFile}}</span> firmato digitalmente
+            (firma
+            digitale CAdES - formato del file: <span class="bold-text">.p7m</span>)
+        </div>
+
+        <!-- input disabilitata -->
+        <mat-form-field class="padding-right-10" style="width: 50%;">
+            <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+        </mat-form-field>
+
+        <!-- bottone sfoglia -->
+        <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+
+        <!-- bottone annulla -->
+        <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button>
+
+
+        <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile" (change)="handleFileInput($event.target.files[0])" />      
+         <!--(change)="handleFileInput($event.target.files[0])"--> 
+
+        <!-- bottone invia -->
+        <button mat-raised-button class="button-style-2" (click)="inviaConFirmaDigitale()" [disabled]="!file">INVIA</button>
+
+    </div>
+
+
+    <div *ngIf = "isBR50">
+
+        <mat-tab-group mat-align-tabs="start" #tabs (selectedTabChange)="onTabChange($event)">
+
+            <!-- prima tab -->
+            <mat-tab  label="INVIO CON FIRMA DIGITALE" >
+                <div class="margin15">
+
+                    <!-- testo  -->
+                    <div class="margin15">
+                        Effettuare l'upload e quindi l'invio del documento <span class="bold-text">{{nomeFile}}</span> firmato digitalmente
+                        (firma
+                        digitale CAdES - formato del file: <span class="bold-text">.p7m</span>)
+                    </div>
+
+                    <!-- input disabilitata -->
+                    <mat-form-field class="padding-right-10" style="width: 50%;">
+                        <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+                    </mat-form-field>
+
+                    <!-- bottone sfoglia -->
+                    <button mat-button class="button-style-1" (click)="uploadFile.click()" >SFOGLIA</button>
+
+                    <!-- bottone annulla -->
+                    <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button>
+
+
+                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"  (change)="handleFileInput($event.target.files[0])" />   
+
+
+                    <!-- bottone invia -->
+                    <button mat-raised-button class="button-style-2" (click)="inviaConFirmaDigitale()" [disabled]="!file">INVIA</button>
+
+                    
+                </div>
+            </mat-tab>
+            
+            <!-- seconda tab regola attiva-->
+            <mat-tab  label="INVIO FIRMA CON AUTOGRAFA">
+
+                <!-- Regola BR50 attiva -->                    
+                <div class="margin15">
+
+
+                    <!-- testo  -->
+                    <div class="margin15">
+                        Effettuare l'upload del documento <span class="bold-text">{{nomeFile}}</span> con firma autografa 
+                        (formato del file: <span class="bold-text">.pdf</span>)
+                        <br>
+                        Eseguire il download del file, stampare e firmare il documento.
+                        Successivamente effettuare l'upload della scansione del file sottoscrittounitamente alla copia del 
+                        documento d' identit� del sottoscrittore, assegnado al pdf il nome originale generato dal sistema. 
+                    </div>
+
+                    <!-- input disabilitata -->
+                    <mat-form-field class="padding-right-10" style="width: 50%;">
+                        <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+                    </mat-form-field>
+
+                    <!-- bottone sfoglia -->
+                    <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+
+                    <!-- bottone annulla -->
+                    <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button>
+
+
+                    <input [hidden]="true" type="file" #uploadFileFA id="uploadFile" name="uploadFile" (change)="handleFileInput($event.target.files[0])" />                        
+                   
+
+                    <!-- bottone invia -->
+                    <button mat-raised-button class="button-style-2" (click)="inviaConFirmaAutografa()" [disabled]="!file">INVIA</button>
+
+
+                </div>
+
+            </mat-tab>
+            
+        </mat-tab-group>
+
+    </div>
+
+
+
+</div>

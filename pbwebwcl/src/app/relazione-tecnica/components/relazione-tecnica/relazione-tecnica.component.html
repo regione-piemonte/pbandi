@@ -1,0 +1,87 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+
+    <!-- Titolo -->
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Relazione tecnica {{title}}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message succes/insucces e Beneficiari e Progetto -->
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                            <button class="button-style-1 paddingLeft20" mat-button
+                                (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave;
+                                PREGRESSE</button>
+                            <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                                ECONOMICO</button>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div>
+        <mat-card *ngIf="isMandaRelazione== true">
+            <div class="row" *ngIf="!isFile" style="padding-bottom: 25px;">
+                <div class="col">
+                    <button mat-raised-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+                    <!-- <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button> -->
+                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                        (change)="handleFileInput($event.target.files[0])" />
+                </div>
+            </div>
+
+            <div class="spaceBetween" >
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileRelazioneName"
+                        disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati()"
+                    [disabled]="!isFile">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+            <div class="spaceBetween" *ngIf="isFile==true" >
+                <button mat-raised-button class="button-style-1" (click)="setFileNullAllegati()">
+                    ANNULLA
+                </button>
+                <button mat-raised-button class="button-style-2" (click)="conferma()" >
+                    CONFERMA
+                </button>
+            </div>
+        </mat-card>
+    </div>
+</div>

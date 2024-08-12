@@ -1,0 +1,1 @@
+select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) owner from dual

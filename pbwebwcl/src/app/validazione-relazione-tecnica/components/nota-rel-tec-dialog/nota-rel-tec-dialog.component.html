@@ -1,0 +1,36 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Conferma relazione tecnica {{tipoRelazioneTenica}}</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div style="display: flex;
+            align-items: center;">
+        <div style="margin-right: 13px;">
+            <mat-icon> info </mat-icon>
+        </div>
+        <div class="row">
+            <div *ngIf="tipoConferma">
+               <b> Sei sicuro di VALIDARE la relazione tecnica {{tipoRelazioneTenica}}? </b>
+            </div>
+            <div *ngIf="!tipoConferma">
+             <b>   Sei sicuro di RIFIUTTARE la relazione tecnica {{tipoRelazioneTenica}}? </b>
+               
+            </div>
+        </div>
+    </div>
+
+    
+    <form [formGroup]="myForm">
+        <mat-form-field style="width: 100%;" appearance="fill">
+            <textarea matInput formControlName="motivazione" rows="9" required
+            rows="7" placeholder="Nota" ></textarea>
+        </mat-form-field>
+    </form>
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="confermaRelTec()"  [disabled]="!myForm.valid">CONFERMA</button>
+    </div>
+</div>

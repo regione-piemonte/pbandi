@@ -1,0 +1,213 @@
+.page {
+    .reportingContainerUp,
+    .reportingContainerDown {
+        max-width: 1440px;
+    }
+
+    .title {
+        .reportingContainerUp {
+            display: flex;
+            justify-content: space-between;
+        }
+        @media (max-width: 992px) {
+            .reportingContainerUp {
+                display: block;
+            }
+            .reportingContainerUpbutton {
+                text-align: right;
+            }
+        }
+
+        .reportingContainerDown {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .backText {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        margin: 24px 0;
+
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        mat-card {
+            mat-card-content {
+                padding-left: 10px;
+
+                mat-divider {
+                    margin-top: 15px;
+                }
+            }
+
+            .header {
+                display: flex;
+                align-items: center;
+
+                h2 {
+                    margin-bottom: 0px;
+                    font-weight: bold;
+                }
+
+                .arrow {
+                    color: grey;
+                }
+            }
+
+            .row {
+                display: flex;
+
+                @media (max-width: 992px) {
+                    display: block;
+                }
+
+                .col {
+                    width: 48%;
+                    padding-right: 10px;
+
+                    @media (max-width: 992px) {
+                        width: 100%;
+                        padding-right: 0px;
+                    }
+                }
+
+                .date {
+                    display: flex;
+                    justify-content: space-between;
+
+                    mat-icon {
+                        color: #0060c1;
+                    }
+                }
+            }
+        }
+
+        .endTable {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+        }
+    }
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+table {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+
+    th {
+        font-size: 16px;
+        font-weight: bold;
+        color: #000000;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    td {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+}
+
+.display-flex {
+    display: flex;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060c1;
+    opacity: 1 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.width25 {
+    width: 25%;
+}
+
+.marginRadioButton {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.marginRight20 {
+    margin-right: 20px;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+.purpleColor {
+    color: #90f;
+}
+
+.greenColor {
+    color: #060;
+}
+
+.yellowBackgroundColor {
+    background-color: #ffff99;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+.mat-header-cell.azioni {
+    width: 160px;
+}

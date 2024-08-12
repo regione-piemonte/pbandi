@@ -1,0 +1,179 @@
+<div class="flex-direction-column">
+
+    <div class="card" *ngIf="docSpesa?.tipoInvio==='D'">
+        <div *ngIf="isVisible || !isFP; else notProd">
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <h3>Allegati al documento</h3>
+
+                    <p *ngIf="!docSpesa?.documentoAllegatoGenerico || docSpesa?.documentoAllegatoGenerico?.length===0">
+                        Nessun allegato presente.</p>
+                    <div *ngFor="let files of docSpesa?.documentoAllegatoGenerico; let y = index">
+                        <div class="alignItemsCenter">
+                            <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                            <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                (click)="anteprimaAllegato(files.nome,files.id,'D')">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div *ngFor="let infoDS of docSpesa?.documentoAllegato; let y = index">
+                        <div style="padding-bottom: 1em;"><mat-divider></mat-divider></div>
+                        <p>File trasmessi in integrazione il <b>{{infoDS[0].dtInvioIntegrazione |
+                                date:'dd/MM/yyyy'}}</b>
+                        </p>
+                        <div *ngFor="let files of infoDS; let y = index">
+                            <div class="alignItemsCenter">
+                                <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                    (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                                <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                    (click)="anteprimaAllegato(files.nome,files.id,'D')">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <ng-template #notProd>
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <h3>Allegati al documento</h3>
+                    <p *ngIf="!docSpesa?.documentoAllegatoGenerico || docSpesa?.documentoAllegatoGenerico?.length===0">
+                        Nessun allegato presente.</p>
+                    <div *ngFor="let files of docSpesa?.documentoAllegatoGenerico; let y = index">
+
+                        <div class="alignItemsCenter">
+                            <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                            <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                (click)="anteprimaAllegato(files.nome,files.id,'D')">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </ng-template>
+    </div>
+
+    <div class="card">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div *ngIf="isVisible || !isFP; else notProdQui">
+                    <h3>Quietanze</h3>
+                    <p *ngIf="docSpesa?.tipoInvio==='D' && !(docSpesa?.documentoAllegatoPagamento?.length > 0)">
+                        Non sono presenti allegati per le quietanze.
+                    </p>
+                    <div *ngFor="let element of docSpesa?.documentoAllegatoPagamento; let y = index">
+                        <div class="alignItemsCenter">
+                            <span> <span style="font-size: 16px;">{{element.descrizioneModalitaPagamento}}</span>
+                                -
+                                {{element.dtPagamento}} - <b> € {{element.importoPagamento | number :'1.2-2'
+                                    : 'it'}}</b>
+                            </span>
+
+                        </div>
+                        <div *ngFor="let files of element.documentoAllegatoGenerico; let y = index">
+                            <div class="alignItemsCenter">
+                                <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                    (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                                <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                    (click)="anteprimaAllegato(files.nome,files.id,'Q'+element.idPagamento)">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngFor="let infoDS of element.documentoAllegatoIntegrazioni; let y = index">
+                            <div *ngIf="element.documentoAllegatoIntegrazioni[0].length>0">
+                                <div style="padding-bottom: 1em;"><mat-divider></mat-divider></div>
+                                <p>File trasmessi in integrazione il
+                                    <b>{{infoDS[0].dtInvioIntegrazione |
+                                        date:'dd/MM/yyyy'}}</b>
+                                </p>
+                                <div *ngFor="let files of infoDS; let y = index">
+                                    <div class="alignItemsCenter" *ngIf="files.nome">
+                                        <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                            (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                                        <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                            (click)="anteprimaAllegato(files.nome,files.id,'Q'+element.idPagamento)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 1em;"><mat-divider></mat-divider></div>
+                    </div>
+                </div>
+
+                <ng-template #notProdQui>
+                    <div>
+                        <h3>Quietanze</h3>
+                        <p *ngIf="docSpesa?.tipoInvio==='D' && !(docSpesa?.documentoAllegatoPagamento?.length > 0)">
+                            Non sono presenti allegati per le quietanze.
+                        </p>
+                        <div *ngFor="let element of docSpesa?.documentoAllegatoPagamento; let y = index">
+                            <div class="alignItemsCenter">
+                                <span> <span style="font-size: 16px;">{{element.descrizioneModalitaPagamento}}</span>
+                                    -
+                                    {{element.dtPagamento}} - <b> € {{element.importoPagamento | number :'1.2-2'
+                                        : 'it'}}</b>
+                                </span>
+
+                            </div>
+                            <div *ngFor="let files of element.documentoAllegatoGenerico; let y = index">
+                                <div class="alignItemsCenter">
+                                    <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                        (click)="downloadAllegato(files.id,files.nome)">{{files.nome}}</a>
+                                    <button mat-icon-button class="blue-color" matTooltip="Anteprima"
+                                        (click)="anteprimaAllegato(files.nome,files.id,'Q'+element.idPagamento)">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="padding-bottom: 1em;"><mat-divider></mat-divider></div>
+                        </div>
+                    </div>
+                </ng-template>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+
+    <div class="card" *ngIf="docSpesa?.tipoInvio==='D' &&
+        (docSpesa?.documentoAllegatoFornitore?.length>0 || docSpesa?.documentoAllegatoQualificaFornitore?.length>0)">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Allegati al fornitore</h3>
+                <table class="fullWidth" *ngIf="docSpesa?.documentoAllegatoFornitore?.length>0">
+                    <tbody>
+                        <tr *ngFor="let allegato of docSpesa?.documentoAllegatoFornitore">
+                            <td
+                                class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap fullWidth cursor-pointer">
+                                <a class="blue-color bold-text cursor-pointer" matTooltip="Download allegato"
+                                    (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+                            </td>
+                            <td>
+                                <button *ngIf="isAnteprimaVisible(allegato.nome)" mat-icon-button class="blue-icon"
+                                    matTooltip="Anteprima allegato"
+                                    (click)="anteprimaAllegato(allegato.nome,allegato.id,'F')">
+                                    <mat-icon>remove_red_eye</mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--documentoAllegatoQualificaFornitore come li visualizzo?-->
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>

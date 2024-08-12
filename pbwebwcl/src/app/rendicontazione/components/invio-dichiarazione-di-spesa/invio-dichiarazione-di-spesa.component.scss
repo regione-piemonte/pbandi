@@ -1,0 +1,133 @@
+.page {
+    .reportingContainerUp,
+    .reportingContainerDown {
+        max-width: 1440px;
+    }
+
+    .reportingContainerDown {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .title {
+        .reportingContainerUp {
+            display: flex;
+            justify-content: space-between;
+        }
+        @media (max-width: 992px) {
+            .reportingContainerUp {
+                display: block;
+            }
+            .reportingContainerUpbutton {
+                text-align: right;
+            }
+        }
+
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .backText {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        margin: 24px 0;
+
+        mat-card {
+            mat-card-content {
+                padding-left: 10px;
+
+                mat-divider {
+                    margin-top: 15px;
+                }
+            }
+        }
+
+        .avviso-content {
+            display: flex;
+            justify-content: flex-start;
+
+            mat-card {
+                background: #dbeef7 url("../../../../assets/info.png") 24px 20px no-repeat;
+                border-left: 8px solid #016cb4;
+                padding: 24px 24px 24px 70px;
+                width: 100%;
+            }
+
+            mat-card-content {
+                display: flex;
+                justify-content: space-between;
+
+                .avviso {
+                    font-size: 14px;
+                }
+
+                .icon {
+                    color: #0060c1;
+                }
+            } //mat-card-content
+        } //avviso-content
+    }
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.paddingRight10 {
+    padding-right: 10px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.marginTop15 {
+    margin-top: 15px;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.backgroundTransparent {
+    background-color: transparent;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

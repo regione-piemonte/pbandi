@@ -1,0 +1,101 @@
+<div class="card">
+    <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+            <h3>Dati generali</h3>
+            <p>Descrizione: <span class="bold-text">{{docSpesa?.descrizioneDocumento}}</span>
+                <mat-grid-list cols="3" rowHeight="40px">
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div class="justify-content-start fullWidth">
+                            <p>Imponibile: <span>€ {{docSpesa?.imponibile | number: '1.2-2' :
+                                    'it'}}</span>
+                            </p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div class="justify-content-start fullWidth">
+                            <p>Totale documento: <span>€ {{docSpesa?.importoTotaleDocumento | number:
+                                    '1.2-2' :
+                                    'it'}}</span></p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="!isBR79">
+                        <div class="justify-content-start fullWidth">
+                            <p>Rendicontabile: <span>€ {{docSpesa?.importoRendicontabile | number:
+                                    '1.2-2' :
+                                    'it'}}</span></p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="!isBR79">
+                        <div class="justify-content-start fullWidth">
+                            <p>Imposta: <span>€ {{docSpesa?.importoIva || 0 | number: '1.2-2' :
+                                    'it'}}</span>
+                            </p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="!isBR79">
+                        <div class="justify-content-start fullWidth">
+                            <p>IVA indetraibile: <span>€ {{docSpesa?.importoIvaACosto || 0 | number:
+                                    '1.2-2'
+                                    :
+                                    'it'}}</span></p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1"
+                        *ngIf="docSpesa?.descBreveTipoDocumentoDiSpesa==='CD' && !isBR79"></mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1"
+                        *ngIf="docSpesa?.descBreveTipoDocumentoDiSpesa==='CD' && !isBR79">
+                        <div class="justify-content-start fullWidth">
+                            <p>Costo orario: <span>€ {{docSpesa?.costoOrario || 0 | number: '1.2-2' :
+                                    'it'}}</span>
+                            </p>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1"
+                        *ngIf="docSpesa?.descBreveTipoDocumentoDiSpesa==='CD' && !isBR79">
+                        <div class="justify-content-start fullWidth">
+                            <p>Ore lavorate: <span>{{docSpesa?.oreLavorate || 0 | number: '1.2-2' :
+                                    'it'}}</span></p>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div class="card" *ngIf="docSpesa?.affidamento">
+    <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+            <h3>Affidamento correlato</h3>
+            <div class="fullWidth">
+                <div class="display-flex margin-bottom-20">
+                    <div class="justify-content-start fullWidth affidamento">
+                        <p>CPA: <span>{{docSpesa.affidamento.codProcAgg}}</span>
+                        </p>
+                    </div>
+
+                    <div class="justify-content-start fullWidth affidamento">
+                        <p>CIG: <span>{{docSpesa.affidamento.cigProcAgg}}</span></p>
+                    </div>
+                    <div class="fullWidth"></div>
+                </div>
+                <div class="justify-content-start fullWidth affidamento margin-bottom-20">
+                    <p>Oggetto: <span>{{docSpesa.affidamento.oggetto}}</span></p>
+                </div>
+                <div class="display-flex margin-bottom-20">
+                    <div class="justify-content-start fullWidth affidamento">
+                        <p>Stato: <span>{{docSpesa.affidamento.descStatoAffidamento}}</span></p>
+                    </div>
+
+                    <div class="justify-content-start fullWidth affidamento">
+                        <p>Esito intermedio: <span>{{docSpesa.affidamento.esitoIntermedio ?
+                                docSpesa.affidamento.esitoIntermedio : 'n.d.'}}</span></p>
+                    </div>
+
+                    <div class="justify-content-start fullWidth affidamento">
+                        <p>Esito definitivo: <span>{{docSpesa.affidamento.esitoDefinitivo ?
+                                docSpesa.affidamento.esitoDefinitivo : 'n.d.'}}</span></p>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

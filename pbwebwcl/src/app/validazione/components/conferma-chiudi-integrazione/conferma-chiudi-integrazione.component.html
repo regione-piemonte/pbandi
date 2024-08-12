@@ -1,0 +1,25 @@
+<div>
+    <div class="spaceBetween">
+      <h3 class="bold-text">Conferma chiudi richiesta integrazione</h3>
+      <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+        <mat-card class="messageError" *ngIf="showError">
+          <mat-card-content class="messageErrorContent">
+            <p>{{message}}</p>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <div>
+        <mat-card-content>
+            <span style="color: red;"> <b>Attenzione ! L'operazione completerà la chiusura della richiesta di integrazione, continuare?</b></span>
+        </mat-card-content>
+    </div>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" [disabled]="isLoading" (click)="chiudiRichiesta()">CONFERMA</button>
+  </div>
+  

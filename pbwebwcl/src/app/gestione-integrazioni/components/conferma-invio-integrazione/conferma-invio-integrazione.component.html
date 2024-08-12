@@ -1,0 +1,80 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div *ngIf="!isLoading()">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Riepilogo Integrazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+    <mat-card-content class="messageSuccessContent">
+      <p>{{messageSuccess}}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+      <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card-content>
+    <!--RENDICONTAZIONE-->
+    <div *ngIf="tipoBottone === 'rendicontazione'"
+      class="display-flex justify-content-space-between aling-items-center">
+      <div style="display: flex;flex-direction: column;">
+        <span> Numero dichiarazione spesa: {{data.dataKey.nDichiarazioneSpesa}} </span>
+        <span> Richiesta integrazione del {{data.dataKey.dataRichiesta | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div *ngIf="isAllegatiDocSpesaQuietanze">
+        <button mat-button class="button-style-1" (click)="openAllegatiDocSospesiQuietanze()">VEDI ALLEGATI DOCUMENTI
+          SOSPESI</button>
+      </div>
+    </div>
+    <!--REVOCA-->
+    <div *ngIf="tipoBottone === 'revoca'" style="display: flex;flex-direction: column;">
+      <div>
+        <span> Procedimento di revoca n. : {{data.dataKey.nRevoca}} del {{data.dataKey.dataInvio |
+          date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div>
+        <span> Richiesta integrazione del : {{data.dataKey.dataRichiesta | date:'dd/MM/yyyy'}}</span>
+      </div>
+    </div>
+    <!--CONTROLLI-->
+    <div *ngIf="tipoBottone === 'controlli'" style="display: flex;flex-direction: column;">
+      <div>
+        <span> Numero di protocollo : {{data.dataKey?.numProtocollo}}</span>
+      </div>
+      <div>
+        <span> Richiesta integrazione del : {{data.dataKey.dtRich | date:'dd/MM/yyyy'}}</span>
+      </div>
+    </div>
+
+    <mat-divider class="margin-top-6 margin-bottom-6"></mat-divider>
+    <div *ngIf="letteraAccompagnatoria.length > 0 || allegatiGenerici.length > 0">
+      <div>
+        <span *ngFor="let lettera of letteraAccompagnatoria">
+          <h3> <b>Lettera accompagnatoria :</b> {{lettera.nomeFile}}</h3>
+        </span>
+      </div>
+      <div>
+        <h3 class="bold-text">Altri allegati :</h3>
+        <p *ngFor="let allegato of allegatiGenerici">
+          {{allegato.nomeFile}}
+        </p>
+      </div>
+    </div>
+    <div *ngIf="letteraAccompagnatoria.length <= 0 && allegatiGenerici.length <= 0">
+      <p>Nessun allegato disponibile</p>
+    </div>
+
+  </mat-card-content>
+  <mat-divider class="margin-top-6 margin-bottom-6"></mat-divider>
+  <span style="color: red;"> <b>Attenzione! L'operazione completerà l'invio dell'integrazione,
+      continuare?</b></span>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="invia()">CONFERMA</button>
+  </div>
+</div>

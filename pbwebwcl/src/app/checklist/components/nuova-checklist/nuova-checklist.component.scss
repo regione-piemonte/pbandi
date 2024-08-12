@@ -1,0 +1,34 @@
+
+.page {
+  /* margin-top: 15px;
+    margin-bottom: 20px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;*/
+
+    .title {
+      /*  display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 85%;
+        margin-left: 20px;
+        margin-bottom: 10px;*/
+
+        .reportingContainerDown {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+
+.button-style-3 {
+    border: 2px solid #1844A8 !important;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0060C1;
+}
+
+table#anagrafica td input#dataControllo {
+  width: 80px;
+}

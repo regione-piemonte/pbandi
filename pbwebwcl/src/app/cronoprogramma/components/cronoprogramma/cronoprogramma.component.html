@@ -1,0 +1,246 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollCrono">
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <!-- <mat-icon>warning</mat-icon>-->
+                <p>{{messageWarning}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent" *ngFor="let msg of messageError">
+                <!--  <mat-icon>clear</mat-icon>-->
+                <p>{{msg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-grid-list cols="2" rowHeight="30">
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <div style="width: 100%;">
+                    <p *ngIf="!isBR56">
+                        Data presentazione domanda:
+                        <span class="bold-text">{{dataPresentazione | date: "dd/MM/yyyy"}}</span>
+                    </p>
+                    <p *ngIf="isBR56">
+                        Data ammissibilità spese:
+                        <span class="bold-text">{{dataPresentazione | date: "dd/MM/yyyy"}}</span>
+                    </p>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <div style="width: 100%;">
+                    <p>Data concessione / comitato: <span class="bold-text">{{dataConcessione | date:
+                            "dd/MM/yyyy"}}</span></p>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <p *ngIf="!fasiMonitoraggio || fasiMonitoraggio.length===0" style="margin-top: 12px;">Non ci sono
+                    elementi da
+                    visualizzare.</p>
+                <div [ngClass]="{'displayNone':!fasiMonitoraggio || fasiMonitoraggio.length===0}">
+                    <form #cronoForm="ngForm">
+                        <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+                            <!--FASE DEL PROGETTO -->
+                            <ng-container matColumnDef="fase">
+                                <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Fase del progetto </th>
+                                <td mat-cell *matCellDef="let row" style="width: 30%;">
+                                    {{row.descFaseMonit}} <span *ngIf="row.obbligatorio">*</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- DATA INIZIO PREVISTA -->
+                            <ng-container matColumnDef="dataInizioPrevista">
+                                <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data inizio prevista</th>
+                                <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;" class="data">
+                                    <mat-form-field style="width: 90%;">
+                                        <input matInput [matDatepicker]="picker1" [(ngModel)]="row.dtInizioPrevista"
+                                            name="dataInizioPrevista{{i}}" #inPrev="ngModel"
+                                            [disabled]="!row.dtInizioPrevistaEditable || confermaSalvataggio">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1" class="blue-color">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                        <mat-error *ngIf="inPrev?.errors?.error === 'format'">
+                                            La data deve essere inserita nella forma gg/mm/aaaa
+                                        </mat-error>
+                                        <mat-error class="font-size-15 display-flex" matTooltip="Se si valorizza la data di inizio effettiva è necessario valorizzare la data
+                                        di inizio prevista" *ngIf="inPrev?.errors?.error === 'dataIn'">
+                                            <mat-icon class="red-color">warning</mat-icon> <span
+                                                class="font-size-10-5 padding-left-3">Errore</span>
+                                        </mat-error>
+                                        <mat-error *ngIf="inPrev?.errors?.error === 'required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <mat-error *ngIf="inPrev?.errors?.error === 'incoerente'">
+                                            Date di inizio/fine incoerenti per la fase.
+                                        </mat-error>
+                                        <mat-error *ngIf="inPrev?.errors?.error === 'minorePres'">
+                                            Data precedente alla data di presentazione domanda.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <!-- DATA INIZIO EFFETTIVA -->
+                            <ng-container matColumnDef="dataInizioEffettiva">
+                                <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data inizio effettiva
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;" class="data">
+                                    <mat-form-field style="width: 90%;">
+                                        <input matInput [matDatepicker]="picker2" [(ngModel)]="row.dtInizioEffettiva"
+                                            [disabled]="!row.dtInizioEffettivaEditable || confermaSalvataggio"
+                                            name="dtInizioEffettiva{{i}}" #inEff="ngModel" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker2" class="blue-color">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'dataInFin'">
+                                            È necessario inserire la data di inizio e fine effettiva
+                                        </mat-error>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'format'">
+                                            La data deve essere inserita nella forma gg/mm/aaaa
+                                        </mat-error>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'incoerente'">
+                                            Date di inizio/fine incoerenti per la fase
+                                        </mat-error>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'maggioreOggi'">
+                                            Data successiva alla data odierna
+                                        </mat-error>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'minorePres'">
+                                            Data precedente alla data di presentazione domanda
+                                        </mat-error>
+                                        <mat-error *ngIf="inEff?.errors?.error === 'required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <!--
+
+                                  <input matInput [matDatepicker]="picker21" [(ngModel)]="row.dtInizioEffettiva"  *ngIf="!row.dtInizioEffettiva"
+                                         name="dtInizioEffettiva{{i}}"
+                                         [disabled]="!row.dtInizioEffettivaEditable || confermaSalvataggio">
+                                    <mat-datepicker-toggle matSuffix [for]="picker21" class="blue-color"  *ngIf="!row.dtInizioEffettiva"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker21 ></mat-datepicker>
+
+-->
+
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <!-- DATA FINE PREVISTA -->
+                            <ng-container matColumnDef="dataFinePrevista">
+                                <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data fine prevista
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;" class="data">
+                                    <mat-form-field style="width: 90%;">
+                                        <input matInput [matDatepicker]="picker3" [(ngModel)]="row.dtFinePrevista"
+                                            name="dataFinePrevista{{i}}" #finPrev="ngModel"
+                                            [disabled]="!row.dtFinePrevistaEditable || confermaSalvataggio">
+                                        <mat-datepicker-toggle matSuffix [for]="picker3" class="blue-color">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>
+                                        <mat-error *ngIf="finPrev?.errors?.error === 'format'">
+                                            La data deve essere inserita nella forma gg/mm/aaaa
+                                        </mat-error>
+                                        <mat-error class="font-size-15 display-flex"
+                                            matTooltip="Se si valorizza la data di fine effettiva è necessario valorizzare la data di fine prevista"
+                                            *ngIf="finPrev?.errors?.error === 'dataIn'">
+                                            <mat-icon class="red-color">warning</mat-icon> <span
+                                                class="font-size-10-5 padding-left-3">Errore</span>
+                                        </mat-error>
+                                        <mat-error *ngIf="finPrev?.errors?.error === 'required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <mat-error *ngIf="finPrev?.errors?.error === 'incoerente'">
+                                            Date di inizio/fine incoerenti per la fase
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <!-- DATA FINE EFFETTIVA -->
+                            <ng-container matColumnDef="dataFineEffettiva">
+                                <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data fine effettiva
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;" class="data">
+                                    <mat-form-field style="width: 90%;">
+                                        <input matInput [matDatepicker]="picker4" [(ngModel)]="row.dtFineEffettiva"
+                                            name="dtFineEffettiva{{i}}" #finEff="ngModel"
+                                            [disabled]="!row.dtFineEffettivaEditable || confermaSalvataggio">
+                                        <mat-datepicker-toggle matSuffix [for]="picker4" class="blue-color">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker4></mat-datepicker>
+                                        <mat-error *ngIf="finEff?.errors?.error === 'dataInFin'">
+                                            È necessario inserire la data di inizio e fine effettiva
+                                        </mat-error>
+                                        <mat-error *ngIf="finEff?.errors?.error === 'format'">
+                                            La data deve essere inserita nella forma gg/mm/aaaa
+                                        </mat-error>
+                                        <mat-error *ngIf="finEff?.errors?.error === 'incoerente'">
+                                            Date di inizio/fine incoerenti per la fase
+                                        </mat-error>
+                                        <mat-error *ngIf="finEff?.errors?.error === 'maggioreOggi'">
+                                            Data successiva alla data odierna
+                                        </mat-error>
+                                        <mat-error *ngIf="finEff?.errors?.error === 'required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <!-- MOTIVO SCOSTAMENTO -->
+                            <ng-container matColumnDef="motivo">
+                                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Motivo scostamento
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i=index;" style="width: 20%;">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label> </mat-label>
+                                        <mat-select [(ngModel)]="row.idMotivoScostamento" name="motivoScostamento{{i}}"
+                                            #motivo="ngModel"
+                                            [disabled]="!row.motivoScostamentoEditable || confermaSalvataggio">
+                                            <mat-option></mat-option>
+                                            <mat-option *ngFor="let option of motiviScostamento"
+                                                [value]="option.idMotivoScostamento">
+                                                {{option.descMotivoScostamento}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="motivo?.errors?.error === 'required'">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns; let i= index"></tr>
+                        </table>
+                    </form>
+                    <div class="endPageButton">
+                        <button mat-raised-button class="button-style-2" (click)="salva()"
+                            *ngIf="!confermaSalvataggio">SALVA
+                        </button>
+                    </div>
+
+                    <div class="spaceBetween marginTop10">
+                        <button mat-raised-button class="button-style-2" *ngIf="confermaSalvataggio"
+                            (click)="annulla()">ANNULLA
+                        </button>
+                        <button mat-raised-button class="button-style-2" (click)="confermaSalva()"
+                            *ngIf="confermaSalvataggio">CONFERMA
+                        </button>
+                    </div>
+                    <!--  </form>-->
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

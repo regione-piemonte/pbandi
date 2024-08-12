@@ -1,0 +1,37 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.max-width-0 {
+    max-width: 0;
+}
+
+.width-1-perc {
+    width: 1%;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.white-space-nowrap {
+    white-space: nowrap;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.margin-h3 {
+    margin: 20px 0px 0px 0px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

@@ -1,0 +1,213 @@
+.linkAllegati {
+    padding-left: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.text-decoration-none {
+    text-decoration: none !important;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.readOnly {
+    color: rgba(0, 0, 0, 0.5);
+    cursor: not-allowed;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.width-45 {
+    width: 45% !important;
+}
+
+.width-50 {
+    width: 50% !important;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.marginLeft10 {
+    margin-left: 10px;
+}
+
+.marginRadioButton {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.marginBottom20 {
+    margin-bottom: 20px;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.marginRight100 {
+    margin-right: 100px;
+}
+
+.marginBottom40 {
+    margin-bottom: 40px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    padding-right: 10px !important;
+}
+
+mat-grid-list {
+    width: 98%;
+}
+
+.alignRightButton {
+    text-align: right;
+}
+
+.widt80Perc {
+    width: 80%;
+}
+
+.width-60-px {
+    width: 60px;
+}
+
+.width-100-px {
+    width: 100px;
+}
+
+.width-38-perc {
+    width: 38%;
+}
+
+.paddingRight0 {
+    padding-right: 0px;
+}
+
+.marginLeft40 {
+    margin-left: 40px;
+}
+
+.marginBottom25 {
+    margin-bottom: 25px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.colorBlack {
+    color: black;
+}
+
+.widt83Perc {
+    width: 82.8%;
+}
+
+.paddingLeft10 {
+    padding-left: 10px;
+}
+
+.alignLeft {
+    text-align: left;
+}
+
+.displayNone {
+    display: none;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.size13 {
+    font-size: 13px;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexAuto {
+    flex: auto;
+}
+
+.qualificheDiv {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 26px;
+}
+
+.qualificheTable {
+    width: 98%;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+    /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important;
+    /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important;
+    /*outer ring color change*/
+}
+
+th.radio,
+td.radio {
+    width: 25px;
+    padding: 4px 0 4px 8px !important;
+}
+
+.allegati {
+    align-items: baseline;
+    background-color: #178cd61a;
+    border-radius: 4px;
+}
+
+.prova {
+    display: flex;
+    align-items: center;
+
+    p:first-of-type {
+        flex: 0 0 auto;
+    }
+}

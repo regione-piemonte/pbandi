@@ -1,0 +1,55 @@
+p {
+    font-size: 16px;
+}
+
+.displayNone {
+    display: none;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.qualificheTable {
+    width: 98%;
+    margin: 10px 0px 20px 10px;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+::ng-deep .mat-dialog-container {
+    .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+    .mat-select-value-text,
+    .cdk-text-field-autofill-monitored:-webkit-autofill {
+        font-weight: bold !important;
+    }
+
+    .mat-header-cell {
+        color: #000;
+    }
+}
+.cdk-overlay-pane {
+    overflow: scroll;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5px;
+}

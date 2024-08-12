@@ -1,0 +1,350 @@
+<mat-card-content>
+  
+<!--Richiedi proroga-->
+<div *ngIf="stepProroga === 1">
+    <div class="spaceBetween">
+      <h3 class="bold-text">Richiedi proroga</h3>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+      <mat-card class="messageError" *ngIf="showError">
+        <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="content"*ngIf="errore === true">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+  
+  <div class="content" *ngIf="errore === false">
+      <mat-card-content class="messageSuccess">
+      <p >SUCCESSO</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+    <mat-divider></mat-divider>
+    <div>
+        <mat-card-content>
+        
+        <mat-card-title>
+            <form [formGroup]="myForm" (ngSubmit)="onSubmit()" *ngIf="errore == null">
+                  <mat-form-field style="width: 50em!important;"  class="fullWidth" class="font">
+                    <mat-label>Motivazione</mat-label>
+                    <textarea style="width: 50em!important;" type="text" matInput formControlName="motivazione" name="motivazione" placeholder="Motivazione"></textarea>
+                  </mat-form-field>
+                 <div style="display: flex; justify-content: space-between;" class="font">
+                    <mat-form-field class="example-full-width" appearance="standard">
+                      <mat-label>Giorni*</mat-label>
+                      <input  type="number" min="0" matInput placeholder="" value=""
+                        formControlName="ggRichiesti" #giorni>
+                    </mat-form-field>
+                </div>
+                <div  class="dialog-footer-buttons">
+                  <button type="button" mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+                  <button type="submit" *ngIf="myForm.invalid" mat-raised-button class="button-style-2"
+                    (click)="controllaForm()">CONFERMA</button>
+                  <button type="submit" *ngIf="myForm.valid" mat-raised-button class="button-style-2">
+                    CONFERMA
+                  </button>
+                </div>
+              
+              </form>
+        </mat-card-title>
+        </mat-card-content>
+        
+    </div>
+</div> 
+
+<!--Richiesta proroga respinta-->
+<div *ngIf="stepProroga === 2" >
+    <div class="spaceBetween">
+      <h3 class="bold-text">Proroga respinta</h3>
+    </div>
+    <div>
+        <table mat-table [dataSource]="inviataDataSource"  class="tableDoc"  style="width: 100%;" >
+
+           
+            <ng-container matColumnDef="dtRichiesta">
+                <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+            </ng-container>
+
+           
+            <ng-container matColumnDef="ggRichiesti">
+                <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.ggRichiesti}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="motivazione">
+                <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                <td mat-cell *matCellDef="let row"> {{row?.motivazione}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ggApprovati">
+                <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                <td mat-cell *matCellDef="let row"> {{(row?.ggApprovati > 0) ? row?.ggApprovati : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="statoProroga">
+                <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.statoProroga}} </td>
+            </ng-container>
+
+            
+
+            <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+        </table>
+    </div>
+    <div class="end">
+      <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+      CHIUDI
+      </button>
+    </div>
+
+</div> 
+
+
+<!--Richiesta proroga inviata-->
+<div *ngIf="stepProroga === 3">
+    <div class="spaceBetween">
+      <h3 class="bold-text">Proroga inviata</h3>
+    </div>
+          <table mat-table [dataSource]="inviataDataSource" class="tableDoc"    >
+
+           <ng-container matColumnDef="dtRichiesta">
+                <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="ggRichiesti">
+                <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.ggRichiesti }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="motivazione">
+                <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                <td mat-cell *matCellDef="let row"> {{row?.motivazione}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ggApprovati">
+                <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                <td mat-cell *matCellDef="let row"> {{(row?.ggApprovati > 0) ? row?.ggApprovati : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="statoProroga">
+                <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row?.statoProroga}} </td>
+            </ng-container>
+
+            
+
+            <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+        </table>
+        <div class="end">
+          <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+          CHIUDI
+          </button>
+        </div>
+</div>
+
+
+<!--Invia nuova richiesta di proroga-->
+<div *ngIf="stepProroga === 4" class="tableDoc">
+    <div class="spaceBetween">
+      <h3 class="bold-text">Proroga richiesta </h3>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+      <mat-card class="messageError" *ngIf="showError">
+        <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="content"*ngIf="errore === true">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+  
+  <div class="content" *ngIf="errore === false">
+      <mat-card-content class="messageSuccess">
+      <p >SUCCESSO</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+    <mat-divider></mat-divider>
+    
+    <div>
+        <table mat-table [dataSource]="inviataDataSource"  style="width: 100%;" >
+            <ng-container matColumnDef="dtRichiesta">
+                <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="ggRichiesti">
+                <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row.ggRichiesti }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="motivazione">
+                <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+                <td mat-cell *matCellDef="let row"> {{row.motivazione}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ggApprovati">
+                <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+                <td mat-cell *matCellDef="let row"> {{(row?.ggApprovati > 0) ? row?.ggApprovati : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="statoProroga">
+                <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+                <td mat-cell *matCellDef="let row"> {{row.statoProroga}} </td>
+            </ng-container>
+
+            
+
+            <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+        <mat-card-content>
+        
+        <mat-card-title>
+          <div class="spaceBetween" style="margin-top: 1em;">
+            <h3 class="bold-text">Richiedi nuova proroga</h3>
+          </div>
+            <form [formGroup]="myForm" (ngSubmit)="onSubmit()" *ngIf="errore == null" style="font-size: 16px;">
+                  <mat-form-field style="width: 50em!important;" class="fullWidth " class="font">
+                    <mat-label>Motivazione</mat-label>
+                    <textarea style="width: 50em!important;" type="text" matInput formControlName="motivazione" name="motivazione" placeholder="Motivazione"></textarea>
+                  </mat-form-field>
+
+                 <div style="display: flex; justify-content: space-between;" class="font">
+                    <mat-form-field class="example-full-width" appearance="standard">
+                      <mat-label>Giorni*</mat-label>
+                      <input type="number" min="0" matInput placeholder="" value=""
+                        formControlName="ggRichiesti" #giorni>
+                    </mat-form-field>
+                </div>
+                <div  class="dialog-footer-buttons">
+                  <button type="button" mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+                  <button type="submit" *ngIf="myForm.invalid" mat-raised-button class="button-style-2"
+                    (click)="controllaForm()">CONFERMA</button>
+                  <button type="submit" *ngIf="myForm.valid" mat-raised-button class="button-style-2">
+                    CONFERMA
+                  </button>
+                  
+                </div>
+              
+              </form>
+        </mat-card-title>
+      </mat-card-content>
+        
+    </div>
+</div> 
+
+<!--Richiesta proroga approvata ma integrazione inviata-->
+<div *ngIf="stepProroga === 5">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Proroga approvata</h3>
+  </div>
+        <table mat-table [dataSource]="inviataDataSource" class="tableDoc"    >
+
+         <ng-container matColumnDef="dtRichiesta">
+              <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ggRichiesti">
+              <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.ggRichiesti }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="motivazione">
+              <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+              <td mat-cell *matCellDef="let row"> {{row?.motivazione}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ggApprovati">
+              <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+              <td mat-cell *matCellDef="let row"> {{(row?.ggApprovati > 0) ? row?.ggApprovati : "-"}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="statoProroga">
+              <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.statoProroga}} </td>
+          </ng-container>
+
+          
+
+          <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+      </table>
+      <div class="end">
+        <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+        CHIUDI
+        </button>
+      </div>
+</div>
+
+<!--Richiesta proroga chiusa d'ufficio-->
+<div *ngIf="stepProroga === 6" >
+  <div class="spaceBetween">
+    <h3 class="bold-text">Proroga chiusa d'ufficio</h3>
+  </div>
+  <div>
+      <table mat-table [dataSource]="inviataDataSource"  class="tableDoc"  style="width: 100%;" >
+
+         
+          <ng-container matColumnDef="dtRichiesta">
+              <th mat-header-cell *matHeaderCellDef > Data richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.dtRichiesta  | date:'dd/MM/yyyy'}}</td>
+          </ng-container>
+
+         
+          <ng-container matColumnDef="ggRichiesti">
+              <th mat-header-cell *matHeaderCellDef > Giorni richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.ggRichiesti}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="motivazione">
+              <th mat-header-cell *matHeaderCellDef >Motivazione</th>
+              <td mat-cell *matCellDef="let row"> {{row?.motivazione}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ggApprovati">
+              <th mat-header-cell *matHeaderCellDef > Giorni approvati </th>
+              <td mat-cell *matCellDef="let row"> {{(row?.ggApprovati > 0) ? row?.ggApprovati : "-"}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="statoProroga">
+              <th mat-header-cell *matHeaderCellDef > Stato richiesta </th>
+              <td mat-cell *matCellDef="let row"> {{row?.statoProroga}} </td>
+          </ng-container>
+
+          
+
+          <tr mat-header-row *matHeaderRowDef="inviataDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: inviataDisplayedColumns;"></tr>
+      </table>
+  </div>
+  <div class="end">
+    <button  type="button" class="button-style-2" mat-button mat-dialog-close>
+    CHIUDI
+    </button>
+  </div>
+
+</div> 
+
+
+
+
+</mat-card-content>

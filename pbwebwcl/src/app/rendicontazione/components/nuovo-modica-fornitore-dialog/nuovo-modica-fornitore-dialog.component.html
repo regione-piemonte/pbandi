@@ -1,0 +1,173 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="boldText" *ngIf="isNuovo">Nuovo fornitore</h3>
+        <h3 class="boldText" *ngIf="!isNuovo && !isSeleziona">Modifica fornitore</h3>
+        <h3 class="boldText" *ngIf="isSeleziona">Selezione del fornitore</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content class="padding-bottom-5">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <app-form-nuovo-modifica-fornitore [user]="user" [fornitore]="fornitore" [isNuovo]="isNuovo" [isXml]="isXml"
+            [isSeleziona]="isSeleziona" [tipologie]="tipologie" [fornitoreAnagrafica]="fornitoreAnagrafica"
+            [fornitoreFattura]="fornitoreFattura" (saved)="saved($event)">
+        </app-form-nuovo-modifica-fornitore>
+        <mat-accordion [ngClass]="{'displayNone': isSeleziona}">
+            <mat-expansion-panel *ngIf="isPersonaFisica()">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Qualifiche
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table mat-table [dataSource]="dataSourceQualifiche" class="mat-elevation-z4 qualificheTable"
+                    #tableQualifiche>
+                    <!-- qualifica Column -->
+                    <ng-container matColumnDef="qualifica">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 40%;">
+                            <b>Qualifica</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="width: 40%;"> {{element.descQualifica}}</td>
+                    </ng-container>
+                    <!-- costoOrario Column -->
+                    <ng-container matColumnDef="costoOrario">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 10%;"> <b>Costo
+                                orario</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.costoOrario | number:
+                            '0.2' :
+                            'it'
+                            }} </td>
+                    </ng-container>
+                    <!-- note Column -->
+                    <ng-container matColumnDef="note">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 35%;"> <b>Note</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="width: 35%;"> {{element.noteQualifica}} </td>
+                    </ng-container>
+
+                    <!-- azioni Column -->
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button type="button" mat-icon-button class="blue-color" matTooltip="Modifica qualifica"
+                                *ngIf="element.comodoIdTabella!==0" (click)="openModificaQualifica(element)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button class="red-color" matTooltip="Elimina qualifica"
+                                *ngIf="element.comodoIdTabella!==0" (click)="eliminaQualifica(element)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsQualifiche"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumnsQualifiche;"></tr>
+                </table>
+                <button mat-button class="button-style-1" type='button' *ngIf="!aggiungiModificaQualificaVisible"
+                    (click)="aggiungiModificaQualificaVisible = true">AGGIUNGI QUALIFICA</button>
+                <mat-grid-list cols="8" rowHeight="80px" *ngIf="aggiungiModificaQualificaVisible">
+                    <mat-grid-tile [colspan]="7" [rowspan]="1">
+                        <mat-form-field style="width: 98%;">
+                            <mat-label>Selezionare una qualifica</mat-label>
+                            <mat-select [(ngModel)]="qualificaSelected" name="qualifica" #qual="ngModel" required>
+                                <mat-option *ngFor="let qualifica of qualifiche" [value]="qualifica">
+                                    {{ qualifica.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="qual?.errors?.required">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <mat-form-field style="width: 98%;">
+                            <input type="text" placeholder="Costo orario" [(ngModel)]="costoOrarioFormatted"
+                                name="costoOrario" matInput required #costo="ngModel" (blur)="setCostoOrario()">
+                            <mat-error *ngIf="costo?.errors?.required">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <mat-form-field style="width: 99%;">
+                            <textarea type="text" placeholder="Nota" matInput [(ngModel)]="nota" name="nota"
+                                #not="ngModel" required></textarea>
+                            <mat-error *ngIf="not?.errors?.required">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="spaceBetween marginTop20">
+                    <button mat-button class="button-style-1" type='button' *ngIf="aggiungiModificaQualificaVisible"
+                        (click)="resetCampi()">INDIETRO</button>
+                    <div matTooltip="Compilare tutti i campi obbligatori"
+                        [matTooltipDisabled]="qualificaSelected && costoOrario && nota"
+                        *ngIf="aggiungiModificaQualificaVisible">
+                        <button mat-button class="button-style-1" type='button' (click)="aggiungiQualifica()"
+                            [disabled]="!qualificaSelected || !costoOrario || !nota">CONFERMA</button>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Allegati
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table mat-table [dataSource]="dataSourceAllegati" class="mat-elevation-z4 qualificheTable"
+                    #tableAllegati>
+                    <!-- allegati Column -->
+                    <ng-container matColumnDef="allegati">
+                        <th class="colorBlack" mat-header-cell *matHeaderCellDef style="width: 90%;">
+                            <b>Allegato</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="width: 90%;">
+                            <button type="button" mat-icon-button class="blue-color boldText"
+                                matTooltip="Download allegato" (click)="downloadAllegato(element.id,element.nome)"
+                                *ngIf="element.id!==0">
+                                {{element.nome}}
+                            </button>
+                            <span *ngIf="element.id===0">
+                                {{element.nome}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- azioni Column -->
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button type="button" mat-icon-button class="blue-color" matTooltip="Disassocia allegato"
+                                *ngIf="element.id!==0 && element.disassociabile" (click)="eliminaAllegato(element)">
+                                <mat-icon>link_off</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsAllegati"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumnsAllegati;"></tr>
+                </table>
+                <button mat-button class="button-style-1" type='button' *ngIf="!aggiungiModificaQualificaVisible"
+                    (click)="aggiungiAllegato()">AGGIUNGI ALLEGATI</button>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-dialog-content>
+    <div class="spaceBetween marginTop20">
+        <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+        <div matTooltip="Compilare tutti i campi obbligatori" [matTooltipDisabled]="!isSalvaDisabled()">
+            <button mat-button class="button-style-1" [disabled]="isSalvaDisabled()" (click)="salva()">SALVA</button>
+        </div>
+    </div>
+</div>

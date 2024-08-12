@@ -1,0 +1,267 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div
+  style="margin-top: 2em"
+  class="page"
+  [ngClass]="{ displayNone: isLoading() }"
+  id="scrollId"
+>
+  <div class="flex-contrario" style="margin-bottom: 2em">
+    <div class="flex-contrario-e-spazio">
+      <div class="larghezza-marty">
+        <b>
+        Richiesto in domanda <br />
+        preventivo<br /><br />
+        </b>
+        <span class="normal-font">{{ dataTerminePreventivo }}</span>
+      </div>
+      <div class="larghezza-marty">
+        <b>
+        Preventivo ammesso <br />
+        in istruttoria <br /><br />
+        </b>
+        <span class="normal-font">{{  dataTermineDomanda }}</span>
+      </div>
+      <div class="larghezza-marty">
+        <b>
+        Consuntivo <br />
+        presentato <br /><br />
+        </b>
+      </div>
+      <div class="larghezza-marty" *ngIf="isValidazioneA20 === true">
+        <b>
+        Consuntivo <br />
+        ammesso <br /><br />
+        </b>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div *ngIf="entrateVo">
+      <div class="flex-e-spazio">
+        <div class="flex-normale primoDiv">
+          <span class="ml-1">
+            <b>Entrate nette</b>
+          </span>
+        </div>
+        <div class="flex-contrario-e-spazio">
+          <div class="larghezza-marty">
+            {{
+              totali.totaleRichiesto
+                | currency : "EUR" : "symbol" : "1.2" : "it"
+            }}
+          </div>
+          <div class="larghezza-marty">
+            {{
+              totali.totaleAmmesso | currency : "EUR" : "symbol" : "1.2" : "it"
+            }}
+          </div>
+
+          <div class="larghezza-marty">
+            {{
+              totali.totaleConsuntivoPresentato
+                | currency : "EUR" : "symbol" : "1.2" : "it"
+            }}
+          </div>
+          <div class="larghezza-marty" *ngIf="isValidazioneA20 === true">
+            {{
+              totali.totaleValidato | currency : "EUR" : "symbol" : "1.2" : "it"
+            }}
+          </div>
+        </div>
+      </div>
+      <!--RIGHE ARANCIONI-->
+      <div *ngFor="let righeSecondoLivello of entrateVo.vociDiEntrataCultura; let i = index">
+        <div>
+          <div class="flex-e-spazio">
+            <div class="flex-icona-occhio secondoDiv">
+              <span class="ml-1">{{ righeSecondoLivello.descrizione }}</span>
+              <div style="display: flex; align-items: flex-end">
+                <div>
+                  <mat-icon
+                    *ngIf="righeSecondoLivello.figli"
+                    (click)="pressEye(righeSecondoLivello)"
+                    class="blue-color"
+                    style="cursor: pointer"
+                    matTooltip="Dettagli"
+                  >
+                    <span *ngIf="righeSecondoLivello.expanded">
+                      visibility
+                    </span>
+                    <span *ngIf="!righeSecondoLivello.expanded">
+                      visibility_off
+                    </span>
+                  </mat-icon>
+                </div>
+                <button 
+                  *ngIf="righeSecondoLivello.flagEdit === 'S' && matInputVisibile"
+                  mat-icon-button
+                  (click)="aggiungiEntrata(righeSecondoLivello)"
+                  matTooltip="Aggiungi entrata"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="flex-contrario-e-spazio">
+              <div class="larghezza-marty">
+                {{
+                  righeSecondoLivello.importoRichiesto || 0
+                    | currency : "EUR" : "symbol" : "1.2" : "it"
+                }}
+              </div>
+              <div class="larghezza-marty">
+                {{
+                  righeSecondoLivello.importoAmmesso || 0
+                    | currency : "EUR" : "symbol" : "1.2" : "it"
+                }}
+              </div>
+              <div
+                class="larghezza-marty"
+                *ngIf="
+                  isValidazioneA20 === true &&
+                  righeSecondoLivello.flagEdit === 'S'
+                "
+              >
+                {{
+                  righeSecondoLivello.importoConsuntivoPresentato || 0
+                    | currency : "EUR" : "symbol" : "1.2" : "it"
+                }}
+              </div>
+              <div class="larghezza-marty" *ngIf="isValidazioneA20 === false">
+                <input
+                  *ngIf="righeSecondoLivello.flagEdit !== 'S' && matInputVisibile"
+                  matInput
+                  [min]="0"
+                  (input)="controlloInputRigheSecondoLivelloImportoConsuntivoPresentato(righeSecondoLivello); controlloCaratteriInput($event)"
+                  (click)="deformattaNumber(i,'A')"
+                  (blur)="aggiungiRigaDaModificare(righeSecondoLivello); formattedNumber(i,'A')"
+                  placeholder="0"
+                  type="text"
+                  class="centro"
+                  [(ngModel)]="entrateVo.vociDiEntrataCultura[i].importoConsuntivoPresentato"
+                />
+                <div *ngIf="righeSecondoLivello.flagEdit === 'S' || !matInputVisibile">
+                  {{
+                    righeSecondoLivello.importoConsuntivoPresentato || 0
+                      | currency : "EUR" : "symbol" : "1.2" : "it"
+                  }}
+                </div>
+              </div>
+
+              <div
+                class="larghezza-marty"
+                *ngIf="
+                  isValidazioneA20 === true &&
+                  righeSecondoLivello.flagEdit === 'S'
+                "
+              >
+                <input
+                  matInput
+                  *ngIf="!entrateNetteSoloVisualizzabile"
+                  [min]="0"
+                  type="number"
+                  class="centro"
+                  placeholder="0"
+                  (input)="
+                    controlloInputRigheSecondoLivelloImportoValidato(
+                      righeSecondoLivello
+                    )
+                  "
+                  [(ngModel)]="righeSecondoLivello.importoValidato"
+                />
+              </div>
+            </div>
+          </div>
+          <!--RIGHE GIALLE-->
+          <div *ngFor="let righeTerzoLivello of righeSecondoLivello.figli; let i = index">
+            <div
+              class="flex-e-spazio"
+              *ngIf="righeSecondoLivello.expanded == true"
+            >
+              <div class="flex-normale terzoDiv">
+                <span class="ml-1">
+                  {{ righeTerzoLivello.completamento }}
+                </span>
+              </div>
+              <div class="flex-contrario-e-spazio">
+                <div class="larghezza-marty">
+                  {{
+                    righeTerzoLivello.importoRichiesto || 0
+                      | currency : "EUR" : "symbol" : "1.2" : "it"
+                  }}
+                </div>
+                <div class="larghezza-marty">
+                  {{
+                    righeTerzoLivello.importoAmmesso || 0
+                      | currency : "EUR" : "symbol" : "1.2" : "it"
+                  }}
+                </div>
+
+                <div class="larghezza-marty" *ngIf="isValidazioneA20 === true">
+                  {{
+                    righeTerzoLivello.importoConsuntivoPresentato || 0
+                      | currency : "EUR" : "symbol" : "1.2" : "it"
+                  }}
+                </div>
+                <div class="larghezza-marty" *ngIf="isValidazioneA20 === false">
+                  <input
+                    matInput
+                    *ngIf="matInputVisibile"
+                    [min]="0"
+                    placeholder="0"
+                    class="centro"
+                    type="text"
+                    (input)="controlloInputRigheTerzoLivelloImportoConsuntivoPresentato(righeTerzoLivello); controlloCaratteriInput($event)"
+                    (click)="deformattaNumber(i,'G',righeSecondoLivello.idVoceDiEntrata, righeSecondoLivello.figli[i].idConsuntivoEntrata)"
+                    (blur)="aggiungiRigaDaModificare(righeTerzoLivello); formattedNumber(i,'G', righeSecondoLivello.idVoceDiEntrata, righeSecondoLivello.figli[i].idConsuntivoEntrata)"
+                    [(ngModel)]="righeSecondoLivello.figli[i].importoConsuntivoPresentato"
+                  />
+                  <div *ngIf="!matInputVisibile">
+                    {{
+                    righeTerzoLivello.importoConsuntivoPresentato || 0
+                      | currency : "EUR" : "symbol" : "1.2" : "it"
+                  }}
+                  </div>
+                </div>
+
+                <div class="larghezza-marty" *ngIf="isValidazioneA20 === true">
+                  <input
+                    matInput
+                    *ngIf="!entrateNetteSoloVisualizzabile"
+                    [min]="0"
+                    type="number"
+                    class="centro"
+                    placeholder="0"
+                    (input)="
+                      controlloInputRigheTerzoLivelloImportoValidato(
+                        righeTerzoLivello
+                      )
+                    "
+                    [(ngModel)]="righeTerzoLivello.importoValidato"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div style="display: flex; justify-content: flex-end" *ngIf="matInputVisibile">
+      <button mat-button class="button-style-2" (click)="salvaModifiche()">
+        SALVA
+      </button>
+    </div>
+  </div>
+
+  <!-- <div>
+    <div style="display: flex; justify-content: flex-end" *ngIf="bottoneConsuntivoVisible">
+      <button mat-button class="button-style-2" (click)="chiudiConsuntivo()">
+        CHIUDI CONSUNTIVO
+      </button>
+    </div>
+  </div> -->
+</div>

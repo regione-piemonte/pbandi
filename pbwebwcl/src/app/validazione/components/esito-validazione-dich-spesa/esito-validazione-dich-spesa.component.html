@@ -1,0 +1,277 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Esito validazione della dichiarazione di spesa</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+
+  <div [hidden]="!error">
+    <div _ngcontent-nxr-c293="" class="content width-100-perc margin-0 max-width-89-perc">
+      <mat-card _ngcontent-nxr-c293="" class="mat-card mat-focus-indicator messageError"
+        ng-reflect-ng-class="[object Object]">
+        <mat-card-content _ngcontent-nxr-c293="" class="mat-card-content messageWarningContent"
+          ng-reflect-ng-class="[object Object]">
+          <p _ngcontent-nxr-c293="" id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+            {{messageError}}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+
+  <form [formGroup]="myForm" class="fullWidth">
+
+    <!-- campi form-->
+    <div class="fullWidth">
+      <div class="fullWidth">
+        <mat-form-field class="fullWidth">
+          <mat-label>
+            Esito dichiarazione di spesa
+          </mat-label>
+          <mat-select matInput formControlName="esitoDichiarazioneSpesa" (selectionChange)="condizioniForm()">
+            <!--[compareWith]="compareEsitoDichiarazioneSpesa"-->
+            <mat-option [value]="element.id"
+              *ngFor="let element of listEsitoDichiarazioneSpesaDaMostrare">{{element.esito}}</mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="myForm.get('esitoDichiarazioneSpesa')?.errors?.required">
+            È obbligatorio specificare l'esito della dichiarazione di spesa
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class="fullWidth">
+        <mat-form-field class="fullWidth">
+          <mat-label>
+            Attributo esito
+          </mat-label>
+          <mat-select matInput formControlName="attributoEsito" (selectionChange)="condizioniForm()">
+            <!--[compareWith]="compareAttributoEsito"-->
+            <mat-option [value]="element.id"
+              *ngFor="let element of listAttributoEsitoDaMostrare">{{element.attrib}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="myForm.get('attributoEsito')?.errors?.required">
+            È obbligatorio specificare l'attributo dell'esito
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="fullWidth">
+        <mat-form-field class="fullWidth">
+          <mat-label>Modalità di agevolazione</mat-label>
+          <mat-select [formControl]="modalitaAgevControl" multiple
+            (selectionChange)="changeModalitaAgevolazione($event)">
+            <mat-option [value]="0">Tutte</mat-option>
+            <mat-option *ngFor="let option of listModalitaAgevolazione" [value]="option.idModalitaAgevolazione"
+              [disabled]="modalitaAgevControl?.value?.includes(0)">{{option.descModalitaAgevolazione}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="modalitaAgevControl?.errors?.required">
+            Campo obbligatorio.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="fullWidth">
+        <mat-form-field class="w-40">
+          <mat-label>
+            Importo da erogare finanziamento
+          </mat-label>
+          <input type="text" matInput formControlName="importo" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+            (blur)="setImporto()">
+          <mat-error *ngIf="myForm?.get('importo').errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="myForm.get('importo')?.errors?.required">
+            Campo obbligatorio.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-58 margin-left-10">
+          <mat-label>Causale di agevolazione finanziamento</mat-label>
+          <mat-select [formControl]="causaleFinanzControl">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let option of listCausaliErogazione"
+              [value]="option.idCausaleErogazione">{{option.descCausaleErogazione}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="causaleFinanzControl?.errors?.required">
+            Campo obbligatorio.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="fullWidth" *ngIf="br80">
+        <mat-form-field class="w-40">
+          <input type="text" placeholder="Importo da erogare contributo" matInput
+            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" formControlName="premialita" (blur)="setPremialita()">
+          <mat-error *ngIf="myForm?.get('premialita').errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="myForm.get('premialita')?.errors?.required">
+            Campo obbligatorio.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-58 margin-left-10">
+          <mat-label>Causale di agevolazione contributo</mat-label>
+          <mat-select [formControl]="causaleContributoControl">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let option of listCausaliErogazione"
+              [value]="option.idCausaleErogazione">{{option.descCausaleErogazione}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="causaleContributoControl?.errors?.required">
+            Campo obbligatorio.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="fullWidth">
+        <mat-form-field class="w-40">
+          <mat-label>
+            Ires
+          </mat-label>
+          <input matInput formControlName="ires" type="number">
+        </mat-form-field>
+      </div>
+    </div>
+
+
+    <div [hidden]="noAllegati">
+      <!-- CARICA LETTERA ACCOMPAGNATORIA -->
+      <div class="fullWidth">
+
+        <div class="fullWidth marginTop20">
+          <mat-label class="bold">Lettera accompagnatoria</mat-label>
+        </div>
+        <div class="fullWidth">
+
+          <div class="row" [hidden]="letteraAccompagnatoria">
+            <div class="col">
+              <button mat-button class="button-style-1" (click)="uploadLetteraAccompagnatoria.click()"
+                [disabled]="chiusaUfficio">AGGIUNGI LETTERA
+                ACCOMPAGNATORIA</button>
+              <input type="file" [hidden]="true" #uploadLetteraAccompagnatoria id="uploadLetteraAccompagnatoria"
+                name="uploadLetteraAccompagnatoria" (change)="handleLetteraAccompagnatoria($event.target.files)" />
+            </div>
+          </div>
+          <div>
+            <ul>
+
+              <li [hidden]="!letteraAccompagnatoria">
+                <div class="alignItemsCenter">
+                  <span>
+                    Flag visibilità: <input [checked]="visibilitaLettera" type="checkbox" (click)="toggleCheckbox(1)">
+                    <span class="bold-text">{{letteraAccompagnatoria?.name}}</span> - {{letteraAccompagnatoria?.size}}
+                    bytes
+                  </span>
+                  <button mat-icon-button class="red-color" matTooltip="Elimina"
+                    (click)="eliminaLetteraAccompagnatoria()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CARICA REPORT VALIDAZIONE -->
+      <div class="fullWidth">
+
+        <div class="fullWidth marginTop20">
+          <mat-label class="bold">Carica report validazione</mat-label>
+        </div>
+        <div class="fullWidth">
+
+          <div class="row" [hidden]="reportValidazione">
+            <div class="col">
+              <button mat-button class="button-style-1" (click)="uploadReportValidazione.click()"
+                [disabled]="chiusaUfficio">AGGIUNGI ALLEGATO</button>
+              <input type="file" [hidden]="true" #uploadReportValidazione id="uploadReportValidazione"
+                name="uploadreportValidazione" (change)="handleReportValidazione($event.target.files)" />
+            </div>
+          </div>
+          <div>
+            <ul>
+
+              <li [hidden]="!reportValidazione">
+                <div class="alignItemsCenter">
+                  <span>
+                    Flag visibilità: <input [checked]="visibilitaReport" type="checkbox" (click)="toggleCheckbox(3)">
+                    <span class="bold-text">{{reportValidazione?.name}}</span> - {{reportValidazione?.size}} bytes
+                  </span>
+                  <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaReportValidazione()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CARICA CHECK LIST -->
+      <!--<div class="fullWidth" *ngIf="br55"> COMMENTATO PER TEST -->
+      <div class="fullWidth">
+
+        <div class="fullWidth marginTop20">
+          <mat-label class="bold">Carica checklist interna</mat-label>
+        </div>
+        <div class="fullWidth">
+
+          <div class="row" [hidden]="checklistInterna">
+            <div class="col">
+              <button mat-button class="button-style-1" (click)="uploadCheckList.click()"
+                [disabled]="chiusaUfficio">AGGIUNGI ALLEGATO</button>
+              <input type="file" [hidden]="true" #uploadCheckList id="uploadCheckList" name="uploadCheckList"
+                (change)="handleChecklistInterna($event.target.files)" />
+            </div>
+          </div>
+          <div>
+            <ul>
+
+              <li [hidden]="!checklistInterna">
+                <div class="alignItemsCenter">
+                  <span>
+                    Flag visibilità: <input [checked]="visibilitaChecklist" type="checkbox" (click)="toggleCheckbox(2)">
+                    <span class="bold-text">{{checklistInterna?.name}}</span> - {{checklistInterna?.size}} bytes
+                  </span>
+                  <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaChecklistInterna()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+
+  <!-- FINAL BUTTONS -->
+  <div class="alignItemsCenter">
+
+    <div class="flexEnd fullWidth">
+      <button class="button-style-1" mat-button (click)="annulla()">ANNULLA</button>
+      <div *ngIf="showConferma">
+        <button mat-raised-button class="button-style-2 marginLeft20" (click)="conferma()"
+          [disabled]="disableConferma">CONFERMA</button>
+        <!-- [disabled]="disableConferma" --->
+      </div>
+      <div *ngIf="!showConferma">
+        <button mat-raised-button class="button-style-2 marginLeft20" (click)="avviaIter()">AVVIA ITER</button>
+        <!-- [disabled]="disableAvviaIter" -->
+      </div>
+
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="tornaAValidazione()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla validazione</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div>
+        <h2>Esame documento</h2>
+      </div>
+    </div>
+  </div>
+  <div class="content margin-bottom-0">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>{{docSpesa?.descrizioneTipologiaDocumento}}: <span class="bold-text">
+              <span *ngIf="docSpesa?.numeroDocumento">n. {{docSpesa?.numeroDocumento}} -</span>
+              {{docSpesa?.dataDocumento}}</span></p>
+          <p class="margin-left-20" *ngIf="docSpesa?.denominazioneFornitore">Fornitore: <span class="bold-text">
+              {{docSpesa?.denominazioneFornitore}}</span></p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <div class="display-flex fullWidth margin-bottom-20">
+      <app-allegati-dettaglio-doc style="width: 33%;" [docSpesa]="docSpesa" [isVisible]="isVisible" [isFP]="isFP"
+        (messageError)="showMessageError($event)"
+        (resetMessageError)="resetMessageError()"></app-allegati-dettaglio-doc>
+      <div class="flex-direction-column margin-left-20" style="width: 65%;">
+        <app-dati-gen-affid-dettaglio-doc [docSpesa]="docSpesa" [isBR79]="isBR79"></app-dati-gen-affid-dettaglio-doc>
+        <div class="card">
+          <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+              <h3>Voci di spesa</h3>
+              <div *ngIf="!dataSourceVociSpesa || !dataSourceVociSpesa.data || dataSourceVociSpesa?.data?.length===0">
+                <p>Attenzione! Per questa dichiarazione di spesa, non sono presenti associazioni a voci
+                  di
+                  spesa.</p>
+                <br>
+                <p>È necessario procedere comunque alla validazione del documento.</p>
+              </div>
+              <div *ngIf="!vociSpesaModificabili && dataSourceVociSpesa?.data?.length > 0">
+                <p>L'associazione alle voci di spesa è già stata esaminata in precedenti dichiarazioni. È necessario
+                  procedere comunque alla validazione del documento per completare l'iter di validazione.</p>
+              </div>
+              <table mat-table [dataSource]="dataSourceVociSpesa" class="fullWidth"
+                [ngClass]="{'displayNone': !dataSourceVociSpesa || !dataSourceVociSpesa.data || dataSourceVociSpesa?.data?.length===0}">
+
+                <ng-container matColumnDef="descrizione">
+                  <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+                  <td mat-cell *matCellDef="let row"> {{row.descrizioneVoceDiSpesa}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ammesso">
+                  <th mat-header-cell *matHeaderCellDef class="text-right"> Ammesso </th>
+                  <td mat-cell *matCellDef="let row" class="text-right">{{row.importoAmmesso |
+                    number:
+                    '1.2-2' : 'it'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="residuo">
+                  <th mat-header-cell *matHeaderCellDef class="text-right">
+                    Residuo </th>
+                  <td mat-cell *matCellDef="let row" class="text-right"
+                    [ngClass]="{'green-color':row.importoResiduoAmmesso>0, 'red-color':0>=row.importoResiduoAmmesso}">
+                    <div class="flexEnd">
+                      <mat-icon *ngIf="0>=row.importoResiduoAmmesso"
+                        matTooltip="Attenzione! Il residuo rendicontato eccede il valore ammesso per la voce di spesa">
+                        warning</mat-icon>
+                      {{row.importoResiduoAmmesso | number: '1.2-2' : 'it'}}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="residuovalidabile">
+                  <th mat-header-cell *matHeaderCellDef class="text-right"> Residuo validabile </th>
+                  <td mat-cell *matCellDef="let row" class="text-right"
+                    [ngClass]="{'green-color':row.residuoValidabile>=0, 'red-color':0>row.residuoValidabile}">
+                    <div class="flexEnd">
+                      <mat-icon *ngIf="0>row.residuoValidabile"
+                        matTooltip="Attenzione! Il residuo validabile è inferiore all'ammesso">
+                        warning</mat-icon>
+                      {{row.residuoValidabile | number: '1.2-2' : 'it'}}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="associato">
+                  <th mat-header-cell *matHeaderCellDef class="text-right"> Associato </th>
+                  <td mat-cell *matCellDef="let row" class="text-right">
+                    {{row.importoAssociatoVoceDiSpesa
+                    | number: '1.2-2' : 'it'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="validato">
+                  <th mat-header-cell *matHeaderCellDef class="text-right"> Validato </th>
+                  <td mat-cell *matCellDef="let row" class="text-right max-width-0">
+                    <span *ngIf="!row.rigaModificabile">{{row.importoValidato}}</span>
+                    <div *ngIf="row.rigaModificabile">
+                      <mat-form-field class="text-right max-width-100">
+                        <input type="text" matInput [(ngModel)]="row.importoValidato" (blur)="setImportoValidato(row)"
+                          [disabled]="!isValidazioneParzialeChecked"
+                          id="rigaValidazioneItem_{{row.idRigoContoEconomico}}"
+                          name="rigaValidazioneItem_{{row.idRigoContoEconomico}}" #impVal="ngModel"
+                          pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                        <mat-error *ngIf="impVal?.errors?.pattern">
+                          Valore non valido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsVociSpesa"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsVociSpesa;"></tr>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <app-note-credito-dettaglio-doc [docSpesa]="docSpesa" (messageError)="showMessageError($event)"
+          (resetMessageError)="resetMessageError()"></app-note-credito-dettaglio-doc>
+        <div class="card">
+          <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+              <h3 class="margin-bottom-0">Note per il beneficiario</h3>
+              <mat-form-field *ngIf="docSpesa" class="fullWidth">
+                <textarea type="text" matInput [(ngModel)]="docSpesa.noteValidazione" name="noteValidazione"
+                  maxlength="4000" [disabled]="!comandiValidazioneVisible"></textarea>
+                <mat-hint>{{4000-docSpesa.noteValidazione?.length}} caratteri disponibili</mat-hint>
+              </mat-form-field>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content" *ngIf="comandiValidazioneVisible">
+    <div class="flexEnd alignItemsCenter">
+      <mat-checkbox *ngIf="!isBR79 && !(!vociSpesaModificabili && dataSourceVociSpesa?.data?.length > 0)"
+        [(ngModel)]="isValidazioneParzialeChecked"
+        [disabled]="(isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4)">Validazione
+        parziale</mat-checkbox>
+      <button *ngIf="!isBR79 && !(!vociSpesaModificabili && dataSourceVociSpesa?.data?.length > 0)" (click)="salva()"
+        mat-stroked-button class="button-style-3 margin-left-20"
+        [disabled]="!isValidazioneParzialeChecked || ((isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4))">SALVA</button>
+      <button mat-stroked-button class="button-style-3 margin-left-20"
+        *ngIf="(isVisible || !isFP) && !(!vociSpesaModificabili && dataSourceVociSpesa?.data?.length > 0)"
+        [disabled]="isValidazioneParzialeChecked || ((isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4))"
+        (click)="sospendi()">SOSPENDI</button>
+      <button mat-stroked-button class="button-style-3 margin-left-20"
+        [disabled]="isValidazioneParzialeChecked || ((isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4))"
+        (click)="respingi()">RESPINGI</button>
+      <button mat-stroked-button class="button-style-3 margin-left-20"
+        *ngIf="!(!vociSpesaModificabili && dataSourceVociSpesa?.data?.length > 0)"
+        [disabled]="isValidazioneParzialeChecked || ((isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4)) || isBR79"
+        (click)="invalida()">INVALIDA</button>
+      <button mat-raised-button class="button-style-2 margin-left-20"
+        [disabled]="isValidazioneParzialeChecked || ((isVisible || !isFP) && (idStatoRichiesta == 1 || idStatoRichiesta == 4))"
+        (click)="valida()">VALIDA</button>
+
+    </div>
+  </div>
+</div>

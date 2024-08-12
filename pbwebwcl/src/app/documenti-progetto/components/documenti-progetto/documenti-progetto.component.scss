@@ -1,0 +1,134 @@
+.display-flex {
+    display: flex;
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-left-20 {
+    margin-left: 20px;
+}
+
+.margin-left-meno-7 {
+    margin-left: -7px;
+}
+
+.margin-right-5 {
+    margin-right: 5px;
+}
+
+.font-size-11 {
+    font-size: 11px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.green-color {
+    color: #065c00;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+.grey-color {
+    color: #ccc;
+}
+
+.width-30-perc {
+    width: 30%;
+}
+
+.width-30-px {
+    width: 30px;
+}
+
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.white-space-nowrap {
+    white-space: nowrap;
+}
+
+.aligned-with-icon {
+    position: absolute;
+    margin-top: 1px;
+    margin-left: 5px;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.visibility-hidden {
+    visibility: hidden;
+}
+
+.viewport {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.viewport-full {
+    height: 200px;
+}
+
+.viewport-1 {
+    height: 40px;
+}
+
+.viewport-2 {
+    height: 80px;
+}
+
+.viewport-3 {
+    height: 120px;
+}
+
+.viewport-4 {
+    height: 160px;
+}
+
+.viewport-item {
+    height: 40px;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100% !important;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+    /*click effect color change*/
+}

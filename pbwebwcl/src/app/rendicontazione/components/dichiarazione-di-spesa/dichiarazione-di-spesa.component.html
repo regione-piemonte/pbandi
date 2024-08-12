@@ -1,0 +1,298 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+
+    <!-- Titolo -->
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAlleRendicontazioni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla rendicontazione</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Dichiarazione di spesa</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message succes/insucces e Beneficiari e Progetto -->
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                            <button class="button-style-1 paddingLeft20" mat-button
+                                (click)="datiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave;
+                                PREGRESSE</button>
+                            <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                                ECONOMICO</button>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Data, Intermedia o finale -->
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content style="display: flex; flex-direction: column;">
+
+                <!-- Data -->
+                <mat-form-field style="width: 30%;">
+                    <mat-label>Rendicontabili fino al</mat-label>
+                    <input matInput [matDatepicker]="picker" [formControl]="data" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="data?.errors?.required">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+                <!-- Intermedia o finale -->
+                <div *ngIf="!isIntegrativa && !isBR58">
+                    <div>
+                        <mat-radio-group [(ngModel)]="tipoDichiarazione" name="tipoDichiarazione"
+                            [disabled]="progettoPiuGreen" (change)="onChangeTipoDichiarazione()">
+
+                            <mat-label>Tipo di dichiarazione</mat-label>
+
+                            <div *ngIf="!isBR54" style="padding-top: 10px;">
+                                <mat-radio-button value="I" style="padding-right: 10px;">intermedia </mat-radio-button>
+                                <mat-radio-button value="F">finale più comunicazione di fine progetto</mat-radio-button>
+                            </div>
+
+                            <div *ngIf="isBR54" style="padding-top: 10px;">
+                                <mat-radio-button value="I" style="padding-right: 10px;" disabled [checked]="false">
+                                    intermedia </mat-radio-button>
+                                <mat-radio-button value="F" [checked]="true">finale più comunicazione di fine progetto
+                                </mat-radio-button>
+                            </div>
+
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <p *ngIf="isBR58 && salCorrente" class="marginTop20">SAL: <span
+                        class="bold-text">{{salCorrente?.descIter}}</span></p>
+
+                <!-- 
+                    <div *ngIf="isBR54">            
+                        <mat-radio-group  [(ngModel)]="tipoDichiarazione" name="tipoDichiarazione"
+                            [disabled]="progettoPiuGreen" (change)="onChangeTipoDichiarazione()">
+                            <mat-label>Tipo di dichiarazione</mat-label>
+                            <div style="padding-top: 10px;">
+                                <mat-radio-button value="I" style="padding-right: 10px;">intermedia</mat-radio-button> 
+                                <mat-radio-button value="F" >finale più comunicazione di fine progetto</mat-radio-button>                               
+                            </div>                    
+                        </mat-radio-group>
+                    </div>
+                   
+
+
+                </div>  -->
+
+                <div *ngIf="isIntegrativa && !isBR58">
+                    <mat-form-field style="width: 30%;">
+                        <input matInput value="INTEGRATIVA" placeholder="Tipo di dichiarazione" disabled />
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="reportingContainerDown" *ngIf="!isVerificaVisible">
+        <button mat-raised-button class="button-style-2" (click)="verificaDichiarazioneSpesa()">VERIFICA
+            DICHIARAZIONE DI SPESA</button>
+    </div>
+
+    <app-dichiarazione-di-spesa-content *ngIf="!isStepperVisible" [idProgetto]="idProgetto"
+        [idBandoLinea]="idBandoLinea" [isBandoCultura]="isBandoCultura" [user]="user"
+        [esitoVerificaDichiarazioneSpesa]="esitoVerificaDichiarazioneSpesa" [initDTO]="initDTO"
+        [tipoDichiarazione]="tipoDichiarazione" [tipoDichNotFinale]="tipoDichNotFinale"
+        [isVerificaVisible]="isVerificaVisible" [isBR56]="isBR56" [isBR58]="isBR58"
+        (messageSuccess)="showMessageSuccess($event)" (messageError)="showMessageError($event)"
+        (resetMessagesSuccessError)="resetMessageSuccess(); resetMessageError();">
+    </app-dichiarazione-di-spesa-content>
+
+
+    <div class="content" [ngClass]="{'displayNone': !isVerificaVisible, 'content': isVerificaVisible}"
+        *ngIf="!isStepperVisible">
+        <div class="flexEnd">
+            <div>
+                <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                <button (click)="anteprimaDichiarazione()" *ngIf="isAnteprimaVisible()" mat-stroked-button
+                    class="button-style-3">ANTEPRIMA
+                    DICHIARAZIONE</button>
+                <!--disabled-->
+            </div>
+            <div>
+                <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                <button mat-raised-button class="button-style-2 marginLeft20" (click)="creaDichiarazione()">CREA
+                    DICHIARAZIONE</button>
+                <!--disabled-->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isBandoCultura && isVerificaVisible && !(tipoDichNotFinale && !isBR58)">
+        <div class="content" *ngIf="isDichiarazioneNonInviabile() && isLeggeBilancioAttiva">
+            <mat-card-content class="messageError">
+                <p>ERRORE</p>
+                <span>Il disavanzo contabile deve essere coperto con risorse proprie.</span>
+            </mat-card-content>
+        </div>
+        <div class="content" *ngIf="isSaldoMaggioreDiZero() && isLeggeBilancioAttiva">
+            <mat-card-content class="messageWarning">
+                <p>ATTENZIONE:</p>
+                <span>Attenzione ci sarà una riduzione del contributo.</span>
+            </mat-card-content>
+        </div>
+        <app-specchietto-saldo></app-specchietto-saldo>
+    </div>
+
+    <mat-horizontal-stepper linear #stepper class="backgroundTransparent no-cultura"
+        [ngClass]="{'displayNone': !(isVerificaVisible && isStepperVisible) , 'content': isVerificaVisible && isStepperVisible }"
+        (selectionChange)="selectionStepperChange($event)">
+        <mat-step [completed]="!isTabAltriDatiDisabled()">
+            <ng-template matStepLabel>Dichiarazione di spesa&nbsp;<span *ngIf="!isIntegrativa">finale</span><span
+                    *ngIf="isIntegrativa">integrativa</span></ng-template>
+            <app-dichiarazione-di-spesa-content [idProgetto]="idProgetto" [idBandoLinea]="idBandoLinea"
+                [isBandoCultura]="isBandoCultura" [user]="user"
+                [esitoVerificaDichiarazioneSpesa]="esitoVerificaDichiarazioneSpesa" [initDTO]="initDTO"
+                [tipoDichiarazione]="tipoDichiarazione" [tipoDichNotFinale]="tipoDichNotFinale"
+                [isVerificaVisible]="isVerificaVisible"
+                [importoRichiestoErogazioneSaldoAmmesso]="importoRichiestoErogazioneSaldoAmmesso" [isBR56]="isBR56"
+                [isBR58]="isBR58" (messageSuccess)="showMessageSuccess($event)"
+                (messageError)="showMessageError($event)"
+                (resetMessagesSuccessError)="resetMessageSuccess(); resetMessageError();">
+            </app-dichiarazione-di-spesa-content>
+            <div class="flexEnd">
+                <button [ngClass]="{'displayNone': isBandoCultura }" mat-raised-button
+                    class="button-style-2 marginLeft20" matStepperNext
+                    [disabled]="isTabAltriDatiDisabled()">AVANTI</button>
+                <button *ngIf="isBandoCultura" mat-raised-button class="button-style-2 marginLeft20" matStepperNext
+                    [disabled]="isTabAltriDatiDisabled() || (isDichiarazioneNonInviabile() && isLeggeBilancioAttiva)">AVANTI
+                </button>
+            </div>
+        </mat-step>
+
+        <mat-step *ngIf="isBandoCultura === true && declaratoriaVisibile === true"
+            [completed]="!isDeclaratoriaCompleta()">
+            <div *ngIf="isBandoCultura === true && declaratoriaVisibile === true">
+                <ng-template matStepLabel>Declaratorie</ng-template>
+            </div>
+            <div [ngClass]="{'displayNone': !isBandoCultura && !declaratoriaVisibile }">
+                <app-declaratoria></app-declaratoria>
+            </div>
+            <div class="spaceBetween">
+                <button mat-raised-button class="button-style-2" matStepperPrevious>INDIETRO</button>
+                <button mat-raised-button class="button-style-2 marginLeft20" matStepperNext
+                    [disabled]="isDeclaratoriaCompleta()">AVANTI</button>
+
+            </div>
+        </mat-step>
+
+
+        <mat-step>
+            <ng-template matStepLabel>Altri dati</ng-template>
+            <div class="content" [ngClass]="{'displayNone': isIndicatoriEmpty()}">
+                <mat-card>
+                    <mat-card-content>
+                        <h3>Indicatori</h3>
+                        <app-indicatori [user]="user" [idProgetto]="idProgetto" [idBandoLinea]="idBandoLinea"
+                            [indicatoriObbligatori]="indicatoriObbligatori"></app-indicatori>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="content">
+                <mat-card>
+                    <mat-card-content>
+                        <h3>Cronoprogramma</h3>
+                        <app-cronoprogramma *ngIf="!isBR58" [user]="user" [idProgetto]="idProgetto"
+                            [regola30attiva]="regola30attiva" [isBR56]="isBR56"
+                            [cronoprogrammaObbligatorio]="cronoprogrammaObbligatorio">
+                        </app-cronoprogramma>
+                        <app-cronoprogramma-fasi-container *ngIf="isBR58" [salCorrente]="salCorrente">
+                        </app-cronoprogramma-fasi-container>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="spaceBetween">
+
+                <div>
+                    <button mat-raised-button class="button-style-2" matStepperPrevious>INDIETRO</button>
+                </div>
+
+                <div class="display-flex">
+                    <div>
+                        <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                        <button (click)="anteprimaDichiarazione()" *ngIf="isAnteprimaVisible() && !isBandoCultura"
+                            mat-stroked-button class="button-style-3">ANTEPRIMA
+                            DICHIARAZIONE
+                        </button>
+                        <!--disabled-->
+                    </div>
+                    <div>
+                        <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                        <button (click)="anteprimaDichiarazioneConDeclaratoria()"
+                            *ngIf="isAnteprimaVisible() && isBandoCultura" mat-stroked-button
+                            class="button-style-3">ANTEPRIMA
+                            DICHIARAZIONE
+                        </button>
+                        <!--disabled-->
+                    </div>
+                    <div>
+                        <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                        <button (click)="anteprimaDichiarazione(true)" *ngIf="isAnteprimaVisible() && progettoPiuGreen"
+                            mat-stroked-button class="button-style-3 marginLeft20">ANTEPRIMA
+                            DICHIARAZIONE +GREEN</button>
+                        <!--disabled-->
+                    </div>
+                    <div>
+                        <!-- matTooltip="A CAUSA DI PROBLEMI TECNICI, LA FUNZIONALITA' 'CREA IL PDF DELLA DICHIARAZIONE DI SPESA' E' STATA MOMENTANEAMENTE DISATTIVATA. "-->
+                        <button mat-raised-button class="button-style-2 marginLeft20"
+                            (click)="salvaIndicatoriCronoprogramma()">CREA
+                            DICHIARAZIONE
+                        </button>
+                        <!--disabled-->
+                    </div>
+                </div>
+
+            </div>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+
+
+
+
+
+    <!--se br34 ed è un bando cultura TODO BISOGNA FAR VEDERE CRONO PROGRAMMA-->
+
+</div>

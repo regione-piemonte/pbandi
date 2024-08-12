@@ -1,0 +1,180 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<form #fornitoreForm="ngForm" [ngClass]="{'displayNone': isLoading()}">
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <div *ngIf="!isSeleziona" class="fullWidth">
+        <div class="spaceBetween">
+            <mat-form-field class="width-48-perc">
+                <mat-label>Selezionare una tipologia</mat-label>
+                <mat-select [(ngModel)]="tipologiaSelected" name="tipologia" (selectionChange)="onSelectTipologia()"
+                    required [disabled]="!isNuovo || isXml">
+                    <mat-option *ngFor="let option of tipologie" [value]="option">
+                        {{ option.descrizione }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="width-48-perc">
+                <mat-checkbox *ngIf="tipologiaSelected?.id===2" [(ngModel)]="isSenzaCFoEstero" name="senzaCFoEstero"
+                    (change)="isSenzaCFoEsteroChecked($event)" [disabled]="isSenzaCFoEsteroDisabled">Fornitore
+                    senza C.F. o estero</mat-checkbox>
+            </div>
+        </div>
+        <mat-form-field class="fullWidth" *ngIf="tipologiaSelected?.id===2 && isSenzaCFoEstero">
+            <mat-label>Selezionare una nazione</mat-label>
+            <mat-select [(ngModel)]="nazioneSelected" name="nazione" required (selectionChange)="onSelectNazione()">
+                <mat-option *ngFor="let option of nazioni" [value]="option">
+                    {{ option.descNazione }}
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+        <div class="spaceBetween">
+            <mat-form-field class="width-48-perc" *ngIf="tipologiaSelected?.id===1">
+                <input type="text" placeholder="Cognome" matInput [(ngModel)]="cognome" required name="cognome" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="width-48-perc" *ngIf="tipologiaSelected?.id===1">
+                <input type="text" placeholder="Nome" matInput [(ngModel)]="nome" required name="nome" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-form-field class="fullWidth" *ngIf="tipologiaSelected?.id===2">
+            <input type="text" placeholder="Denominazione" matInput [(ngModel)]="denominazione" required
+                name="denominazione" />
+            <mat-error>
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+        <div class="spaceBetween">
+            <mat-form-field class="width-48-perc">
+                <input type="text" placeholder="Codice fiscale" matInput [(ngModel)]="codiceFiscale"
+                    [disabled]="isSenzaCFoEstero || isCFVerificato" required name="codFisc" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="width-48-perc" *ngIf="tipologiaSelected?.id===2 && !isSenzaCFoEstero">
+                <input type="text" placeholder="Partita iva" matInput [(ngModel)]="partitaIva" name="iva" />
+            </mat-form-field>
+            <mat-form-field class="width-48-perc" *ngIf="tipologiaSelected?.id===2 && isSenzaCFoEstero">
+                <input type="text" placeholder="Cod. Identificativo" matInput [(ngModel)]="codIdentificativo"
+                    name="codIdentificativo" required maxlength="30" />
+                <mat-hint>{{codIdentificativo? codIdentificativo.length : 0}}/30</mat-hint>
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="fullWidth spaceBetween margin-bottom-30" *ngIf="isSeleziona">
+        <div class="width-48-perc" *ngIf="fornitoreAnagrafica">
+            <p class="boldText">DATI DEL FORNITORE PRESENTE IN ANAGRAFICA</p>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Denominazione" matInput
+                    [(ngModel)]="fornitoreAnagrafica.denominazioneFornitore" required name="denominazione" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Codice fiscale" matInput
+                    [(ngModel)]="fornitoreAnagrafica.codiceFiscaleFornitore" disabled required name="codFisc" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Partita iva" matInput
+                    [(ngModel)]="fornitoreAnagrafica.partitaIvaFornitore" name="iva" disabled />
+            </mat-form-field>
+            <mat-radio-group [(ngModel)]="fornitoreSelected" name="fornitoreSelected">
+                <mat-radio-button value="A">Usa questi dati </mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="width-48-perc" *ngIf="fornitoreFattura">
+            <p class="boldText">DATI DEL FORNITORE PRESENTE IN FATTURA</p>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Denominazione" matInput
+                    [(ngModel)]="fornitoreFattura.denominazioneFornitore" required name="denominazioneFattura" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Codice fiscale" matInput
+                    [(ngModel)]="fornitoreFattura.codiceFiscaleFornitore" disabled required name="codFiscFattura" />
+                <mat-error>
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <input type="text" placeholder="Partita iva" matInput [(ngModel)]="fornitoreFattura.partitaIvaFornitore"
+                    name="ivaFattura" disabled />
+            </mat-form-field>
+            <mat-radio-group [(ngModel)]="fornitoreSelected" name="fornitoreSelected">
+                <mat-radio-button value="F">Usa questi dati</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+    <div class="spaceBetween" *ngIf="tipologiaSelected?.id===2">
+        <mat-radio-group class="width-48-perc" [(ngModel)]="formaGiuridica" name="formaGiuridica"
+            (change)="loadTipologieFormaGiuridica()">
+            <mat-label>Forma giuridica *</mat-label>
+            <mat-radio-button value="1">Privato
+            </mat-radio-button>
+            <mat-radio-button value="2">Pubblico</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field class="width-48-perc">
+            <mat-label>Selezionare una tipologia</mat-label>
+            <mat-select [(ngModel)]="tipologiaFormaGiuridicaSelected" name="tipologiaFormaGiuridica" required>
+                <mat-option *ngFor="let option of tipologieFormaGiuridica" [value]="option">
+                    {{ option.descrizione }}
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                Campo obbligatorio
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <mat-form-field class="width-48-perc" *ngIf="tipologiaSelected?.id===2 && formaGiuridica==='2'">
+        <input type="text" placeholder="Codice iPA" matInput [(ngModel)]="codiceIPA" name="codiceIPA" required />
+        <mat-error>
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <div *ngIf="tipologiaSelected?.id===2 && isAtecoVisible">
+        <mat-form-field class="width-48-perc">
+            <input type="text" placeholder="Ateco *(1)" matInput [(ngModel)]="codiceAteco" name="codiceAteco"
+                disabled />
+            <mat-hint>(1) Il codice ATECO è obbligatorio per fornitori esteri appartenenti alla UE</mat-hint>
+        </mat-form-field>
+        <mat-tree class="fullWidth" [dataSource]="dataSource" [treeControl]="treeControl">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                <button type="button" mat-icon-button disabled></button>
+                <mat-radio-button (change)="onSelectCodAteco(node.attivitaAteco)">
+                    {{node.attivitaAteco.codDescAteco}}
+                </mat-radio-button>
+            </mat-tree-node>
+
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                <button type="button" mat-icon-button matTreeNodeToggle>
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                </button>
+                <mat-radio-button (change)="onSelectCodAteco(node.attivitaAteco)">
+                    {{node.attivitaAteco.codDescAteco}}
+                </mat-radio-button>
+            </mat-tree-node>
+        </mat-tree>
+    </div>
+</form>

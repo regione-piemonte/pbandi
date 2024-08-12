@@ -1,0 +1,77 @@
+<mat-spinner-pbandi class="page" [ngClass]="{'displayNone': !isLoading()}"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="tornaAValidazione()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla validazione</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div>
+        <h2>CheckList</h2>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+        </div>
+        <div class="cod-progetto">
+          <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="datiProgettoEAttivitaPregresse()">DATI
+            PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+            ECONOMICO</button>
+        </div>
+        <div class="cod-progetto" *ngIf="!idDocumentoIndexPiuGreen">
+          <p class="alignItemsCenter">Dichiarazione<span *ngIf="isFinale">&nbsp;FINALE</span>:&nbsp;<span
+              class="bold-text blue-color">{{idDichiarazioneDiSpesa}}</span>
+            <button type="button" mat-icon-button class="blue-color marginLeft10" (click)="downloadPdfDichiarazione()">
+              <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <!-- PK : quello che segue e' l'html preso dal DB -->
+  <!--   select * from PBANDI_C_CHECKLIST_MODEL_HTML where id_modello = 33; -->
+  <div [innerHTML]="htmlModelloCheckList | safeHTML"> </div>
+  <!-- PK : fine l'html preso dal DB -->
+
+
+  <div class="content">
+    <div class="spaceBetween">
+      <div class="backContainer">
+        <button (click)="tornaAValidazione()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alla validazione</span>
+        </button>
+      </div>
+      <div>
+        <button *ngIf="viewButtonScaricaBozza" mat-raised-button (click)="funzScaricaBozza()"
+          class="button-style-2">SCARICA BOZZA</button>
+        <button *ngIf="statoChecklist!='D'" mat-raised-button (click)="funzSalvaChecklistValidazioneBozza()"
+          class="button-style-2 margin-left-10">SALVA BOZZA</button>
+        <button *ngIf="statoChecklist!='D'" mat-raised-button (click)="funzSalvaChecklistValidazioneDefinitivo()"
+          class="button-style-2 margin-left-10">SALVA
+          DEFINITIVO</button>
+      </div>
+    </div>
+  </div>
+</div>

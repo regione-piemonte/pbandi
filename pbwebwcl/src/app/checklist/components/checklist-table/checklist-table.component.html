@@ -1,0 +1,105 @@
+<div class="content" id="scrollTable">
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="content">
+    <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+            <p *ngIf="!dataSource || !elencoChecklist || !elencoChecklist.length">Nessun elemento da visualizzare.</p>
+            <table class="tableElenco" mat-table [dataSource]="dataSource" style="width: 100%;"
+                [ngClass]="{'displayNone': !dataSource || !elencoChecklist || !elencoChecklist.length}">
+
+                <ng-container matColumnDef="allegati">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button *ngIf="row.codiceTipo==='CLIL' || row.codiceTipo==='CLILA' || row.codiceTipo==='CL'"
+                            mat-icon-button matTooltip="Visualizza file allegati" (click)="openAllegati(row)">
+                            <mat-icon>attachment</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="nomedoc">
+                    <th mat-header-cell *matHeaderCellDef> Nome checklist </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.nome}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipodoc">
+                    <th mat-header-cell *matHeaderCellDef> Tipo
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.descTipo}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="stato">
+                    <th mat-header-cell *matHeaderCellDef> Stato
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.descStato}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="versione">
+                    <th mat-header-cell *matHeaderCellDef> Versione
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.versione}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="data">
+                    <th mat-header-cell *matHeaderCellDef> Data
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.dataControllo}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="soggetto">
+                    <th mat-header-cell *matHeaderCellDef> Soggetto controllore
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.soggettoControllore}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="azioni">
+                    <th mat-header-cell *matHeaderCellDef class="width-115-px">
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="width-115-px">
+                        <button mat-icon-button class="blueIcon" *ngIf="isModificabile" matTooltip="Modifica"
+                            (click)="modificaFile(row)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button class="blueIcon" matTooltip="Anteprima allegato"
+                            (click)="anteprimaAllegato(row.nome,row.idDocumentoIndex,row.codiceTipo)">
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </button>
+                        <button mat-icon-button class="blueIcon" matTooltip="Visualizza PDF"
+                            (click)="downloadFile(row)">
+                            <mat-icon>download</mat-icon>
+                        </button>
+                        <button mat-icon-button class="red-color" *ngIf="isEliminabile" matTooltip="Elimina"
+                            (click)="eliminaFile(row)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                [ngClass]="{'displayNone': !dataSource || !elencoChecklist || !elencoChecklist.length}">
+            </mat-paginator>
+        </mat-card-content>
+    </mat-card>
+</div>

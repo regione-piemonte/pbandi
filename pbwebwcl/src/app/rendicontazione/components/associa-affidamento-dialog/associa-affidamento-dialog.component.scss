@@ -1,0 +1,47 @@
+table {
+  width: 100%;
+}
+
+.width12Perc {
+  width: 12.5%;
+}
+
+.width37Perc {
+  width: 37.5%;
+}
+
+.paddingLeft10 {
+  padding-left: 10px;
+}
+
+.colorTextDisabled {
+  color: #888;
+}
+
+.colorTextRed {
+  color: #b8191a;
+}
+
+.displayNone {
+  display: none;
+}
+
+::ng-deep .mat-dialog-container {
+  overflow-y: auto !important;
+  padding-bottom: 10px !important;
+  max-height: calc(100vh - 30px) !important;
+  height: auto !important;
+
+  .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+  .mat-select-value-text,
+  .cdk-text-field-autofill-monitored:-webkit-autofill {
+    font-weight: bold !important;
+  }
+}
+.cdk-overlay-pane {
+  overflow: scroll;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
+}

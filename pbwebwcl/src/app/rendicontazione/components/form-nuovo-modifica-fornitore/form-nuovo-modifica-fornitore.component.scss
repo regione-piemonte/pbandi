@@ -1,0 +1,52 @@
+p {
+    font-size: 16px;
+}
+
+.displayNone {
+    display: none;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.width-48-perc {
+    width: 48%;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
+}
+
+mat-radio-group {
+    mat-label {
+        padding-right: 10px;
+    }
+
+    mat-radio-button {
+        padding-right: 10px;
+    }
+}
+
+mat-tree {
+    max-height: 190px;
+    overflow: auto;
+    margin-top: 20px;
+    margin-left: -15px;
+
+    mat-tree-node {
+        max-height: 30px;
+        min-height: 30px;
+    }
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}

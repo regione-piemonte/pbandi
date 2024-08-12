@@ -1,0 +1,206 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToEconomie()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna all'elenco delle economie</span>
+            </button>
+        </div>
+        <h2 *ngIf="!idEconomia">Nuova economia</h2>
+        <h2 *ngIf="idEconomia">Modifica economia</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Progetto cedente</h3>
+                <form #cedenteForm="ngForm">
+                    <mat-form-field class="fullWidth margin-bottom-6">
+                        <mat-label>Selezionare un bando *</mat-label>
+                        <mat-select [(ngModel)]="bandoCedenteSelected" name="bandoCedente" #bc="ngModel"
+                            (selectionChange)="changeBandoCedente()" [disabled]="idEconomia || isFromRimodulazione">
+                            <mat-option *ngFor="let option of bandi" [value]="option">
+                                {{ option.nomeBandoLinea }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="bc?.errors?.error ==='required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="display-flex margin-bottom-6">
+                        <mat-form-field class="width-50-perc">
+                            <mat-label>Selezionare un progetto *</mat-label>
+                            <mat-select [(ngModel)]="progettoCedenteSelected" name="progettoCedente" #pc="ngModel"
+                                (selectionChange)="changeProgettoCedente(true)"
+                                [disabled]="idEconomia || isFromRimodulazione">
+                                <mat-option *ngFor="let option of progettiCedente" [value]="option">
+                                    {{ option.codiceVisualizzato }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="pc?.errors?.error ==='required'">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <button *ngIf="progettoCedenteSelected" mat-icon-button
+                            (click)="openDettaglioProgetto('C',progettoCedenteSelected.idProgetto)">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </div>
+                    <p class="margin-bottom-6"><span class="bold-text">Beneficiario: </span> {{benCedente ?
+                        (benCedente?.descrizione ?
+                        benCedente?.descrizione : (benCedente?.nome+ ' ' + benCedente?.cognome)) : ''}}</p>
+                    <div class="display-flex margin-bottom-6">
+                        <p class="width-50-perc"><span class="bold-text">Importo max cedibile: </span> {{maxCedibile |
+                            number: '1.2-2' : 'it'}} </p>
+                        <p class="width-50-perc"><span class="bold-text">Economie già cedute: </span> {{economieCedute |
+                            number: '1.2-2' : 'it'}} </p>
+                    </div>
+                    <div class="display-flex margin-bottom-6">
+                        <mat-form-field class="width-50-perc">
+                            <input type="text" placeholder="Importo ceduto *" matInput
+                                pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="importoCedutoFormatted"
+                                name="importoCeduto" #imp="ngModel" (blur)="setImportoCeduto()"
+                                [disabled]="isFromRimodulazione">
+                            <mat-error *ngIf="imp?.errors?.pattern">
+                                Valore non valido
+                            </mat-error>
+                            <mat-error *ngIf="imp?.errors?.error === 'minore'">
+                                Il valore deve essere maggiore o uguale di 0
+                            </mat-error>
+                            <mat-error *ngIf="imp?.errors?.error === 'maggioreMax'">
+                                L'importo ceduto deve essere inferiore all'importo massimo cedibile
+                            </mat-error>
+                            <mat-error *ngIf="imp?.errors?.error === 'required'">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <div>
+                            <button class="button-style-1" mat-button (click)="gestioneQuote('C')">GESTIONE
+                                QUOTE</button>
+                        </div>
+                    </div>
+                    <mat-form-field class="fullWidth margin-bottom-6">
+                        <textarea type="text" matInput placeholder="Note cessione *" [(ngModel)]="noteCessione"
+                            name="noteCessione" #noteCess="ngModel" maxlength="4000"
+                            [disabled]="isFromRimodulazione"></textarea>
+                        <mat-hint>{{noteCessione ? noteCessione.length : 0 }}/4000</mat-hint>
+                        <mat-error *ngIf="noteCess?.errors?.error === 'required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="width-data">
+                        <mat-label>Data cessione *</mat-label>
+                        <input matInput [matDatepicker]="picker1" [formControl]="dataCessione"
+                            [disabled]="isFromRimodulazione">
+                        <mat-datepicker-toggle matSuffix [for]="picker1">
+                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="dataCessione?.errors?.error === 'required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Progetto ricevente</h3>
+                <form #riceventeForm="ngForm">
+                    <mat-form-field class="fullWidth margin-bottom-6">
+                        <mat-label>Selezionare un bando</mat-label>
+                        <mat-select [(ngModel)]="bandoRiceventeSelected" name="bandoRicevente" #br="ngModel"
+                            (selectionChange)="changeBandoRicevente()" [disabled]="isFromRimodulazione">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of bandi" [value]="option">
+                                {{ option.nomeBandoLinea }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="br?.errors?.error ==='required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="display-flex margin-bottom-6">
+                        <mat-form-field class="width-50-perc">
+                            <mat-label>Selezionare un progetto <span *ngIf="bandoRiceventeSelected">*</span></mat-label>
+                            <mat-select [(ngModel)]="progettoRiceventeSelected" name="progettoRicevente" #pr="ngModel"
+                                (selectionChange)="changeProgettoRicevente(true)" [disabled]="isFromRimodulazione">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let option of progettiRicevente" [value]="option">
+                                    {{ option.codiceVisualizzato }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="pr?.errors?.error ==='required'">
+                                Campo obbligatorio
+                            </mat-error>
+                            <mat-error *ngIf="pr?.errors?.error ==='fonti'">
+                                Il progetto ricevente non contiene tutte le fonti a cui il progetto cedente ha assegnato
+                                un importo
+                            </mat-error>
+                        </mat-form-field>
+                        <button *ngIf="progettoRiceventeSelected" mat-icon-button
+                            (click)="openDettaglioProgetto('R',progettoRiceventeSelected.idProgetto)">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </div>
+                    <div class="display-flex">
+                        <p class="margin-bottom-6 width-50-perc"><span class="bold-text">Beneficiario: </span>
+                            {{benRicevente ?
+                            (benRicevente?.descrizione ?
+                            benRicevente?.descrizione : (benRicevente?.nome+ ' ' + benRicevente?.cognome)) : ''}}</p>
+                        <div>
+                            <button class="button-style-1" mat-button (click)="gestioneQuote('R')">GESTIONE
+                                QUOTE</button>
+                        </div>
+                    </div>
+                    <mat-form-field class="fullWidth margin-bottom-6">
+                        <textarea type="text" matInput placeholder="Note ricezione" [(ngModel)]="noteRicezione"
+                            name="noteRicezione" maxlength="4000" [disabled]="isFromRimodulazione"></textarea>
+                        <mat-hint>{{noteRicezione ? noteRicezione.length : 0 }}/4000</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field class="width-data margin-bottom-6">
+                        <mat-label>Data ricezione <span *ngIf="bandoRiceventeSelected">*</span></mat-label>
+                        <input matInput [matDatepicker]="picker2" [formControl]="dataRicezione"
+                            [disabled]="isFromRimodulazione">
+                        <mat-datepicker-toggle matSuffix [for]="picker2">
+                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="dataRicezione?.errors?.error === 'required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                    <br />
+                    <mat-form-field class="width-data">
+                        <mat-label>Data utilizzo</mat-label>
+                        <input matInput [matDatepicker]="picker3" [formControl]="dataUtilizzo"
+                            [disabled]="isFromRimodulazione && !bandoRiceventeSelected">
+                        <mat-datepicker-toggle matSuffix [for]="picker3">
+                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content flexEnd" *ngIf="!(isFromRimodulazione && !bandoRiceventeSelected)">
+        <button class="button-style-2" mat-raised-button (click)="salva()">
+            SALVA
+        </button>
+    </div>
+</div>

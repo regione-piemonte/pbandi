@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.683013455365071"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="destinatario" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="destinatarioIndirizzo" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dataInizioRendicontazione" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dataFineRendicontazione" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="determinazione" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="numeroContributo" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dataContributo" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="denominazioneIntervento" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="codiceProgetto" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="sottoscritto" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dataNascita" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="comuneNascita" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="comuneResidenza" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="provinciaResidenza" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="societa" class="java.lang.String" isForPrompting="false"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="145">
+			<staticText>
+				<reportElement x="252" y="22" width="291" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Spett.le]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="-1" width="214" height="23"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dichiarazione di Spesa]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="252" y="44" width="291" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{destinatario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="252" y="66" width="291" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{destinatarioIndirizzo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="131" y="114" width="306" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Periodo dal "+ $P{dataInizioRendicontazione}+" al "+ $P{dataFineRendicontazione}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="114" width="130" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Dichiarazione di Spesa]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="700">
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" x="-2" y="0" width="555" height="42"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold=\"true\" size=\"10\" >"+
+"Estremi della "+ $P{determinazione}+" che ha approvato la concessione del contributo: n. "+ $P{numeroContributo}+" del "+ $P{dataContributo}+
+"</style>"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="500" width="555" height="26"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Comunica, inoltre, che le spese pagate e quietanzate, indicate sub 1, sono relative alle voci di costo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="0" y="526" width="303" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stato avanzamento della spesa quietanzata]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="0" y="622" width="303" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Elenco fatture delle spese quietanzate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="0" y="655" width="555" height="32"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Dichiara di essere informato ai sensi e per gli effetti dell’art.13 del D.Lgs.196/2003 che i dati personali raccolti saranno trattati, anche con strumenti informatici, esclusivamente nell’ambito del procedimento per il quale la presente dichiarazione viene resa.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="203" width="417" height="26"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARAZIONE SOSTITUTIVA DI ATTO DI NOTORIETA'
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="259" width="61" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="-2" y="282" width="555" height="154"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[1.	che i dati esposti nella tabella sottostante corrispondono alle spese pagate e quietanzate dal GG/MM/AAAA al GG/MM/AAAA, per un ammontare di Euro NNNNN,NN ed ineriscono esclusivamente a spese ammesse a contributo;
+
+2.	che la spesa sopra indicata è documentata da fatture o altri documenti contabili di equivalente valore probatorio acquisiti nella contabilità dell’ente nel rispetto della normativa contabile e fiscale vigente;
+
+3.	che le fatture elencate nel prospetto di seguito compilato si riferiscono esclusivamente a spese ammesse a finanziamento, sostenute per la realizzazione dell’intervento sopra indicato;
+
+4.	che le spese sono state effettuate conformemente alle disposizioni previste per l’attuazione della normativa del bando di riferimento.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="0" y="602" width="555" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Comunica, altresì, che le spese pagate e quietanzate, indicate sub 1, sono riferite ai documenti contabili sotto specificati:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="152" y="229" width="248" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[(ART. 47 del D.P.R. 28 dicembre 2000, n. 445)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" x="-2" y="42" width="555" height="43"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold=\"true\" size=\"10\" >"+
+"Denominazione dell’intervento: "+ $P{denominazioneIntervento}+
+" Codice progetto: "+ $P{codiceProgetto}+
+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" x="0" y="85" width="555" height="59"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold=\"true\" size=\"10\" >"+
+"Il sottoscritto "+ $P{sottoscritto}+" nato a: "+ $P{comuneNascita}+
+" il "+ $P{dataNascita}+" residente a: "+ $P{comuneResidenza}+" Prov. "+
+$P{provinciaResidenza}+" in qualità di legale rappresentante della società "+
+$P{societa}+" beneficiario del finanziamento per l’intervento in oggetto"+
+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" x="0" y="144" width="555" height="59"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["consapevole delle sanzioni penali previsti dall’art. 76 DPR 28/12/2000 n. 445,"+
+" nel caso di dichiarazioni mendaci, falsità negli atti, uso o esibizione di atto"+
+" falsi o contenenti dati non più rispondenti a verità,"+
+" sotto la propria responsabilità"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="87" y="34" width="100" height="20" forecolor="#000000"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="521" y="34" width="32" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" di "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="34" width="52" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-2" y="34" width="89" height="20"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Stampato in data :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="332" y="0" width="189" height="35"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[In fede
+(firma leggibile del dichiarante)*
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="1" y="0" width="186" height="17"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Luogo e data]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

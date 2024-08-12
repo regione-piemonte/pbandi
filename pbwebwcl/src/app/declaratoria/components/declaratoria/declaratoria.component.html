@@ -1,0 +1,336 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+
+<div class="page mb-2" [ngClass]="{ displayNone: isLoading() }" id="scrollCrono">
+	<div>
+		<p class="bold-text">Declaratoria</p>
+		<div>Si dichiara quanto segue:</div>
+	</div>
+	<form [formGroup]="myForm" class="fullWidth">
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Ritenuta d'acconto IRES</p>
+						<div>in merito alla ritenuta d’acconto IRES prevista dall’art. 28 del D.p.r. 600/1973 e s.m.i. l’ente rappresentato :</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="ritenutaIres" required>
+								<mat-radio-button class="d-flex option-radio-button" *ngFor="let option of ritenutaIres" [value]="option" >
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">IVA</p>
+						<div>in base al regime di contabilità a cui è sottoposto l'ente e in relazione alle spese connesse alla realizzazione dell'iniziativa sopra indicata :</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="iva"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of iva" [value]="option">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Organi collegiali</p>
+						<div>
+							in riferimento all'art. 6 della legge 30 luglio 2010, n. 122 "Conversione in legge, con modificazioni, del decreto-legge 31 maggio 2010, n. 78 (…)”, la titolarità delle cariche interne
+							agli organi collegiali dell'ente da me rappresentato e la partecipazione alle riunioni di detti organi:
+						</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="collegiali"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of collegiali" [value]="option">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+					<div class="content">
+						<mat-card-content class="messageInfo">
+							<p>SI RICORDA CHE</p>
+							<div>
+								il non rispetto delle disposizioni sopra indicate comporta la non possibilità di presentare la richiesta di contributo e nel caso di assegnazione di contributo la revoca dello stesso
+								con le relative conseguenze di natura penale
+							</div>
+						</mat-card-content>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Documento Unico di Regolarità Contributiva</p>
+						<div>ai fini del rilascio del D.U.R.C. (Documento Unico di Regolarità Contributiva) attestante l'assolvimento degli obblighi contributivi nei confronti di INPS, INAIL e Cassa Edile:</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="documentoUnico"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of documentoUnico" [value]="option">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Richiesta di contributi ad altre strutture della Regione Piemonte</p>
+						<div>per la realizzazione della stessa iniziativa/progetto, oltre a quella già presentata alla Direzione e al Settore regionali in indirizzo:</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="contributiStrutture"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of contributiStrutture" [value]="option" (change)="contributiStruttureChange(option)">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+
+					<div *ngIf="contributiStruttureVisibility === true"> 
+
+					<div class="example-section">richiesta di contributi ad altre strutture della Regione Piemonte:</div>
+					<div style="margin: 20px 0px 33px 0px">
+						<mat-divider></mat-divider>
+					</div>
+
+					<div >
+						<table mat-table [dataSource]="dataSourceStrutture" formArrayName="strutture" *ngIf="dati && dati.length > 1">
+							<ng-container matColumnDef="direzione">
+								<th mat-header-cell *matHeaderCellDef>
+									Denominazione della Direzione della Regione Piemonte a cui è stata presentata o si intende presentare un’altra richiesta di contributi per la stessa iniziativa/progetto
+								</th>
+								<td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+											<!-- <div class="d-flex">
+												<div class="mr-1">Direzione</div>
+												<mat-select (selectionChange)="onDirezioneChange($event, i)" formControlName="direzione" required>
+													<mat-option *ngFor="let direzione of direzioni" [value]="direzione.value">
+														{{ direzione.viewValue }}
+													</mat-option>
+												</mat-select>
+											</div> -->
+									 	
+											<mat-form-field >
+												<mat-label>Selezionare una direzione</mat-label>
+												<mat-select (selectionChange)="onDirezioneChange($event, i)" formControlName="direzione" required>
+													<mat-option *ngFor="let direzione of direzioni" [value]="direzione.viewValue">
+														{{ direzione.viewValue }}
+													</mat-option>
+												</mat-select>
+											</mat-form-field>
+									</td>
+								</ng-container>
+
+							<ng-container matColumnDef="settore">
+								<th mat-header-cell *matHeaderCellDef>
+									Denominazione del Settore della Regione Piemonte a cui è stata presentata o si intende presentare un’altra richiesta di contributi per la stessa iniziativa/progetto
+								</th>
+								<td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+									<!-- <div class="d-flex">
+										<div class="mr-1">Settore</div>
+										<mat-select formControlName="settore" (selectionChange)="onSettoreChange($event, i)" required>
+											<mat-option *ngFor="let settore of settoreOptions(element.direzione)" [value]="settore.idSettore">
+												{{ settore.idSettore }}
+											</mat-option>
+										</mat-select>
+									</div> -->
+
+									<mat-form-field >
+										<mat-label>Selezionare un Settore</mat-label>
+										<mat-select formControlName="settore" (selectionChange)="onSettoreChange($event, i)" required>
+											<mat-option *ngFor="let settore of settoreOptions(element.direzione)" [value]="settore.descrizione">
+												{{ settore.descrizione }}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</td>
+							</ng-container>
+
+							<ng-container matColumnDef="normativa">
+								<th mat-header-cell *matHeaderCellDef>
+									Normativa di riferimento (legge regionale, bando, regolamento) in base al quale è stata presentata o si intende presentare un’altra richiesta di contributi per la stessa
+									iniziativa/progetto
+								</th>
+								<td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+									<!-- <div class="d-flex">
+										<div class="mr-1">Normativa</div>
+										<input class="bordo" type="text" min="0" matInput placeholder="{{ element.normativa }}" 
+                                        (blur)="onNormativaChange($event.target.value, i)" value="" formControlName="normativa" #normativa  required />
+									</div> -->
+
+									<mat-form-field>
+										<mat-label>Normativa</mat-label>
+										<input matInput  type="text" min="0" placeholder="" 
+                                        (blur)="onNormativaChange($event.target.value, i)" value="" formControlName="normativa" #normativa  required>
+									</mat-form-field>
+								</td>
+							</ng-container>
+
+							<ng-container matColumnDef="actions">
+								<th mat-header-cell *matHeaderCellDef></th>
+								<td mat-cell *matCellDef="let element">
+									<div class="d-flex">
+										<button mat-icon-button (click)="eliminaRigaStrutture(element)" [disabled]="element.delete == false">
+											<mat-icon class="mat-icon" matTooltip="Elimina">delete</mat-icon>
+										</button>
+									</div>
+								</td>
+							</ng-container>
+
+							<tr mat-header-row *matHeaderRowDef="displayedColumnsStrutture"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumnsStrutture"></tr>
+						</table>
+						<div class="d-flex-end">
+							<button mat-raised-button class="button-style-11 marginLeft20" (click)="aggiungiRigaStrutture()">Aggiungi</button>
+						</div>
+					</div>
+				  </div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Richiesta di contributi di natura statale o comunitaria</p>
+						<div>per la realizzazione della stessa iniziativa/progetto, oltre a quella già presentata alla Direzione e al Settore regionali in indirizzo :</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="contributiStataliComunitarie"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of contributiStataliComunitarie" [value]="option" (change)="contributiStataliComunitarieChange(option)">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+					<div *ngIf="contributiStataliComunitarieVisibility === true"> 
+					<div class="example-section">richiesta di contributi di natura statale o comunitaria:</div>
+					<div style="margin: 20px 0px 33px 0px">
+						<mat-divider></mat-divider>
+					</div>
+
+					<div>
+						<table mat-table [dataSource]="dataSourceStataleComunitaria" formArrayName="stataleComunitaria">
+							<ng-container matColumnDef="a">
+								<th mat-header-cell *matHeaderCellDef>
+									Denominazione della struttura statale o comunitaria a cui è stata presentata o si intende presentare una richiesta di contributo distinta da quella indicata in questo modulo
+								</th>
+								<td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+									<!-- <div class="d-flex">
+										<div class="mr-1">Struttura</div>
+										<input class="bordo" type="text" min="0" matInput placeholder=""
+                                        (blur)="onStrutturaChange($event.target.value, i)"  value="" formControlName="struttura" #struttura  required >
+									</div> -->
+
+									<mat-form-field>
+										<mat-label>Struttura</mat-label>
+										<input type="text" min="0" matInput placeholder="" 
+                                        (blur)="onStrutturaChange($event.target.value, i)"  value="" formControlName="struttura" #struttura  required >
+									</mat-form-field>
+
+									
+								</td>
+							</ng-container>
+
+							<ng-container matColumnDef="b">
+								<th mat-header-cell *matHeaderCellDef>
+									Denominazione del Programma di Intervento statale o comunitario in base al quale è stata presentata o si intende presentare una richiesta di contributo distinta da quella indicata in
+									questo modulo
+								</th>
+								<td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+									<!-- <div class="d-flex">
+										<div class="mr-1">Programma</div>
+										<input class="bordo" type="text" min="0" matInput placeholder="{{ element.programma }}"
+                                        (blur)="onProgrammaChange($event.target.value, i)"  value="" formControlName="programma" #programma  required />
+									</div> -->
+
+									<mat-form-field>
+										<mat-label>Programma</mat-label>
+										<input type="text" min="0" matInput placeholder="{{ element.programma }}"
+                                        (blur)="onProgrammaChange($event.target.value, i)"  value="" formControlName="programma" #programma  required >
+									</mat-form-field>
+								</td>
+							</ng-container>
+
+							<ng-container matColumnDef="actions">
+								<th mat-header-cell *matHeaderCellDef></th>
+								<td mat-cell *matCellDef="let element">
+									<div class="d-flex">
+										<button mat-icon-button (click)="eliminaRigaStataleComunitaria(element)" [disabled]="element.delete == false">
+											<mat-icon class="mat-icon" matTooltip="Elimina">delete</mat-icon>
+										</button>
+									</div>
+								</td>
+							</ng-container>
+
+							<tr mat-header-row *matHeaderRowDef="displayedColumnsStataleComunitaria"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumnsStataleComunitaria"></tr>
+						</table>
+
+						<div class="d-flex-end">
+							<button mat-raised-button class="button-style-11 marginLeft20" (click)="aggiungiRigaStataleComunitaria()">Aggiungi</button>
+						</div>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div>
+						<p class="bold-text">Eventuali contributi successivi</p>
+						<div>le attività e le iniziative culturali proposte, su cui insiste la presente richiesta di contributo:</div>
+					</div>
+					<section class="example-section">
+						<div>
+							<mat-radio-group formControlName="contributiSuccessivi"  required>
+								<mat-radio-button class="d-flex" *ngFor="let option of contributiSuccessivi" [value]="option">
+									<div class="spazio">{{ option }}</div>
+								</mat-radio-button>
+							</mat-radio-group>
+						</div>
+					</section>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	<!-- 	<p>{{ myForm.value | json }}</p>
+		<p>{{ myForm.valid | json }}</p> -->
+		<!-- <div>
+			<div style="display: flex; justify-content: flex-end">
+				<button mat-button class="button-style-2" (click)="controllaFormDeclaratoria">SALVA</button>
+			</div>
+		</div> -->
+	</form>
+</div>

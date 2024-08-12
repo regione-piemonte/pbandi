@@ -1,0 +1,172 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer" *ngIf="isFromRimodulazione">
+            <button (click)="goToRimodulazione()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla rimodulazione del conto economico</span>
+            </button>
+        </div>
+        <h2>Gestione economie FSC</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="!isFromRimodulazione">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <mat-radio-group [(ngModel)]="filtroSelected" name="filtro"
+                            class="display-flex flex-direction-column margin-top-15 fullWidth">
+                            <mat-radio-button value="1">Tutte le economie
+                            </mat-radio-button>
+                            <mat-radio-button value="2" class="margin-top-15">Economie ancora da ricevere
+                            </mat-radio-button>
+                            <mat-radio-button value="3" class="margin-top-15">Economie già ricevute </mat-radio-button>
+                            <mat-radio-button value="4" class="margin-top-15">Economie da utilizzare </mat-radio-button>
+                            <mat-radio-button value="5" class="margin-top-15">Economie già utilizzate
+                            </mat-radio-button>
+                            <mat-radio-button value="6" class="margin-top-15">
+                                <span class="width-40-perc">Filtra per Beneficiario progetto cedente (anche
+                                    parziale)</span>
+                                <mat-form-field class="width-60-perc">
+                                    <input matInput [(ngModel)]="filtroBenCedente" name="filtroBenCedente"
+                                        [disabled]="filtroSelected!=='6'" />
+                                </mat-form-field>
+                            </mat-radio-button>
+                            <mat-radio-button value="7">
+                                <span class="width-40-perc">Filtra per Codice progetto cedente (anche parziale)</span>
+                                <mat-form-field class="width-60-perc">
+                                    <input matInput [(ngModel)]="filtroCodCedente" name="filtroCodCedente"
+                                        [disabled]="filtroSelected!=='7'" />
+                                </mat-form-field>
+                            </mat-radio-button>
+                            <mat-radio-button value="8">
+                                <span class="width-40-perc">Filtra per Beneficiario progetto ricevente (anche
+                                    parziale)</span>
+                                <mat-form-field class="width-60-perc">
+                                    <input matInput [(ngModel)]="filtroBenRicevente" name="filtroBenRicevente"
+                                        [disabled]="filtroSelected!=='8'" />
+                                </mat-form-field>
+                            </mat-radio-button>
+                            <mat-radio-button value="9">
+                                <span class="width-40-perc">Filtra per Codice progetto ricevente (anche parziale)</span>
+                                <mat-form-field class="width-60-perc">
+                                    <input matInput [(ngModel)]="filtroCodRicevente" name="filtroCodRicevente"
+                                        [disabled]="filtroSelected!=='9'" />
+                                </mat-form-field>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <button class="button-style-2 margin-top-15" mat-raised-button type="submit">
+                            CERCA
+                        </button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Tabella economie</h3>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+
+                <table mat-table [dataSource]="dataSource" class="fullWidth"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="cedente">
+                        <th mat-header-cell *matHeaderCellDef> Progetto cedente </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.codiceVisualizzatoCedente}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ceduto">
+                        <th mat-header-cell *matHeaderCellDef class="text-right"> Importo ceduto </th>
+                        <td mat-cell *matCellDef="let row" class="text-right">
+                            {{row.importoCeduto | number: '1.2-2' : 'it'}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="noteCessione">
+                        <th mat-header-cell *matHeaderCellDef>Note cessione </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.noteCessione}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dataCessione">
+                        <th mat-header-cell *matHeaderCellDef> Data cessione </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dataCessione | date: "dd/MM/yyyy"}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ricevente">
+                        <th mat-header-cell *matHeaderCellDef> Progetto ricevente </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.codiceVisualizzatoRicevente}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dataRicezione">
+                        <th mat-header-cell *matHeaderCellDef> Data ricezione </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dataRicezione | date: "dd/MM/yyyy"}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="noteRicezione">
+                        <th mat-header-cell *matHeaderCellDef> Note ricezione </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.noteRicezione}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dataUtilizzo">
+                        <th mat-header-cell *matHeaderCellDef> Data utilizzo </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dataUtilizzo | date: "dd/MM/yyyy"}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef style="width: 70px;"> </th>
+                        <td mat-cell *matCellDef="let row" style="width: 70px;">
+                            <button mat-icon-button matTooltip="Modifica" (click)="goToModifica(row.idEconomia)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button *ngIf="!row.dataUtilizzo && !isFromRimodulazione" mat-icon-button
+                                matTooltip="Elimina" class="red-color" (click)=" elimina(row)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <div class="spaceBetween alignItemsCenter">
+                    <div>
+                        <button class="button-style-1" *ngIf="dataSource?.data?.length>0" mat-button
+                            (click)="reportDettaglio()">ESPORTA DETTAGLIO ELENCO</button>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                        #paginator
+                        [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                    </mat-paginator>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="!isFromRimodulazione">
+        <div class="flexEnd">
+            <button mat-stroked-button (click)="aggiungiEconomia()" color="primary"
+                class="button-style-3">AGGIUNGI</button>
+        </div>
+    </div>
+</div>

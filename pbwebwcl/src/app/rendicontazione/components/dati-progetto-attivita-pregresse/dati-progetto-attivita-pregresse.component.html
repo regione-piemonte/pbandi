@@ -1,0 +1,211 @@
+<div class="page">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAlleRendicontazioni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla rendicontazione</span>
+            </button>
+        </div>
+        <div>
+            <h2>Dati del progetto e attività pregresse</h2>
+        </div>
+    </div>
+    <div class="content">
+        <mat-tab-group mat-stretch-tabs class="mat-elevation-z2">
+            <mat-tab label="DATI GENERALI">
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Bando</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{bando}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Bando linea</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{bandoLinea}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Titolo progetto</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{titoloProgetto}}>
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Codice progetto</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{codiceProgetto}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Acronimo</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{acronimo}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>CUP</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{cup}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Data domanda</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{dataDomanda}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Data concessione</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{dataConcessione}}
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="DATI FINANZIARI">
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Ammesso</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{ammesso}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Residuo ammesso</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{residuoAmmesso}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                        </div>
+                        <div class="col-4Custom">
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Cofinanziamento Pubblico</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{cofinanziamentoPubblico}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Contributo *</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{contributo}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Impegno</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{impegno}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Rendicontato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{rendicontato}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Quietanziato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{quietanziato}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Validato *</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{validato}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Contributo erogato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{contributoErogato}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-6Custom fontSize11">
+                            (*) Importo al netto delle revoche
+                        </div>
+                        <div class="col-6Custom textAlignRight">
+                            <button class="button-style-1" mat-button (click)="aggiorna()">AGGIORNA</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Attivit&agrave; pregresse">
+                <mat-accordion class="example-headers-align">
+                    <mat-expansion-panel class="marginLeft30 marginRight30 marginTop30" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                17/03/2017
+                            </mat-panel-title>
+                            <mat-panel-description class="colorBlack">
+                                Validazione della Dichiarazione di spesa FINALE CON COMUNICAZIONE n° 19676 validata
+                                dall'utente ALBERTO DIPANE
+                                <mat-icon>keyboard_arrow_down</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="marginLeft30 marginBottom15">
+                            <b>Importo Quietanzato:&nbsp; </b> 30.000,00
+                        </div>
+                        <div class="marginLeft30 marginBottom15">
+                            <b>Importo Rendicontato:&nbsp; </b> 30.000,00
+                        </div>
+                        <div class="marginLeft30 marginBottom15">
+                            <b>Importo Validato:&nbsp; </b> 30.000,00
+                        </div>
+                        <div class="marginLeft30 marginBottom15">
+                            <b>Note:</b>&nbsp;Ai sensi della D.D. del 28 novembre 2015, n. 383 “PAR FSC 2007/2013 Asse
+                            III –
+                            Riqualificazione territoriale. Linea di azione 6) Turismo; Linea d’intervento
+                            “Riqualificazione e valorizzazione del patrimonio turistico, sportivo e culturale,
+                            attraverso Accordi di Programma con gli Enti territoriali”; Approvazione pista di controllo”
+                            l'attività di controllo sugli appalti e le aggiudicazioni per i progetti inclusi nella linea
+                            di azione 6) è in capo all'Ente beneficiario.
+                        </div>
+                        <div class="marginLeft30 marginBottom15">
+                            <b>Periodo dichiarazione:&nbsp;</b> dal 01/01/2007 al 24/03/2016
+                        </div>
+                        <mat-action-row>
+                            <button class="button-style-1" mat-button color="primary"
+                                (click)="scarica()">SCARICA</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel class="matExpansionDisableClick marginLeft30 marginRight30 marginBottom30"
+                        hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                24/03/2016
+                            </mat-panel-title>
+                            <mat-panel-description class="colorBlack">
+                                Caricamento Indicatori di Avvio da parte di CRISTINA GIORGI
+                                <mat-icon></mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

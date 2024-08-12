@@ -1,0 +1,27 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Rilievo contabile</h3>
+        <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content class="margin-bottom-10">
+        <form #rilievoForm="ngForm">
+            <mat-form-field class="fullWidth">
+                <textarea type="text" placeholder="Note rilievo" matInput [(ngModel)]="note" name="note" #nt="ngModel"
+                    maxlength="1000" required [disabled]="readOnly"></textarea>
+                <mat-hint>{{note ? note.length : 0 }}/1000</mat-hint>
+                <mat-error *ngIf=" nt?.errors?.required">
+                    Campo obbligatorio
+                </mat-error>
+            </mat-form-field>
+            <p *ngIf="readOnly" class="margin-top-20"><span class="bold-text">Data rilievo:&nbsp;</span>{{date | date:
+                'dd/MM/yyyy'}}</p>
+        </form>
+    </div>
+    <div class="display-flex justify-content-space-between" *ngIf="!readOnly">
+        <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="salvaRilievo()">SALVA</button>
+    </div>
+</div>

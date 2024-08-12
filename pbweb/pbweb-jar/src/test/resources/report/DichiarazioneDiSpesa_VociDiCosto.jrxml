@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dichiarazioneDiSpesa_VociDiCosto" pageWidth="595" pageHeight="842" columnWidth="553" leftMargin="0" rightMargin="42" topMargin="10" bottomMargin="10">
+	<property name="ireport.zoom" value="1.7715610000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dataAl" class="java.util.Date"/>
+	<parameter name="IS_BR02" class="java.lang.Boolean"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descVoceDiSpesa" class="java.lang.String">
+		<fieldDescription><![CDATA[descVoceDiSpesa]]></fieldDescription>
+	</field>
+	<field name="descVoceDiSpesaPadre" class="java.lang.String">
+		<fieldDescription><![CDATA[descVoceDiSpesaPadre]]></fieldDescription>
+	</field>
+	<field name="idVoceDiSpesaPadre" class="java.lang.Long">
+		<fieldDescription><![CDATA[idVoceDiSpesaPadre]]></fieldDescription>
+	</field>
+	<field name="idVoceSpesa" class="java.lang.Long">
+		<fieldDescription><![CDATA[idVoceSpesa]]></fieldDescription>
+	</field>
+	<field name="importoAmmessoFinanziamento" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoAmmessoFinanziamento]]></fieldDescription>
+	</field>
+	<field name="importoQuietanzato" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoQuietanzato]]></fieldDescription>
+	</field>
+	<field name="importoValidato" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoValidato]]></fieldDescription>
+	</field>
+	<field name="importoRendicontato" class="java.lang.Double"/>
+	<variable name="totaleQuietanzata" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{importoQuietanzato}]]></variableExpression>
+	</variable>
+	<variable name="totaleValidata" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{importoValidato}]]></variableExpression>
+	</variable>
+	<variable name="totaleAmmesso" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{importoAmmessoFinanziamento}]]></variableExpression>
+	</variable>
+	<variable name="totaleRendicontato" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{importoRendicontato}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="28">
+			<staticText>
+				<reportElement mode="Opaque" x="235" y="12" width="84" height="16" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rendicontata (5)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="235" height="28" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.table" value="start"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="start"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Voci di Spesa (1)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="403" y="12" width="75" height="16" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Validata (3)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="478" y="12" width="75" height="16" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ammessa (4)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="319" y="12" width="84" height="16" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Quietanzata (2)"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="235" y="0" width="318" height="12" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Spesa]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="235" height="15">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="start"/>
+				</reportElement>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descVoceDiSpesaPadre}!=null || $F{descVoceDiSpesa}!=null?($F{descVoceDiSpesaPadre}==null?$F{descVoceDiSpesa}:$F{descVoceDiSpesaPadre}+" : "+$F{descVoceDiSpesa}):""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="319" y="0" width="84" height="15">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{importoQuietanzato}==null?"N.D.": new DecimalFormat("#,##0.00").format($F{importoQuietanzato}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="403" y="0" width="75" height="15">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{importoValidato}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoValidato}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="478" y="0" width="75" height="15">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importoAmmessoFinanziamento}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoAmmessoFinanziamento})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="235" y="0" width="84" height="15">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{importoRendicontato}==null?"N.D.": new DecimalFormat("#,##0.00").format($F{importoRendicontato}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="15">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement mode="Opaque" x="319" y="0" width="84" height="15" forecolor="#000000" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totaleQuietanzata}==null?"N.D.":new DecimalFormat("#,##0.00").format($V{totaleQuietanzata})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="235" height="15" forecolor="#000000" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="start"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[TOTALE]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement mode="Opaque" x="478" y="0" width="75" height="15" forecolor="#000000" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.table" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totaleAmmesso}==null?"N.D.":new DecimalFormat("#,##0.00").format($V{totaleAmmesso})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement mode="Opaque" x="235" y="0" width="84" height="15" forecolor="#000000" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.table" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totaleRendicontato}==null?"N.D.":new DecimalFormat("#,##0.00").format($V{totaleRendicontato})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement mode="Opaque" x="403" y="0" width="75" height="15" forecolor="#000000" backcolor="#E3E3E3">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totaleValidata}==null?"N.D.":new DecimalFormat("#,##0.00").format($V{totaleValidata})]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

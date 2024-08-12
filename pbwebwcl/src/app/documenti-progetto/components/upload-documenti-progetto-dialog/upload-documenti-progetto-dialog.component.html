@@ -1,0 +1,39 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Upload documenti di progetto</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+
+<span class="bold-text">Progetto: </span> {{codiceProgetto}}
+
+<mat-form-field class="fullWidth margin-top-20">
+    <mat-label>Selezionare una tipologia</mat-label>
+    <mat-select [(ngModel)]="tipoDocumentoSelected" name="tipoDocumento">
+        <mat-option *ngFor="let tipoDocumento of tipiDocumento" [value]="tipoDocumento">
+            {{ tipoDocumento.descrizione }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<div class="alignItemsCenter">
+    <mat-form-field class="margin-right-10" class="fullWidth">
+        <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+    </mat-form-field>
+    <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+    <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button>
+    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+        (change)="handleFileInput($event.target.files[0])" />
+</div>
+<div class="flexEnd">
+    <div matTooltip="Selezionare una tipologia e caricare un documento"
+        [matTooltipDisabled]="file && tipoDocumentoSelected">
+        <button mat-raised-button class="button-style-2" (click)="salva()"
+            [disabled]="!file || !tipoDocumentoSelected">SALVA</button>
+    </div>
+</div>

@@ -1,0 +1,276 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageInfo" *ngIf="isMessageInfoVisible">
+            <mat-card-content class="messageInfoContent">
+                <p [innerHTML]="messageInfo"></p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+                    <form #ricercaForm="ngForm" (submit)="ricerca(null)">
+
+                        <mat-radio-group *ngIf="isBandoCultura == false" aria-label="Select an option"
+                            [(ngModel)]="documentiRadio" name="doc" class="row marginRadioButton">
+                            <mat-radio-button class="marginRight20" value="1">Documenti di spesa gestiti nel
+                                progetto
+                            </mat-radio-button>
+                            <mat-radio-button value="2">Tutti i documenti</mat-radio-button>
+                        </mat-radio-group>
+
+                        <div class="row" *ngIf="rendicontazioneCombo?.visibile">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una rendicontazione</mat-label>
+                                <mat-select [(ngModel)]="rendicontazioneSelected" name="rendicontazione">
+                                    <mat-option *ngFor="let opzione of rendicontazioneCombo.opzioni" [value]="opzione">
+                                        {{opzione.descrizione}}
+                                    </mat-option>
+                                    <mat-optgroup>
+                                        <mat-label>Partner</mat-label>
+                                        <mat-option *ngFor="let partner of rendicontazioneCombo.partners"
+                                            [value]="partner">
+                                            {{partner.descrizione}}
+                                        </mat-option>
+                                    </mat-optgroup>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una categoria</mat-label>
+                                <mat-select [(ngModel)]="categoriaSelected" name="categoria">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let categoria of categorie" [value]="categoria">
+                                        {{ categoria.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+
+                        <div class="row">
+
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una tipologia</mat-label>
+                                <mat-select [(ngModel)]="tipologiaSelected" name="tipologia">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let tipologia of tipologie" [value]="tipologia">
+                                        {{ tipologia.descTipoDocumentoSpesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="isBandoCultura == false" class="col">
+                                <mat-label>Selezionare uno stato</mat-label>
+                                <mat-select [(ngModel)]="statoSelected" name="stato">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let stato of stati" [value]="stato">
+                                        {{ stato.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="width25 marginRight10">
+                                <input type="text" placeholder="Numero" [(ngModel)]="numero" name="numero" matInput>
+                            </mat-form-field>
+                            <div class="date" *ngIf="isBandoCultura == false">
+                                <mat-form-field class="marginRight10 width-data">
+                                    <mat-label>Data dal</mat-label>
+                                    <input matInput [matDatepicker]="pickerDal" [formControl]="dataDa">
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDal">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDal></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field class="width-data">
+                                    <mat-label>Data al</mat-label>
+                                    <input matInput [matDatepicker]="pickerAl" [formControl]="dataA">
+                                    <mat-datepicker-toggle matSuffix [for]="pickerAl">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerAl></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un fornitore</mat-label>
+                                <mat-select [(ngModel)]="fornitoreSelected" name="fornitore"
+                                    matTooltip="{{fornitoreSelected?.descrizione}}">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let fornitore of fornitori" [value]="fornitore"
+                                        matTooltip="{{fornitore.descrizione}}">
+                                        {{ fornitore.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una voce di spesa</mat-label>
+                                <mat-select [(ngModel)]="voceDiSpesaSelected" name="voceDiSpesa"
+                                    matTooltip="{{voceDiSpesaSelected?.descVoceDiSpesa}}">
+                                    <mat-option></mat-option>
+                                    <mat-optgroup *ngFor="let macroVoce of vociDiSpesa"
+                                        [label]="macroVoce.descVoceDiSpesa">
+                                        <mat-option *ngFor="let microVoce of macroVoce.vociDiSpesaFiglie"
+                                            [value]="microVoce" matTooltip="{{microVoce.descVoceDiSpesa}}">
+                                            {{microVoce.descVoceDiSpesa}}
+                                        </mat-option>
+                                    </mat-optgroup>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="taskVisibile" class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare una task</mat-label>
+                                <mat-select [(ngModel)]="taskSelected" name="task">
+                                    <mat-option *ngFor="let task of tasks" [value]="task">
+                                        {{ task }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <button class="button-style-2 marginTop20" mat-raised-button type="submit">
+                                CERCA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div [ngClass]="{'displayNone': !esitoRicerca || !isDocSpesaVisible, 'content': isDocSpesaVisible && esitoRicerca}">
+        <mat-card class="mat-elevation-z4">
+            <mat-card-content>
+                <h3>Documenti di spesa</h3>
+                <p *ngIf="(!dataSource || !dataSource.data || dataSource.data.length===0)">Non ci sono elementi da
+                    visualizzare.</p>
+                <table mat-table [dataSource]="dataSource" matSort matSortActive="id"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                    <ng-container matColumnDef="tipologia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+                        <td mat-cell *matCellDef="let row"> {{row.tipologia}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="progetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                        <td mat-cell *matCellDef="let row" [innerHTML]="row.progetti"></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fornitore">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fornitore </th>
+                        <td mat-cell *matCellDef="let row"> {{row.fornitore}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datanum">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data / numero </th>
+                        <td mat-cell *matCellDef="let row">{{row.estremi}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="stato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+                        <td mat-cell *matCellDef="let row" [innerHTML]="row.stato"></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rendicontazione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right" arrowPosition="before">
+                            <span>Rendicontabile</span>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="text-right">
+                            {{row.importi}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="validato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right" arrowPosition="before">
+                            Validato</th>
+                        <td mat-cell *matCellDef="let row" class="text-right">
+                            {{row.validato | number: '1.2-2' : 'it'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button *ngIf="row.associato" matTooltip="Consulta il dettaglio"
+                                (click)="goToDettaglioDocumento(row.idDocumento)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                            <button mat-icon-button *ngIf="row.associabile && !isReadOnly"
+                                matTooltip="Associa documento al progetto" (click)="openDialogAssociaDocumento(row)">
+                                <mat-icon>add_box</mat-icon>
+                            </button>
+                            <button mat-icon-button *ngIf="row.clonabile && !isReadOnly && !isBR58" matTooltip="Clona"
+                                (click)="clonaDocumento(row.idDocumento)">
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                            <button mat-icon-button *ngIf="row.modificabile && !isReadOnly" matTooltip="Modifica"
+                                (click)="goToModificaDocumento(row.idDocumento)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button *ngIf="row.eliminabile && !isReadOnly" matTooltip="Elimina"
+                                (click)="eliminaDocumento(row.idDocumento)" class="red-color">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{'yellowBackgroundColor': row.associaButtonClicked}"></tr>
+                </table>
+                <div
+                    [ngClass]="{'flexEnd': !dataSource || !dataSource.data || dataSource.data.length===0, 'endTable':dataSource?.data?.length>0}">
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                        [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                    </mat-paginator>
+                    <div class="display-flex">
+                        <button *ngIf="dataSource?.data?.length" class="button-style-1" mat-button
+                            (click)="downloadExcel()">SCARICA IN EXCEL</button>
+                        <div *ngIf="!isReadOnly">
+                            <button class="button-style-2" mat-raised-button (click)="dichiarazioneDiSpesa()">INVIO
+                                DICHIARAZIONE DI SPESA</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="title">
+        <div class="reportingContainerDown">
+            <button class="button-style-2 marginRight20" *ngIf="!esitoRicerca && isDocSpesaVisible" mat-raised-button
+                (click)="dichiarazioneDiSpesa()">INVIO
+                DICHIARAZIONE DI SPESA</button>
+            <div matTooltip="Impossibile aggiungere un documento: documento di spesa dichiarabile già esitente"
+                [matTooltipDisabled]="!(isBR58 && hasDocumentoDichiarabile)">
+                <button mat-stroked-button *ngIf="!isReadOnly" (click)="nuovoDocumentoDiSpesa()" color="primary"
+                    class="button-style-3" [disabled]="isBR58 && hasDocumentoDichiarabile">
+                    NUOVO DOCUMENTO DI SPESA</button>
+            </div>
+        </div>
+    </div>
+</div>
