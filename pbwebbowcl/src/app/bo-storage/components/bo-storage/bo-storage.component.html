@@ -1,0 +1,140 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>BO Storage</h2>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="display-flex">
+                            <mat-form-field class="fullWidth marginRight10">
+                                <input type="text" placeholder="Nome file" [(ngModel)]="nomeFile" matInput
+                                    name="nomeFile">
+                            </mat-form-field>
+                            <mat-form-field [formGroup]="tipiDocGroup" class="fullWidth">
+                                <mat-label>Selezionare un tipo documento</mat-label>
+                                <input type="text" aria-label="Number" matInput formControlName="tipoDocControl"
+                                    [matAutocomplete]="autoDoc" (blur)="check('T')">
+                                <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayFnTipiDoc"
+                                    (optionSelected)="click($event,'T')">
+                                    <mat-option *ngFor="let option of ( filteredOptionsTipiDoc$ | async)"
+                                        [value]="option">
+                                        {{option.descrizione}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="display-flex">
+                            <mat-form-field [formGroup]="progGroup" class="fullWidth">
+                                <mat-label>Selezionare un progetto</mat-label>
+                                <input type="text" placeholder="Inserire almeno 3 caratteri" aria-label="Number"
+                                    matInput formControlName="progControl" [matAutocomplete]="autoProg"
+                                    (blur)="check('P')" (input)="getProgettiByDesc(desc?.value)" #desc>
+                                <mat-autocomplete #autoProg="matAutocomplete" [displayWith]="displayFnProg"
+                                    (optionSelected)="click($event,'P')">
+                                    <mat-option *ngFor="let option of ( filteredOptionsProg$ | async)" [value]="option"
+                                        [disabled]="!option.idProgetto">
+                                        {{option.codiceVisualizzato}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <button class="button-style-2" mat-raised-button type="submit">
+                            CERCA
+                        </button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !isResultVisible}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Elenco documenti</h3>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <table mat-table [dataSource]="dataSource" class="fullWidth" matSort #sort="matSort"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="info">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="width-5-perc"> </th>
+                        <td mat-cell *matCellDef="let row" class="width-5-perc">
+                            <mat-icon *ngIf="row.flagFirmato || row.flagMarcato"
+                                [matTooltip]="row.flagFirmaAutografa ? 'File firmato con firma autografa' : (row.flagMarcato ? 'File con marcatura temporale' : 'File firmato digitalmente')">
+                                info</mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nomeFile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="width-35-perc"> Nome file </th>
+                        <td mat-cell *matCellDef="let row" class="max-width-0 width-35-perc">
+                            <div class="display-flex">
+                                <span class="text-overflow-ellipsis overflow-hidden white-space-nowrap">
+                                    {{row.nomeFile}}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descrizioneTipoDocIndex">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo documento </th>
+                        <td mat-cell *matCellDef="let row"> {{row.descrizioneTipoDocIndex}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codiceVisualizzatoProgetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                        <td mat-cell *matCellDef="let row"> {{row.codiceVisualizzatoProgetto}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button (click)="downloadAllegato(row)" matTooltip="Download">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                            <button *ngIf="isAnteprimaVisible(row)" mat-icon-button class="blue-icon width-5-perc"
+                                matTooltip="Anteprima" (click)="anteprimaAllegato(row)">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="uploadFile.click()" matTooltip="Sostituisci">
+                                <mat-icon>loop</mat-icon>
+                            </button>
+                            <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                                (change)="onFileSelected($event.target.files[0], row)" />
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    #paginator>
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="spaceBetween">
+    <h3 class="bold-text"> Modifica parametro monitoraggio dialog</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<form #nuovoForm="ngForm">
+    <div class="nuova-area-page">
+
+        <div class="margin-15">
+            <h4 class="bold-text">Parametro monitoraggio</h4>
+            <p> {{descrizione}}</p>
+        </div>
+
+        <mat-form-field class="margin-15 margin-top-20">
+            <input type="number" placeholder="Numero giorni" [(ngModel)]="numGiorni" name="numGiorni" matInput>
+        </mat-form-field>
+
+       
+
+
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+            <div >
+                <button mat-button class="button-style-1" type="submit" (click)="salva()" >
+                    SALVA 
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</form>

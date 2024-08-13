@@ -1,0 +1,15 @@
+.mat-elevation-z2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.bold-text {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

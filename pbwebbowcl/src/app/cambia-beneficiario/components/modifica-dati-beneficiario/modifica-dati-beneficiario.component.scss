@@ -1,0 +1,38 @@
+.display-flex {
+    display: flex;
+    //justify-content: flex-start | flex-end | center | space-between | space-around | space-evenly
+    justify-content: space-around;
+    align-items: center;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.mat-elevation-z2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.smallInput {
+    width: 5px;
+}
+
+.smallFild {
+    width: 70px;
+    margin-left: 20px;
+}
+
+.tripleFild {
+    max-width: 170px;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

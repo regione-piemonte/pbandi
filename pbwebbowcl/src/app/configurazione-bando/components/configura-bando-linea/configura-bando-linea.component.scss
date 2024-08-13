@@ -1,0 +1,306 @@
+.page {
+    .title {
+        .back-container {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .back-text {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        .info {
+            p {
+                margin: 0px;
+                font-size: 16px;
+                display: inline;
+            }
+
+            span {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        }
+
+        ::ng-deep .mat-tab-label .mat-tab-label-content {
+            font-size: 16px;
+        }
+
+        mat-tab-group {
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+
+        table {
+            mat-icon {
+                color: #006cb4;
+            }
+        }
+
+        .row {
+            display: flex;
+
+            @media (max-width: 992px) {
+                display: block;
+            }
+
+            .col {
+                width: 49%;
+                padding-right: 10px;
+
+                @media (max-width: 992px) {
+                    width: 100%;
+                    padding-right: 0px;
+                }
+            }
+        }
+    }
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.float-right {
+    float: right;
+    overflow: visible;
+   
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.align-items-center {
+    display: flex;
+    align-items: center;
+}
+
+.justify-content-flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-left-30 {
+    margin-left: 30px;
+}
+.margin-left-10 {
+    margin-left: 10px;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
+}
+
+::ng-deep .mat-tab-label {
+    min-width: 0px !important;
+}
+
+::ng-deep .mat-tab-label-content {
+    white-space: pre-wrap !important;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.rotate-icon-90-grad {
+    transform: rotate(90deg);
+}
+
+.example-section {
+    margin: 12px 0;
+}
+
+.example-margin {
+    margin: 0 12px;
+}
+
+ul {
+    list-style-type: none;
+    margin-top: 4px;
+}
+
+.padding-left-12 {
+    padding-left: 12px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.margin-top-20 {
+    margin-top: 20px !important;
+}
+
+.red-color {
+    color: #b8191a !important;
+}
+
+.green-color {
+    color: #1dad00 !important;
+}
+
+.width-30 {
+    width: 30px;
+}
+
+.marginRight25 {
+    margin-right: 25px;
+}
+
+.marginTop30 {
+    margin-top: 30px;
+}
+
+.viewport {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.viewport-full {
+    height: 200px;
+}
+
+.viewport-1 {
+    height: 40px;
+}
+
+.viewport-2 {
+    height: 80px;
+}
+
+.viewport-3 {
+    height: 120px;
+}
+
+.viewport-4 {
+    height: 160px;
+}
+
+.viewport-item {
+    height: 40px;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100% !important;
+}
+
+
+.grid-layout{
+    display: grid;
+    align-items: center;
+    grid-template-columns: 0% 40% 25% 25% 10%;
+}
+
+
+.item-iban{
+    grid-column-start: 0;
+    grid-column-end: 3;
+    grid-row-start: 0;
+    grid-row-end: 1;
+    padding: 10px;
+}
+
+.item-tipo-conto{
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 0;
+    grid-row-end: 1;
+    padding: 10px;
+
+}
+
+.item-molt{
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 0;
+    grid-row-end: 1;
+    padding: 10px;
+
+}
+
+.item-icon-delete{
+    grid-column-start: 5;
+    grid-column-end: 6;
+    grid-row-start: 0;
+    grid-row-end: 1;
+    padding: 10px;
+}
+
+
+
+.margin-bottom-50{
+    margin-bottom: 50px;
+}
+
+.margin-15{
+    margin: 15px;
+}
+
+.clear-both{
+    clear: both;
+}
+
+.container-flex-end{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.float-rigth{
+    float: right;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.width50{
+    width: 50%;
+}
+
+.input{
+    background-color: white !important;
+}
+
+.margin-input-under-title{
+    margin: 15px;
+    margin-top: 30px;
+}
+
+
+.flex-direction{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.margin-20{
+    margin: 20px;
+}
+
+.text-align-center{
+    text-align: center;
+}
+
+.input-in-table{
+    width: 40px;
+    height: 50 px;
+    text-align: center;
+}

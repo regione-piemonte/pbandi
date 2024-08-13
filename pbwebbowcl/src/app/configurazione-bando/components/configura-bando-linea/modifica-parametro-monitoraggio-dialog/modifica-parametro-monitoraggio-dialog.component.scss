@@ -1,0 +1,23 @@
+.nuova-area-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.bold-text {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+.margin-15{
+    margin: 15px;
+}
+
+.margin-top-20{
+    margin: 15px;
+}

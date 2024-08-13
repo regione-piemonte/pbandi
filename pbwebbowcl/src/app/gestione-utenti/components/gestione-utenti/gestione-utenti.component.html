@@ -1,0 +1,175 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+
+<div class="page" [ngClass]="{'displayNone': isLoading()}" #scrollId id="scrollId">
+
+    <!-- titolo principale -->
+    <div class="title">
+        <h2>Gestione utenti</h2>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- body -->
+    <div class="content">
+
+        <!-- card campi di ricerca utenti -->
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+
+                <!-- titolo  -->
+                <div class="header">
+                    <h3 class="search">Ricerca utenti</h3>
+                </div>
+
+                <!-- form di ricerca  -->
+                <form #ricercaForm="ngForm" (submit)="onCercaUtentiPressed()">
+                    <!-- text box -->
+                    <mat-form-field class="width-49-perc margin-right-10">
+                        <input type="text" placeholder="Nome" [(ngModel)]="utenteRicercatoFilter.nome" matInput
+                            name="nomeUtenteRicercaInputText">
+                    </mat-form-field>
+
+                    <!-- text box -->
+                    <mat-form-field class="width-49-perc">
+                        <input type="text" placeholder="Cognome" [(ngModel)]="utenteRicercatoFilter.cognome" matInput
+                            name="cognomeUtenteRicercaInputText">
+                    </mat-form-field>
+
+                    <!-- text box -->
+                    <mat-form-field class="width-49-perc margin-right-10">
+                        <input type="text" placeholder="Codice fiscale"
+                            [(ngModel)]="utenteRicercatoFilter.codiceFiscale" matInput name="cfUtenteRicercaInputText">
+                    </mat-form-field>
+
+                    <!-- data picker -->
+                    <mat-form-field class="width-data margin-right-10">
+                        <mat-label>Data inserimento dal</mat-label>
+                        <input matInput [matDatepicker]="dataInserimentoDal"
+                            [(ngModel)]="utenteRicercatoFilter.dataInserimentoDal" name="dataDal">
+                        <mat-datepicker-toggle matSuffix [for]="dataInserimentoDal"></mat-datepicker-toggle>
+                        <mat-datepicker #dataInserimentoDal></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- data picker -->
+                    <mat-form-field class="width-data">
+                        <mat-label>Data inserimento al</mat-label>
+                        <input matInput [matDatepicker]="dataInserimentoAl"
+                            [(ngModel)]="utenteRicercatoFilter.dataInserimentoAl" name="dataAl">
+                        <mat-datepicker-toggle matSuffix [for]="dataInserimentoAl"></mat-datepicker-toggle>
+                        <mat-datepicker #dataInserimentoAl></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- input select -->
+                    <mat-form-field class="width-49-perc">
+                        <mat-label>Selezionare un tipo anagrafica </mat-label>
+                        <mat-select [(ngModel)]="anagraficaSelezionata" name="selectAnagrafica"
+                            (selectionChange)="onSelectedTipoAnagrafica()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let a of anagraficaList; let i = index" [value]="a">
+                                {{a.descEstesa}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- bottone  -->
+                    <div>
+                        <button mat-raised-button class="button-style-2" type="submit">
+                            <!-- [disabled]="!isBeneficiarioSelezionato || !isProgettoSelezionato">-->
+                            CERCA
+                        </button>
+                    </div>
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" [ngClass]="{'displayNone': !isTabellaVisible}">
+        <!-- card tabella utenti ricercati -->
+        <mat-card class="mat-elevation-z2">
+
+            <!-- card titolo-->
+            <mat-card-content>
+
+                <!-- titolo  -->
+                <h3>Utenti</h3>
+                <p *ngIf="!dataSource || !dataSource.data || !dataSource.data.length">Nessun elemento da visualizzare
+                </p>
+                <!-- tabella  -->
+                <table mat-table [dataSource]="dataSource" class="tabella fullWidth" matSort #sort="matSort"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || !dataSource.data.length}">
+
+                    <!-- Cognome Column -->
+                    <ng-container matColumnDef="cognome">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+                        <td mat-cell *matCellDef="let row"> {{row.cognome}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="nome">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                        <td mat-cell *matCellDef="let row"> {{row.nome}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="cf">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale </th>
+                        <td mat-cell *matCellDef="let row"> {{row.codiceFiscale}} </td>
+                    </ng-container>
+
+                    <!-- Anagrafica Column -->
+                    <ng-container matColumnDef="anagrafica">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo anagrafica </th>
+                        <td mat-cell *matCellDef="let row"> {{row.descTipoAnagrafica}} </td>
+                    </ng-container>
+
+                    <!-- Data Column -->
+                    <ng-container matColumnDef="dataDal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data inserimento </th>
+                        <td mat-cell *matCellDef="let row"> {{row.dataInserimento | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Dettaglio" (click)="onDettaglioPressed(row)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                            <button mat-icon-button class="red-color" matTooltip="Elimina"
+                                (click)="onEliminaPressed(row)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || !dataSource.data.length}">
+                </mat-paginator>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content flexEnd">
+        <button mat-stroked-button (click)="OnCaricaUtentiPressed()" class="button-style-3 margin-right-10"> CARICA
+            UTENTI
+        </button>
+        <button mat-stroked-button (click)="OnNuovoUtentePressed()" class="button-style-3"> NUOVO UTENTE
+        </button>
+    </div>
+
+</div>

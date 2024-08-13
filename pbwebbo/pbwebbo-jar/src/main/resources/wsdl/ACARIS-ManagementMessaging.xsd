@@ -1,0 +1,129 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0"
+    xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            targetNamespace="management.acaris.acta.doqui.it"
+            xmlns:tns="management.acaris.acta.doqui.it"
+            xmlns:common="common.acaris.acta.doqui.it">
+
+    <xs:include schemaLocation="ACARIS-Management.xsd"/>
+    <xs:import namespace="common.acaris.acta.doqui.it"  schemaLocation="ACARIS-Common.xsd"/>
+
+	<!--=====================-->
+	<!-- Management services -->
+	<!--=====================-->
+ 
+	<!-- getVitalRecordCode Operation -->
+	<xs:element name="getVitalRecordCode">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getVitalRecordCodeResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="vitalRecordCode" type="tns:VitalRecordCodeType"
+				minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- addAnnotazioni Operation -->
+	<xs:element name="addAnnotazioni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="objectId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" type="common:PrincipalIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="annotazioni" type="common:AnnotazioniPropertiesType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="addAnnotazioniResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idAnnotazioni" type="common:IdAnnotazioniType"
+				minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<!-- updateAnnotazioni Operation -->
+	<!-- deleteAnnotazioni Operation -->
+
+	<!-- getAnnotazioni Operation -->
+	<xs:element name="getAnnotazioni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idAnnotazioni" type="common:IdAnnotazioniType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getAnnotazioniResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotazioni" type="common:AnnotazioniPropertiesType"
+				minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- addMovimentazione Operation -->
+	<!-- updateMovimentazione Operation -->
+	<!-- deleteMovimentazione Operation -->
+
+	<!-- getMovimentazione Operation -->
+	<xs:element name="getMovimentazione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idMovimentazione" type="common:IdMovimentazioneType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getMovimentazioneResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="movimentazione" type="tns:MovimentazioneType"
+				minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- addProvvedimentoAutorizzativo Operation -->
+	<!-- updateProvvedimentoAutorizzativo Operation -->
+	<!-- deleteProvvedimentoAutorizzativo Operation -->
+
+	<!-- getProvvedimentoAutorizzativo Operation -->
+	<xs:element name="getProvvedimentoAutorizzativo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idProvvedimentoAutorizzat" type="common:IdProvvedimentoAutorizzatType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getProvvedimentoAutorizzativoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="provvedimentoAutorizzat" type="tns:ProvvedimentoAutorizzatType"
+				minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

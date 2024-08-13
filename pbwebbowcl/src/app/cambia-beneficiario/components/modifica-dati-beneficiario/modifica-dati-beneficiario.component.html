@@ -1,0 +1,134 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Modifica beneficiario subentrante</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="onNoClick()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <h3 class="bold-text">Beneficiario</h3>
+
+    <!-- Denominazione -->
+    <div class="display-flex">
+        <mat-form-field class="fullWidth marginRight10">
+            <mat-label>Denominazione</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.denominazione" matInput
+                name="denominazioneInputText">
+        </mat-form-field>
+    </div>
+
+    <!-- Codice fiscale -->
+    <div class="display-flex">
+        <mat-form-field class="fullWidth marginRight10">
+            <mat-label>Codice fiscale</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.codiceFiscale" matInput name="cfInputText">
+        </mat-form-field>
+    </div>
+
+
+    <!-- Partita IVA -->
+    <div class="display-flex">
+        <mat-form-field class="fullWidth marginRight10">
+            <mat-label>Partita IVA</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.partitaIva" matInput name="ivaInputText">
+        </mat-form-field>
+    </div>
+
+    <h3 class="bold-text">Beneficiario e sede legale</h3>
+
+    <!--Locazione-->
+    <div class="display-flex">
+
+        <mat-form-field class="tripleFild margin-right-10">
+            <mat-label>Regione</mat-label>
+            <mat-select [(ngModel)]="regioneSelected" name="selectRegione" (selectionChange)="onSelectedRegione()">
+                <mat-option *ngFor="let regione of regioniList" [value]="regione">
+                    {{regione.descrizione}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <!--mat-form-field class = "tripleFild"  *ngIf="idRegioneSelected != undefined && idRegioneSelected != null"-->
+        <mat-form-field class="tripleFild margin-right-10">
+            <mat-label>Provincia</mat-label>
+            <mat-select [(ngModel)]="provinciaSelected" name="selectProvincia"
+                (selectionChange)="onSelectedProvincia()">
+                <mat-option *ngFor="let provincia of provincieiList" [value]="provincia">
+                    {{provincia.descrizione}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!--mat-form-field class = "tripleFild" *ngIf="idProvinciaSelected != undefined && idProvinciaSelected != null"-->
+        <mat-form-field class="tripleFild">
+            <mat-label>Comune</mat-label>
+            <mat-select [(ngModel)]="comuneSelected" name="selectComune" (selectionChange)="onSelectedComune()">
+                <mat-option *ngFor="let comune of comuniiList" [value]="comune">
+                    {{comune.descrizione}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+
+
+    <div class="display-flex">
+
+        <!-- Indirizzo -->
+        <mat-form-field class="fullWidth marginRight10">
+            <mat-label>Indirizzo</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.indirizzo" matInput name="indirizzoInputText">
+        </mat-form-field>
+
+
+        <!-- Civico -->
+        <mat-form-field class="fullWidth marginRight10 smallFild">
+            <mat-label>Civico</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.civico" matInput name="civicoInputText">
+        </mat-form-field>
+
+
+        <!-- CAP -->
+        <mat-form-field class="fullWidth marginRight10 smallFild">
+            <mat-label>CAP</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.cap" matInput name="capInputText">
+        </mat-form-field>
+
+
+    </div>
+
+    <!-- Email -->
+    <div class="display-flex">
+        <mat-form-field class="fullWidth marginRight10">
+            <mat-label>Email</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.email" matInput name="emailInputText">
+        </mat-form-field>
+    </div>
+
+
+
+    <!-- Telefono -->
+    <div class="display-flex ">
+
+        <mat-form-field class="fullWidth marginRight10 doubleFild">
+            <mat-label>Telefono</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.telefono" matInput name="telefonoInputText">
+        </mat-form-field>
+
+        <!-- Fax -->
+        <mat-form-field class="fullWidth marginRight10 doubleFild">
+            <mat-label>Fax</mat-label>
+            <input type="text" [(ngModel)]="datiBeneficiarioProgettoDTO.fax" matInput name="faxInputText">
+        </mat-form-field>
+
+    </div>
+
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="onNoClick()">ANNULLA</button>
+        <button mat-button class="button-style-1" [mat-dialog-close]="datiBeneficiarioProgettoDTO"
+            cdkFocusInitial>CONFERMA</button>
+    </div>
+</div>

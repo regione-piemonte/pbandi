@@ -1,0 +1,69 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Associazione a permessi</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+
+    <p>Codice: <span class="bold-text">{{codice}}</span> </p>
+    <p>Descrizione: <span class="bold-text">{{descrizione}}</span> </p>
+
+    <div class="cards-div">
+        <div style="width: 46%;">
+            <h3 class="bold-text">Permessi da associare</h3>
+            <mat-card class="mat-elevation-z8 height-350 overflow-auto">
+                <mat-card-content>
+                    <p *ngIf="!daAssociare || daAssociare.length===0">Nessun permesso da associare</p>
+                    <div *ngIf="daAssociare?.length>0">
+                        <div *ngFor="let permesso of daAssociare">
+                            <mat-checkbox [(ngModel)]="permesso.checked"
+                                name="daAssociare{{permesso.descBrevePermesso}}" (change)="changeDaAssociareCheck()">
+                                {{permesso.descBrevePermesso}} - {{permesso.descPermesso}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="arrows-div">
+            <div [matTooltip]="getAssociaTooltip()">
+                <button [disabled]="isAssociaDisabled" mat-icon-button (click)="associa()">
+                    <mat-icon>east</mat-icon>
+                </button>
+            </div>
+            <div [matTooltip]="getDisassociaTooltip()">
+                <button [disabled]="isDisassociaDisabled" mat-icon-button (click)="disassocia()">
+                    <mat-icon>west</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div style="width: 46%;">
+            <h3 class="bold-text">Permessi associati</h3>
+            <mat-card class="mat-elevation-z8 height-350 overflow-auto">
+                <mat-card-content>
+                    <p *ngIf=" !associati || associati.length===0">Nessun permesso associato</p>
+                    <div *ngIf="associati?.length>0">
+                        <div *ngFor="let permesso of associati">
+                            <mat-checkbox [(ngModel)]="permesso.checked" name="associato{{permesso.descBrevePermesso}}"
+                                (change)="changeAssociatiCheck()">
+                                {{permesso.descBrevePermesso}} - {{permesso.descPermesso}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+.width-data {
+  width: 160px !important;
+}
+
+.width-49-perc {
+  width: 49%;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.floatDiv {
+  float: left;
+  margin: auto;
+}
+
+.mat-elevation-z2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+.mandaAcapo {
+  margin-right: 110px;
+}
+
+.mat-green {
+  color: white;
+  background-color: forestgreen;
+}
+
+.semaforo {
+  display: flex;
+  align-items: center;
+}
+
+.luce {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Colori delle luci */
+.luce.red { background-color: #ff4136; }
+.luce.yellow { background-color: #ffd700; }
+.luce.green { background-color: #2ecc40; }
+
+
+.testo-stilizzato {
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-transform: uppercase;
+}
+
+/* Stile della freccia */
+.freccia {
+  font-size: 24px; /* Dimensione della freccia */
+
+}
+
+.fila-semafori {
+  display: flex;
+  justify-content: space-between; /* oppure space-around o space-evenly a seconda delle tue esigenze */
+}

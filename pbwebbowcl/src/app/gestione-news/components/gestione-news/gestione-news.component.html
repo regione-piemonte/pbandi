@@ -1,0 +1,89 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>Gestione news / avvisi</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <table mat-table [dataSource]="dataSource" class="fullWidth"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="titolo">
+                        <th mat-header-cell *matHeaderCellDef> Titolo </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.titolo}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                        <td mat-cell *matCellDef="let row"> {{row.tipoNews === 'WARN' ? 'W' : 'I'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dataInizio">
+                        <th mat-header-cell *matHeaderCellDef> Data inizio </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dtInizio | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dataFine">
+                        <th mat-header-cell *matHeaderCellDef> Data fine </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dtFine | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="profili">
+                        <th mat-header-cell *matHeaderCellDef> Profili </th>
+                        <td mat-cell *matCellDef="let row">
+                            <p class="margin-0 font-size-13" *ngFor="let tipo of row.tipiAnagrafica">
+                                {{tipo.descrizione}}</p>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="width-100-px"> </th>
+                        <td mat-cell *matCellDef="let row" class="width-100-px">
+                            <button mat-icon-button matTooltip="Dettaglio" (click)="dettaglio(row)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Modifica" (click)="modifica(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button class="red-color" *ngIf="isEliminabile(row)" matTooltip="Elimina"
+                                (click)="elimina(row)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content flexEnd">
+        <button mat-stroked-button (click)="nuovaNews()" class="button-style-3">NUOVA NOTIZIA
+        </button>
+    </div>
+</div>

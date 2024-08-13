@@ -1,0 +1,178 @@
+
+
+    <div class="page">
+     <!-- body -->
+     <div class="content">
+
+      <!-- card campi di ricerca utenti -->
+      <mat-card class="mat-elevation-z2">
+          <mat-card-content>
+
+              <!-- titolo  -->
+              <div class="header">
+                  <h3 class="search">Console Monitoraggio Servizi</h3>
+              </div>
+
+              <!-- form di ricerca  -->
+              <form #ricercaForm="ngForm" (submit)="onTracciaChiamateMonitoraggio()">
+
+
+
+                  <!-- data picker -->
+                  <mat-form-field class=" width-49-perc width-data margin-right-10">
+                      <mat-label>Data inserimento dal</mat-label>
+                      <input type="data-time-local"matInput [matDatepicker]="dataInserimentoDal"
+                          [(ngModel)]="consoleMonitoraggioFilter.dataInserimentoDal" name="dataDal">
+                      <mat-datepicker-toggle matSuffix [for]="dataInserimentoDal"></mat-datepicker-toggle>
+                      <mat-datepicker #dataInserimentoDal></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field class=" width-49-perc width-data margin-right-10 ">
+                    <input [(ngModel)]="consoleMonitoraggioFilter.oraInserimentoDal"
+                    matInput type="time" id="appt" name="oraDal" min="00:00" max="23:59"/>
+                </mat-form-field>
+
+                  <!-- data picker -->
+                  <mat-form-field class="width-data margin-right-10 ">
+                      <mat-label>Data inserimento al</mat-label>
+                      <input  matInput [matDatepicker]="dataInserimentoAl"
+                          [(ngModel)]="consoleMonitoraggioFilter.dataInserimentoAl" name="dataAl">
+                      <mat-datepicker-toggle matSuffix [for]="dataInserimentoAl"></mat-datepicker-toggle>
+                      <mat-datepicker #dataInserimentoAl></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field class=" width-49-perc width-data  margin-right-10 ">
+                    <input [(ngModel)]="consoleMonitoraggioFilter.oraInserimentoAl"
+                       matInput type="time" id="appt" name="oraAl" min="00:00" max="23:59"/>
+                </mat-form-field>
+
+                  <!-- input select -->
+                  <mat-form-field class="width-49-perc  mandaAcapo">
+                      <mat-label>Selezionare un Errore </mat-label>
+                      <mat-select [(ngModel)]="erroreSelezionato" name="onSelectedTipoErrore"
+                          (selectionChange)="onSelectedTipoErrore()">
+                          <mat-option></mat-option>
+                          <mat-option *ngFor="let a of erroriList; let i = index" [value]="a">
+                           {{a.messaggioErrore}}
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field class="width-49-perc  margin-right-10">
+                    <mat-label>Selezionare un Servizio </mat-label>
+                    <mat-select [(ngModel)]="servizioSelezionato" name="onSelectedServizio"
+                        (selectionChange)="onSelectedServizio()">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let a of serviziList; let i = index" [value]="a">
+                         {{a.nomeServizio}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+
+                  <!-- bottone  -->
+                  <div>
+                      <button mat-raised-button class="button-style-2" type="submit">
+                          CERCA
+                      </button>
+
+
+                  </div>
+
+              </form>
+          </mat-card-content>
+      </mat-card>
+      <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+          <div class="header">
+            <h3 >Stato Servizi</h3>
+        </div>
+        <div class="fila-semafori">
+          <div class="semaforo">
+            <div [ngStyle]="getStatusServizio('AMMVO_CONTAB')" class="luce"></div>
+            <span class="testo-stilizzato">PBAN <span class="freccia">&rarr;</span> AMCO</span>
+          </div>
+
+          <div class="semaforo">
+            <div [ngStyle]="getStatusServizio('FINDOM')" class="luce"></div>
+            <span class="testo-stilizzato">PBAN <span class="freccia">&rarr;</span> FINDOM</span>
+          </div>
+
+          <div class="semaforo">
+            <div [ngStyle]="getStatusServizio('DOQUI')" class="luce"></div>
+            <span class="testo-stilizzato">PBAN <span class="freccia">&rarr;</span> DOQUI</span>
+          </div>
+        </div>
+
+        </mat-card-content>
+    </mat-card>
+
+
+
+      <!-- card tabella errori monitoraggio -->
+      <mat-card class="mat-elevation-z2">
+
+        <div *ngIf="!dataSource || !dataSource.data || !dataSource.data.length">
+          <h3 class="header" >Monitoraggio esiti</h3>
+           <p>Nessun elemento da visualizzare</p>
+        </div>
+          <mat-card-content  >
+
+
+              <!-- tabella  -->
+              <table   [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}" mat-table [dataSource]="dataSource"
+                 class="tabella fullWidth" matSort #sort="matSort">
+
+                  <!-- Servizio Column -->
+                  <ng-container matColumnDef="nomeServizio">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Servizio </th>
+                      <td mat-cell *matCellDef="let row"> {{row.nomeServizio}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="categoria">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Categoria </th>
+                    <td mat-cell *matCellDef="let row"> {{row.categoriaServizio}} </td>
+                </ng-container>
+
+
+                  <ng-container matColumnDef="esito">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Esito </th>
+                      <td  mat-cell *matCellDef="let row"> {{row.esito}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="codiceErrore">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice errore </th>
+                      <td mat-cell *matCellDef="let row"> {{row.codiceErrore}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="messaggioErrore">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Messaggio </th>
+                      <td mat-cell *matCellDef="let row"> {{row.messaggioErrore}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="dataInizioChiamata">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Data inizio </th>
+                      <td mat-cell *matCellDef="let row"> {{row.dataInizioChiamata | date: 'dd/MM/yyyy HH:mm:ss'}}
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="dataFineChiamata">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Data fine </th>
+                    <td mat-cell *matCellDef="let row"> {{row.dataFineChiamata | date: 'dd/MM/yyyy HH:mm:ss'}}
+                    </td>
+                </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+              <mat-paginator #elencoMonitoraggio [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                  [ngClass]="{'displayNone': !dataSource || !dataSource.data || !dataSource.data.length}">
+              </mat-paginator>
+
+          </mat-card-content>
+      </mat-card>
+    </div>
+ </div>

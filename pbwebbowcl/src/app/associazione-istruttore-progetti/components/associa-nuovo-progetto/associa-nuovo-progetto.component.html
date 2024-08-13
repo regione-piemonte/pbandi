@@ -1,0 +1,181 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAllaGestioneAssociazioni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione associazioni</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Associa nuovo progetto</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="benef">
+                    <p>Cognome istruttore: <span>{{cognomeIstruttore}}</span></p>
+                    <p class="marginLeft25">Nome istruttore: <span>{{nomeIstruttore}}</span></p>
+                    <p class="marginLeft25">Codice fiscale: <span>{{codiceFiscale}}</span></p>
+                    <p class="marginLeft25">Tipo anagrafica: <span>{{anagraficaIstruttoreSelected}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Ricerca progetti da associare
+
+                    </h3>
+                </div>
+                <div>
+                    <form [formGroup]="form" class="margin-top-10">
+                        <mat-form-field class="fullWidth">
+                            <mat-label>Selezionare bando linea *</mat-label>
+                            <input type="text" aria-label="Number" matInput formControlName="bandoLinea"
+                                [matAutocomplete]="auto" (blur)="onBlurAutoComplete()">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                (optionSelected)="changeBando()">
+                                <mat-option *ngFor="let option of (filteredOptions$ | async)" [value]="option">
+                                    {{option.nomeBandolinea}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="form.get('bandoLinea')?.errors?.required">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                    </form>
+                    <form #filtriForm="ngForm">
+                        <div class="display-flex align-items-center">
+                            <mat-form-field class="marginRight10 fullWidth">
+                                <mat-label>Selezionare codice progetto</mat-label>
+                                <mat-select [disabled]="!form.get('bandoLinea')?.value"
+                                    [(ngModel)]="codiceProgettoSelected" name="codiceProgetto"
+                                    (ngModelChange)="changeProgetto()" [ngModelOptions]="{standalone: true}">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let codiceProgetto of codiciProgetto" [value]="codiceProgetto">
+                                        {{ codiceProgetto.codiceVisualizzato }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="marginRight10 fullWidth">
+                                <mat-label>Selezionare beneficiario</mat-label>
+                                <mat-select [disabled]="!form.get('bandoLinea')?.value"
+                                    [(ngModel)]="beneficiarioSelected" name="beneficiario"
+                                    (ngModelChange)="changeBeneficiario()" [ngModelOptions]="{standalone: true}">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let beneficiario of beneficiari" [value]="beneficiario">
+                                        {{ beneficiario.beneficiario }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div class="fullWidth">
+                                <a>Istruttori associati</a>
+                                <mat-radio-group aria-label="Select an option" [(ngModel)]="istruttoriRadio" name="doc"
+                                    class="marginRadioButton">
+                                    <mat-radio-button class="col marginLeft20" value="1">si
+                                    </mat-radio-button>
+                                    <mat-radio-button class="col marginLeft20" value="2">no</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row margin-top-10">
+                        <button mat-raised-button class="button-style-2 margin0" type="button" (click)="cerca()">
+                            CERCA
+                        </button>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" [hidden]="!showResults">
+        <div [hidden]="!(dataSource.filteredData.length == 0)">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-content>
+                    Non è presente nessun progetto da associare.
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div [hidden]="dataSource.filteredData.length == 0">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-content>
+                    <h3>Elenco progetti da associare</h3>
+                    <table mat-table [dataSource]="dataSource">
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? changeSingleRow(row) : null"
+                                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="codiceProgetto">
+                            <th mat-header-cell *matHeaderCellDef>Codice progetto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.codiceVisualizzato}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="bando">
+                            <th mat-header-cell *matHeaderCellDef> Bando </th>
+                            <td mat-cell *matCellDef="let element"> {{element.titoloBando}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="beneficiario">
+                            <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+                            <td mat-cell *matCellDef="let element"> {{element.beneficiario}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="numIstrAssoc">
+                            <th mat-header-cell *matHeaderCellDef> Numero istruttori
+                                <span *ngIf="isIstruttoreAffidamenti"> affidamenti </span>
+                                <span *ngIf="!isIstruttoreAffidamenti"> ADG e OI </span>
+                                associati
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <a class="colorBlue clickableItem"
+                                    (click)="element.showIstrAsso = !element.showIstrAsso">{{element.numeroIstruttoriAssociati}}</a>
+                                <a [hidden]="!element.showIstrAsso"
+                                    *ngFor="let istrAssoc of element.istruttoriSempliciAssociati">
+                                    <br>{{ istrAssoc.cognome }} {{ istrAssoc.nome }}
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="content" [hidden]="!showResults || dataSource.filteredData.length == 0">
+        <div class="flexEnd">
+            <button [class.customButton]="!showImpegniButtons" [class.button-style-3]="showImpegniButtons"
+                [disabled]='!showImpegniButtons' mat-stroked-button (click)="associaAIstruttore()">ASSOCIA A
+                ISTRUTTORE</button>
+        </div>
+    </div>
+</div>

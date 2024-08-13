@@ -1,0 +1,97 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [hidden]="!showModelli">
+
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica modello {{dataTemplatOld == undefined ? undefined :
+      dataTemplatOld.descTipoDocumento}}</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <mat-card class="mat-elevation-z2 messageError marginLeft25 marginRight25 marginTop30" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+      <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+  </mat-card>
+  <div cdkDropListGroup class="box">
+
+    <div class="widt-80-per">
+      <!-- INIZIO COLONNA DI SINISTRA -->
+      <div *ngFor="let macroSezione of dataTemplateNew">
+        <!-- Intestazione macrosezione -->
+        <h2 class="bold-text marginTop20">{{macroSezione.numOrdinamentoMacroSezione}}. {{macroSezione.descMacroSezione}}
+        </h2>
+        <!-- Microsezione senza drag -->
+        <div (click)="entrareInDiv()" [hidden]="showDraggableSection" class="row"
+          *ngFor="let microSezione of macroSezione.microSezioni">
+          <mat-form-field class="widt-90-per">
+            <input cdkDropList (cdkDropListDropped)="drop($event, macroSezione, microSezione)" type="text"
+              [(ngModel)]="microSezione.microSezione.contenutoMicroSezione" matInput>
+          </mat-form-field>
+          <mat-slide-toggle class="margin-left-15" [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="microSezione.isChecked" color="primary">
+          </mat-slide-toggle>
+        </div>
+
+        <!-- Microsezione con drag -->
+        <div (click)="entrareInDiv()" [hidden]="!showDraggableSection" cdkDropList
+          (cdkDropListDropped)="drop2(macroSezione, $event)">
+          <div class="row" *ngFor="let microSezione of macroSezione.microSezioni" cdkDrag>
+            <mat-form-field class="widt-90-per">
+              <input cdkDropList (cdkDropListDropped)="drop($event, macroSezione, microSezione)" type="text"
+                [(ngModel)]="microSezione.microSezione.contenutoMicroSezione" matInput>
+            </mat-form-field>
+            <mat-slide-toggle class="margin-left-15" [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="microSezione.isChecked" color="primary">
+            </mat-slide-toggle>
+          </div>
+        </div>
+
+        <!-- Microsezione aggiungi campo -->
+        <!--div class="row" *ngFor="let microSezioneAggiungiCampo of macroSezione.microSezioniAggiungiCampo">
+          <mat-form-field class="widt-90-per">
+            <input cdkDropList (cdkDropListDropped)="dropAggiungiCampo($event, macroSezione, microSezioneAggiungiCampo)"
+              type="text" [(ngModel)]="microSezioneAggiungiCampo.microSezione.contenutoMicroSezione" matInput>
+          </mat-form-field>
+          <mat-slide-toggle class="margin-left-15" [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="microSezioneAggiungiCampo.isChecked"color="primary">
+          </mat-slide-toggle>
+        </div-->
+        <!-- Aggiungi campo -->
+        <div class="col alignItemsCenter">
+          <button mat-button class="button-style-1" type='button' (click)="aggiungiCampo(macroSezione)">AGGIUNGI
+            CAMPO</button>
+        </div>
+      </div>
+      <!-- FINE COLONNA DI SINISTRA -->
+    </div>
+    <div class="widt-20-per">
+      <div class="fixed">
+        <!-- INIZIO COLONNA DI DESTRA (PLACHEHOLDERS) -->
+        <h2 class="bold-text marginTop20">Placeholders</h2>
+        <div class="marginBottom10">
+          <br>Trascinare i <a class="bold-text">placeholders</a> all’interno dei campi di testo
+        </div>
+        <div *ngIf="dataTemplatOld">
+          <div cdkDropList [cdkDropListData]="dataTemplatOld.placeholders" class="example-list">
+            <div *ngFor="let placeholder of dataTemplatOld.placeholders" class="example-box" cdkDrag
+              (cdkDragStarted)="inizioCDK()" (cdkDragMoved)="fineCDK()">
+              {{placeholder}}
+            </div>
+          </div>
+        </div>
+        <!-- FINE COLONNA DI DESTRA (PLACHEHOLDERS) -->
+      </div>
+    </div>
+  </div>
+
+  <button (click)="salva()" class="button-style-2" mat-raised-button type="submit">
+    SALVA
+  </button>
+  <button (click)="annulla()" class="button-style-1 marginLeft20" mat-button type="submit">
+    ANNULLA
+  </button>
+</div>
+<div [hidden]="showModelli">
+  <h2>Modello non trovato</h2>
+</div>

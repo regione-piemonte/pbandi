@@ -1,0 +1,38 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="spaceBetween">
+    <h3 class="bold-text">Nuovo tipo di documento</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+<mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+    <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+    </mat-card-content>
+</mat-card>
+<form #nuovoForm="ngForm" (onSubmit)="salva()">
+    <div class="nuovo-tipo-documento-page">
+        <mat-form-field>
+            <input type="text" placeholder="Tipo di documento *" [(ngModel)]="tipoDocumento" name="tipoDocumento"
+                matInput>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" placeholder="Codice tipo *" [(ngModel)]="codiceTipo" name="codiceTipo" matInput>
+        </mat-form-field>
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+            <div matTooltip="Inserire un tipo di documento e un codice tipo"
+                [matTooltipDisabled]="tipoDocumento && codiceTipo">
+                <button (click)="salva()" class="button-style-1" mat-button type="submit"
+                    [disabled]="!tipoDocumento || !codiceTipo">
+                    SALVA
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

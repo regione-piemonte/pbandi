@@ -1,0 +1,29 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.height-350 {
+    height: 350px;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.cards-div {
+    display: flex;
+    justify-content: space-around;
+    min-height: 300px;
+}
+
+.arrows-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

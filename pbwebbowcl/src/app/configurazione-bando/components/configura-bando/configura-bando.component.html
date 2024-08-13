@@ -1,0 +1,1363 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button mat-button (click)="tornaBandi()">
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna ai bandi</span>
+            </button>
+        </div>
+        <div>
+            <h2 *ngIf="isNuovoBando">Nuovo bando</h2>
+            <h2 *ngIf="!isNuovoBando">Modifica bando</h2>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-tab-group mat-stretch-tabs class="mat-elevation-z2" #tabs>
+            <!-- TAB DATI BANDO-->
+            <mat-tab label="DATI BANDO">
+                <form #datiBandoForm="ngForm">
+                    <div [hidden]="(processoDatiBando == 1) && (isNuovoBando == false) ? true : false">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare una normativa *</mat-label>
+                                    <mat-select [(ngModel)]="normativaSelected" name="normativa"
+                                        (ngModelChange)="changeNormativa()" #norm="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let normativa of normative" [value]="normativa">
+                                            {{ normativa.descBreve }} - {{ normativa.descEstesa }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="norm?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth">
+                                <input type="text" placeholder="Titolo bando *" [(ngModel)]="titoloBando"
+                                    name="titoloBando" matInput #tit="ngModel">
+                                <mat-error *ngIf="tit?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="processoDatiBando == 1 ? true : false">
+                        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="marginRight10 fullWidth">
+                                    <mat-label>Data determina approv.bando *</mat-label>
+                                    <input matInput [matDatepicker]="pickerDataDeterminaApprovBando"
+                                        [formControl]="dataDeterminaApprovBando">
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDataDeterminaApprovBando">
+                                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDataDeterminaApprovBando></mat-datepicker>
+                                    <mat-error *ngIf="dataDeterminaApprovBando?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30">
+                                    <mat-label>Numero approv. bando<span *ngIf="is2127"> *</span></mat-label>
+                                    <input type="text" [(ngModel)]="numeroApprovBando" name="numeroApprovBando"
+                                        #nApprovbando="ngModel" matInput>
+                                    <mat-error *ngIf="nApprovbando?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                        <mat-grid-tile [colspan]="2" [rowspan]="1">
+                            <mat-form-field class="marginRight10 fullWidth">
+                                <mat-label>Data pubblicazione bando<span *ngIf="is2127"> *</span></mat-label>
+                                <input matInput [matDatepicker]="pickerDataPubblicazioneBando"
+                                    [formControl]="dataPubblicazioneBando">
+                                <mat-datepicker-toggle matSuffix [for]="pickerDataPubblicazioneBando">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDataPubblicazioneBando></mat-datepicker>
+                                <mat-error *ngIf="dataPubblicazioneBando?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="1">
+                            <mat-form-field class="fullWidth marginLeft30">
+                                <mat-label>{{processoDatiBando == 1 ? "Data presentazione domande" : "Data minima
+                                    rendicontazione"}}</mat-label>
+                                <input matInput [matDatepicker]="pickerDataMinimaRendicontazione"
+                                    [formControl]="dataMinimaRendicontazione">
+                                <mat-datepicker-toggle matSuffix [for]="pickerDataMinimaRendicontazione">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDataMinimaRendicontazione></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="1">
+                            <mat-form-field class="fullWidth marginLeft30">
+                                <mat-label>Data scadenza domande</mat-label>
+                                <input matInput [matDatepicker]="pickerDataScadenzaDomande"
+                                    [formControl]="dataScadenzaDomande">
+                                <mat-datepicker-toggle matSuffix [for]="pickerDataScadenzaDomande">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDataScadenzaDomande></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <div class="fullWidth">
+                                <a>Prevista graduatoria</a>
+                                <mat-radio-group aria-label="Select an option" [(ngModel)]="graduatoriaRadio" name="doc"
+                                    class="row marginRadioButton">
+                                    <mat-radio-button class="col marginLeft20" value="1">si
+                                    </mat-radio-button>
+                                    <mat-radio-button class="col marginLeft20" value="2">no</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="col fullWidth">
+                                <input type="text" placeholder="Dotazione Finanziaria *"
+                                    [(ngModel)]="dotazioneFinanziaria" name="dotazioneFinanziaria" matInput
+                                    #dot="ngModel">
+                                <mat-error *ngIf="dot?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30">
+                                <mat-label>Selezionare una materia di riferimento *</mat-label>
+                                <mat-select [(ngModel)]="materiaRiferimentoSelected" name="materiaRiferimento"
+                                    #mat="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let materiaRiferimento of materieRiferimento"
+                                        [value]="materiaRiferimento">
+                                        {{ materiaRiferimento.descMateria }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="mat?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="processoDatiBando == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un codice intesa istituzionale *</mat-label>
+                                    <mat-select [(ngModel)]="codIntIstitSelected" name="codsIntIstit" #cod="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let codIntIstit of codsIntIstit" [value]="codIntIstit">
+                                            {{ codIntIstit.id }} - {{ codIntIstit.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="cod?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="processoDatiBando == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un tipo operazione *</mat-label>
+                                    <mat-select [(ngModel)]="tipoOperazioneSelected" name="tipoOperazione"
+                                        #op="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let tipoOperazione of tipiOperazione"
+                                            [value]="tipoOperazione">
+                                            {{ tipoOperazione.id }} - {{ tipoOperazione.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="op?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare un settore CIPE *</mat-label>
+                                <mat-select [(ngModel)]="settoreCIPESelected" name="settoreCIPE"
+                                    (ngModelChange)="changeSettoreCIPE()" #setcipe="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let settoreCIPE of settoriCIPE" [value]="settoreCIPE">
+                                        {{ settoreCIPE.id }} - {{ settoreCIPE.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="setcipe?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare un sotto settore CIPE *</mat-label>
+                                <mat-select [(ngModel)]="sottoSettoreCIPESelected" name="sottoSettoreCIPE"
+                                    (ngModelChange)="changeSottoSettoreCIPE()"
+                                    [disabled]="settoreCIPESelected == undefined" #sottocipe="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let sottoSettoreCIPE of sottoSettoriCIPE"
+                                        [value]="sottoSettoreCIPE">
+                                        {{ sottoSettoreCIPE.id }} - {{ sottoSettoreCIPE.descEstesa }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="sottocipe?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una natura CIPE *</mat-label>
+                                <mat-select [(ngModel)]="naturaCIPESelected" name="naturaCIPE"
+                                    (ngModelChange)="changeNaturaCIPE()" #nat="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let naturaCIPE of natureCIPE" [value]="naturaCIPE">
+                                        {{ naturaCIPE.idNaturaCipe }} - {{ naturaCIPE.descNaturaCipe }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="nat?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="processoDatiBando == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un settore CPT *</mat-label>
+                                    <mat-select [(ngModel)]="settoreCPTSelected" name="settoreCPT" #setcpt="ngModel">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let settoreCPT of settoriCPT" [value]="settoreCPT">
+                                            {{ settoreCPT.id }} - {{ settoreCPT.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-error *ngIf="setcpt?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una tipologia di attivazione *</mat-label>
+                                <mat-select [(ngModel)]="tipologiaAttivazioneSelected" name="tipologiaAttivazione"
+                                    #att="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let tipologiaAttivazione of tipologieAttivazione"
+                                        [value]="tipologiaAttivazione">
+                                        {{ tipologiaAttivazione.id }} - {{ tipologiaAttivazione.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="att?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div class="textAlignRight">
+                        <button class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button
+                            type="submit" (click)="salvaDatiBando()">
+                            SALVA
+                        </button>
+                    </div>
+                </form>
+            </mat-tab>
+            <!-- TAB VOCI DI SPESA-->
+            <mat-tab [disabled]='isNuovoBando' label="VOCI DI SPESA">
+                <form #vociSpesaForm="ngForm" class="marginLeft30">
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field [formGroup]="macroGroup" class="col fullWidth marginRight30">
+                                <mat-label>Selezionare una macrovoce di spesa *</mat-label>
+                                <input type="text" aria-label="Number" matInput formControlName="macroControl"
+                                    [matAutocomplete]=" autoMacro" (blur)="check('M')">
+                                <mat-autocomplete autoActiveFirstOption #autoMacro="matAutocomplete"
+                                    [displayWith]="displayFnMacro" (optionSelected)="click($event,'M')">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsMacro | async)?.length>4,
+                                        'viewport-1': (filteredOptionsMacro | async)?.length==1,
+                                        'viewport-2': (filteredOptionsMacro | async)?.length==2,
+                                        'viewport-3': (filteredOptionsMacro | async)?.length==3,
+                                        'viewport-4': (filteredOptionsMacro | async)?.length==4 }">
+                                        <mat-option class="viewport-item"
+                                            *cdkVirtualFor="let option of filteredOptionsMacro | async"
+                                            [value]="option">
+                                            {{ option.descVoceDiSpesa }} - {{ option.codTipoVoceDiSpesa }}
+                                        </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="macroGroup.get('macroControl')?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <div class="fullWidth">
+                                <button class="button-style-1 marginLeft20" mat-button
+                                    (click)="aggiungiMacroVoce()">AGGIUNGI MACROVOCE</button>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginRight30">
+                                <mat-label>Selezionare una microvoce di spesa</mat-label>
+                                <mat-select [(ngModel)]="microVoceSpesaSelected" name="microVoceSpesa">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor=" let microVoceSpesa of microVociSpesa" [value]="microVoceSpesa">
+                                        {{ microVoceSpesa.descVoceDiSpesa }} - {{ microVoceSpesa.codTipoVoceDiSpesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <div class="fullWidth">
+                                <button class="button-style-1 marginLeft20" mat-button
+                                    (click)="aggiungiMicroVoce()">AGGIUNGI MICROVOCE</button>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div class="textAlignRight">
+                        <button class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button
+                            type="submit" (click)="associaVoceSpesa()">
+                            ASSOCIA
+                        </button>
+                    </div>
+                    <div class="content" [hidden]="!showTableVoceSpesa">
+                        <p
+                            *ngIf="!dataSourceVociSpesa || !dataSourceVociSpesa.data || !dataSourceVociSpesa.data.length">
+                            Nessun elemento da visualizzare.</p>
+                        <table mat-table [dataSource]="dataSourceVociSpesa" class="mat-elevation-z2 fullWidth"
+                            [ngClass]="{'displayNone': !dataSourceVociSpesa || !dataSourceVociSpesa.data || !dataSourceVociSpesa.data.length}">
+                            <ng-container matColumnDef="codice">
+                                <th mat-header-cell *matHeaderCellDef> <b>Codice</b> </th>
+                                <td mat-cell *matCellDef="let row"> {{row.descBreve}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="macroVoce">
+                                <th mat-header-cell *matHeaderCellDef> <b>Macrovoce di spesa</b> </th>
+                                <td mat-cell *matCellDef="let row"> {{getMacroVoceFromString(row.descEstesa)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="microVoce">
+                                <th mat-header-cell *matHeaderCellDef> <b>Microvoce</b> </th>
+                                <td mat-cell *matCellDef="let row">{{getMicroVoceFromString(row.descEstesa)}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="speseGestione">
+                                <th mat-header-cell *matHeaderCellDef> <b>Spese di gestione</b> </th>
+                                <td mat-cell *matCellDef="let row">{{row.info4 === "S" ? "Sì" : "No"}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="azioni">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let row">
+                                    <button mat-icon-button style="width: 30px;" (click)="eliminaVoceSpesa(row.id)"
+                                        class="red-color">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsVociSpesa"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsVociSpesa;"></tr>
+                        </table>
+                    </div>
+                </form>
+            </mat-tab>
+            <!-- TAB DATI AGGIUNTIVI-->
+            <mat-tab [disabled]='isNuovoBando' label="DATI AGGIUNTIVI">
+                <h2 class="marginLeft30 h2Style marginTop20 ">Modalità di agevolazione</h2>
+                <mat-grid-list cols="8" rowHeight="80px">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                            <mat-label>Selezionare una modalità di agevolazione</mat-label>
+                            <mat-select [(ngModel)]="modalitaAgevolazioneSelected" name="modalitaAgevolazione">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let modalitaAgevolazione of modalitasAgevolazione"
+                                    [value]="modalitaAgevolazione">
+                                    {{ modalitaAgevolazione.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="9" rowHeight="80px" class="marginLeft30 marginRight30">
+
+                    <mat-grid-tile [colspan]="3" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginRight30">
+                            <input type="number" placeholder="Importo agevolato (%)" [(ngModel)]="importoAgevolato"
+                                name="importoAgevolato" matInput>
+                        </mat-form-field>
+                    </mat-grid-tile>
+
+                    <div *ngIf="modalitaAgevolazioneSelected?.hasPeriodoDiStabilita">
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginRight30">
+                                <input type="number" placeholder=" Periodo di stabilita'" [(ngModel)]="periodoStabilita"
+                                    name="periodoStabilita" matInput>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </div>
+
+                    <div>
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="col fullWidth">
+                                <input type="number" placeholder="Importo da erogare post concessione (%)"
+                                    [(ngModel)]="importoDaErogare" name="importoDaErogare" matInput>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </div>
+
+
+                </mat-grid-list>
+                <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="fullWidth">
+                            <mat-checkbox class="example-margin" [(ngModel)]="checkedModalitaLiquidazione">
+                                Modalità da usare in liquidazione
+                            </mat-checkbox>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="textAlignRight">
+                    <button (click)="associaModalitaAgevolazione()" matTooltip="Selezionare una modalità agevolazione"
+                        [matTooltipDisabled]="modalitaAgevolazioneSelected"
+                        class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="submit">
+                        ASSOCIA
+                    </button>
+                </div>
+                <div class="marginRight30 marginLeft30 marginBottom40">
+                    <p *ngIf="!dataSourceModAgev || !dataSourceModAgev.data || !dataSourceModAgev.data.length">
+                        Nessun elemento da visualizzare.
+                    </p>
+                    <table mat-table [dataSource]="dataSourceModAgev" class="mat-elevation-z2 fullWidth"
+                        [ngClass]="{'displayNone': !dataSourceModAgev || !dataSourceModAgev.data || !dataSourceModAgev.data.length}">
+                        <!-- Codice Column -->
+                        <ng-container matColumnDef="codice">
+                            <th mat-header-cell *matHeaderCellDef> <b>Codice</b> </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.idModalitaAgevolazione}} </td>
+                        </ng-container>
+
+                        <!-- Modalita agevolazione Column -->
+                        <ng-container matColumnDef="modAgev">
+                            <th mat-header-cell *matHeaderCellDef class="text-align-center"> <b>Modalità di
+                                    agevolazione</b> </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.descModalitaAgevolazione}} </td>
+                        </ng-container>
+
+                        <!-- Importo agevolato Column -->
+                        <ng-container matColumnDef="impAgev">
+                            <th mat-header-cell *matHeaderCellDef class="text-align-center"> <b>Importo agevolato</b>
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.percentualeImportoAgevolato}} </td>
+                        </ng-container>
+
+                        <!-- Periodo stabilita -->
+                        <ng-container matColumnDef="perStab">
+                            <th mat-header-cell *matHeaderCellDef class="text-align-center"> <b>Periodo di stabilita'
+                                </b> </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.periodoStabilita}} </td>
+                        </ng-container>
+
+                        <!-- Importo da erogare -->
+                        <ng-container matColumnDef="impErog">
+                            <th mat-header-cell *matHeaderCellDef class="text-align-center"> <b>Importo da erogare post
+                                    concessione(%)
+                                </b>
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.importoDaErogare}} </td>
+                        </ng-container>
+
+                        <!-- Da usare in liquidazione Column -->
+                        <ng-container matColumnDef="daUsInLiq">
+                            <th mat-header-cell *matHeaderCellDef class="text-align-center"> <b>Da usare in
+                                    liquidazione</b> </th>
+                            <td mat-cell *matCellDef="let element" class="text-align-center">
+                                {{element.flagLiquidazione}} </td>
+                        </ng-container>
+
+                        <!-- azioni Column -->
+                        <ng-container matColumnDef="azioni">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button (click)="deleteModAgev(element.idModalitaAgevolazione)" type="button"
+                                    mat-icon-button class="red-color">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsModAgev"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsModAgev;"></tr>
+                    </table>
+                </div>
+                <h2 class="marginLeft30 h2Style marginTop20">Tipo di trattamento</h2>
+                <mat-grid-list cols="8" rowHeight="80px">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                            <mat-label>Selezionare un tipo di trattamento</mat-label>
+                            <mat-select [(ngModel)]="tipoTrattamentoSelected" name="tipoTrattamento">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let tipoTrattamento of tipiTrattamento" [value]="tipoTrattamento">
+                                    {{ tipoTrattamento.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="textAlignRight">
+                    <button (click)="associaTipoTrattamento()" matTooltip="Selezionare una modalità agevolazione"
+                        [matTooltipDisabled]="tipoTrattamentoSelected"
+                        class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="submit">
+                        ASSOCIA
+                    </button>
+                </div>
+                <div class="marginRight30 marginLeft30 marginBottom40">
+                    <p *ngIf="!dataSourceTipoTrat || !dataSourceTipoTrat.data || !dataSourceTipoTrat.data.length">
+                        Nessun elemento da visualizzare.</p>
+                    <table mat-table [dataSource]="dataSourceTipoTrat" class="mat-elevation-z2 fullWidth"
+                        [ngClass]="{'displayNone': !dataSourceTipoTrat || !dataSourceTipoTrat.data || !dataSourceTipoTrat.data.length}">
+                        <!-- Tipo trattamento Column -->
+                        <ng-container matColumnDef="tipoTratt">
+                            <th mat-header-cell *matHeaderCellDef> <b>Tipo di trattamento</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descTipoTrattamento}} </td>
+                        </ng-container>
+
+                        <!-- Predefinito Column -->
+                        <ng-container matColumnDef="predefinito">
+                            <th mat-header-cell *matHeaderCellDef> <b>Predefinito</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.isPredefinito == true ? "Si" : "No"}}
+                            </td>
+                        </ng-container>
+
+                        <!-- star Column -->
+                        <ng-container matColumnDef="star">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button (click)="setPredefinito(element.idTipoTrattamento)" type="button"
+                                    mat-icon-button class="colorBlue">
+                                    <mat-icon>stars</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <!-- delete Column -->
+                        <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button (click)="deleteTipoTrat(element.idTipoTrattamento)" type="button"
+                                    mat-icon-button class="red-color">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoTrat"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoTrat;"></tr>
+                    </table>
+                </div>
+                <h2 class="marginLeft30 h2Style marginTop20">Soggetti finanziatori</h2>
+                <mat-grid-list cols="8" rowHeight="80px">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                            <mat-label>Selezionare un soggetto finanziatore</mat-label>
+                            <mat-select [(ngModel)]="soggettoFinanziatoreSelected" name="soggettoFinanziatore">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let soggettoFinanziatore of soggettiFinanziatore"
+                                    [value]="soggettoFinanziatore">
+                                    {{ soggettoFinanziatore.descEstesa }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="col fullWidth">
+                            <input type="number" placeholder="Percentuale (%)" [(ngModel)]="percentuale"
+                                name="percentuale" matInput>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="textAlignRight">
+                    <button (click)="associaSogFin()" matTooltip="Selezionare una modalità agevolazione"
+                        [matTooltipDisabled]="soggettoFinanziatoreSelected"
+                        class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="submit">
+                        ASSOCIA
+                    </button>
+                </div>
+                <div class="marginRight30 marginLeft30 marginBottom40">
+                    <p *ngIf="!dataSourceSogFin || !dataSourceSogFin.data || !dataSourceSogFin.data.length">
+                        Nessun elemento da visualizzare.</p>
+                    <table mat-table [dataSource]="dataSourceSogFin" class="mat-elevation-z2 fullWidth"
+                        [ngClass]="{'displayNone': !dataSourceSogFin || !dataSourceSogFin.data || !dataSourceSogFin.data.length}">
+                        <!-- Soggetto finanziatore Column -->
+                        <ng-container matColumnDef="soggFin">
+                            <th mat-header-cell *matHeaderCellDef> <b>Soggetto finanziatore</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descSoggFinanziatore}} </td>
+                        </ng-container>
+
+                        <!-- Percentuale Column -->
+                        <ng-container matColumnDef="perc">
+                            <th mat-header-cell *matHeaderCellDef> <b>Percentuale</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.percentualeQuotaSoggFinanz}} </td>
+                        </ng-container>
+
+                        <!-- delete Column -->
+                        <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button (click)="deleteSogFin(element.idSoggettoFinanziatore)" type="button"
+                                    mat-icon-button class="red-color">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsSogFin"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsSogFin;"></tr>
+                    </table>
+                </div>
+                <h2 class="marginLeft30 h2Style marginTop20">Causale di erogazione</h2>
+                <mat-grid-list cols="8" rowHeight="80px">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                            <mat-label>Selezionare una causale di erogazione</mat-label>
+                            <mat-select [(ngModel)]="causaleErogazioneSelected" name="causaleErogazione">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let causaleErogazione of causaliErogazione"
+                                    [value]="causaleErogazione">
+                                    {{ causaleErogazione.descEstesa }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                            <mat-label>Selezionare una modalità di agevolazione</mat-label>
+                            <mat-select [(ngModel)]="modalitaAgevoErogazioneSelected" name="modalitaAgevoErogazioneSelected">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let modalitaAgevolazione of modalitasAgevolazioneErogazione"
+                                    [value]="modalitaAgevolazione">
+                                    {{ modalitaAgevolazione.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="col fullWidth">
+                            <input type="number" placeholder="Soglia spesa quietanziata (%)"
+                                [(ngModel)]="sogliaSpesaQuietanziata" name="sogliaSpesaQuietanziata" matInput>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30">
+                            <input type="number" placeholder="Erogazione (%)" [(ngModel)]="erogazione" name="erogazione"
+                                matInput>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginLeft30">
+                            <input type="number" placeholder="Limite (%)" [(ngModel)]="limite" name="limite" matInput>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="textAlignRight">
+                    <button (click)="associaCausErog()" matTooltip="Selezionare una causale di erogazione"
+                        [matTooltipDisabled]="causaleErogazioneSelected"
+                        class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="submit">
+                        ASSOCIA
+                    </button>
+                </div>
+                <div class="marginRight30 marginLeft30 marginBottom40">
+                    <p *ngIf="!dataSourceCausErog || !dataSourceCausErog.data || !dataSourceCausErog.data.length">
+                        Nessun elemento da visualizzare.</p>
+                    <table mat-table [dataSource]="dataSourceCausErog" class="mat-elevation-z2 fullWidth"
+                        [ngClass]="{'displayNone': !dataSourceCausErog || !dataSourceCausErog.data || !dataSourceCausErog.data.length}">
+
+                        <!-- Causale erogazione Column -->
+                        <ng-container matColumnDef="causErog">
+                            <th mat-header-cell *matHeaderCellDef> <b>Causale di erogazione</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descCausale}} </td>
+                        </ng-container>
+
+                        <!-- Soglia spesa quietanziata Column -->
+                        <ng-container matColumnDef="soglSpQuiet">
+                            <th mat-header-cell *matHeaderCellDef> <b>Soglia spesa quietanziata</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.percSogliaSpesaQuietanzata}} </td>
+                        </ng-container>
+
+                        <!-- Soglia spesa quietanziata Column -->
+                        <ng-container matColumnDef="modAgev" *ngIf="isCostanteFinpiemonte">
+                            <th mat-header-cell *matHeaderCellDef> <b>Modalità di agevolazione </b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descModalitaAgevolazione}} </td>
+                        </ng-container>
+
+                        <!-- Erogazione Column -->
+                        <ng-container matColumnDef="erog">
+                            <th mat-header-cell *matHeaderCellDef> <b>Erogazione</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.percErogazione}} </td>
+                        </ng-container>
+
+                        <!-- Limite Column -->
+                        <ng-container matColumnDef="lim">
+                            <th mat-header-cell *matHeaderCellDef> <b>Limite</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.percLimite}} </td>
+                        </ng-container>
+
+                        <!-- delete Column -->
+                        <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button (click)="deleteCausErog(element.progrBandoCausaleErogaz)" type="button"
+                                    mat-icon-button class="red-color">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCausErog"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCausErog;"></tr>
+                    </table>
+                </div>
+                <h2 class="marginLeft30 h2Style marginTop20">Indicatori</h2>
+
+                <div *ngIf="!isSiffino">
+                    <div class="display-flex">
+                        <mat-form-field class="col fullWidth marginLeft30 marginRight10">
+                            <mat-label>Selezionare un tipo di indicatore</mat-label>
+                            <mat-select [(ngModel)]="tipoIndicatoreSelected" name="tipoIndicatore"
+                                (ngModelChange)="changeTipoIndicatore()">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let tipoIndicatore of tipiIndicatore" [value]="tipoIndicatore">
+                                    {{ tipoIndicatore.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field [formGroup]="indicatoriGroup" class="col fullWidth marginRight30">
+                            <mat-label>Selezionare un indicatore</mat-label>
+                            <input type="text" aria-label="Number" matInput formControlName="indicatoriControl"
+                                [matAutocomplete]=" autoInd" (blur)="check('I')">
+                            <mat-autocomplete autoActiveFirstOption #autoInd="matAutocomplete"
+                                [displayWith]="displayFnInd" (optionSelected)="click($event,'I')">
+                                <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                    class="viewport" [ngClass]="{'viewport-full': (filteredOptionsInd | async)?.length>4,
+                                    'viewport-1': (filteredOptionsInd | async)?.length==1,
+                                    'viewport-2': (filteredOptionsInd | async)?.length==2,
+                                    'viewport-3': (filteredOptionsInd | async)?.length==3,
+                                    'viewport-4': (filteredOptionsInd | async)?.length==4 }">
+                                    <mat-option class="viewport-item"
+                                        *cdkVirtualFor="let option of filteredOptionsInd | async" [value]="option"
+                                        matTooltip="{{ option.descBreve }} - {{ option.descEstesa }}"
+                                        matToolTipPosition="after" matTooltipShowDelay="100" matTooltipHideDelay="100">
+                                        {{ option.descBreve }} - {{ option.descEstesa }}
+                                    </mat-option>
+                                </cdk-virtual-scroll-viewport>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="display-flex">
+                        <mat-form-field class="fullWidth marginLeft30 marginRight10">
+                            <textarea rows="3" matInput placeholder="Informazione iniziale" [(ngModel)]="infoIniziale"
+                                name="infoIniziale" maxlength="500"></textarea>
+                            <mat-hint>{{infoIniziale ? infoIniziale.length : 0}}/500</mat-hint>
+                        </mat-form-field>
+
+                        <mat-form-field class="fullWidth marginRight30">
+                            <textarea rows="3" matInput placeholder="Informazione finale" [(ngModel)]="infoFinale"
+                                name="infoFinale" maxlength="500"></textarea>
+                            <mat-hint>{{infoFinale ? infoFinale.length : 0}}/500</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="textAlignRight" *ngIf="!isSiffino">
+                    <button (click)="associaIndicat()" matTooltip="Selezionare un indicatore"
+                        [matTooltipDisabled]="indicatoreSelected"
+                        class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="button">
+                        ASSOCIA
+                    </button>
+                </div>
+                <div class="marginRight30 marginLeft30 marginBottom40 marginTop20">
+                    <p *ngIf="!dataSourceIndic || !dataSourceIndic.data || !dataSourceIndic.data.length">
+                        Nessun elemento da visualizzare.</p>
+                    <table mat-table [dataSource]="dataSourceIndic" class="mat-elevation-z2 fullWidth"
+                        [ngClass]="{'displayNone': !dataSourceIndic || !dataSourceIndic.data || !dataSourceIndic.data.length}">
+                        <!-- Codice Column -->
+                        <ng-container matColumnDef="cod">
+                            <th mat-header-cell *matHeaderCellDef> <b>Codice</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descBreve}} </td>
+                        </ng-container>
+
+                        <!-- Indicatore Column -->
+                        <ng-container matColumnDef="ind">
+                            <th mat-header-cell *matHeaderCellDef> <b>Indicatore</b> </th>
+                            <td mat-cell *matCellDef="let element"> {{element.descEstesa}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="infoIniziale">
+                            <th mat-header-cell *matHeaderCellDef> <b>Informazione iniziale</b> </th>
+                            <td mat-cell *matCellDef="let element" class="max-width-0">
+                                <div class="spaceBetween">
+                                    <span
+                                        class="text-overflow-ellipsis overflow-hidden white-space-nowrap padding-top-4">{{element.info}}</span>
+                                    <button mat-icon-button matTooltip="Visualizza in nuova finestra"
+                                        *ngIf="element.info?.length > 10" (click)="visualizzaInDialog(element.info)">
+                                        <mat-icon>open_in_new</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="infoFinale">
+                            <th mat-header-cell *matHeaderCellDef> <b>Informazione finale</b> </th>
+                            <td mat-cell *matCellDef="let element" class="max-width-0">
+                                <div class="spaceBetween">
+                                    <span
+                                        class="text-overflow-ellipsis overflow-hidden white-space-nowrap padding-top-4">{{element.info2}}</span>
+                                    <button mat-icon-button matTooltip="Visualizza in nuova finestra"
+                                        *ngIf="element.info2?.length > 10" (click)="visualizzaInDialog(element.info)">
+                                        <mat-icon>open_in_new</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- delete Column -->
+                        <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button *ngIf="!isSiffino" (click)="deleteIndicat(element.id)" type="button"
+                                    mat-icon-button class="red-color">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsIndic"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsIndic;"></tr>
+                    </table>
+                </div>
+            </mat-tab>
+
+            <!-- TAB LINEA DI INTERVENTO -->
+            <mat-tab [disabled]='isNuovoBando' label="LINEA DI INTERVENTO">
+                <form #lineaInterventoForm="ngForm">
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una normativa *</mat-label>
+                                <mat-select
+                                    [disabled]="(processoDatiBando == 1) && (isNuovoBando == false) ? false : true"
+                                    [(ngModel)]="normativaLinInSelected" name="normativaLinIn"
+                                    (ngModelChange)="changeNormativaLineaIntervento()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let normativaLinIn of normativeLinInt" [value]="normativaLinIn">
+                                        {{ normativaLinIn.descBreve }} - {{ normativaLinIn.descEstesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare
+                                    <span *ngIf="!is2127">un asse</span>
+                                    <span *ngIf="is2127">una priorità</span></mat-label>
+                                <mat-select [(ngModel)]="asseSelected" name="asse" (ngModelChange)="changeAsse()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let asse of assi" [value]="asse">
+                                        {{ asse.descBreve }} - {{ asse.descEstesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30">
+                                <mat-label>Selezionare una misura</mat-label>
+                                <mat-select [(ngModel)]="misuraSelected" name="misura" (ngModelChange)="changeMisura()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let misura of misure" [value]="misura"
+                                        matTooltip="{{ misura.descBreve }} - {{ misura.descEstesa }}"
+                                        matToolTipPosition="after" matTooltipShowDelay="100" matTooltipHideDelay="100">
+                                        {{ misura.descBreve }} - {{ misura.descEstesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una linea</mat-label>
+                                <mat-select [(ngModel)]="lineaSelected" name="linea">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let linea of linee" [value]="linea"
+                                        matTooltip="{{ linea.descBreve }} - {{ linea.descEstesa }}"
+                                        matToolTipPosition="after" matTooltipShowDelay="100" matTooltipHideDelay="100">
+                                        {{ linea.descBreve }} - {{ linea.descEstesa }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth">
+                                <input type="text" placeholder="Titolo bando linea *" [(ngModel)]="titoloBandoLinea"
+                                    name="titoloBandoLinea" matInput #titBL="ngModel">
+                                <mat-error *ngIf="titBL?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="processoLineeIntervento == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare una priorità QSN *</mat-label>
+                                    <mat-select [(ngModel)]="prioritaQSNSelected" name="prioritaQSN" #pri="ngModel"
+                                        (ngModelChange)="changePrioritaQSN()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let prioritaQSN of prioritasQSN" [value]="prioritaQSN">
+                                            {{ prioritaQSN.id }} - {{ prioritaQSN.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="pri?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="processoLineeIntervento == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un obiettivo generale QSN *</mat-label>
+                                    <mat-select [(ngModel)]="obiettivoGeneraleQSNSelected" name="obiettivoGeneraleQSN"
+                                        #obgen="ngModel" (ngModelChange)="changeObiettivoGeneraleQSN()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let obiettivoGeneraleQSN of obiettiviGeneraleQSN"
+                                            [value]="obiettivoGeneraleQSN">
+                                            {{ obiettivoGeneraleQSN.id }} - {{ obiettivoGeneraleQSN.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="obgen?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="processoLineeIntervento == 1 ? false : true">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un obiettivo specifico QSN *</mat-label>
+                                    <mat-select [(ngModel)]="obiettivoSpecificoQSNSelected" #obspec="ngModel"
+                                        name="obiettivoSpecificoQSN">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let obiettivoSpecificoQSN of obiettiviSpecificoQSN"
+                                            [value]="obiettivoSpecificoQSN">
+                                            {{ obiettivoSpecificoQSN.id }} - {{ obiettivoSpecificoQSN.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="obspec?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una categoria CIPE *</mat-label>
+                                <mat-select [(ngModel)]="catCIPESelected" name="catCIPE" #categ="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let catCIPE of catsCIPE" [value]="catCIPE">
+                                        {{ catCIPE.descrizioneBreve }} - {{ catCIPE.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="categ?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare una tipologia CIPE *</mat-label>
+                                <mat-select [(ngModel)]="tipoCIPESelected" name="tipoCIPE" #tipo="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let tipoCIPE of tipiCIPE" [value]="tipoCIPE">
+                                        {{ tipoCIPE.descrizioneBreve }} - {{ tipoCIPE.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="tipo?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="processoLineeIntervento == 1 ? true : false">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field [formGroup]="obTemGroup"
+                                    class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un obiettivo tematico *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="obTemControl"
+                                        [matAutocomplete]=" autoObTem" (blur)="check('O')">
+                                    <mat-autocomplete autoActiveFirstOption #autoObTem="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'O')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsObTem | async)?.length>4,
+                                        'viewport-1': (filteredOptionsObTem | async)?.length==1,
+                                        'viewport-2': (filteredOptionsObTem | async)?.length==2,
+                                        'viewport-3': (filteredOptionsObTem | async)?.length==3,
+                                        'viewport-4': (filteredOptionsObTem | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsObTem | async"
+                                                [value]="option">
+                                                {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="obTemGroup.get('obTemControl')?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="processoLineeIntervento == 1 ? true : false">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field [formGroup]="classRAGroup"
+                                    class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare classificazione RA *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="classRAControl"
+                                        [matAutocomplete]=" autoClassRA" (blur)="check('C')">
+                                    <mat-autocomplete autoActiveFirstOption #autoClassRA="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'C')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsClassRA | async)?.length>4,
+                                            'viewport-1': (filteredOptionsClassRA | async)?.length==1,
+                                            'viewport-2': (filteredOptionsClassRA | async)?.length==2,
+                                            'viewport-3': (filteredOptionsClassRA | async)?.length==3,
+                                            'viewport-4': (filteredOptionsClassRA | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsClassRA | async"
+                                                [value]="option">
+                                                {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="classRAGroup.get('classRAControl')?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                        <mat-grid-tile [colspan]="2" [rowspan]="1">
+                            <mat-form-field class="col fullWidth">
+                                <input type="number" placeholder="Durata progetti da dat conc.(mesi) *" #dur="ngModel"
+                                    [(ngModel)]="durProgDatConc" name="durProgDatConc" matInput>
+                                <mat-error *ngIf="dur?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <mat-grid-list cols="8" rowHeight="80px">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                <mat-label>Selezionare un processo *</mat-label>
+                                <mat-select [(ngModel)]="processoSelected" name="processo" #proc="ngModel">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let processo of processi" [value]="processo">
+                                        {{ processo.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="proc?.errors?.error === 'required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <div [hidden]="!is2127 && !is1420">
+                        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <a>Bando SIF</a>
+                                    <mat-radio-group aria-label="Select an option" [(ngModel)]="BandoSIFRadio"
+                                        name="BandoSIF" class="row marginRadioButton" (change)="changeBandoSIF($event)"
+                                        [disabled]="showFormModificaLineaIntervento">
+                                        <mat-radio-button class="col marginLeft20" value="1">si
+                                        </mat-radio-button>
+                                        <mat-radio-button class="col marginLeft20" value="2">no</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127 || BandoSIFRadio !== '1'">
+                        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-label>SIF con sostegno sotto forma di sovvenzioni (art. 58)</mat-label>
+                                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagArt58"
+                                        name="flagArt58" class="row marginRadioButton">
+                                        <mat-radio-button class="col marginLeft20" value="S">si
+                                        </mat-radio-button>
+                                        <mat-radio-button class="col marginLeft20" value="N">no</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div *ngIf="is2127 && BandoSIFRadio === '1'" class="marginLeft30">
+                        <p>Status giuridico dello strumento finanziario:&nbsp;
+                            <span class="bold-text">blocchi separati di conti finanziari o
+                                fiduciari</span>
+                        </p>
+                        <p>L'operazione di strumenti finanziari è realizzata:&nbsp;
+                            <span class="bold-text">sotto la Responsabilità dell'Autorità di Gestione</span>
+                        </p>
+                        <p>L'operazione di strumenti finanziari è realizzata nei
+                            periodi:&nbsp;
+                            <span class="bold-text">2021-2027 e post-2027</span>
+                        </p>
+                    </div>
+
+                    <div [hidden]="!is2127 && !is1420">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare un bando SIF</mat-label>
+                                    <mat-select *ngIf="!showFormModificaLineaIntervento" [(ngModel)]="bandoSIFSelected"
+                                        name="bandoSIF" [disabled]="!showBandoSIF">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let bandoSIF of bandiSIF" [value]="bandoSIF">
+                                            {{ bandoSIF.nomeBandoLinea }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <input *ngIf="showFormModificaLineaIntervento" matInput name="bandoSIF"
+                                        [value]="dataModificaLineaIntervento?.nomeBandoLineaSif" disabled />
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare livello istituzione</mat-label>
+                                    <mat-select [(ngModel)]="livIstSelected" name="livIst" [disabled]="!showLivIst"
+                                        (ngModelChange)="changeLivelloIstituzione()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let livIst of livsIst" [value]="livIst">
+                                            {{ livIst.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <a>Fondo di Fondi</a>
+                                    <mat-radio-group [disabled]="!showFondoFondi" aria-label="Select an option"
+                                        [(ngModel)]="FondoFondiRadio" name="FondoFondi" class="row marginRadioButton">
+                                        <mat-radio-button class="col marginLeft20" value="1">si
+                                        </mat-radio-button>
+                                        <mat-radio-button class="col marginLeft20" value="2">no</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare tipo localizzazione</mat-label>
+                                    <mat-select [(ngModel)]="tipoLocSelected" name="tipoLoc">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let tipoLoc of tiposLoc" [value]="tipoLoc">
+                                            {{ tipoLoc.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare progetto complesso</mat-label>
+                                    <mat-select [(ngModel)]="progComplessoSelected" name="progComplesso">
+                                        <div *ngIf="progsComplesso != undefined">
+                                            <mat-option></mat-option>
+                                            <mat-option *ngFor="let progComplesso of progsComplesso"
+                                                [value]="progComplesso">
+                                                {{ progComplesso.descrizione }}
+                                            </mat-option>
+                                        </div>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                                    <mat-label>Selezionare classificazione Meccanismi di Erogazione Territoriale (MET)
+                                    </mat-label>
+                                    <mat-select [(ngModel)]="clasMETSelected" name="clasMET">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let clasMET of classesMET" [value]="clasMET">
+                                            {{ clasMET.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div [hidden]="!is2127">
+                        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+                            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                <mat-form-field class="col fullWidth">
+                                    <input type="text" placeholder="Codice RNA" [(ngModel)]="codRNA" name="codRNA"
+                                        matInput>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+
+                    <div [hidden]="showFormModificaLineaIntervento" class="textAlignRight">
+                        <button [hidden]="!showFormModificaLineaIntervento"
+                            class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button
+                            type="submit" (click)="associaLineaAssociata()">
+                            ASSOCIA
+                        </button>
+                    </div>
+                    <div [hidden]="!showFormModificaLineaIntervento" class="textAlignRight">
+                        <button class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button
+                            type="submit" (click)="confermaModificheLineaAssociata()">
+                            SALVA
+                        </button>
+                    </div>
+                    <div class="marginRight30 marginLeft30 marginBottom40" [hidden]="!showTableLineaAssociata">
+                        <p *ngIf="!dataSourceLinInt || !dataSourceLinInt.data || !dataSourceLinInt.data.length">
+                            Nessun elemento da visualizzare.</p>
+                        <table mat-table [dataSource]="dataSourceLinInt" class="mat-elevation-z2 fullWidth"
+                            [ngClass]="{'displayNone': !dataSourceLinInt || !dataSourceLinInt.data || !dataSourceLinInt.data.length}">
+                            <!-- Linea associata Column -->
+                            <ng-container matColumnDef="linAss">
+                                <th mat-header-cell *matHeaderCellDef> <b>Linea associata</b> </th>
+                                <td mat-cell *matCellDef="let element"> {{element.descBreveLinea}} </td>
+                            </ng-container>
+
+                            <!-- Bando linea Column -->
+                            <ng-container matColumnDef="bandoLinea">
+                                <th mat-header-cell *matHeaderCellDef> <b>Bando linea</b> </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nomeBandoLinea}} </td>
+                            </ng-container>
+
+                            <!-- settings Column -->
+                            <ng-container matColumnDef="settings">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button type="button" mat-icon-button class="colorBlue"
+                                        (click)="configuraBandoLinea(element.progrBandoLineaIntervento, element.nomeBandoLinea)">
+                                        <mat-icon>settings</mat-icon>
+                                    </button>
+                            </ng-container>
+
+                            <!-- edit Column -->
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button type="button" mat-icon-button class="colorBlue"
+                                        (click)="editLineaAssociata(element.progrBandoLineaIntervento)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                            </ng-container>
+
+                            <!-- delete Column -->
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button type="button" mat-icon-button class="red-color"
+                                        (click)="deleteLineaAssociata(element.progrBandoLineaIntervento)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsLinInt"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsLinInt;"></tr>
+                        </table>
+                    </div>
+                    <div class="marginRight30 marginLeft30 marginBottom40" [hidden]="showTableLineaAssociata">
+                        <mat-card class="mat-elevation-z4">
+                            <mat-card-content>
+                                Non è presente nessuna linea associata.
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </form>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>
+</div>

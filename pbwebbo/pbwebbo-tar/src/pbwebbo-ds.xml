@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+	<datasource jndi-name="java:/jdbc/pbwebboDS" pool-name="jdbc/pbwebboDS">
+		<!-- connection-url>jdbc:oracle:thin:@tst-domdb49.csi.it:1521:TW11UTF8</connection-url -->
+		<connection-url>@@CONNECTION_URL@@</connection-url>
+		<driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+		<driver>oracle</driver>
+		<security>
+			<user-name>@@DB_USER@@</user-name>
+			<password>@@DB_PWD@@</password>
+		</security>
+		<validation>
+			<valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker"/>
+			<background-validation>true</background-validation>
+			<stale-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleStaleConnectionChecker"/>
+			<exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter"/>
+		</validation>
+	</datasource>
+</datasources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbwebbo.business.SpringApplicationContextHelper"></bean>
+
+	<!-- bean usati dai servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebbo.business.impl" />
+	
+	<!-- bean dei servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebbo.business.service.impl" />
+	
+	<bean class="it.csi.pbandi.pbwebbo.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebbo.util.FileSqlUtil"></bean>
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+      	<property name="jndiName" value="jdbc/pbwebboDS" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean class="it.csi.pbandi.pbwebbo.business.impl.GestioneBackofficeBusinessWebboImpl"/>
+	
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebbo.integration.dao" />
+	
+
+
+
+</beans>

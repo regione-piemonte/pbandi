@@ -1,0 +1,121 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>Gestione Templates</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="display-flex">
+                            <mat-form-field [formGroup]="bandoGroup" class="fullWidth margin-right-10">
+                                <input type="text" placeholder="Selezionare un bandolinea" aria-label="Number" matInput
+                                    formControlName="bandoControl" [matAutocomplete]="auto" (blur)="check()">
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    [displayWith]="displayFn" (optionSelected)="click($event)">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptions | async)?.length>4,
+                                        'viewport-1': (filteredOptions | async)?.length==1,
+                                        'viewport-2': (filteredOptions | async)?.length==2,
+                                        'viewport-3': (filteredOptions | async)?.length==3,
+                                        'viewport-4': (filteredOptions | async)?.length==4 }">
+                                        <mat-option></mat-option>
+                                        <mat-option class="viewport-item"
+                                            *cdkVirtualFor="let option of filteredOptions | async" [value]="option">
+                                            {{ option.nomeBandoLinea }}
+                                        </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-form-field class="fullWidth">
+                                <mat-label>Selezionare un tipo documento</mat-label>
+                                <mat-select [(ngModel)]="tipoDocumentoSelected" name="tipoDocumento">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of tipiDocumento" [value]="option">
+                                        {{ option.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <button class="button-style-2 margin-right-10" mat-raised-button type="submit">
+                            CERCA
+                        </button>
+                        <!--button class="button-style-2" mat-raised-button type="button" (click)="anteprima()">
+                            ANTEPRIMA
+                        </button-->
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !showElenco}">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <table mat-table [dataSource]="dataSource" class="fullWidth"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+
+                    <ng-container matColumnDef="bando">
+                        <th mat-header-cell *matHeaderCellDef> Bandolinea </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.nomeBandolinea}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef> Tipo documento </th>
+                        <td mat-cell *matCellDef="let row"> {{row.descTipoDocIndex}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="data">
+                        <th mat-header-cell *matHeaderCellDef> Data inserimento </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.dtInserimento | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef class="width-100-px"> </th>
+                        <td mat-cell *matCellDef="let row" class="width-100-px">
+                            <button mat-icon-button (click)="downloadModelloDocumentoAssociato(row)"
+                                matTooltip="Download">
+                                <mat-icon> picture_as_pdf </mat-icon>
+                            </button>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content flexEnd">
+        <button mat-stroked-button (click)="generaTemplates()" class="button-style-3">GENERA TEMPLATES
+        </button>
+    </div>
+</div>

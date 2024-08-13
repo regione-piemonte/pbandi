@@ -1,0 +1,24 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Nuova area scientifica</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<form #nuovoForm="ngForm">
+    <div class="nuova-area-page">
+        <mat-form-field>
+            <input type="text" placeholder="Codice *" [(ngModel)]="codice" name="codice" matInput>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" placeholder="Area scientifica *" [(ngModel)]="areaScientifica" name="areaScientifica"
+                matInput>
+        </mat-form-field>
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+            <div matTooltip="Inserire un codice e un area scientifica" [matTooltipDisabled]="codice && areaScientifica">
+                <button mat-button class="button-style-1" type="submit" (click)="salva()"
+                    [disabled]="!codice || !areaScientifica">SALVA</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,44 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Upload file utente</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="OnAnnullaPressed()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<div *ngIf="isMessageSuccessVisible">
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- bottone  -->
+    <button mat-raised-button class="button-style-2" (click)="OnsSuccesPressed()">
+        CHIUDI
+    </button>
+
+</div>
+
+
+<div *ngIf="!isMessageSuccessVisible">
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+
+    <label for="uploadFile" class="bold-text padding-right-10"> File .csv </label>
+    <mat-form-field class="padding-right-10 width-30-perc">
+        <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+    </mat-form-field>
+    <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+    <button mat-button class="button-style-1 orange" (click)="file=null" [disabled]="!file">ANNULLA</button>
+    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+        (change)="onFileSelected($event)" />
+</div>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="OnAnnullaPressed()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" [disabled]="!isLoadFile"
+        (click)="OnCaricaPressed(file)">CARICA</button>
+</div>

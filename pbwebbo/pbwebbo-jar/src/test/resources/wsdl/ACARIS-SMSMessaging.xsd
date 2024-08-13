@@ -1,0 +1,112 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0"
+    xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            targetNamespace="sms.acaris.acta.doqui.it"
+            xmlns:tns="sms.acaris.acta.doqui.it"
+            xmlns:common="common.acaris.acta.doqui.it"
+            xmlns:document="documentservice.acaris.acta.doqui.it">
+
+    <xs:include schemaLocation="ACARIS-SMS.xsd"/>
+    <xs:import namespace="common.acaris.acta.doqui.it"  schemaLocation="ACARIS-Common.xsd"/>
+	<xs:import namespace="documentservice.acaris.acta.doqui.it"  schemaLocation="ACARIS-Document.xsd"/>
+	
+
+	<!--============================-->
+	<!-- Classi locali allo schema  -->
+	<!--============================-->
+
+	
+
+	<!--=====================-->
+	<!-- Service operations  -->
+	<!--=====================-->
+
+	<!-- creaSmistamento operation -->
+	<xs:element name="creaSmistamento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" type="common:PrincipalIdType" 
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="mittente" type="tns:MittenteType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="destinatari" type="tns:DestinatarioType" 
+					minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="oggettiSmistati" type="tns:OggettoSmistamentoType" 
+					minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="infoCreazione" type="tns:InfoCreazioneType" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="creaSmistamentoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="objects" type="common:IdSmistamentoType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="completaSmistamentoFirmaDwd">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" type="common:PrincipalIdType" 
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="idSmistamentoMittente" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idAoo" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="dataUltimoFirmatario" type="common:timeStamp" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idUtenteUltimoFirmatario" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idNodoUltimoDestinatario" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="docFisicoPrincipale" type="document:DocumentoFisicoIRC" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="docFisiciAllegati" type="document:DocumentoFisicoIRC" 
+					minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="destinatari" type="tns:DestinatarioConNoteType" 
+					minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="firmaAncheAllegati" type="common:boolean" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="completaSmistamentoFirmaDwdResponse">
+		<xs:complexType>
+			<xs:sequence/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="annullaSmistamentoFirmaDwd">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repositoryId" type="common:ObjectIdType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="principalId" type="common:PrincipalIdType" 
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="idSmistamentoMittente" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="dataRifiuto" type="common:timeStamp" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="idUtenteRifiuto" type="common:IDDBType" 
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="destinatariCompletati" type="tns:DestinatarioConNoteType" 
+					minOccurs="1" maxOccurs="unbounded" />
+				<xs:element name="destinatarioRifiuta" type="tns:DestinatarioConNoteType" 
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="annullaSmistamentoFirmaDwdResponse">
+		<xs:complexType>
+			<xs:sequence/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

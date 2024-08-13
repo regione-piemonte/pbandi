@@ -1,0 +1,81 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" #scrollId [ngClass]="{'displayNone':!(!isSaveNuovoUtente && !isLoading())}">
+
+    <div class="spaceBetween">
+        <h3 class="bold-text">Nuovo utente</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <form #inputForm="ngForm">
+        <!-- text box  nome-->
+        <mat-form-field class="width-49-perc margin-right-10">
+            <input type="text" placeholder="Nome" [(ngModel)]="nome" matInput name="nomeNuovoUteneInputText">
+        </mat-form-field>
+
+        <!-- text box  cognome -->
+        <mat-form-field class="width-49-perc">
+            <input type="text" placeholder="Cognome" [(ngModel)]="cognome" matInput name="cognomeNuovoUteneInputText">
+        </mat-form-field>
+
+        <!-- text box cf-->
+        <mat-form-field class="width-49-perc margin-right-10">
+            <input type="text" placeholder="Codice fiscale" [(ngModel)]="codiceFiscale" matInput
+                name="cfNuovoUteneInputText">
+        </mat-form-field>
+
+        <!-- input select -->
+        <mat-form-field class="width-49-perc">
+            <mat-label>Tipo anagrafica </mat-label>
+            <mat-select [(ngModel)]="anagraficaSelezionata" name="selectAnagrafica"
+                (selectionChange)="onSelectedTipoAnagrafica()">
+                <mat-option *ngFor="let a of anagraficaList; let i = index" [value]="a">
+                    {{a.descEstesa}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="width-49-perc margin-right-10"
+            *ngIf="anagraficaSelezionata?.descBreve === descBreveRuoloIstruttoreOI || anagraficaSelezionata?.descBreve === descBreveRuoloIstruttoreADG">
+            <input type="text" placeholder="Indirizzo e-mail" [(ngModel)]="email" matInput name="email" #mail="ngModel"
+                pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$">
+            <mat-error *ngIf="mail?.errors?.pattern">
+                Formato non valido
+            </mat-error>
+        </mat-form-field>
+    </form>
+    <div *ngIf="isVisibleEntiAssocite" id="mat-card-scroll">
+        <div class="title">
+            <h3 class="bold-text">Enti da associare</h3>
+        </div>
+        <div *ngFor="let enti of entiAssociabiliSupport.entiAssociabiliFiltrati; let i = index" [value]="enti">
+            <mat-checkbox class="my-checkbox" [(ngModel)]="enti.checkboxselected">
+                {{enti.descrizione}} </mat-checkbox>
+            <br>
+        </div>
+        <!--(change)="onCkeckboxSelected()"-->
+
+        <div *ngFor="let enti of entiAssociabiliSupport.entiAssociatiList; let i = index" [value]="enti">
+            <mat-checkbox class="my-checkbox" [(ngModel)]="enti.checkboxselected">
+                {{enti.descEstesa}} </mat-checkbox>
+            <br>
+        </div>
+    </div>
+
+    <div class="spaceBetween margin-top-20">
+        <button mat-button class="button-style-1" (click)="close()">
+            <!-- [disabled]="!isBeneficiarioSelezionato || !isProgettoSelezionato">-->
+            ANNULLA
+        </button>
+        <button mat-button class="button-style-1" (click)="OnSalvaPressed()" [disabled]="!isAnagraficaSelected">
+            SALVA
+        </button>
+    </div>
+
+</div>

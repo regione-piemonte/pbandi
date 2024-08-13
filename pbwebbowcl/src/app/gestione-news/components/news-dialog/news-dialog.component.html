@@ -1,0 +1,80 @@
+<div class="spaceBetween">
+    <h3 class="bold-text" *ngIf="type==='N'">Nuova notizia</h3>
+    <h3 class="bold-text" *ngIf="type==='M'">Modifica notizia</h3>
+    <h3 class="bold-text" *ngIf="type==='D'">Dettaglio notizia</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+<form #newsForm="ngForm">
+    <mat-form-field class="fullWidth">
+        <input type="text" matInput placeholder="Titolo *" [(ngModel)]="avviso.titolo" name="titolo" #tit="ngModel"
+            [disabled]="type==='D'" />
+        <mat-error *ngIf="tit?.errors?.error === 'required'">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="fullWidth">
+        <textarea rows="4" matInput placeholder="Contenuto *" [(ngModel)]="avviso.descrizione" name="contenuto"
+            #cont="ngModel" [disabled]="type==='D'"></textarea>
+        <mat-error *ngIf="cont?.errors?.error === 'required'">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-49-perc padding-right-10">
+        <mat-label>Destinatari *</mat-label>
+        <mat-select [formControl]="tipiFormControl" multiple (selectionChange)="changeDestinatari()"
+            [disabled]="type==='D'">
+            <mat-select-trigger>
+                {{tipiFormControl.value && tipiFormControl.value[0] ? tipiFormControl.value[0].descrizione : ''}}
+                <span *ngIf="tipiFormControl.value?.length > 1">
+                    (+{{tipiFormControl.value.length - 1}} {{tipiFormControl.value?.length === 2 ? 'altro' : 'altri'}})
+                </span>
+            </mat-select-trigger>
+            <mat-option [value]="tutti">TUTTI</mat-option>
+            <mat-option *ngFor="let tipo of tipiAnagrafica" [value]="tipo" [disabled]="destinatariDisabled">
+                {{tipo.descrizione}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="tipiFormControl?.errors?.error === 'required'">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-data">
+        <mat-label>Data inizio *</mat-label>
+        <input matInput [matDatepicker]="pickerInizio" [formControl]="dataInizio" [disabled]="type==='D'">
+        <mat-datepicker-toggle matSuffix [for]="pickerInizio">
+            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #pickerInizio></mat-datepicker>
+        <mat-error *ngIf="dataInizio?.errors?.error === 'required'">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-49-perc padding-right-10">
+        <mat-label>Tipologia *</mat-label>
+        <mat-select [(ngModel)]="avviso.tipoNews" [disabled]="type==='D'" name="tipo" #tip="ngModel">
+            <mat-option value="INFO">Informativa</mat-option>
+            <mat-option value="WARN">Warning</mat-option>
+        </mat-select>
+        <mat-error *ngIf="tip?.errors?.error === 'required'">
+            Campo obbligatorio
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-data">
+        <mat-label>Data fine</mat-label>
+        <input matInput [matDatepicker]="pickerFine" [formControl]="dataFine" [disabled]="type==='D'">
+        <mat-datepicker-toggle matSuffix [for]="pickerFine">
+            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #pickerFine></mat-datepicker>
+    </mat-form-field>
+</form>
+<div class="spaceBetween" *ngIf="type!=='D'">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="salva()">SALVA</button>
+</div>

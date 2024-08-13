@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jxb:bindings version="2.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb bindingschema_2_0.xsd">
+      
+	 <jxb:globalBindings
+		 	fixedAttributeAsConstantProperty="false"
+		 	collectionType="indexed"
+		 	generateIsSetMethod="false"
+		 	typesafeEnumMaxMembers="1000" >
+		<jxb:serializable/>
+		<jxb:javaType name="java.util.Date" xmlType="xs:date"
+		    parseMethod="org.apache.cxf.tools.common.DataTypeAdapter.parseDateTime"
+		    printMethod="org.apache.cxf.tools.common.DataTypeAdapter.printDateTime"/>
+		<jxb:javaType name="java.util.Date" xmlType="xs:dateTime"
+		    parseMethod="org.apache.cxf.tools.common.DataTypeAdapter.parseDateTime"
+		    printMethod="org.apache.cxf.tools.common.DataTypeAdapter.printDateTime"/>
+	</jxb:globalBindings>
+
+	<jxb:bindings schemaLocation="ACARIS-Common.xsd">
+	    <jxb:schemaBindings>
+	      	<jxb:package name="it.doqui.acta.actasrv.dto.acaris.type.common" /> 
+	    </jxb:schemaBindings>
+	</jxb:bindings>
+
+	<jxb:bindings schemaLocation="ACARIS-BackOffice.xsd">
+	    <jxb:schemaBindings>
+	      	<jxb:package name="it.doqui.acta.actasrv.dto.acaris.type.backoffice" /> 
+	    </jxb:schemaBindings>
+	</jxb:bindings>
+
+</jxb:bindings>

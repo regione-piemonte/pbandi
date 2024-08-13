@@ -1,0 +1,42 @@
+.display-flex {
+    display: flex;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.viewport {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.viewport-full {
+    height: 200px;
+}
+
+.viewport-1 {
+    height: 40px;
+}
+
+.viewport-2 {
+    height: 80px;
+}
+
+.viewport-3 {
+    height: 120px;
+}
+
+.viewport-4 {
+    height: 160px;
+}
+
+.viewport-item {
+    height: 40px;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100% !important;
+}

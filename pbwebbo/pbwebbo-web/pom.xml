@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>it.csi.pbandi</groupId>
+		<artifactId>pbwebbo</artifactId>
+		<version>1.8.0</version>
+	</parent>
+
+	<artifactId>pbwebbo-web</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>it.csi.pbandi</groupId>
+			<artifactId>pbwebbo-jar</artifactId>
+			<version>1.8.0</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-web-api</artifactId>
+			<version>6.0</version>  <!-- Jboss EAP 6.x -->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<filters>
+			<!-- Carico il profilo per l'ambiente target -->
+			<filter>profiles/${build.profile.id}/config.properties</filter>
+		</filters>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<resource>
+							<!-- abilita il replace dei placeholder -->
+							<filtering>true</filtering>
+							<!-- this is relative to the pom.xml directory -->
+							<directory>src/main/resources</directory>
+						</resource>
+					</webResources>
+				</configuration>
+				<version>3.3.1</version>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>dev</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>local</id>
+			<properties>
+				<build.profile.id>local</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di produzione -->
+		<profile>
+			<id>prod-rp-01</id>
+			<properties>
+				<build.profile.id>prod-rp-01</build.profile.id>
+			</properties>
+		</profile>
+	</profiles>
+	
+</project>

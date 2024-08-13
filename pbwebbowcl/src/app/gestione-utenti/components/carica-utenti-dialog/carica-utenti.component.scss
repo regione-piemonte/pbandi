@@ -1,0 +1,43 @@
+.button-style-2 {
+    margin-right: 20px;
+}
+
+.mat-elevation-z2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+#upload-utente-card {
+    padding-top: 20px;
+}
+
+#extension-wrong {
+    color: red;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.orange:enabled {
+    color: orangered !important;
+}
+
+.padding-right-10 {
+    padding-right: 10px;
+}
+
+.width-30-perc {
+    width: 30%;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

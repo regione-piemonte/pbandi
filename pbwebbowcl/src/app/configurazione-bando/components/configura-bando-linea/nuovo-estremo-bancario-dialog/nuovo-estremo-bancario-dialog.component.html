@@ -1,0 +1,34 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Nuovo estremo bancario</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<form #nuovoForm="ngForm">
+    <div class="nuova-area-page">
+
+        <mat-form-field>
+            <input type="text" placeholder="Iban *" [(ngModel)]="iban" name="iban" matInput>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="text" placeholder="Tipologia conto" [(ngModel)]="tipologiaConto" name="tipologiaConto"
+                matInput>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="text" placeholder="Moltiplicatore" [(ngModel)]="moltiplicatore" name="moltiplicatore"
+                matInput>
+        </mat-form-field>
+
+
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+            <div matTooltip="Inserire un etremo bancario" [matTooltipDisabled]="iban ">
+                <button mat-button class="button-style-1" type="submit" (click)="salva()"
+                    [disabled]="!iban">SALVA</button>
+            </div>
+        </div>
+        
+    </div>
+</form>

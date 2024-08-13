@@ -1,0 +1,72 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAllaGestioneAssociazioni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione associazioni</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Associa nuovo bando</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="benef">
+                    <p>Cognome istruttore: <span>{{cognomeIstruttore}}</span></p>
+                    <p class="marginLeft25">Nome istruttore: <span>{{nomeIstruttore}}</span></p>
+                    <p class="marginLeft25">Codice fiscale: <span>{{codiceFiscale}}</span></p>
+                    <p class="marginLeft25">Tipo anagrafica: <span>{{anagraficaIstruttoreSelected}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Ricerca bando linea da associare </h3>
+                </div>
+                <form [formGroup]="form" (submit)="associaAIstruttore()" class="margin-top-10">
+                    <mat-form-field class="fullWidth">
+                        <mat-label>Selezionare bando linea *</mat-label>
+                        <input type="text" aria-label="Number" matInput formControlName="bandoLinea"
+                            [matAutocomplete]="auto" (blur)="onBlurAutoComplete()">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let option of (filteredOptions$ | async)" [value]="option"
+                                (optionSelected)="click($event)">
+                                {{option.nomeBandolinea}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="form.get('bandoLinea')?.errors?.required">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="row margin-top-10">
+                        <button mat-raised-button class="button-style-2 margin0" type="submit"
+                            [disabled]="!bandoSelected">
+                            ASSOCIA A ISTRUTTORE
+                        </button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

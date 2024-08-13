@@ -1,0 +1,41 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}" class="page">
+    <div class="spaceBetween">
+        <h2 class="bold-text" *ngIf="isNuovo">Nuova associazione</h2>
+        <h2 class="bold-text" *ngIf="!isNuovo">Modifica associazione</h2>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <form (submit)="salva()">
+        <mat-form-field class="fullWidth">
+            <input type="text" placeholder="Codice fiscale beneficiario *" [(ngModel)]="cfBenef" matInput
+                name="cfBenef">
+        </mat-form-field>
+        <mat-form-field class="fullWidth">
+            <input type="text" placeholder="Codice visualizzato progetto *" [(ngModel)]="codProg" matInput
+                name="codProg">
+        </mat-form-field>
+        <mat-radio-group [(ngModel)]="rappr" name="rappr">
+            <mat-label>Rappresentante legale *</mat-label>
+            <mat-radio-button class="margin-left-10" value="false">no
+            </mat-radio-button>
+            <mat-radio-button class="margin-left-10" value="true">sì</mat-radio-button>
+        </mat-radio-group>
+        <div class="spaceBetween margin-top-10">
+            <button mat-button class="button-style-1" type="button" (click)="close()">
+                ANNULLA
+            </button>
+            <div matTooltip="Compilare tutti i campi obbligatori" [matTooltipDisabled]="cfBenef && codProg && rappr">
+                <button mat-button class="button-style-1" type="submit" [disabled]="!cfBenef || !codProg || !rappr">
+                    SALVA
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

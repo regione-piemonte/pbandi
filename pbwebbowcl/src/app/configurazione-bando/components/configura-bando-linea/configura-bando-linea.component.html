@@ -1,0 +1,1483 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="page" id="scrollId">
+    <div class="title">
+        <div class="back-container">
+            <button title="Torna ai bandi" mat-button (click)="tornaBandi()">
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="back-text">Torna ai bandi</span>
+            </button>
+        </div>
+        <div>
+            <h2>Configurazione bando linea</h2>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="info margin-bottom-10">
+                    <p>Bando: <span>{{bando}}</span></p>
+                </div>
+                <div class="info">
+                    <p>Bando linea: <span>{{bandoLinea}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-card class="mat-elevation-z2 messageError marginRight25 marginTop30" *ngIf="isMessageErrorVisible">
+                    <mat-card-content class="messageErrorContent">
+                        <p [innerHTML]="messageError"></p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+                    <mat-card-content class="messageSuccessContent">
+                        <p [innerHTML]="messageSuccess"></p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-tab-group (selectedTabChange)="tabClick($event)" [(selectedIndex)]="selectedTab" #tabs>
+
+                    <!-- inizio delle tab -->
+
+                    <mat-tab label="ENTE DI COMPETENZA">
+                        <div class="avviso-content marginTop20">
+                            <mat-card class="mat-elevation-z0">
+                                <mat-card-content>
+                                    <div class="avviso">
+                                        <span>I ruoli
+                                            <span class="bold-text">Destinatario delle comunicazioni,
+                                                Programmatore del progetto, Responsabile procedura
+                                                attivazione</span>
+                                            e
+                                            <span class="bold-text">Attuatore del progetto</span>
+                                            devono essere
+                                            <span class="bold-text">obbligatoriamente</span>
+                                            associati per poter procedere.</span>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <form #enteAssociaForm="ngForm" class="marginTop20" name="enteCompetenzaForm">
+
+                            <!-- Ruolo -->
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un ruolo *</mat-label>
+                                    <mat-select [(ngModel)]="ruoloSelected" name="ruolo"
+                                        (ngModelChange)="changeRuolo()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let ruolo of ruoli" [value]="ruolo">
+                                            {{ ruolo.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Ente -->
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un Ente *</mat-label>
+                                    <mat-select [(ngModel)]="enteSelected" name="ente" (ngModelChange)="changeEnte()">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let ente of enti" [value]="ente">
+                                            {{ ente.descEnte }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Settore -->
+                            <div class="row">
+                                <mat-form-field class="fullWidth">
+                                    <mat-label>Selezionare un settore</mat-label>
+                                    <mat-select [(ngModel)]="settoreSelected" name="settore">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let settore of settori" [value]="settore">
+                                            {{ settore.descSettore }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- PEC -->
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <input type="text" placeholder="PEC" [(ngModel)]="pec" name="pec" matInput>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- RADIO BUTTON MONITORAGGIO DEI TEMPI -->
+                            <!-- <div class="row">
+                                <div class="spaceBetween">
+                                    <mat-label>Monitoraggio dei tempi e delle scadenze attivo*</mat-label>
+                                    <mat-radio-group aria-label="Select an option*" class="d-flex"
+                                        [(ngModel)]="flagMonitoraggioTempi">
+                                        <mat-radio-button [value]="'S'">Sì</mat-radio-button>
+                                        <mat-radio-button [value]="'N'">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div> -->
+
+                            <div class="align" *ngIf="isCostanteFinpiemonte">
+                                <div>
+                                    <mat-label> <b>Monitoraggio dei tempi e delle scadenze attivo*</b></mat-label>
+                                </div>
+                                <mat-radio-group [(ngModel)]="flagMonitoraggioTempi" name="flagMonitoraggioTempi">
+                                    <mat-radio-button [value]='1'>Sì</mat-radio-button>
+                                    <mat-radio-button [value]='2' style="margin-left:5px;">No</mat-radio-button>
+                                </mat-radio-group>
+                                <!-- <mat-error *ngIf="flagMonitoraggioTempi==null">Campo obbligatorio</mat-error> -->
+                            </div>
+
+                            <!-- MAIL (hidden)-->
+                            <div class="row"
+                                *ngIf="ruoloSelected?.descrizioneBreve === descBreveRuoloEnteRespAffid || ruoloSelected?.descrizioneBreve === descBreveRuoloEnteRagioneriaDel">
+                                <mat-form-field class="col">
+                                    <input type="text" placeholder="EMAIL" [(ngModel)]="mail" name="mail" matInput
+                                        (change)="mailCheck()" required>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Periodo di conservazione corrente (hidden) -->
+                            <div class="row" [hidden]="!showConservazione">
+                                <mat-form-field class="col">
+                                    <input type="number" placeholder="Periodo di conservazione corrente (ACTA)"
+                                        [(ngModel)]="periodoConservazioneCorrente" name="periodoConservazioneCorrente"
+                                        matInput>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Periodo di conservazione generale (hidden) -->
+                            <div class="row" [hidden]="!showConservazione">
+                                <mat-form-field class="col">
+                                    <input type="number" placeholder="Periodo di conservazione generale (ACTA)"
+                                        [(ngModel)]="periodoConservazioneGenerale" name="periodoConservazioneGenerale"
+                                        matInput>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare i campi obbligatori"
+                                    [matTooltipDisabled]="ruoloSelected && enteSelected 
+                                    && (ruoloSelected?.descrizioneBreve !== descBreveRuoloEnteRespAffid || ruoloSelected?.descrizioneBreve !== descBreveRuoloEnteRagioneriaDel || mailIsValid)">
+                                    <button (click)="associaEnte()" class="button-style-2" mat-raised-button
+                                        type="submit"
+                                        [disabled]="!ruoloSelected || !enteSelected
+                                        || ((ruoloSelected?.descrizioneBreve !== descBreveRuoloEnteRespAffid || ruoloSelected?.descrizioneBreve !== descBreveRuoloEnteRagioneriaDel) && (!mailIsValid || !mail || mail?.length == 0))">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabella -->
+                            <div class="content" *ngIf="showEnteCompetenzaTable">
+                                <table mat-table [dataSource]="dataSourceEnteCompetenza" class="fullWidth">
+                                    <ng-container matColumnDef="ruolo">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Ruolo</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.ruolo}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="ente">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Ente</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descrizione}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="parolaChiaveACTA">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Parola chiave ACTA</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.parolaChiave}}
+                                            <div [hidden]="true">
+                                                <button title="Verifica Parola Chiave" mat-icon-button
+                                                    (click)="verificaPCActa(row)" class="red-color width-30">
+                                                    <mat-icon class=" red-color">delete
+                                                    </mat-icon>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <!-- PK link "CHIAVE DA VERIFICARE/CHIAVcaE VERIFICATA" qui???-->
+                                    <ng-container matColumnDef="consCor">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Cons corr</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.conservazioneCorrente}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="consGen">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Cons gen</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.conservazioneGenerale}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="mail">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Mail</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.indirizzoMail}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="pec">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Pec</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.indirizzoMailPec}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina ente di competenza" mat-icon-button
+                                                (click)="eliminaEnte(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsEnteCompetenza"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsEnteCompetenza;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showEnteCompetenzaTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="DATI AGGIUNTIVI">
+                        <h2 id="tipoAiutoScroll" class="bold-text marginTop20">Tipo di aiuto</h2>
+                        <form #tipoAiutoForm="ngForm">
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un tipo di aiuto *</mat-label>
+                                    <mat-select [(ngModel)]="tipoAiutoSelected" name="tipoAiuto">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let tipoAiuto of tipiAiuto" [value]="tipoAiuto"
+                                            matTooltip="{{ tipoAiuto.descrizioneBreve }} - {{ tipoAiuto.descrizione }}"
+                                            matToolTipPosition="after" matTooltipShowDelay="100"
+                                            matTooltipHideDelay="100">
+                                            {{ tipoAiuto.descrizioneBreve }} - {{ tipoAiuto.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un tipo di aiuto" [matTooltipDisabled]="tipoAiutoSelected">
+                                    <button (click)="associaTipoAiuto()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!tipoAiutoSelected">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showTipoAiutoTable">
+                                <table mat-table [dataSource]="dataSourceTipoAiuto" class="fullWidth">
+                                    <ng-container matColumnDef="aiuto">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Aiuto</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.codIgrueT1}} - {{row.descTipoAiuto}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina tipo aiuto" mat-icon-button
+                                                (click)="eliminaTipoAiuto(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoAiuto"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoAiuto;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showTipoAiutoTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                        <h2 id="temaPrioritarioScroll" class="bold-text marginTop20 ">Tema prioritario</h2>
+                        <form #temaPrioritarioForm="ngForm">
+                            <div class="row">
+                                <mat-form-field [formGroup]="temaPrGroup" class="col">
+                                    <mat-label>Selezionare un tema prioritario *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="temaPrControl"
+                                        [matAutocomplete]="autoTemaPr" (blur)="check('T')">
+                                    <mat-autocomplete autoActiveFirstOption #autoTemaPr="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'T')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsTemaPr | async)?.length>4,
+                                        'viewport-1': (filteredOptionsTemaPr | async)?.length==1,
+                                        'viewport-2': (filteredOptionsTemaPr | async)?.length==2,
+                                        'viewport-3': (filteredOptionsTemaPr | async)?.length==3,
+                                        'viewport-4': (filteredOptionsTemaPr | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsTemaPr | async"
+                                                [value]="option"
+                                                matTooltip="{{ option.descrizioneBreve }} - {{ option.descrizione }}"
+                                                matToolTipPosition="after" matTooltipShowDelay="100"
+                                                matTooltipHideDelay="100">
+                                                {{ option.descrizioneBreve }} - {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un tema prioritario"
+                                    [matTooltipDisabled]="temaPrioritarioSelected">
+                                    <button (click)="associaTemaPrioritario()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!temaPrioritarioSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showTemaPrioritarioTable">
+                                <table mat-table [dataSource]="dataSourceTemaPrioritario" class="fullWidth">
+                                    <ng-container matColumnDef="temaPrioritario">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Tema prioritario</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.descrizioneBreve}} -
+                                            {{row.descrizione}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina tema prioritario" mat-icon-button
+                                                (click)="eliminaTemaPrioritario(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsTemaPrioritario"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsTemaPrioritario;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showTemaPrioritarioTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                        <h2 class="bold-text marginTop20 ">Indicatori QSN</h2>
+                        <form #indicatoreQSNForm="ngForm">
+                            <div class="row">
+                                <mat-form-field [formGroup]="indQSNGroup" class="col">
+                                    <mat-label>Selezionare un indicatore QSN *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="indQSNControl"
+                                        [matAutocomplete]="autoIndQSN" (blur)="check('IQ')">
+                                    <mat-autocomplete autoActiveFirstOption #autoIndQSN="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'IQ')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsindQSN | async)?.length>4,
+                                        'viewport-1': (filteredOptionsindQSN | async)?.length==1,
+                                        'viewport-2': (filteredOptionsindQSN | async)?.length==2,
+                                        'viewport-3': (filteredOptionsindQSN | async)?.length==3,
+                                        'viewport-4': (filteredOptionsindQSN | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsindQSN | async"
+                                                [value]="option"
+                                                matTooltip="{{ option.descrizioneBreve }} - {{ option.descrizione }}"
+                                                matToolTipPosition="after" matTooltipShowDelay="100"
+                                                matTooltipHideDelay="100">
+                                                {{ option.descrizioneBreve }} - {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un indicatore QSN"
+                                    [matTooltipDisabled]="indicatoreQSNSelected">
+                                    <button (click)="associaIndicatoreQSN()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!indicatoreQSNSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showIndicatoreQSNTable">
+                                <table mat-table [dataSource]="dataSourceIndicatoreQSN" class="fullWidth">
+                                    <ng-container matColumnDef="indicatoreQSN">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Indicatore QSN</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descBreve}} - {{row.descEstesa}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina indicatore QSN" mat-icon-button
+                                                (click)="eliminaIndicatoreQSN(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsIndicatoreQSN"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsIndicatoreQSN;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showIndicatoreQSNTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                        <h2 class="bold-text marginTop20 ">Indicatori risultato programma</h2>
+                        <form #indicatoriRisultatoForm="ngForm">
+                            <div class="row">
+                                <mat-form-field [formGroup]="indRisGroup" class="col">
+                                    <mat-label>Selezionare un indicatore risultato programma *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="indRisControl"
+                                        [matAutocomplete]="autoIndRis" (blur)="check('IR')">
+                                    <mat-autocomplete autoActiveFirstOption #autoIndRis="matAutocomplete"
+                                        [displayWith]="displayFnIndRis" (optionSelected)="click($event,'IR')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsindRis | async)?.length>4,
+                                        'viewport-1': (filteredOptionsindRis | async)?.length==1,
+                                        'viewport-2': (filteredOptionsindRis | async)?.length==2,
+                                        'viewport-3': (filteredOptionsindRis | async)?.length==3,
+                                        'viewport-4': (filteredOptionsindRis | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsindRis | async"
+                                                [value]="option"
+                                                matTooltip="{{ option.descBreve }} - {{ option.descEstesa }}"
+                                                matToolTipPosition="after" matTooltipShowDelay="100"
+                                                matTooltipHideDelay="100">
+                                                {{ option.descBreve }} - {{ option.descEstesa }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un indicatore risultato programma"
+                                    [matTooltipDisabled]="indicatoreRisultatoSelected">
+                                    <button (click)="associaIndicatoreRisultatoProgramma()" class="button-style-2"
+                                        mat-raised-button type="submit"
+                                        [disabled]="!indicatoreRisultatoSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showIndicatoreRisultatoProgrammaTable">
+                                <table mat-table [dataSource]="dataSourceIndicatoreRisultatoProgramma"
+                                    class="fullWidth">
+                                    <ng-container matColumnDef="indicatoreRisultatoProgramma">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Indicatore risultato programma</b>
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.descBreve}} - {{row.descEstesa}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina indicatore risultato programma" mat-icon-button
+                                                (click)="eliminaIndicatoreRisultatoProgramma(row)"
+                                                class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsIndicatoreRisultatoProgramma">
+                                    </tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: displayedColumnsIndicatoreRisultatoProgramma;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth"
+                                *ngIf="!showIndicatoreRisultatoProgrammaTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                        <h2 class="bold-text marginTop20 ">Tipo periodo</h2>
+                        <form #tipoPeriodoForm="ngForm">
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un tipo periodo *</mat-label>
+                                    <mat-select [(ngModel)]="tipoPeriodoSelected" name="tipoPeriodo">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let tipoPeriodo of tipiPeriodo" [value]="tipoPeriodo">
+                                            {{ tipoPeriodo.descrizioneBreve }} - {{ tipoPeriodo.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un tipo periodo"
+                                    [matTooltipDisabled]="tipoPeriodoSelected">
+                                    <button (click)="associaTipoPeriodo()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!tipoPeriodoSelected">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showTipoPeriodoTable">
+                                <table mat-table [dataSource]="dataSourceTipoPeriodo" class="fullWidth">
+                                    <ng-container matColumnDef="tipoPeriodo">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Tipo periodo</b> </th>
+                                        <td mat-cell *matCellDef="let row">{{row.descrizioneBreve}} -
+                                            {{row.descrizione}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina tipo periodo" mat-icon-button
+                                                (click)="eliminaTipoPeriodo(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoPeriodo"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoPeriodo;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showTipoPeriodoTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                        <h2 class="bold-text marginTop20 ">Area scientifica</h2>
+                        <form #areaScientificaForm="ngForm">
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un'area scientifica *</mat-label>
+                                    <mat-select [(ngModel)]="areaScientificaSelected" name="areaScientifica">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let area of areeScientifiche" [value]="area">
+                                            {{ area.descEstesa }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div class="col align-items-center">
+                                    <button mat-button class="button-style-1" type='button'
+                                        (click)="aggiungiAreaScientifica()">AGGIUNGI AREA</button>
+                                </div>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare un'area scientifica"
+                                    [matTooltipDisabled]="areaScientificaSelected">
+                                    <button (click)="associaAreaScientifica()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!areaScientificaSelected">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showAreaScientificaTable">
+                                <table mat-table [dataSource]="dataSourceAreaScientifica" class="fullWidth">
+                                    <ng-container matColumnDef="codice">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Codice</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descBreve}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="areaScientifica">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Area scientifica</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descEstesa}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina area scientifica" mat-icon-button
+                                                (click)="eliminaAreaScientifica(row)" class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsAreaScientifica"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsAreaScientifica;"></tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showAreaScientificaTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Associazione non presente.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="REGOLE">
+                        <form #regoleForm="ngForm" class="marginTop20">
+                            <div class="row">
+                                <mat-form-field [formGroup]="regolaGroup" class="col">
+                                    <mat-label>Selezionare una regola *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="regolaControl"
+                                        [matAutocomplete]="autoRegola" (blur)="check('R')">
+                                    <mat-autocomplete autoActiveFirstOption #autoRegola="matAutocomplete"
+                                        [displayWith]="displayFnRegola" (optionSelected)="click($event,'R')">
+                                        <mat-option *ngFor="let option of filteredOptionsRegola | async"
+                                            [value]="option"
+                                            matTooltip="{{ option.descBreve }} - {{ option.descEstesa }}"
+                                            matToolTipPosition="after" matTooltipShowDelay="100"
+                                            matTooltipHideDelay="100">
+                                            {{ option.descBreve }} - {{ option.descEstesa }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare una regola" [matTooltipDisabled]="regolaSelected">
+                                    <button (click)="associaRegola()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!regolaSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showRegolaTable">
+                                <table mat-table [dataSource]="dataSourceRegola" class="fullWidth">
+                                    <ng-container matColumnDef="regola">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Regola</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descRegolaComposta}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina regola" mat-icon-button (click)="eliminaRegola(row)"
+                                                class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRegola"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRegola;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showRegolaTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="PARAMETRI MONITORAGGIO TEMPI"
+                        *ngIf="flagAssociazioneDestinatarioFinpiemonte && flagFinpiemonte">
+
+                        <div>
+                            <mat-form-field class="width50 margin-input-under-title" appearance="fill">
+                                <mat-label>Selezionare un parametro di monitoraggio *</mat-label>
+                                <input type="text" placeholder="" aria-label="Number" matInput
+                                    [formControl]="parmMonitTempControl" [matAutocomplete]="auto"
+                                    [(ngModel)]="parametriMonitoraggioTempiSelected">
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    (optionSelected)="onSelectParmMonit()" [displayWith]="displayFn">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport">
+                                    </cdk-virtual-scroll-viewport>
+                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                        matTooltip="{{ option.descrizioneBreve }} - {{ option.descrizione }}">
+                                        {{option.code}} - {{option.descrizione}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <mat-form-field class="example-full-width margin-15">
+                            <mat-label>Numero giorni</mat-label>
+                            <input type="number" matInput [(ngModel)]="paramMonitTempNumGiorni">
+                        </mat-form-field>
+
+                        <div>
+
+                            <div class="row flex-direction margin-20">
+                                <div matTooltip="Selezionare un parametro di monitoraggio"
+                                    [matTooltipDisabled]="parametriMonitoraggioTempiSelected">
+                                    <button (click)="associaParametroMonitoraggio()" class="button-style-2"
+                                        mat-raised-button type="submit"
+                                        [disabled]="!parametriMonitoraggioTempiSelected">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="content " *ngIf="parametriMonitoraggioTempiAssociatiList?.length > 0">
+                            <table mat-table [dataSource]="dataSourceParmMonitTemp" class="fullWidth">
+
+                                <ng-container matColumnDef="paramMonitTemp">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="margin-left-10">
+                                            <b>Parametri Monitoraggio</b>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="margin-left-10">
+                                        <div class="margin-left-10">
+                                            {{row.descBreveParametroMonit}} - {{row.descParametroMonit}}
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="numGiorni">
+                                    <th mat-header-cell *matHeaderCellDef class="margin-left-10">
+                                        <div class="margin-left-10 text-align-center">
+                                            <b> Numero giorni</b>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"
+                                        class="margin-left-10 text-align-center input-in-table">
+                                        <div class="input-in-table">
+                                            {{row.numGiorni}}
+                                        </div>
+
+                                    </td>
+                                </ng-container>
+
+
+
+                                <ng-container matColumnDef="azioni">
+                                    <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                    <td mat-cell *matCellDef="let row" class="azioni">
+
+                                        <button title="Modifica associazione parametri monitoraggio" mat-icon-button
+                                            (click)="modificaParametroMonitoraggio(row)" class="blue-icon width-30">
+                                            <mat-icon class="blue-icon">edit</mat-icon>
+                                        </button>
+
+                                        <button title="Elimina associazione parametri monitoraggio" mat-icon-button
+                                            (click)="disassociaParametroMonitoraggio(row)" class="red-color width-30">
+                                            <mat-icon class=" red-color">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsParamMonitTemp"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsParamMonitTemp;">
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="content align-items-center fullWidth"
+                            *ngIf="parametriMonitoraggioTempiAssociatiList?.length <= 0">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
+
+
+                        <!--
+                        <form #regoleForm="ngForm" class="marginTop20">
+                            <div class="row">
+                                <mat-form-field [formGroup]="parmMonitTempGroup" class="col">
+                                    <mat-label>Selezionare un parametro di monitoraggio *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="parmMonitTempControl"
+                                        [matAutocomplete]="autoRegola" (blur)="check('R')">
+                                    <mat-autocomplete autoActiveFirstOption #autoRegola="matAutocomplete"
+                                        [displayWith]="displayFnRegola" (optionSelected)="click($event,'R')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsRegola | async)?.length>4,
+                                        'viewport-1': (filteredOptionsRegola | async)?.length==1,
+                                        'viewport-2': (filteredOptionsRegola | async)?.length==2,
+                                        'viewport-3': (filteredOptionsRegola | async)?.length==3, 
+                                        'viewport-4': (filteredOptionsRegola | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsRegola | async"
+                                                [value]="option"
+                                                matTooltip="{{ option.descBreve }} - {{ option.descEstesa }}"
+                                                matToolTipPosition="after" matTooltipShowDelay="100"
+                                                matTooltipHideDelay="100">
+                                                {{ option.descBreve }} - {{ option.descEstesa }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare una regola" [matTooltipDisabled]="regolaSelected">
+                                    <button (click)="associaRegola()" class="button-style-2" mat-raised-button
+                                        type="submit" [disabled]="!regolaSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+
+                                    <button (click)="getParametriMonitoraggioTempi()" class="button-style-2" mat-raised-button
+                                        type="submit" >
+                                        monitTemp
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content" *ngIf="showRegolaTable">
+                                <table mat-table [dataSource]="dataSourceRegola" class="fullWidth">
+                                    <ng-container matColumnDef="regola">
+                                        <th mat-header-cell *matHeaderCellDef> <b>Regola</b> </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.descRegolaComposta}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="azioni">
+                                        <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                        <td mat-cell *matCellDef="let row" class="azioni">
+                                            <button title="Elimina regola" mat-icon-button (click)="eliminaRegola(row)"
+                                                class="red-color width-30">
+                                                <mat-icon class=" red-color">delete</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRegola"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRegola;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="content align-items-center fullWidth" *ngIf="!showRegolaTable">
+                                <mat-card class="mat-elevation-z4 fullWidth">
+                                    <mat-card-content>
+                                        Non ci sono elementi da visualizzare.
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </form>
+                    -->
+
+
+
+
+
+
+
+
+                    </mat-tab>
+                    <mat-tab label="MODELLI DI DOCUMENTO">
+                        <p class="margin-top-20">Selezionare il <span class="bold-text">Bando-Linea</span> da cui
+                            duplicare
+                            i modelli di documento</p>
+                        <div class="row">
+                            <mat-form-field class="fullWidth">
+                                <mat-label>Selezionare un Bando Linea</mat-label>
+                                <mat-select [(ngModel)]="bandoLineaSelected" name="bandoLinea"
+                                    (ngModelChange)="changeBandoLinea()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let bandoLinea of bandiLinea" [value]="bandoLinea">
+                                        {{ bandoLinea.descrizione }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div style="display: flex; justify-content: space-around; min-height: 300px;">
+                            <div style="width: 46%;">
+                                <h3 class="bold-text">Modelli di documento duplicabili</h3>
+                                <mat-card class="mat-elevation-z8" style="min-height: 210px;">
+                                    <mat-card-content *ngIf="!showModelliDocumentiDuplicabili">
+                                        Nessun documento duplicabile
+                                    </mat-card-content>
+                                    <mat-card-content *ngIf="showModelliDocumentiDuplicabili">
+                                        <section class="example-section">
+                                            <span class="example-list-section">
+                                                <mat-checkbox class="example-margin" [checked]="allComplete"
+                                                    (change)="setAll($event.checked)">
+                                                    {{task.name}}
+                                                </mat-checkbox>
+                                            </span>
+                                            <span class="example-list-section">
+                                                <ul class="padding-left-12 margin-top-10">
+                                                    <li *ngFor="let subtask of task.subtasks">
+                                                        <mat-checkbox [(ngModel)]="subtask.completed"
+                                                            [color]="subtask.color"
+                                                            (ngModelChange)="updateAllComplete()">
+                                                            {{subtask.descrizione}}
+                                                        </mat-checkbox>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </section>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div matTooltip="Selezionare almeno un modello di documento"
+                                    [matTooltipDisabled]="checkModDocDuplicSelAlmeno1()">
+                                    <button [disabled]="!checkModDocDuplicSelAlmeno1()" mat-icon-button
+                                        (click)="associaModelliDocumento()" title="Associa modelli documento">
+                                        <mat-icon class="blueColor">forward</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="width: 46%;">
+                                <h3 class="bold-text">Modelli di documento associati</h3>
+                                <mat-card class="mat-elevation-z8" style="min-height: 210px;;">
+                                    <mat-card-content>
+                                        <!-- Nessun documento duplicato -->
+                                        <div class="content" *ngIf="showModelliDocumentiAssociatiTable">
+                                            <table mat-table [dataSource]="dataSourceModelliDocumentiAssociati"
+                                                class="fullWidth">
+                                                <ng-container matColumnDef="descrizione">
+                                                    <td mat-cell *matCellDef="let row"> {{row.descTipoDocIndex}} </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="download">
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <button mat-icon-button
+                                                            (click)="downloadModelloDocumentoAssociato(row.idTipoDocumentoIndex)"
+                                                            title="Download modello documento associato">
+                                                            <mat-icon [hidden]="row.dtInserimento == null">
+                                                                picture_as_pdf
+                                                            </mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="generaModello">
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <button mat-icon-button
+                                                            title="Genera modello documento associato"
+                                                            (click)="generaModelloDocumentoAssociato(row.idTipoDocumentoIndex)">
+                                                            <mat-icon class="material-icons-outlined">playlist_add_check
+                                                            </mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="edit">
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <button mat-icon-button
+                                                            title="Modifica modello documento associato"
+                                                            (click)="modificaModelloDocumentoAssociato(row.idTipoDocumentoIndex)">
+                                                            <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="delete">
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <button mat-icon-button
+                                                            (click)="eliminaModelloDocumentoAssociato(row)"
+                                                            class="red-color"
+                                                            title="Elimina modello documento associato">
+                                                            <mat-icon class="red-color">delete
+                                                            </mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-row
+                                                    *matRowDef="let row; columns: displayedColumnsModelliDocumentiAssociati;">
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="content align-items-center fullWidth"
+                                            *ngIf="!showModelliDocumentiAssociatiTable">
+                                            <mat-card class="mat-elevation-z4 fullWidth">
+                                                <mat-card-content>
+                                                    Nessun documento duplicato
+                                                </mat-card-content>
+                                            </mat-card>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="DOCUMENTI / MODALITÀ DI PAGAMENTO">
+                        <form #docModalitaPagamentoAssociaForm="ngForm" class="marginTop20">
+                            <div class="row">
+                                <mat-form-field [formGroup]="tipoDocGroup" class="col">
+                                    <mat-label>Selezionare un tipo di documento *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="tipoDocControl"
+                                        [matAutocomplete]="autoTipoDoc" (blur)="check('TD')">
+                                    <mat-autocomplete autoActiveFirstOption #autoTipoDoc="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'TD')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsTipoDoc | async)?.length>4,
+                                        'viewport-1': (filteredOptionsTipoDoc | async)?.length==1,
+                                        'viewport-2': (filteredOptionsTipoDoc | async)?.length==2,
+                                        'viewport-3': (filteredOptionsTipoDoc | async)?.length==3,
+                                        'viewport-4': (filteredOptionsTipoDoc | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsTipoDoc | async"
+                                                [value]="option">
+                                                {{ option.descrizioneBreve }} - {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <div class="col align-items-center">
+                                    <button mat-button class="button-style-1" type='button'
+                                        (click)="aggiungiTipoDocumento()">AGGIUNGI TIPO DI DOCUMENTO</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <mat-form-field [formGroup]="modGroup" class="col">
+                                    <mat-label>Selezionare una modalità di pagamento *</mat-label>
+                                    <input type="text" aria-label="Number" matInput formControlName="modControl"
+                                        [matAutocomplete]="automod" (blur)="check('M')">
+                                    <mat-autocomplete autoActiveFirstOption #automod="matAutocomplete"
+                                        [displayWith]="displayFnDecodifica" (optionSelected)="click($event,'M')">
+                                        <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                            #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsMod | async)?.length>4,
+                                        'viewport-1': (filteredOptionsMod | async)?.length==1,
+                                        'viewport-2': (filteredOptionsMod | async)?.length==2,
+                                        'viewport-3': (filteredOptionsMod | async)?.length==3,
+                                        'viewport-4': (filteredOptionsMod | async)?.length==4 }">
+                                            <mat-option class="viewport-item"
+                                                *cdkVirtualFor="let option of filteredOptionsMod | async"
+                                                [value]="option">
+                                                {{ option.descrizioneBreve }} - {{ option.descrizione }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <div class="col align-items-center">
+                                    <button mat-button class="button-style-1" type='button'
+                                        (click)="aggiungiModalitaPagamento()">AGGIUNGI MODALITÀ DI PAGAMENTO</button>
+                                </div>
+                            </div>
+                            <mat-grid-list cols="8" rowHeight="80px" class="margin-left-30">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-checkbox [ngModelOptions]="{standalone: true}" class="example-margin"
+                                            [(ngModel)]="checkedTuttiBandoLinea">
+                                            Tutti i bando linea
+                                        </mat-checkbox>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <div class="row justify-content-flex-end marginTop20 margin-bottom-30">
+                                <div matTooltip="Selezionare un tipo di documento e una modalita di pagamento"
+                                    [matTooltipDisabled]="tipoDocumentoSelected && modalitaPagamentoSelected">
+                                    <button (click)="associaDocModalitaPagamento()" class="button-style-2"
+                                        mat-raised-button type="submit"
+                                        [disabled]="!tipoDocumentoSelected?.value?.id || !modalitaPagamentoSelected?.value?.id">
+                                        ASSOCIA
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <h2 class="bold-text marginTop20 ">Documenti / pagamenti disponibili per il bando linea corrente
+                        </h2>
+                        <div class="content" [hidden]="!showModPagBandoLineaCorTable">
+                            <table mat-table [dataSource]="dataSourceModPagBandoLineaCor" class="fullWidth">
+                                <ng-container matColumnDef="tipoDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> <b>Tipo documento</b> </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.descTipoDocumento}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="modalitaPagamento">
+                                    <th mat-header-cell *matHeaderCellDef> <b>Modalità pagamento</b> </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.descModalitaPagamento}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="azioni">
+                                    <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                    <td mat-cell *matCellDef="let row" class="azioni">
+                                        <button mat-icon-button (click)="eliminaModPagBandoLineaCor(row)"
+                                            class="red-color width-30"
+                                            title="Elimina modalità pagamento bando linea corrente">
+                                            <mat-icon class=" red-color">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsModPagBandoLineaCor"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsModPagBandoLineaCor;"></tr>
+                            </table>
+                            <div [hidden]="!(dataSourceModPagBandoLineaCor.filteredData.length > 10)">
+                                <mat-paginator #paginatorModPagBandoLineaCor [pageSizeOptions]="[5, 10, 25, 100]"
+                                    [pageSize]="10" [showFirstLastButtons]="true">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <div class="content align-items-center fullWidth" [hidden]="showModPagBandoLineaCorTable">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Documenti / pagamenti disponibili per tutti i bandi linea
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="content" [hidden]="!showModPagTuttiBandoLineaTable">
+                                    <table mat-table [dataSource]="dataSourceModPagTuttiBandoLinea" class="fullWidth">
+                                        <ng-container matColumnDef="tipoDocumento">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Tipo documento</b> </th>
+                                            <td mat-cell *matCellDef="let row">{{row.descBreveTipoDocumento}} -
+                                                {{row.descTipoDocumento}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="modalitaPagamento">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Modalità pagamento</b> </th>
+                                            <td mat-cell *matCellDef="let row">{{row.descBreveModalitaPagamento}} -
+                                                {{row.descModalitaPagamento}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="azioni">
+                                            <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                            <td mat-cell *matCellDef="let row" class="azioni">
+                                                <button mat-icon-button (click)="eliminaModPagTuttiBandoLinea(row)"
+                                                    class="red-color width-30"
+                                                    title="Elimina modalità pagamento tutti i bando linea">
+                                                    <mat-icon class=" red-color">delete
+                                                    </mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsModPagTuttiBandoLinea">
+                                        </tr>
+                                        <tr mat-row
+                                            *matRowDef="let row; columns: displayedColumnsModPagTuttiBandoLinea;">
+                                        </tr>
+                                    </table>
+                                    <div [hidden]="!(dataSourceModPagTuttiBandoLinea.filteredData.length > 10)">
+                                        <mat-paginator #paginatorModPagTuttiBandoLinea
+                                            [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                                            [showFirstLastButtons]="true">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="content align-items-center fullWidth"
+                                    [hidden]="showModPagTuttiBandoLineaTable">
+                                    <mat-card class="mat-elevation-z4 fullWidth">
+                                        <mat-card-content>
+                                            Non ci sono elementi da visualizzare.
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-tab>
+                    <mat-tab label="CHECKLIST">
+                        <h3 class="bold-text marginTop20">Modelli di checklist</h3>
+                        <mat-card class="mat-elevation-z8" style="min-height: 210px;;">
+                            <mat-card-content>
+                                <div [hidden]="!showModelliCheckListTable">
+                                    <table mat-table [dataSource]="dataSourceModelliChecklist"
+                                        class="mat-elevation-z8 fullWidth">
+                                        <!-- Checkbox Column -->
+                                        <ng-container matColumnDef="select">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                    [checked]="selection.hasValue() && isAllSelected()"
+                                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                                    [aria-label]="checkboxLabel()">
+                                                </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                    (change)="$event ? selection.toggle(row) : null"
+                                                    [checked]="selection.isSelected(row)"
+                                                    [aria-label]="checkboxLabel(row)">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Nome Column -->
+                                        <ng-container matColumnDef="nome">
+                                            <th mat-header-cell *matHeaderCellDef> Nome </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.nomeModello}} </td>
+                                        </ng-container>
+
+                                        <!-- Codice Column -->
+                                        <ng-container matColumnDef="codice">
+                                            <th mat-header-cell *matHeaderCellDef> Codice </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.descBreveTipoDocIndex}}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Descrizione Column -->
+                                        <ng-container matColumnDef="descrizione">
+                                            <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.descTipoDocIndex}} </td>
+                                        </ng-container>
+
+                                        <!-- Versione Column -->
+                                        <ng-container matColumnDef="versione">
+                                            <th mat-header-cell *matHeaderCellDef> Versione </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.versioneModello}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                            (click)="selection.toggle(row)">
+                                        </tr>
+                                    </table>
+                                    <div
+                                        [hidden]="dataSourceModelliChecklist == undefined ? true : !(dataSourceModelliChecklist.filteredData.length > 10)">
+                                        <mat-paginator #paginatorModelliCheckList [pageSizeOptions]="[5, 10, 25, 100]"
+                                            [pageSize]="10" [showFirstLastButtons]="true">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <div class="content align-items-center fullWidth" [hidden]="showModelliCheckListTable">
+                                    <mat-card class="mat-elevation-z4 fullWidth">
+                                        <mat-card-content>
+                                            Non ci sono elementi da visualizzare.
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                        <div class="marginTop20" style="display: flex; align-items: center;">
+                            <div class="text-align-center fullWidth">
+                                <div matTooltip="Selezionare almeno un modello di checklist"
+                                    [matTooltipDisabled]="selection.selected.length > 0">
+                                    <button [disabled]="!(selection.selected.length > 0)" mat-icon-button
+                                        (click)="associaChecklist()" title="Associa checkList">
+                                        <mat-icon class="blueColor rotate-icon-90-grad">forward</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content" [hidden]="!showCheckListAssociateTable">
+                            <h3 class="bold-text marginTop20">Checklist associate</h3>
+                            <mat-card class="mat-elevation-z8" style="min-height: 210px;;">
+                                <mat-card-content>
+                                    <table mat-table [dataSource]="dataSourceCheckListAssociate" class="fullWidth">
+                                        <ng-container matColumnDef="nome">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Nome</b> </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.nomeModello}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="codice">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Codice</b> </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.descTipoDocIndex}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="descrizione">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Descrizione</b> </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.descTipoDocIndex}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="versione">
+                                            <th mat-header-cell *matHeaderCellDef> <b>Versione</b> </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.versioneModello}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="azioni">
+                                            <th mat-header-cell *matHeaderCellDef class="azioni"></th>
+                                            <td mat-cell *matCellDef="let row" class="azioni">
+                                                <button mat-icon-button (click)="eliminaChecklist(row)"
+                                                    class="red-color width-30" title="Elimina checklist">
+                                                    <mat-icon class=" red-color">delete
+                                                    </mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsCheckListAssociate"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsCheckListAssociate;">
+                                        </tr>
+                                    </table>
+                                    <div [hidden]="!(dataSourceCheckListAssociate.filteredData.length > 10)">
+                                        <mat-paginator #paginatorCheckListAssociate [pageSizeOptions]="[5, 10, 25, 100]"
+                                            [pageSize]="10" [showFirstLastButtons]="true">
+                                        </mat-paginator>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="content align-items-center fullWidth" [hidden]="showCheckListAssociateTable">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="COSTANTI">
+                        <form #costantiForm="ngForm" class="marginTop20">
+                            <div class="row">
+                                <mat-form-field class="fullWidth">
+                                    <input type="text" placeholder="Norma di incentivazione *"
+                                        [(ngModel)]="normaIncentivazione" name="normaIncentivazione" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <input type="text" placeholder="Codice normativa *" [(ngModel)]="codiceNormativa"
+                                        name="codiceNormativa" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare uno stato domanda *</mat-label>
+                                    <mat-select [(ngModel)]="statoDomandaSelected" name="statoDomanda">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let stato of statiDomanda" [value]="stato">
+                                            {{ stato.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="col">
+                                    <mat-label>Selezionare un tipo di operazione *</mat-label>
+                                    <mat-select [(ngModel)]="tipoOperazioneSelected" name="tipoOperazione">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let tipo of tipiOperazione" [value]="tipo">
+                                            {{ tipo.descrizioneBreve }} - {{ tipo.descrizione }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="row">
+                                <mat-form-field class="col">
+                                    <input type="number" placeholder="Stato invio domanda *"
+                                        [(ngModel)]="statoInvioDomanda" name="statoInvioDomanda" matInput>
+                                </mat-form-field>
+                                <mat-form-field class="col">
+                                    <input type="number" placeholder="Stato progetto *" [(ngModel)]="statoProgetto"
+                                        name="statoProgetto" matInput>
+                                </mat-form-field>
+                                <mat-form-field class="col">
+                                    <input type="number" placeholder="Stato conto economico *"
+                                        [(ngModel)]="statoContoEconomico" name="statoContoEconomico" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div class="row float-right marginTop20">
+                                <div matTooltip="Selezionare i campi obbligatori"
+                                    [matTooltipDisabled]="normaIncentivazione && codiceNormativa && statoDomandaSelected && tipoOperazioneSelected && statoInvioDomanda && statoProgetto && statoContoEconomico">
+                                    <button (click)="salvaCostanti()" class="button-style-2" mat-raised-button
+                                        type="submit"
+                                        [disabled]="!normaIncentivazione || !codiceNormativa || !statoDomandaSelected || !tipoOperazioneSelected || !statoInvioDomanda || !statoProgetto || !statoContoEconomico">
+                                        SALVA
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="ESTREMI BANCARI" *ngIf="flagAssociazioneDestinatarioFinpiemonte && flagFinpiemonte">
+
+
+
+                        <div class="margin-bottom-50" *ngFor="let modAgevEstrBanc of modAgevEstrBancList"
+                            [value]="modAgevEstrBanc">
+
+                            <mat-card class="mat-elevation-z8 margin-15">
+
+
+                                <p class="bold-text"> Modalita' di agevolazione:
+                                    {{modAgevEstrBanc.modalitaAgevolazione.descModalitaAgevolazione}} </p>
+
+
+                                <div *ngFor="let estremoBancario of modAgevEstrBanc.estremiBancariList ;let indexBanche=index;"
+                                    [value]="estremoBancario">
+                                    <mat-card class="mat-elevation-z2 margin-15">
+
+                                        <div *ngIf="estremoBancario.descBanca != undefined">
+
+                                            <!--
+                                            <mat-icon class="float-rigth red-color clickable"  matTooltip="Elimina associazione banca"
+                                             
+                                            *ngIf="estremoBancario.isSendToAmministrativoContabile != True" (click)="removeAssociazioneBanca(modAgevEstrBanc, estremoBancario)">
+                                                delete
+                                            </mat-icon>
+                                            -->
+                                            <div class="bold-text"> {{estremoBancario.descBanca}} </div>
+
+
+
+                                            <div class="grid-layout margin-15"
+                                                *ngFor="let estremo of estremoBancario.estremi " [value]="estremo">
+
+
+                                                <div class="item-iban ">
+                                                    <mat-form-field class="fullWidth margin-right-15">
+                                                        <label>IBAN</label>
+                                                        <input type="text" [(ngModel)]="estremo.iban" name="iban"
+                                                            matInput readonly>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="item-molt ">
+                                                    <mat-form-field class="fullWidth margin-right-15">
+                                                        <label>Moltiplicatore</label>
+                                                        <input type="number" [(ngModel)]="estremo.moltiplicatore"
+                                                            name="moltiplicatore" matInput readonly>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="item-tipo-conto">
+                                                    <mat-form-field class="fullWidth  margin-right-15">
+                                                        <label>Tipologia Conto</label>
+                                                        <input type="text" [(ngModel)]="estremo.tipologiaConto"
+                                                            name="tipologiaConto" matInput readonly>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="item-icon-delete"
+                                                    *ngIf="estremo.isSendToAmministrativoContabile != True">
+                                                    <mat-icon class="red-color clickable"
+                                                        matTooltip="Elimina associazione iban"
+                                                        (click)="removeAssociazioneIban(modAgevEstrBanc, estremoBancario, estremo)">
+                                                        delete
+                                                    </mat-icon>
+                                                </div>
+
+                                                <div class="item-icon-delete"
+                                                    *ngIf="estremo.isSendToAmministrativoContabile == True">
+                                                    <mat-icon class="green-color clickable"
+                                                        matTooltip="Inviato ad amministrativo contabile">
+                                                        check_circle
+                                                    </mat-icon>
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+                                            <div class="container-flex-end fullWidth">
+                                                <button
+                                                    (click)="aggiungiEtremoBancario(modAgevEstrBanc,estremoBancario)"
+                                                    class="button-style-2 margin-top-20 " mat-raised-button
+                                                    type="submit"> <!--[disabled]="!ruoloSelected || !enteSelected"-->
+                                                    AGGIUNGI IBAN
+                                                </button>
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <div *ngIf="estremoBancario.descBanca == undefined">
+
+                                            <div *ngIf="bankSelected">
+
+                                                <mat-form-field [formGroup]="bancheGroup" class="fullWidth">
+                                                    <mat-label>Selezionare una banca</mat-label>
+                                                    <input type="text" placeholder="Inserire almeno 3 caratteri"
+                                                        aria-label="Number" matInput formControlName="bankControl"
+                                                        [matAutocomplete]="autoBank" (blur)="check('P')"
+                                                        (input)="getBancheByDesc(desc?.value)" #desc>
+                                                    <mat-autocomplete #autoBank="matAutocomplete"
+                                                        [displayWith]="displayFnBank"
+                                                        (optionSelected)="onClickSelectBank($event, estremoBancario)">
+                                                        <mat-option
+                                                            *ngFor="let option of ( filteredOptionsBanche$ | async)"
+                                                            [value]="option" [disabled]="!option.idBanca">
+                                                            {{option.descBanca}}
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+
+                                            </div>
+
+
+
+                                        </div>
+
+
+
+
+
+
+                                    </mat-card>
+                                </div>
+
+                                <div *ngIf="modAgevEstrBanc.estremiBancariList?.length == 0" class="margin-20">
+                                    <p> Nussuna banca presente per questa modalita di agevolazione </p>
+                                </div>
+
+                                <div class="container-flex-end fullWidth">
+                                    <button (click)="aggiungiBanca(modAgevEstrBanc)"
+                                        class="button-style-2 margin-top-20" mat-raised-button type="submit">
+                                        <!--[disabled]="!ruoloSelected || !enteSelected"-->
+                                        AGGIUNGI BANCA
+                                    </button>
+                                </div>
+
+                            </mat-card>
+                        </div>
+
+                        <div *ngIf="modAgevEstrBancList?.length == 0" class="margin-20">
+                            <p> Nussuna modalita di agevolazione associata </p>
+                        </div>
+
+                        <div class="container-flex-end fullWidth">
+                            <button (click)="sendToAmmCont()" class="button-style-2 margin-top-20" mat-raised-button
+                                type="submit"> <!--[disabled]="!ruoloSelected || !enteSelected"-->
+                                INVIA AMMCONT
+                            </button>
+                        </div>
+
+
+                    </mat-tab>
+
+
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

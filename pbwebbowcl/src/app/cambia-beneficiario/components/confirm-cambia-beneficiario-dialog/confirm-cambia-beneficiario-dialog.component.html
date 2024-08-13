@@ -1,0 +1,45 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Conferma cambia beneficiario</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="onAnnullaClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card-content>
+    <p> <span class="bold-text"> Progetto: </span> {{beneficiario.titoloProgetto}} </p>
+</mat-card-content>
+
+
+<!-- card beneficiario da disassociare -->
+<mat-card class="mat-elevation-z2">
+
+    <h3 class="bold-text"> Beneficiario da disassociare: </h3>
+
+    <mat-card-content>
+        <p> <span class="bold-text"> Denominazione: </span> {{beneficiario.denominazioneBeneficiario}} </p>
+    </mat-card-content>
+
+    <mat-card-content>
+        <p> <span class="bold-text"> Codice fiscale: </span> {{beneficiario.codiceFiscaleSoggetto}} </p>
+    </mat-card-content>
+
+</mat-card>
+
+<!-- card beneficiario da associare -->
+<mat-card class="mat-elevation-z2">
+
+    <h3 class="bold-text"> Nuovo beneficiario: </h3>
+
+    <mat-card-content>
+        <p> <span class="bold-text"> Denominazione: </span> {{beneficiarioSubentrante.denominazione}} </p>
+    </mat-card-content>
+
+    <mat-card-content>
+        <p> <span class="bold-text"> Codice fiscale: </span> {{beneficiarioSubentrante.codiceFiscale}} </p>
+    </mat-card-content>
+
+</mat-card>
+
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="onAnnullaClick()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfermaClick()">CONFERMA</button>
+</div>

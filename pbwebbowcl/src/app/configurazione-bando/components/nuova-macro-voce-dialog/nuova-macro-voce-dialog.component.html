@@ -1,0 +1,52 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="spaceBetween">
+    <h3 class="bold-text">Nuova macrovoce di spesa</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content class="mat-typography">
+    <mat-card class="mat-elevation-z2 messageError marginLeft25 marginRight25 marginTop30"
+        *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <form #datiForm="ngForm">
+        <mat-grid-list cols="8" rowHeight="80px">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginRight15">
+                    <input type="text" placeholder="Macrovoce di spesa *" [(ngModel)]="macroVoceSpesa"
+                        name="macroVoceSpesa" matInput>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="col fullWidth">
+                    <input type="text" placeholder="Codice tipo *" [(ngModel)]="codiceTipo" name="codiceTipo" matInput>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="col fullWidth">
+                    <mat-label>Selezionare una voce di spesa monitoraggio</mat-label>
+                    <mat-select [(ngModel)]="voceSpesaMonitSelected" name="voceSpesaMonit">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let voceSpesaMonit of vociSpesaMonit" [value]="voceSpesaMonit">
+                            {{ voceSpesaMonit.descBreve }} - {{ voceSpesaMonit.descEstesa }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <div class="fullWidth display-flex justify-content-start">
+                    <mat-checkbox [(ngModel)]="speseGestione" name="spesaGestione">
+                        Spese di gestione
+                    </mat-checkbox>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</mat-dialog-content>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="salva()">SALVA</button>
+</div>

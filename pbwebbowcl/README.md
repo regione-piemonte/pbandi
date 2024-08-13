@@ -1,11 +1,11 @@
 # Componente di Prodotto
-PBWEBWCL
+PBWEBBOWCL
 
 ## Versione
 1.8.0
 
 ## Descrizione del prodotto
-Si tratta della parte di front-end della componente [PBWEB](../pbweb). 
+Si tratta della parte di front-end della componente [PBWEBBO](../pbwebbo). 
 
 ## Configurazioni iniziali
 Questa deve essere compilata prima della componente PBWEB. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbwebwcl\buildfiles.
@@ -21,7 +21,7 @@ Questa deve essere compilata prima della componente PBWEB. I file da configurare
 [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
-Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWEB](../pbweb), effettuare i seguenti step:
+Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWEBBO](../pbwebbo), effettuare i seguenti step:
 
 0- Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <vh-di prod> con  il Virtual Host Apache su cui saranno presenti le locations
 1- cd pbwebwcl
@@ -32,13 +32,13 @@ Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte jav
 5- cd dist\prod-rp-01
 6- zip -r ..\..\dist_wcl_prod_rp_01.zip ./* -x "./assets/.svn/*"
 7- cd ..\..\..
-8- xcopy pbwebwcl\dist_wcl_prod_rp_01.zip pbweb\pbweb-web\src\main\webapp\
-   (il file .zip viene copiato nella cartella /webapp della componente [PBWEB](../pbweb) )
-9- del pbwebwcl\dist_wcl_prod_rp_01.zip
+8- xcopy pbwebbowcl\dist_wcl_prod_rp_01.zip pbwebbo\pbwebbo-web\src\main\webapp\
+   (il file .zip viene copiato nella cartella /webapp della componente [PBWEBBO](../pbwebbo) )
+9- del pbwebbowcl\dist_wcl_prod_rp_01.zip
 
 ## Deployment
-Questa componente non deve essere deployata ma dovrà essere inglobata nella componente [PBWEB](../pbweb).
-Seguire le istruzioni del README.md della componente [PBWEB](../pbweb)
+Questa componente non deve essere deployata ma dovrà essere inglobata nella componente [PBWEBBO](../pbwebbo).
+Seguire le istruzioni del README.md della componente [PBWEBBO](../pbwebbo)
 
 ## Versioning
 Per il versionamento del software si usa la tecnica Semantic Versioning (http://semver.org).

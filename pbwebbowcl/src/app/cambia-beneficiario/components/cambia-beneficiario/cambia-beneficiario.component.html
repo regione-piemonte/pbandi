@@ -1,0 +1,258 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+
+<div class="page" [ngClass]="{'displayNone':isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>Cambia beneficiario</h2>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+
+
+    <div class="content">
+
+        <!-- Card iniziale Ricerca progetto e beneficiario -->
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+
+                <div class="header">
+                    <!--mat-icon class="material-icons-outlined">settings_applications</mat-icon-->
+                    <h3 class="search">Criteri di ricerca</h3>
+                </div>
+
+                <form #ricercaForm="ngForm" (submit)="cerca()">
+                    <!--NASCOSTA COMBO BENEFICIARI PER VELOCIZZARE LA PAGINA-->
+                    <!--mat-form-field [formGroup]="beneficiarioGroup" class="fullWidth">
+                        <input type="text" placeholder="Selezionare un beneficiario" aria-label="Number" matInput
+                            formControlName="beneficiarioControl" [matAutocomplete]="autoBen" (blur)="check('B')">
+                        <mat-autocomplete autoActiveFirstOption #autoBen="matAutocomplete" [displayWith]="displayFnBen"
+                            (optionSelected)="click($event,'B')">
+                            <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                class="viewport" [ngClass]="{'viewport-full': (filteredOptionsBen | async)?.length>4,
+                                'viewport-1': (filteredOptionsBen | async)?.length==1,
+                                'viewport-2': (filteredOptionsBen | async)?.length==2,
+                                'viewport-3': (filteredOptionsBen | async)?.length==3,
+                                'viewport-4': (filteredOptionsBen | async)?.length==4 }">
+                                <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsBen | async" [value]="option">
+                                    {{ option.descrizione }} - {{ option.codiceFiscale }}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-autocomplete>
+                    </mat-form-field-->
+                    <mat-form-field [formGroup]="progettoGroup" class="fullWidth">
+                        <input type="text" placeholder="Selezionare un progetto" aria-label="Number" matInput
+                            formControlName="progettoControl" [matAutocomplete]="autoProg" (blur)="check('P')">
+                        <mat-autocomplete autoActiveFirstOption #autoProg="matAutocomplete"
+                            [displayWith]="displayFnProg" (optionSelected)="click($event,'P')">
+                            <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                class="viewport" [ngClass]="{'viewport-full': (filteredOptionsProg | async)?.length>4,
+                                'viewport-1': (filteredOptionsProg | async)?.length==1,
+                                'viewport-2': (filteredOptionsProg | async)?.length==2,
+                                'viewport-3': (filteredOptionsProg | async)?.length==3,
+                                'viewport-4': (filteredOptionsProg | async)?.length==4 }">
+                                <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsProg | async" [value]="option">
+                                    {{ option.codiceVisualizzatoProgetto }}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <button mat-raised-button class="button-style-2" type="submit" [disabled]="!isProgettoSelezionato">
+                        CERCA
+                    </button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+
+        <div *ngIf="isSearchinProgress && beneficiarioDTO != null && beneficiarioDTO != undefined">
+
+            <!-- Seconda card che appare dopo la ricerca fatta sulla prima -->
+            <mat-card class="mat-elevation-z2">
+
+                <mat-card-content>
+                    <div class="header">
+                        <h3>Beneficiario attutale</h3>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <p> <span class="boldText"> Codice fiscale: </span> {{beneficiarioDTO.codiceFiscaleSoggetto}} </p>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <p> <span class="boldText"> Denominazione: </span> {{beneficiarioDTO.denominazioneBeneficiario}}
+                    </p>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <p> <span class="boldText"> Titolo progetto: </span> {{beneficiarioDTO.titoloProgetto}} </p>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <p> <span class="boldText"> Denominazione: </span> {{beneficiarioDTO.denominazioneBeneficiario}}
+                    </p>
+                </mat-card-content>
+
+                <br>
+                <mat-divider></mat-divider>
+                <br>
+
+                <mat-card-content>
+                    <div class="header">
+                        <h3>Beneficiario subentrante</h3>
+                    </div>
+                </mat-card-content>
+
+
+                <mat-card-content>
+                    <form (submit)="cercaBeneficiarioSubentrante()" [formGroup]="cfValidations">
+                        <mat-form-field class="fullWidth">
+                            <input type="text" placeholder="inserire CF beneficiario subentrante"
+                                [(ngModel)]="cfBeneficiarioSubentrante" matInput
+                                name="cfBeneficiarioSubentranteInputText" formControlName="cf">
+                            <mat-error *ngIf="cfValidations.get('cf').hasError('required')">
+                                Codice fiscale richiesto
+                            </mat-error>
+                            <mat-error *ngIf="cfValidations.get('cf').hasError('minlength')">
+                                Codice fiscale troppo corto
+                            </mat-error>
+                            <mat-error *ngIf="cfValidations.get('cf').hasError('maxlength')">
+                                Codice fiscale troppo lungo
+                            </mat-error>
+
+                        </mat-form-field>
+                        <div class="display-flex margin-top-20">
+                            <button mat-raised-button class="button-style-2 " type="submit"
+                                [disabled]="cfValidations.get('cf')?.errors">
+                                CERCA
+                            </button>
+                            <button
+                                *ngIf="isSearchinProgress && datiBeneficiarioProgettoDTO && !datiBeneficiarioProgettoDTO.idSoggetto"
+                                mat-raised-button class="button-style-2 margin-left-10" type="button"
+                                (click)="modificabeneficiarioDialog()">
+                                NUOVO BENEFICIARIO
+                            </button>
+                        </div>
+
+                    </form>
+
+                </mat-card-content>
+
+
+            </mat-card>
+
+            <!-- Terza card che appare dopo la ricerca del beneficiario subentrante -->
+            <!--[ngClass]="{'displayNone': isLoading()}-->
+            <!--<mat-card #scrollBeneficiarioSubentrante class="mat-elevation-z2" [ngClass]="{'displayNone': datiBeneficiarioProgettoDTO != null && datiBeneficiarioProgettoDTO != undefined}" > -->
+            <!--<mat-card #scrollBeneficiarioSubentrante class="mat-elevation-z2" *ngShow="datiBeneficiarioProgettoDTO != null && datiBeneficiarioProgettoDTO != undefined" >  -->
+            <!--mat-card #scrollBeneficiarioSubentrante class="mat-elevation-z2" ng-hide="datiBeneficiarioProgettoDTO != null && datiBeneficiarioProgettoDTO != undefined" >-->
+
+            <mat-card class="mat-elevation-z2" *ngIf="isSearchinProgress && datiBeneficiarioProgettoDTO?.idSoggetto">
+                <mat-card-content>
+                    <div class="header">
+                        <h3>Beneficiario Subentrante</h3>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <p>
+                        <span class="boldText"> Denominazione: </span> {{datiBeneficiarioProgettoDTO.denominazione}}
+                    </p>
+                </mat-card-content>
+
+                <mat-card-content>
+                    <button mat-raised-button class="button-style-2 margin20" type="button"
+                        (click)="modificabeneficiarioDialog()">
+                        MODIFICA
+                    </button>
+                </mat-card-content>
+
+            </mat-card>
+
+            <!-- Tasto modifica -->
+            <mat-card-content *ngIf="isSearchinProgress && datiBeneficiarioProgettoDTO">
+                <button mat-raised-button class="confirmButton" class="button-style-2 margin20" type="button"
+                    (click)="cambiabeneficiario()">
+                    CAMBIA BENEFICIARIO
+                </button>
+            </mat-card-content>
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<!-- Codice tolto
+
+
+    //input txet
+    <div class="row">
+        <mat-form-field class="col">
+            <input type="text" placeholder="Inserire nome bando" [(ngModel)]="nomeBando" matInput
+                name="nomeBando">
+        </mat-form-field>
+    </div>
+                   
+
+    //input txet
+    <div class="row">
+        <mat-form-field class="col">
+            <input type="text" placeholder="Inserire nome bando linea" [(ngModel)]="nomeBandoLinea"
+                matInput name="nomeBandoLinea">
+        </mat-form-field>
+    </div>
+
+
+    <button mat-icon-button (click)="criteriRicercaOpenClose()">
+        <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+        <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+    </button>
+                        
+
+
+    <div class = "debug">
+        <h3>Variabili di debug</h3>
+        <p>loadedOnInit = {{loadedOnInit}} </p>
+        <p>loadedRicercaBeneficiari = {{loadedRicercaBeneficiari}} </p>
+        <p>loadedRicercaProgetti = {{loadedRicercaProgetti}} </p>
+        <p>loadCerca = {{loadCerca}} </p>
+
+        <style type="text/css">
+            .debug { 
+                border-style: solid;
+                border-color: red; 
+                border-width: 2px ;
+                color : red;
+                padding: 20px;
+                float: left;
+            }
+        </style>
+
+    </div>
+
+
+
+
+
+-->

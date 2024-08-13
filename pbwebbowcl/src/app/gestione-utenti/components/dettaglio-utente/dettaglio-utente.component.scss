@@ -1,0 +1,66 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.mat-elevation-z2 {
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+.mat-card-actions,
+.mat-card-subtitle,
+.mat-card-content {
+    display: contents;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+#mat-card-scroll {
+    height: 40%;
+    max-height: 200px;
+    overflow: auto;
+    font-size: 12px;
+}
+
+.mat-checkbox-inner-container {
+    height: 10px;
+    width: 10px;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.width-49-perc {
+    width: 49%;
+}
+
+.mat-form-field-wrapper {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.listItem {
+    font-size: 14px;
+    height: auto;
+}
+
+.mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+    height: auto;
+}
+
+.mat-list-base {
+    padding-top: 2px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
