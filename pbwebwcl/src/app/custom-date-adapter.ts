@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { DatePipe } from "@angular/common";
 import { NativeDateAdapter } from "@angular/material/core";
 

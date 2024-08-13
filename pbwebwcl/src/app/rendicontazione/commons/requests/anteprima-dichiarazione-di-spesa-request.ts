@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { DatiDeclaratoriaDTO } from "../dto/dati-declaratoria-dto";
 import { TipoAllegatoDTO } from "../dto/tipo-allegato-dto";
 

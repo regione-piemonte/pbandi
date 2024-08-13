@@ -1,3 +1,8 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
 /*
  * This class was automatically generated with 
  * <a href="http://www.castor.org">Castor 1.0.5</a>, using an XML

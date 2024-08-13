@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 export const environment = {
   production: true,
   apiURL: "https://secure.sistemapiemonte.it/finanziamenti/bandi/pbweb",

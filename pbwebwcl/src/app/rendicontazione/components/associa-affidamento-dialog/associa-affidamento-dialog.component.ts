@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { AffidamentoRendicontazioneDTO } from '../../commons/dto/affidamento-rendicontazione-dto';
 import { HandleExceptionService } from './../../../core/services/handle-exception.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';

@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { PagamentoFormDTO } from "../dto/pagamento-form-dto";
 import { PagamentoVoceDiSpesaDTO } from "../dto/pagamento-voce-di-spesa-dto";
 import { VoceDiSpesaDTO } from "../dto/voce-di-spesa-dto";

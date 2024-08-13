@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 const italianRangeLabel = (page: number, pageSize: number, length: number) => {

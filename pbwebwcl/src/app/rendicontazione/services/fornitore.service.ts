@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { Observable } from 'rxjs';
 import { SalvaQualificaRequest } from '../commons/requests/salva-qualifica-request';
 import { UserInfoSec } from '../../core/commons/dto/user-info';

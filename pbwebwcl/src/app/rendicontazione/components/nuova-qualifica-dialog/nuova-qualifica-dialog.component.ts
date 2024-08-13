@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { UserService } from './../../../core/services/user.service';
 import { UserInfoSec } from './../../../core/commons/dto/user-info';
 import { NgForm } from '@angular/forms';

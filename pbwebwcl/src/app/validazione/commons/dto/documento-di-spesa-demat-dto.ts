@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { DocumentoAllegatoDTO } from "src/app/rendicontazione/commons/dto/documento-allegato-dto";
 import { AffidamentoValidazione } from "./affidamento-validazione";
 import { DocumentoAllegatoPagamentoDTO } from "./documento-allegato-pagamento-dto";

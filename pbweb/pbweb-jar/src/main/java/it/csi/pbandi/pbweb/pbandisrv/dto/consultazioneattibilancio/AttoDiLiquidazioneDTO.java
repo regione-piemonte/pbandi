@@ -1,3 +1,8 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
 package it.csi.pbandi.pbweb.pbandisrv.dto.consultazioneattibilancio;
 
 ////{PROTECTED REGION ID(R-1779648924) ENABLED START////}

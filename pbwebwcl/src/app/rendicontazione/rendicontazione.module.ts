@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { SharedModule } from './../shared/shared.module';
 import { NuovaQualificaDialogComponent } from './components/nuova-qualifica-dialog/nuova-qualifica-dialog.component';
 import { RendicontazioneComponent } from './components/rendicontazione/rendicontazione.component';

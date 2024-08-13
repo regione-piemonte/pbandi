@@ -1,3 +1,8 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
 package it.csi.pbandi.pbweb.pbandisrv.dto.dichiarazionedispesa;
 
 public class EsitoOperazioneAnteprimaDichiarazioneSpesa implements java.io.Serializable {

@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { Subscription } from "rxjs";
 
 const isFunction = (fn) => typeof fn === 'function';

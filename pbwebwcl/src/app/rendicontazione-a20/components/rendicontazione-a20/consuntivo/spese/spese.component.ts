@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TabellaVociDiSpesa, VoceDiSpesaDaSalvare, mapToTabellaVociDiSpesa, ricalcolaTotaliSpese } from 'src/app/rendicontazione-a20/commons/conto-economico-vo';
 import { SpesaService } from 'src/app/rendicontazione-a20/services/spesa.service';

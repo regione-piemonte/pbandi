@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AutoUnsubscribe } from 'src/app/shared/decorator/auto-unsubscribe';
 import { ConfigService } from 'src/app/core/services/config.service';

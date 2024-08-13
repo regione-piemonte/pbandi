@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { Component, Input, OnInit } from '@angular/core';
 import { NuovoDocumentoDiSpesaDTO } from '../../commons/dto/nuovo-documento-di-spesa-dto';
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { EconomiaPerDatiGeneraliDTO } from "./economia-per-dati-generali-dto";
 import { ImportoAgevolatoDTO } from "./importo-agevolato-dto";
 import { ImportoDescrizioneDTO } from "./importo-descrizione-dto";

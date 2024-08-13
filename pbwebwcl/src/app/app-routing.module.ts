@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { ArchivioFileContainerComponent } from './archivio-file-container/components/archivio-file-container/archivio-file-container.component';
 import { DocumentoDiSpesaComponent } from './rendicontazione/components/documento-di-spesa/documento-di-spesa.component';
 import { NgModule } from '@angular/core';

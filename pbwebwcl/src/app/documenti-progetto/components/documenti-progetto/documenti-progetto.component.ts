@@ -1,3 +1,8 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
 import { HandleExceptionService } from './../../../core/services/handle-exception.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
