@@ -1,0 +1,198 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToCaricaChecklist()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a carica checklist</span>
+            </button>
+        </div>
+        <h2>Elenco progetti della proposta</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2" *ngIf="proposta">
+            <mat-card-content>
+                <h2>Proposta</h2>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 15%;">
+                                <p class="bold-text">Numero </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.idPropostaCertificaz}}</p>
+                            </td>
+                            <td style="width: 18%;">
+                                <p class="bold-text">Data creazione </p>
+                            </td>
+                            <td style="width: 32%;">
+                                <p>{{proposta.dtOraCreazione | date: "dd/MM/yyyy"}}</p>
+                            </td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 15%;">
+                                <p class="bold-text">Descrizione </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.descProposta}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un asse - obiettivo - attività</mat-label>
+                                <mat-select [(ngModel)]="attivitaSelected" name="bando"
+                                    (selectionChange)="onSelectAttivita()">
+                                    <mat-option *ngFor="let option of attivita" [value]="option">
+                                        <span *ngIf="option.idLineaDiIntervento!==0">{{ option.descBreveLinea }} -
+                                            {{option.descLinea}}</span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un beneficiario</mat-label>
+                                <mat-select [(ngModel)]="beneficiarioSelected" name="beneficiario"
+                                    (selectionChange)="onSelectBeneficiario()">
+                                    <mat-option *ngFor="let option of beneficiari" [value]="option">
+                                        <span *ngIf="option.idSoggetto!==0"> {{ option.denominazioneBeneficiario }}
+                                            [{{option.codiceFiscale}}]</span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un codice</mat-label>
+                                <mat-select [(ngModel)]="progettoSelected" name="progetto"
+                                    (selectionChange)="onSelectProgetto()">
+                                    <mat-option *ngFor="let option of progetti" [value]="option">
+                                        {{ option.codiceProgetto }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <div matTooltip="Inserire almeno un campo di ricerca"
+                                [matTooltipDisabled]="attivitaSelected || beneficiarioSelected || progettoSelected">
+                                <button class="button-style-2 margin0" mat-raised-button type="submit"
+                                    [disabled]="!attivitaSelected && !beneficiarioSelected && !progettoSelected">
+                                    CERCA
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !dataSource || !elencoProgetti}">
+        <h3>Elenco progetti</h3>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <table mat-table [dataSource]="dataSource" matSort #sort="matSort" matSortActive="data"
+                    style="width: 100%;">
+
+                    <ng-container matColumnDef="attivita">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Attività </th>
+                        <td mat-cell *matCellDef="let row" style="width: 20%;">
+                            {{row.descBreveCompletaAttivita}} - {{row.attivita}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Beneficiario </th>
+                        <td mat-cell *matCellDef="let row" style="width: 20%;"> {{row.beneficiario}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codiceprogetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Codice progetto
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.codiceVisualizzato}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="contributopubblico">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Contr.pub. (%)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 10%;">
+                            {{row.percContributoPubblico | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cofinanziamento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Cofin. (%)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 10%;">
+                            {{row.percCofinFesr | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="toterogato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Tot. erogato (€)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.importoErogazioni | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totpagamenti">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Tot. pagamenti (€)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.importoPagamentiValidati | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totfideiussioni">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Tot.fideiussioni (%)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.importoFideiussioni | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="spesacertificabile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Spesa certificabile
+                            lorda (€)
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.spesaCertificabileLorda | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button class="blueIcon" matTooltip="Gestione checklist"
+                                style="width: 30px;" (click)="goToGestioneChecklist(row.idDettPropostaCertif)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <h2>Creazione di proposta di certificazione</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <form #creaForm="ngForm" (submit)="valida()" class="column">
+                    <div class="row">
+                        <mat-form-field style="width: 30%">
+                            <mat-label>Selezionare una linea di intervento</mat-label>
+                            <mat-select [(ngModel)]="lineaDiInterventoSelected" name="linea" #linea="ngModel"
+                                [disabled]="isValidated">
+                                <mat-option *ngFor="let option of lineeIntervento" [value]="option">
+                                    {{option.descLinea}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="linea?.errors?.error ==='required'">
+                                Campo obbligatorio
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <div style="width:50%">
+                            <mat-form-field style="width: 60%">
+                                <mat-label>Data limite pagamenti</mat-label>
+                                <input matInput [matDatepicker]="picker1" [formControl]="dataPagamenti"
+                                    [disabled]="isValidated">
+                                <mat-datepicker-toggle matSuffix [for]="picker1" class="blueIcon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                                <mat-error *ngIf="dataPagamenti?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="dataPagamenti?.errors?.error ==='maggioreYesterday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                                <mat-error *ngIf="dataPagamenti?.errors?.error ==='minoreMinData'">
+                                    La data deve essere successiva alla data {{minData | date: "dd/MM/yyyy"}}.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div style="width:50%;">
+                            <mat-form-field style="width: 60%">
+                                <mat-label>Data limite validazioni</mat-label>
+                                <input matInput [matDatepicker]="picker2" [formControl]="dataValidazioni"
+                                    [disabled]="isValidated">
+                                <mat-datepicker-toggle matSuffix [for]="picker2" class="blueIcon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                                <mat-error *ngIf="dataValidazioni?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="dataValidazioni?.errors?.error ==='maggioreYesterday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                                <mat-error *ngIf="dataValidazioni?.errors?.error ==='minoreMinData'">
+                                    La data deve essere successiva alla data {{minData | date: "dd/MM/yyyy"}}.
+                                </mat-error>
+                                <mat-error *ngIf="dataValidazioni?.errors?.error ==='minoreDataPagamenti'">
+                                    La data limite delle validazioni non può essere inferiore alla data limite
+                                    dei pagamenti.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="width:50%">
+                            <mat-form-field style="width: 60%">
+                                <mat-label>Data limite fideiussioni</mat-label>
+                                <input matInput [matDatepicker]="picker3" [formControl]="dataFideiussioni"
+                                    [disabled]="isValidated">
+                                <mat-datepicker-toggle matSuffix [for]="picker3" class="blueIcon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker3></mat-datepicker>
+                                <mat-error *ngIf="dataFideiussioni?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="dataFideiussioni?.errors?.error ==='maggioreYesterday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                                <mat-error *ngIf="dataFideiussioni?.errors?.error ==='minoreMinData'">
+                                    La data deve essere successiva alla data {{minData | date: "dd/MM/yyyy"}}.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div style="width:50%">
+                            <mat-form-field style="width: 60%">
+                                <mat-label>Data limite erogazioni</mat-label>
+                                <input matInput [matDatepicker]="picker4" [formControl]="dataErogazioni"
+                                    [disabled]="isValidated">
+                                <mat-datepicker-toggle matSuffix [for]="picker4" class="blueIcon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker4></mat-datepicker>
+                                <mat-error *ngIf="dataErogazioni?.errors?.error ==='required'">
+                                    Campo obbligatorio
+                                </mat-error>
+                                <mat-error *ngIf="dataErogazioni?.errors?.error ==='maggioreYesterday'">
+                                    La data deve essere precedente alla data odierna.
+                                </mat-error>
+                                <mat-error *ngIf="dataErogazioni?.errors?.error ==='minoreMinData'">
+                                    La data deve essere successiva alla data {{minData | date: "dd/MM/yyyy"}}.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Breve descrizione della proposta</mat-label>
+                            <textarea matInput [disabled]="isValidated" [(ngModel)]="descrizione"
+                                name="desc"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <mat-checkbox [(ngModel)]="isBozza" [disabled]="isValidated" name="bozza">Bozza
+                    </mat-checkbox>
+                    <div class="textAlignRight" *ngIf="!isValidated">
+                        <button mat-raised-button class="button-style-2" type="submit">VALIDA
+                        </button>
+
+                    </div>
+                    <div class="spaceBetween marginTop10" *ngIf="isValidated">
+                        <button mat-raised-button class="button-style-2" (click)="indietro()">INDIETRO
+                        </button>
+                        <button mat-raised-button class="button-style-2" (click)="creaAnteprimaProposta()">CREA
+                            ANTEPRIMA PROPOSTA
+                        </button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

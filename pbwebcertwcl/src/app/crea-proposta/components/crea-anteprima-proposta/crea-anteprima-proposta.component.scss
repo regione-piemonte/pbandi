@@ -1,0 +1,55 @@
+.page {
+    .content {
+
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+    }
+}
+
+.blueIcon {
+    color: #0060C1;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    min-height: 80px;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060C1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color:  #0058B1 !important; /*click effect color change*/
+}

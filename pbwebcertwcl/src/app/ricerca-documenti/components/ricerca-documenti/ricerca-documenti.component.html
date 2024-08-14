@@ -1,0 +1,141 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>Ricerca documenti</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Selezionare una linea di intervento</mat-label>
+                            <mat-select [(ngModel)]="lineaDiInterventoSelected" name="linea"
+                                (selectionChange)="onSelectLineaIntervento()">
+                                <mat-option *ngFor="let option of lineeIntervento" [value]="option">
+                                    {{option.descBreveLinea}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Selezionare una proposta</mat-label>
+                            <mat-select [(ngModel)]="propostaSelected" name="proposta"
+                                (selectionChange)="onSelectProposta()">
+                                <mat-option *ngFor="let option of proposteFiltered" [value]="option">
+                                    <span *ngIf="option.idPropostaCertificaz!=0">
+                                        {{option.idPropostaCertificaz}} [{{option.descStatoPropostaCertif}}] -
+                                        {{option.dtOraCreazione | date: "dd/MM/yyyy"}}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="column" *ngIf="!oi_ist_master">
+                            <mat-checkbox [(ngModel)]="checkListCertificazione" name="checklist">Checklist
+                                certificazione
+                            </mat-checkbox>
+                            <mat-checkbox [(ngModel)]="dichiarazioneFinale" name="dichfin">Dichiarazione finale
+                            </mat-checkbox>
+                            <mat-checkbox [(ngModel)]="filePropostaCertificazione" name="fileprop">File della proposta
+                                di certificazione
+                            </mat-checkbox>
+                        </div>
+                        <div class="textAlignRight">
+                            <button mat-raised-button class="button-style-2" type="submit">CERCA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" [ngClass]="{'displayNone': !dataSource || elencoDocumenti?.length==0}">
+        <h3>Elenco documenti</h3>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div *ngIf="noElementsMessageVisible">{{noElementsMessage}}</div>
+                <table mat-table *ngIf="dataSource && elencoDocumenti.length>0 && !noElementsMessageVisible"
+                    [dataSource]="dataSource" matSort #sort="matSort" matSortActive="data" style="width: 100%;">
+
+                    <ng-container matColumnDef="nomefile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Documento </th>
+                        <td mat-cell *matCellDef="let row" style="width: 20%;">
+                            {{row.nomeDocumento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descrizione">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Descrizione
+                            proposta </th>
+                        <td mat-cell *matCellDef="let row" style="width: 20%;"> {{row.noteDocumentoIndex}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="proposta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 6%;"> Proposta
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 6%;">
+                            {{row.idPropostaCertificaz}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="progetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 6%;"> Progetto
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 6%;">
+                            {{row.idProgetto}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipodoc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Tipo documento
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 20%;">
+                            {{row.descTipoDocIndexStato }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datadoc">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Data documento
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 10%;">
+                            {{row.dtInserimentoIndex | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;">
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 10%;">
+                            <button mat-icon-button class="blueIcon" matTooltip="Scarica allegato" style="width: 30px;"
+                                (click)="downloadAllegato(row.idDocumentoIndex,row.nomeDocumento)">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

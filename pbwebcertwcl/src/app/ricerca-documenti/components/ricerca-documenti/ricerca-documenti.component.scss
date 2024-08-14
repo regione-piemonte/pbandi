@@ -1,0 +1,79 @@
+.page {
+
+    .content {
+
+
+        .header {
+            display: flex;
+            align-items: center;
+
+            h2 {
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+
+            .arrow {
+                color: grey;
+            }
+        }
+
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+    }
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+th, td {
+    padding-right: 10px !important;
+}
+
+td {
+    font-size: 13;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.blueIcon {
+    color: #0060C1;
+}
+
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060C1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color:  #0058B1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060C1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058B1 !important;
+}

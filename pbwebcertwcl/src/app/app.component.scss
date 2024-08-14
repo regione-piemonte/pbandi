@@ -1,0 +1,66 @@
+.cont-textMenuUser {
+  padding: 10px 0;
+
+  .textMenuUser {
+    font-family: "Titillium Web", sans-serif;
+    font-size: 16px;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+mat-toolbar {
+  background-color: #006cb4;
+  color: #ffffff;
+  min-height: 64px;
+}
+
+//MODIFICA STILE CAMPI DISABLED
+::ng-deep .mat-select-disabled .mat-select-value {
+  color: rgba(0, 0, 0, 0.6) !important;
+  cursor: not-allowed !important;
+  font-weight: bold !important;
+}
+
+::ng-deep .mat-input-element:disabled,
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+  color: rgba(0, 0, 0, 0.6) !important;
+  cursor: not-allowed !important;
+  font-weight: bold !important;
+}
+
+::ng-deep .mat-radio-button.mat-radio-disabled .mat-radio-label-content {
+  color: rgba(0, 0, 0, 0.6) !important;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .mat-checkbox-disabled .mat-checkbox-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .mat-button-disabled {
+  cursor: not-allowed !important;
+}
+
+//MODIFICA STILE RADIO E CHECK
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color: #0058b1 !important; /*click effect color change*/
+}

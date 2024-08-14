@@ -1,0 +1,362 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button *ngIf="!(isTerminated && !isInviaReport)" (click)="goToGestioneProposte()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione proposte</span>
+            </button>
+            <button *ngIf="isTerminated && !isInviaReport" (click)="indietro()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Indietro</span>
+            </button>
+        </div>
+        <h2>Aggiornamento stato della proposta</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2" *ngIf="proposta && !isChiusuraConti && !isInviaReport">
+            <mat-card-content>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 15%;">
+                                <p class="bold-text">Numero </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.idPropostaCertificaz}}</p>
+                            </td>
+                            <td style="width: 18%;">
+                                <p class="bold-text">Data creazione </p>
+                            </td>
+                            <td style="width: 32%;">
+                                <p>{{proposta.dtOraCreazione | date: "dd/MM/yyyy"}}</p>
+                            </td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 15%;">
+                                <p class="bold-text">Descrizione </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.descProposta}}</p>
+                            </td>
+                            <td style="width: 18%;">
+                                <p class="bold-text">Stato attuale </p>
+                            </td>
+                            <td style="width: 32%;">
+                                <p>{{proposta.descStatoPropostaCertif}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="width: 100%;" *ngIf="descBreveStatoIniziale==='05open'">
+                    <tbody>
+                        <tr style="width: 100%;">
+                            <td style="width: 50%;">
+                                <mat-form-field style="width: 50%;">
+                                    <mat-label>Selezionare un nuovo stato</mat-label>
+                                    <mat-select [(ngModel)]="nuovoStatoSelected" name="stato">
+                                        <mat-option *ngFor="let option of nuoviStati" [value]="option">
+                                            {{option.descStatoPropostaCertif}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td style="width: 50%;">
+                                <div>
+                                    <button mat-raised-button class="button-style-2" [disabled]="!nuovoStatoSelected"
+                                        (click)="salvaNuovoStato()">SALVA</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content"
+        *ngIf="(descBreveStatoIniziale==='07appr' || descBreveStatoIniziale==='intermedia-finale') && !isTerminated && !isChiusuraConti">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm" (submit)="ricerca()">
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un bando-linea</mat-label>
+                                <mat-select [(ngModel)]="bandoLineaSelected" name="bando"
+                                    (selectionChange)="onSelectBandoLinea()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of bandiLinea" [value]="option">
+                                        {{ option.nomeBandoLinea }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un beneficiario</mat-label>
+                                <mat-select [(ngModel)]="beneficiarioSelected" name="beneficiario"
+                                    (selectionChange)="onSelectBeneficiario()">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of beneficiari" [value]="option">
+                                        {{ option.denominazioneBeneficiario }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un codice</mat-label>
+                                <mat-select [(ngModel)]="progettoSelected" name="progetto">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let option of progetti" [value]="option">
+                                        {{ option.codiceProgetto }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row" *ngIf="descBreveStatoIniziale==='07appr'">
+                            <mat-checkbox [(ngModel)]="progettiModificati" name="progModif">Progetti modificati
+                            </mat-checkbox>
+                        </div>
+                        <div class="row">
+                            <div class="marginTop10">
+                                <button class="button-style-2 margin0" mat-raised-button type="submit">
+                                    CERCA
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" [ngClass]="{'displayNone': !dataSource || !elencoProgetti || isInviaReport}">
+        <h3 *ngIf="!isTerminated">Elenco progetti</h3>
+        <h3 *ngIf="isTerminated">Progetti modificati</h3>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <form #progettiForm="ngForm">
+                    <table mat-table [dataSource]="dataSource" matSort #sort="matSort" style="width: 100%;">
+
+                        <ng-container matColumnDef="codiceprogetto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 23%;"> Codice progetto
+                            </th>
+                            <td mat-cell *matCellDef="let row" style="width: 23%;">
+                                {{row.codiceProgetto}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="beneficiario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 23%;"> Beneficiario
+                            </th>
+                            <td mat-cell *matCellDef="let row" style="width: 23%;"> {{row.denominazioneBeneficiario}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nettoADC">
+                            <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Imp certificato netto ADC
+                            </th>
+                            <td mat-cell *matCellDef="let row; let i = index" style="width: 15%;" class="imp">
+                                <mat-form-field style="width: 90%;" *ngIf="!isTerminated">
+                                    <input type="text" matInput [(ngModel)]="row.importoModificabile"
+                                        name="importo{{i}}" #imp="ngModel"
+                                        (blur)="formatValue(row.idProgetto,row.importoModificabile)" />
+                                    <mat-error class="font-size-15 display-flex"
+                                        matTooltip="Inserire un importo inferiore all'importo certificato netto ADG"
+                                        *ngIf="imp?.errors?.error ==='notValid'">
+                                        <mat-icon class="red-color">warning</mat-icon> <span
+                                            class="font-size-10-5 padding-left-3">Errore</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <span *ngIf="isTerminated">{{row.importoCertificazioneNetto | number: '0.2' :
+                                    'it'}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nettoADG">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Imp certificato
+                                netto
+                                ADG
+                            </th>
+                            <td mat-cell *matCellDef="let row" style="width: 15%;">
+                                {{row.impCertifNettoPremodifica | number: '0.2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="note">
+                            <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Note
+                            </th>
+                            <td mat-cell *matCellDef="let row ; let i = index" class="nota" style="width: 20%;">
+                                <mat-form-field style="width: 90%;" *ngIf="!isTerminated">
+                                    <input type="text" matInput [(ngModel)]="row.nota" name="nota{{i}}"
+                                        #not="ngModel" />
+                                    <mat-error *ngIf="not?.errors?.error === 'required'">
+                                        Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                                <span *ngIf="isTerminated">{{row.nota}}</span>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
+                    </table>
+                </form>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                    [showFirstLastButtons]="true">
+                </mat-paginator>
+                <div class="spaceBetween">
+                    <button mat-raised-button class="button-style-2"
+                        (click)="scaricaInExcel(idProposta, elencoProgetti)">SCARICA IN EXCEL</button>
+                    <div>
+                        <button mat-raised-button class="button-style-2 marginRight10" *ngIf="!isTerminated"
+                            (click)="save()">SALVA</button>
+                        <button mat-raised-button class="button-style-2" *ngIf="!isTerminated"
+                            (click)="termina()">TERMINA</button>
+                        <button mat-raised-button class="button-style-2" *ngIf="isTerminated"
+                            (click)="inviaReport()">INVIA REPORT</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content" [ngClass]="{'displayNone': !dataSourceIF || !elencoProgettiIF || isChiusuraConti}">
+        <h3>Elenco progetti</h3>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <table class="tableIF" mat-table [dataSource]="dataSourceIF" matSort #sortIF="matSort">
+
+                    <ng-container matColumnDef="asse">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Asse </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.asse}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codiceprogetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Codice progetto </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.codiceProgetto}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Beneficiario </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;"> {{row.beneficiario}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="validaticum">
+                        <th mat-header-cell *matHeaderCellDef> Importo pagamenti validati cum
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.importoPagamValidCum | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="erogazionicum">
+                        <th mat-header-cell *matHeaderCellDef> Importo erogazioni cum
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.importoErogazioniCum | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="revochecum">
+                        <th mat-header-cell *matHeaderCellDef> Importo revoche rilevanti cum
+                        <td mat-cell *matCellDef="let row">
+                            {{row.importoRevocheRilevCum | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="recupericum">
+                        <th mat-header-cell *matHeaderCellDef> Importo recuperi cum
+                        <td mat-cell *matCellDef="let row">
+                            {{row.importoRecuperiCum | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="soppressionicum">
+                        <th mat-header-cell *matHeaderCellDef> Importo soppressioni cum
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.importoSoppressioniCum | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lordocum">
+                        <th mat-header-cell *matHeaderCellDef> Certificato lordo cum
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.certificatoLordoCumulato | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="nettocum">
+                        <th mat-header-cell *matHeaderCellDef> Certificato netto cum
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.certificatoNettoCumulato | number: '0.2' : 'it'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nettoannuale">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Certificato netto annuale
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;" class="imp">
+                            <mat-form-field style="width: 90%;">
+                                <input type="text" matInput [(ngModel)]="row.importoCertifNettoAnnualModificabile"
+                                    (blur)="formatValueIFAnnuale(row.idProgetto,row.importoCertifNettoAnnualModificabile)" />
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="colonnac">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Colonna C
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;" class="imp">
+                            <mat-form-field style="width: 90%;">
+                                <input type="text" matInput [(ngModel)]="row.colonnaCModificabile"
+                                    (blur)="formatValueIFColonnaC(row.idProgetto,row.colonnaCModificabile)" />
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsIF"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsIF;"></tr>
+                </table>
+                <mat-paginator #paginatorIF [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                    [showFirstLastButtons]="true">
+                </mat-paginator>
+
+                <div class="spaceBetween marginTop10">
+                    <button mat-raised-button class="button-style-2"
+                        (click)="scaricaInExcelIF(idProposta, elencoProgettiIF)">SCARICA IN EXCEL</button>
+                    <div>
+                        <button mat-raised-button class="button-style-2 marginRight10" (click)="save()">SALVA</button>
+                        <button mat-raised-button class="button-style-2 marginRight10" (click)="aggiornaDati()"
+                            [disabled]="aggiornaDatiClicked">AGGIORNA DATI</button>
+                        <button mat-raised-button class="button-style-2" (click)="chiusuraConti()">CHIUSURA
+                            CONTI</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

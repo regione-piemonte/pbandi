@@ -1,0 +1,38 @@
+.page {
+    .content {
+
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+    }
+}
+
+.blueIcon {
+    color: #0060C1;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060C1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058B1 !important;
+}

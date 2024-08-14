@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbwebcert.business.SpringApplicationContextHelper"></bean>
+	
+	<!-- bean di utility -->
+	<bean class="it.csi.pbandi.pbwebcert.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebcert.util.FileSqlUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebcert.business.MailUtil"></bean>
+
+	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+ 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+ 	
+	<bean name="certificazioneDaoImpl" class="it.csi.pbandi.pbwebcert.integration.dao.impl.CertificazioneDaoImpl"/>
+	
+	<bean class="it.csi.pbandi.pbwebcert.business.manager.ReportManager"></bean>
+	<bean class="it.csi.pbandi.pbwebcert.business.manager.DocumentoManager"></bean>
+
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebcert.integration.dao" />
+
+	<bean class="it.csi.pbandi.pbwebcert.business.pbandisrv.business.certificazione.CertificazioneBusinessImpl"/>
+
+	<context:property-placeholder location="classpath:/enviromentTest.properties" />
+
+</beans>

@@ -1,0 +1,82 @@
+.page {
+    .title {
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .backText {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            font-weight: bold;
+        }
+    }
+}
+
+.blueIcon {
+    color: #0060c1;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+.paddingTop10 {
+    padding-top: 10px;
+}
+
+.paddingRight10 {
+    padding-right: 10px;
+}
+
+.marginRight10 {
+    margin-right: 10px;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}

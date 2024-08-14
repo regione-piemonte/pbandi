@@ -1,0 +1,41 @@
+.page {
+
+    .content {
+
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+    }
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.mat-tab-group {
+    margin-bottom: 48px;
+}
+
+.paddingTop10 {
+    padding-top: 10px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.blueIcon {
+    color: #0060C1;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+

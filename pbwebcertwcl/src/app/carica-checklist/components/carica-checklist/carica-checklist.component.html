@@ -1,0 +1,76 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <h2>Carica checklist</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="textAlignCenter">
+                    <mat-form-field style="width: 30%">
+                        <mat-label>Selezionare una linea di intervento</mat-label>
+                        <mat-select [(ngModel)]="lineaDiInterventoSelected" name="linea"
+                            (selectionChange)="filterByLineaIntervento()">
+                            <mat-option *ngFor="let option of lineeIntervento" [value]="option">
+                                {{option.descLinea}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <h2>Elenco proposte</h2>
+                <table mat-table [dataSource]="dataSource" matSort #sort="matSort" matSortActive="data"
+                    style="width: 100%;">
+
+                    <ng-container matColumnDef="numproposta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> N° proposta </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.idPropostaCertificaz}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descproposta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 45%;"> Descrizione
+                            proposta </th>
+                        <td mat-cell *matCellDef="let row" style="width: 45%;"> {{row.descProposta}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="statoproposta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Stato proposta
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.descStatoPropostaCertif}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datacreazione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Data creazione
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 15%;">
+                            {{row.dtOraCreazione | date: "dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="azioni">
+                        <th mat-header-cell *matHeaderCellDef>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button class="blueIcon" matTooltip="Gestione checklist"
+                                style="width: 30px;" (click)="goToGestioneChecklist(row.idPropostaCertificaz)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button class="blueIcon" matTooltip="Gestione checklist progetto"
+                                style="width: 30px;" (click)="goToGestioneChecklistProgetto(row.idPropostaCertificaz)">
+                                <mat-icon>file_copy</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

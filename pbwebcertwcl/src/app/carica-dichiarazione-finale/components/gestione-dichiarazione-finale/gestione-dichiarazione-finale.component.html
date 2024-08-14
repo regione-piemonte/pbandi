@@ -1,0 +1,142 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToCaricaDichiarazioneFinale()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a carica dichiarazione finale</span>
+            </button>
+        </div>
+        <h2>Gestione dichiarazione finale - Livello proposta</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2" *ngIf="proposta">
+            <mat-card-content>
+                <h2>Proposta</h2>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 15%;">
+                                <p class="bold-text">Numero </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.idPropostaCertificaz}}</p>
+                            </td>
+                            <td style="width: 18%;">
+                                <p class="bold-text">Data creazione </p>
+                            </td>
+                            <td style="width: 32%;">
+                                <p>{{proposta.dtOraCreazione | date: "dd/MM/yyyy"}}</p>
+                            </td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 15%;">
+                                <p class="bold-text">Descrizione </p>
+                            </td>
+                            <td style="width: 35%;">
+                                <p>{{proposta.descProposta}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessAllegatiVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccessAllegati}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorAllegatiVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageAllegatiError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h2>Gestione dichiarazione finale</h2>
+                <div class="textAlignCenter" *ngIf="isAllegaFile">
+                    <label for="uploadFile" class="bold-text paddingRight10"> File da allegare </label>
+                    <mat-form-field class="paddingRight10" style="width: 30%;">
+                        <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+                    </mat-form-field>
+                    <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+                    <button mat-button class="button-style-1 orange-color" (click)="file=null"
+                        [disabled]="!file">ANNULLA</button>
+                    <button mat-raised-button class="button-style-2" [disabled]="!file"
+                        (click)="aggiungiAllegato()">AGGIUNGI</button>
+                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                        (change)="handleFileInput($event.target.files[0])" />
+                </div>
+
+                <table mat-table [dataSource]="dataSource" style="width: 100%;" *ngIf="!isAllegaFile">
+
+                    <ng-container matColumnDef="check">
+                        <th mat-header-cell *matHeaderCellDef class="radio">
+                            <mat-checkbox (change)="selectAllCheckbox($event)" [(ngModel)]="allChecked">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="radio">
+                            <mat-checkbox (change)="selectCheckbox(row.idDocumentoIndex,$event)" value="{{row.checked}}"
+                                [(ngModel)]="row.checked"></mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nomefile">
+                        <th mat-header-cell *matHeaderCellDef style="width: 25%;"> Allegato </th>
+                        <td mat-cell *matCellDef="let row" style="width: 25%;">
+                            {{row.nomeDocumento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descrizione">
+                        <th mat-header-cell *matHeaderCellDef style="width: 35%;"> Descrizione </th>
+                        <td mat-cell *matCellDef="let row" style="width: 35%;">
+                            <mat-form-field style="width: 90%;">
+                                <input type="text" matInput [(ngModel)]="row.noteDocumentoIndex" />
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipodoc">
+                        <th mat-header-cell *matHeaderCellDef style="width: 31%;"> Tipo documento
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="width: 31%;">
+                            {{row.descTipoDocIndex}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <div class="paddingTop10 spaceBetween" *ngIf="!isAllegaFile">
+                    <div matTooltip="Selezionare un elemento dall'elenco"
+                        [matTooltipDisabled]="idAllegatiChecked.length>0">
+                        <button mat-raised-button class="button-style-2 marginRight10"
+                            [disabled]="idAllegatiChecked?.length===0" (click)="eliminaAllegati()">ELIMINA</button>
+                        <button mat-raised-button class="button-style-2" [disabled]="idAllegatiChecked?.length===0"
+                            (click)="modificaDescrizioneAllegati()">MODIFICA DESCRIZIONE</button>
+                    </div>
+                    <div>
+                        <button mat-raised-button class="button-style-2" (click)="isAllegaFile=true">ALLEGA
+                            FILE</button>
+                    </div>
+                </div>
+                <div *ngIf="isAllegaFile && allegati &&allegati.length>0" class="paddingTop10">
+                    <button mat-raised-button class="button-style-2" (click)="isAllegaFile=false">INDIETRO</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
