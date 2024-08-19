@@ -1,0 +1,300 @@
+<div *ngIf="!dataSource || !dataSource.filteredData || dataSource.filteredData.length===0">Non ci sono elementi da
+  visualizzare.</div>
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
+  [ngClass]="{ 'displayNone': !dataSource || !dataSource.filteredData || dataSource.filteredData.length===0, 'w-99': cwidth == '99%', 'w-100': cwidth == '100%' }">
+  <!-- (matSortChange)="sortData($event)" matSortActive="id" matSortDirection="asc" matSortDisableClear -->
+  <ng-container *ngFor="let column of displayedColumns; let ic = index;" matColumnDef="{{ column }}">
+    <!-- trackBy: (index:number, el:any): number => { return el.id; }; -->
+    <!-- ((displayedColumns.indexOf('azioni'))?displayedColumns.splice(displayedColumns.indexOf('azioni'), 1):displayedColumns) -->
+    <!-- ((azioni)?displayedColumns.concat('azioni'):displayedColumns) -->
+    <!---- ><th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!enableSort" class="{{ ((displayedHeadersCustom && displayedHeadersCustom[ic])?displayedHeadersCustom:'') }}" [ngClass]="{'mat-sort-header-arrow-hidden': !enableSort || displayedHeadersCustom[ic] == 'azioni'}">{{ displayedHeaders[ic] }}</th><!-- mat-sort-header [disabled]="!enableSort"-->
+
+    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!enableSort"
+      class="{{ ((displayedHeadersCustom && displayedHeadersCustom[ic])?displayedHeadersCustom:'') }}"
+      [ngClass]="{'mat-sort-header-arrow-hidden': !enableSort || displayedHeadersCustom[ic] == 'azioni'}">
+      <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'text'">
+        {{ displayedHeaders[ic] }}
+      </ng-container>
+      <ng-container *ngIf="displayedColumnsCustom[ic] == 'checkbox'">
+        <mat-checkbox *ngFor="let mrb of azioni.customHeaderCheckbox.defaultValues; let mrbFirst = first;"
+          class="mat-checkbox-white-space-inherit" [checked]="isCheckedHeaderRowCheckbox(undefined, column, ic, mrb)"
+          [value]="mrb" [disabled]="isDisabledHeaderRowCheckbox(undefined, column, ic)"
+          (change)="onHeaderRowCheckboxChange($event, undefined, column, ic)">
+          {{ mrb.descrizione }}
+        </mat-checkbox>
+      </ng-container>
+    </th>
+    <ng-container *ngIf="displayedColumnsCustom[ic] == 'date'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">{{ row[column] | date: 'dd/MM/yyyy' }}
+      </td>
+    </ng-container>
+    <ng-container *ngIf="displayedColumnsCustom[ic] == 'number'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">{{ row[column] | number: '1.2-2' :
+        'it' }}</td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'text'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">{{ row[column] }}</td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'input'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="defaultValues.input.placeholder"
+            [(ngModel)]="row[column]">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'input-number-float'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">
+        <mat-form-field>
+          <input class="w-100" type="text" [(inputNumber)]="defaultValues.input.inputNumberType"
+            [pattern]="defaultValues.input.pattern" matInput [autocomplete]="defaultValues.input.autocomplete"
+            [placeholder]="defaultValues.input.placeholder" [name]="'row' + column" [(ngModel)]="row[column]"
+            [disabled]="isDisabledRowInputFloatNumber(row, column, i)">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'select'">
+      <td mat-cell *matCellDef="let row" class="{{ displayedColumnsCustom[ic] }}">
+        <mat-form-field class="w-100">
+          <!-- matOptionFirstChildUndefined="true" -->
+          <mat-label>{{ azioni.fieldSelect.label }}</mat-label>
+          <mat-select [(ngModel)]="row[column]" [compareWith]="compareWithCodiceDescrizione"
+            [disabled]="isDisabledRowSelect(row, column, i)" (selectionChange)="onRowSelectSelect(row, column, i)">
+            <!-- name="descSettoreSelected" -->
+            <mat-option *ngIf="azioni && azioni.fieldSelect && azioni.fieldSelect.emptyOptionEnabled"></mat-option>
+            <mat-option *ngFor="let mrb of azioni.fieldSelect.defaultValues;" [value]="mrb">
+              <span>{{ mrb?.descrizione }}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'radio-button'">
+      <td mat-cell *matCellDef="let row; let i = dataIndex;" class="{{ displayedColumnsCustom[ic] }}">
+        <mat-radio-group
+          *ngIf="azioni && azioni.customRadio && azioni.customRadio.defaultValues && azioni.customRadio.defaultValues.length && row[column] !== undefined"
+          class="w-100 justify-content-center" aria-label="Select an option" [(ngModel)]="row[column]"
+          (ngModelChange)="onRowRadioButtonChange(row, column, i)" [disabled]="isDisabledRowRadioButton(row, column, i)"
+          [required]="isRequiredRowRadioButton(row, column, i)">
+          <!-- [name]="'row' + column + elementUnique()" -->
+          <mat-radio-button *ngFor="let mrb of azioni.customRadio.defaultValues; let mrbFirst = first;"
+            [ngClass]="{ 'mr-10': mrbFirst }" [value]="mrb.codice">{{ mrb?.descrizione }}</mat-radio-button>
+          <!--<mat-radio-button [value]="true" class="mr-10">Si</mat-radio-button><!-- [checked]="flagCardine == true" -->
+          <!--<mat-radio-button [value]="false">No</mat-radio-button><!-- w-100 mat-radio-button-justify-content-center -->
+        </mat-radio-group>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="!displayedColumnsCustom[ic] || displayedColumnsCustom[ic] == 'checkbox'">
+      <td mat-cell *matCellDef="let row; let i = dataIndex;" class="{{ displayedColumnsCustom[ic] }}">
+        <ng-container
+          *ngIf="azioni && azioni.customCheckbox && azioni.customCheckbox.defaultValues && azioni.customCheckbox.defaultValues.length">
+          <mat-checkbox *ngFor="let mrb of azioni.customCheckbox.defaultValues; let mrbFirst = first;"
+            class="mat-checkbox-white-space-inherit" [checked]="isCheckedRowCheckbox(row, column, i, mrb)" [value]="mrb"
+            [disabled]="isDisabledRowCheckbox(row, column, i)" (change)="onRowCheckboxChange($event, row, column, i)">
+            {{ mrb.descrizione }}
+          </mat-checkbox><!-- class="vertical-align-middle" -->
+          <!-- isCheckedRowCheckbox -> compareWithCodiceDescrizione -->
+          <!--
+            class="mat-checkbox-white-space-inherit"
+            [checked]="flagSedeAmministrativa == 'S'"
+            [value]="'S'"
+            [disabled]="action == 'dettaglio'"
+            name="flagSedeAmministrativa"
+            (change)="onMatCheckboxChange($event, 'flagSedeAmministrativa')"
+          -->
+          <!--
+            [(indeterminate)]="indeterminate"
+            [(ngModel)]="flagSedeAmministrativa"
+            (ngModelChange)="onFlagSedeAmministrativaModelChange1($event)"
+            [labelPosition]="'before'"
+          -->
+        </ng-container>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="azioni && displayedColumnsCustom[ic] == 'azioni'">
+      <td mat-cell *matCellDef="let row; let i = dataIndex;" class="{{ displayedColumnsCustom[ic] }}">
+        <div class="display-inline-flex align-items-center">
+          <button mat-icon-button
+            *ngIf="azioni.visualizza && (azioni.visualizza === true || (azioni.visualizza !== false && azioni.visualizza !== undefined && row[azioni.visualizza] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.visualizza)?azioni?.tooltip?.visualizza:defaultValues.tooltip.visualizza) }}"
+            (click)="onVisualizzaRowBtn(row)">
+            <mat-icon
+              [ngClass]="{'grey-color': (azioni.personOffIconRifiuto && (azioni.personOffIconRifiuto === true || (azioni.personOffIconRifiuto !== false && azioni.personOffIconRifiuto !== undefined && row[azioni.personOffIconRifiuto] === true))) 
+            || (azioni.personOffIconDisabled && (azioni.personOffIconDisabled === true || (azioni.personOffIconDisabled !== false && azioni.personOffIconDisabled !== undefined && row[azioni.personOffIconDisabled] === true)))}">
+              info</mat-icon><!-- visibility -->
+          </button>
+          <!--
+          <button mat-icon-button
+            *ngIf="azioni.associa && (azioni.associa === true || (azioni.associa !== false && azioni.associa !== undefined && row[azioni.associa])"
+            matTooltip="{{ ((azioni?.tooltip?.associa)?azioni?.tooltip?.associa:defaultValues.tooltip.associa) }}"
+            (click)="onAssociaRowBtn(row)">
+            <mat-icon>add_box</mat-icon>
+          </button>
+          <button mat-icon-button
+            *ngIf="azioni.clona && (azioni.clona === true || (azioni.clona !== false && azioni.clona !== undefined && row[azioni.clona])"
+            matTooltip="{{ ((azioni?.tooltip?.clona)?azioni?.tooltip?.clona:defaultValues.tooltip.clona) }}"
+            (click)="onClonaRowBtn(row)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          -->
+          <button mat-icon-button
+            *ngIf="azioni.modifica && (azioni.modifica === true || (azioni.modifica !== false && azioni.modifica !== undefined && row[azioni.modifica] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.modifica)?azioni?.tooltip?.modifica:defaultValues.tooltip.modifica) }}"
+            (click)="onModificaRowBtn(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button
+            *ngIf="azioni.elimina && (azioni.elimina === true || (azioni.elimina !== false && azioni.elimina !== undefined && row[azioni.elimina] === true))"
+            class="red-color"
+            matTooltip="{{ ((azioni?.tooltip?.elimina)?azioni?.tooltip?.elimina:defaultValues.tooltip.elimina) }}"
+            (click)="onEliminaRowBtn(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button
+            *ngIf="azioni.custom && (azioni.custom === true || (azioni.custom !== false && azioni.custom !== undefined && row[azioni.custom] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.custom)?azioni?.tooltip?.custom:defaultValues.tooltip.custom) }}"
+            (click)="onCustomRowBtn(row)">
+            <mat-icon>{{ ((azioni.icon && azioni.icon.custom)?azioni.icon.custom:'info') }}</mat-icon>
+          </button>
+          <button mat-icon-button
+            *ngIf="azioni.custom2 && (azioni.custom2 === true || (azioni.custom2 !== false && azioni.custom2 !== undefined && row[azioni.custom2] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.custom2)?azioni?.tooltip?.custom2:defaultValues.tooltip.custom2) }}"
+            (click)="onCustom2RowBtn(row)">
+            <mat-icon>{{ ((azioni.icon && azioni.icon.custom2)?azioni.icon.custom2:'info') }}</mat-icon>
+          </button>
+          <mat-slide-toggle ngDefaultControl
+            *ngIf="azioni.slide && (azioni.slide === true || (azioni.slide !== false && azioni.slide !== undefined && row[azioni.slide] === true)) && slides && slides.length"
+            class="ml-5"
+            [matTooltip]="((slides && slides[i])?((azioni?.tooltip?.slideTrue)?sprintfTooltip(azioni?.tooltip?.slideTrue, azioni?.tooltip?.slideTrueFieldTypes, azioni?.tooltip?.slideTrueFields, row):sprintfTooltip(defaultValues.tooltip.slideTrue, defaultValues.tooltip.slideTrueFieldTypes, defaultValues.tooltip.slideTrueFields, row)):((azioni?.tooltip?.slideFalse)?sprintfTooltip(azioni?.tooltip?.slideFalse, azioni?.tooltip?.slideFalseFieldTypes, azioni?.tooltip?.slideFalseFields, row):sprintfTooltip(defaultValues.tooltip.slideFalse, defaultValues.tooltip.slideFalseFieldTypes, defaultValues.tooltip.slideFalseFields, row)))"
+            (click)="onSlideRowBtn(row, slides[i])" [(ngModel)]="slides[i]"></mat-slide-toggle>
+          <mat-icon
+            *ngIf="azioni.warning && (azioni.warning === true || (azioni.warning !== false && azioni.warning !== undefined && row[azioni.warning] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.warning)?azioni?.tooltip?.warning:defaultValues.tooltip.warning) }}">
+            warning</mat-icon>
+          <button mat-icon-button
+            *ngIf="azioni.personOffButton && (azioni.personOffButton === true || (azioni.personOffButton !== false && azioni.personOffButton !== undefined && row[azioni.personOffButton] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.personOffButton)?azioni?.tooltip?.personOffButton:defaultValues.tooltip.personOffButton) }}"
+            (click)="onPersonOffBtn(row)">
+            <mat-icon>person_off</mat-icon>
+          </button>
+          <mat-icon class="grey-color"
+            *ngIf="azioni.personOffIconRifiuto && (azioni.personOffIconRifiuto === true || (azioni.personOffIconRifiuto !== false && azioni.personOffIconRifiuto !== undefined && row[azioni.personOffIconRifiuto] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.personOffIconRifiuto)?azioni?.tooltip?.personOffIconRifiuto:defaultValues.tooltip.personOffIconRifiuto) }}">
+            person_off</mat-icon>
+          <mat-icon class="grey-color"
+            *ngIf="azioni.personOffIconDisabled && (azioni.personOffIconDisabled === true || (azioni.personOffIconDisabled !== false && azioni.personOffIconDisabled !== undefined && row[azioni.personOffIconDisabled] === true))"
+            matTooltip="{{ ((azioni?.tooltip?.personOffIconDisabled)?azioni?.tooltip?.personOffIconDisabled:defaultValues.tooltip.personOffIconDisabled) }}">
+            person_off</mat-icon>
+          <!---->
+        </div>
+      </td>
+    </ng-container>
+    <ng-container *ngIf="displayedFootersCustom">
+      <ng-container *ngIf="!displayedFootersCustom[ic]">
+        <td mat-footer-cell *matFooterCellDef class="{{ displayedFootersCustom[ic] }}">{{ displayedFooters[ic] }}</td>
+      </ng-container>
+      <ng-container *ngIf="displayedFootersCustom[ic] == 'center'">
+        <td mat-footer-cell *matFooterCellDef class="{{ displayedFootersCustom[ic] }}">{{ displayedFooters[ic] }}</td>
+      </ng-container>
+      <ng-container *ngIf="displayedFootersCustom[ic] == 'right'">
+        <td mat-footer-cell *matFooterCellDef class="{{ displayedFootersCustom[ic] }}">{{ displayedFooters[ic] }}</td>
+      </ng-container>
+      <ng-container *ngIf="displayedFootersCustom[ic] == 'number'">
+        <td mat-footer-cell *matFooterCellDef class="{{ displayedColumnsCustom[ic] }}">{{ displayedFooters[ic] | number:
+          '1.2-2' : 'it' }}</td>
+      </ng-container>
+      <ng-container *ngIf="displayedFootersCustom[ic] == 'sum'">
+        <td mat-footer-cell *matFooterCellDef class="number {{ displayedColumnsCustom[ic] }}">{{ sum(column) | number:
+          '1.2-2' : 'it' }}</td>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <!-- dynamic buttons - start -- >
+  <ng-container *ngIf="azioni" matColumnDef="azioniDefault">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let row">
+
+    </td>
+  </ng-container>
+  <!-- dynamic buttons - end -->
+  <!-- nested - table - start -->
+  <ng-container *ngIf="nestedField" matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let row; let i = dataIndex;"
+      [ngClass]="{ 'displayNone': collapsed && ((!expandedElementIndex && expandedElementIndex !== 0) || expandedElementIndex !== i) }"
+      [attr.colspan]="displayedColumns.length" class="p-0">
+      <div *ngIf="row[nestedField] && row[nestedField]?.filteredData?.length">
+        <!-- [@detailExpand]="element == expandedElementIndex ? 'expanded' : 'collapsed'" -->
+        <div>
+          <!-- class="inner-table mat-elevation-z8" -->
+          <!---- >
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <!---->
+          <blx-data-table
+            *ngIf="!(!row[nestedField] || !row[nestedField].filteredData || row[nestedField].filteredData.length===0)"
+            [dataSource]="row[nestedField]" [displayedColumns]="nestedColumns" [displayedHeaders]="nestedHeaders"
+            [displayedFooters]="nestedFooters" [displayedColumnsCustom]="nestedColumnsCustom"
+            [displayedHeadersCustom]="nestedHeadersCustom" [displayedFootersCustom]="nestedFootersCustom"
+            [cwidth]="nestedCwidth" [azioni]="nestedColumnsCustomAzioni"
+            [isDisabledInputFloatNumber]="isNestedDisabledInputFloatNumber" [isDisabledSelect]="isNestedDisabledSelect"
+            (onSelectSelect)="onNestedRowSelectSelect($event)" [isDisabledRadioButton]="isNestedDisabledRadioButton"
+            (onRadioButtonChange)="onNestedRowRadioButtonChange($event)"
+            [isDisabledHeaderCheckbox]="isNestedDisabledHeaderCheckbox"
+            (onNestedHeaderCheckboxChange)="onNestedHeaderRowCheckboxChange($event)"
+            [isDisabledCheckbox]="isNestedDisabledCheckbox" (onCheckboxChange)="onNestedRowCheckboxChange($event)"
+            (onVisualizza)="onNestedVisualizzaRowBtn($event)" (onModifica)="onNestedModificaRowBtn($event)"
+            (onElimina)="onNestedEliminaRowBtn($event)" (onCustom)="onNestedCustomRowBtn($event)"
+            (onCustom2)="onNestedCustom2RowBtn($event)" [slideKey]="nestedSlideKey" [(slides)]="nestedSlides"
+            (onSlide)="onNestedSlideRowBtn($event)" [ngClassFunction]="ngClassNestedFunction"></blx-data-table>
+          <!-- [columns]="nestedColumns2" [rows]="nestedRows2" -->
+        </div>
+      </div>
+    </td>
+  </ng-container>
+  <!-- nested - table - end -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"
+    [ngClass]="{ 'displayNone': !(displayedHeaders && displayedHeaders.length) }"></tr><!-- displayedColumns -->
+  <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = dataIndex;" (click)="toggleRow(row, i)"
+    [ngClass]="ngClassFunctionRow(row, i)"></tr><!-- class="id_{{i}}" [ngClass]="{ 'grayBackgroundColor': i % 2 }" -->
+  <!-- multiTemplateDataRows - ['expandedDetail'] - start -->
+  <tr mat-row *matRowDef="let nestedRow; columns: ((nestedField)?['expandedDetail']:[]); let i = dataIndex;"></tr>
+  <!-- class="id_{{i}}" [ngClass]="{ 'greenBackgroundColor': i % 2 }" -->
+  <!-- multiTemplateDataRows - ['expandedDetail'] - end -->
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"
+    [ngClass]="{ 'displayNone': !(displayedFooters && displayedFooters.length) }"></tr>
+</table>
+<div class="endTable"
+  [ngClass]="{'displayNone': !dataSource || !dataSource.filteredData || dataSource.filteredData.length===0}">
+  <mat-paginator [ngClass]="{ 'displayNone': !enablePaginator }" [pageSizeOptions]="[5, 10, 25, 100]"
+    [pageSize]="pageSize" [showFirstLastButtons]="true"></mat-paginator>
+  <!-- dataSource.data.length - dataSource.filteredData.length -->
+  <!--
+  <div>
+    <button class="button-style-2" mat-raised-button (click)="dichiarazioneDiSpesa()">INVIO DICHIARAZIONE DI SPESA</button>
+  </div>
+  -->
+</div>
+<!---- >
+<div class="p-5 m-5">
+  <div class="table-responsive table-container">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <!-- dragula="table_columns" [(dragulaModel)]="columns" -- >
+          <th *ngFor="let column of columns">
+            {{column}}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of rows">
+          <td *ngFor="let column of columns">
+            {{row[column]}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!---->

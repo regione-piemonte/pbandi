@@ -1,0 +1,16 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Richiesta Erogazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageSuccess">
+    <mat-card-content class="messageSuccessContent">
+        <p>E' ora possibile inviare la richiesta di erogazione e stampare il modello da spedire.</p>
+    </mat-card-content>
+</mat-card>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="invia()">INVIA
+        RICHIESTA EROGAZIONE</button>
+</div>

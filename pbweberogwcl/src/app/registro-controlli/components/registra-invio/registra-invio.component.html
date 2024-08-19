@@ -1,0 +1,42 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div *ngIf="!isLoading()">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Registra invio</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-grid-list cols="2" rowHeight="60px">
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-form-field class="fullWidth margin-right-10">
+                <input type="text" placeholder="Numero segnalazione IMS *" [(ngModel)]="numSegIMS" matInput
+                    name="numSegIMS" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-form-field class="fullWidth">
+                <mat-label>Data di registrazione IMS *</mat-label>
+                <input matInput [matDatepicker]="pickerDataRegIMS" [formControl]="dataRegIMS">
+                <mat-datepicker-toggle matSuffix [for]="pickerDataRegIMS">
+                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerDataRegIMS></mat-datepicker>
+            </mat-form-field>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+    <div class="spaceBetween">
+        <button class="button-style-1" mat-button type="button" (click)="indietro()">
+            INDIETRO
+        </button>
+        <button class="button-style-2 " mat-raised-button type="submit" (click)="salva()">
+            SALVA
+        </button>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+// table {
+//   width: 100%;
+// }
+
+.w-99 {
+  width: 99%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+th.right,
+td.right,
+th.number,
+td.number {
+  text-align: right;
+}
+
+::ng-deep th.right .mat-sort-header-container
+::ng-deep th.number .mat-sort-header-container {
+  justify-content: flex-end;
+}
+
+// th.date,
+// td.date {
+    
+// }
+
+tr.mat-row, tr.mat-footer-row {
+  height: inherit;
+  //background-color: red;
+}
+
+tr.mat-footer-row {
+  font-weight: bold;
+}
+
+.greenBackgroundColor {
+  background-color: #00800080;
+}
+
+.grayBackgroundColor {
+  background-color: #80808080;
+}
+
+::ng-deep .azioni,
+::ng-deep .mat-sort-header-arrow-hidden {
+  .mat-sort-header-arrow {
+    display: none;
+  }
+}
+
+/* Todo: spostare in shared */
+// .color-blue {
+//   color: #006cb4;
+// }
+// .color-red {
+//   color: #ff0000;
+// }

@@ -1,0 +1,63 @@
+<mat-form-field class="w-100" [formGroup]="beneficiarioGroup"><!-- *ngIf="!isLoading()" -->
+  <input matInput type="text"
+    #autocompleteHtmlIE
+    formControlName="beneficiarioControl"
+    name="beneficiarioControl"
+    wai-aria="Selezionare un beneficiario"
+    placeholder="Selezionare un beneficiario"
+    aria-label="Selezionare un beneficiario"
+    matTooltip="{{ autocompleteHtmlIE.value }}"
+    [matAutocomplete]="auto"
+    (blur)="check()"
+    [required]="required"
+    [matAutocompleteDisabled]="disabled"
+  ><!-- [disabled]="disabled" --><!-- attr.disabled --><!-- autocomplete="off" --><!-- id="autocompleteHtmlIE" name="autocompleteHtmlIEName" -->
+  <mat-autocomplete #auto="matAutocomplete"
+    autoActiveFirstOption
+    [displayWith]="displayFn"
+    (optionSelected)="click($event)"
+  >
+    <cdk-virtual-scroll-viewport #viewport
+      itemSize="40"
+      minBufferPx="200"
+      maxBufferPx="400"
+      class="viewport"
+      [ngClass]="{'viewport-full': (filteredOptions | async)?.length>4,
+        'viewport-1': (filteredOptions | async)?.length==1,
+        'viewport-2': (filteredOptions | async)?.length==2,
+        'viewport-3': (filteredOptions | async)?.length==3,
+        'viewport-4': (filteredOptions | async)?.length==4
+      }"
+    >
+      <mat-option *cdkVirtualFor="let option of filteredOptions | async"
+        class="viewport-item"
+        [value]="option"
+        matTooltip="{{ option.denominazione }} - {{ option.codiceFiscale }}"
+      >
+        {{ option.denominazione }} - {{ option.codiceFiscale }}
+      </mat-option>
+    </cdk-virtual-scroll-viewport>
+  </mat-autocomplete>
+</mat-form-field>
+<!---- >
+<button class="button-style-2 ml-btn" mat-raised-button type="submit"
+  [disabled]="!beneficiarioGroup.controls['beneficiarioControl']?.value?.idBeneficiario">
+  CONFERMA
+</button>
+<!---->
+<!---- >
+<mat-card class="mat-elevation-z2 marginBottom18 {{ class }}">
+  <mat-card-content>
+    <div *ngFor="let label of labels" class="mb-12 alignItemsCenter">
+      <p class="margin0 font-size-16">{{ label.codice }}: <span class="bold-text font-size-16">{{ label.descrizione }}</span></p>
+    </div>
+    <div *ngIf="buttons" class="flexEnd">
+      <button mat-button
+        *ngFor="let button of buttons"
+        class="button-style-1 paddingLeft20 text-normal text-uppercase"
+        (click)="onButtonsBtnClick(button)"
+      >{{ button.descrizione }}</button>
+    </div>
+  </mat-card-content>
+</mat-card>
+<!---->

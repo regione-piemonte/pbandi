@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>it.csi.pbandi</groupId>
+		<artifactId>pbweberog</artifactId>
+		<version>1.8.0</version>
+	</parent>
+
+	<artifactId>pbweberog-ear</artifactId>
+	<packaging>ear</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>it.csi.pbandi</groupId>
+			<artifactId>pbweberog-web</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>it.csi.pbandi</groupId>
+			<artifactId>pbweberog-jar</artifactId>
+			<type>jar</type>
+		</dependency>	
+	</dependencies>
+
+	<build>
+		<!-- finalName>pbweberog</finalName -->
+		<finalName>pbweberog${postfix}</finalName>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<modules>
+						<webModule>
+							<groupId>it.csi.pbandi</groupId>
+							<artifactId>pbweberog-web</artifactId>
+							<contextRoot>/pbweberog</contextRoot>
+							<uri>pbweberog-web.war</uri>
+						</webModule>
+					</modules>
+					<!-- Replace del context-root-->
+ 					<filtering>true</filtering>
+ 					<nonFilteredFileExtensions>
+            			<nonFilteredFileExtension>jar</nonFilteredFileExtension>
+          			</nonFilteredFileExtensions>
+					<filters>
+						<filter>${basedir}/../pbweberog-web/profiles/${build.profile.id}/config.properties</filter>
+					</filters> 
+					<!-- -->
+					<earSourceDirectory>${basedir}/src/main/resources</earSourceDirectory>
+					<earSourceIncludes>META-INF/*, lib/*</earSourceIncludes>
+					<!-- <earSourceIncludes>META-INF/*, lib/*</earSourceIncludes> -->
+					<version>6</version>  <!-- Jboss EAP 6.x -->
+				</configuration>
+			</plugin>
+		
+		</plugins>
+	</build>
+</project>

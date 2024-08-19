@@ -1,0 +1,104 @@
+<table class="marginTop20">
+    <tbody>
+        <tr>
+            <td class="width-20 text-right">
+                <p class="margin0 pl-10 pr-10 bold-text">Procedura di aggiudicazione</p>
+            </td>
+            <td class="width-30">
+                contratto in house Art 12 della direttiva 2014/24/UE
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="width-20">
+                <div *ngIf=" action=='dettaglio' || action=='modifica'"
+                    class="align-items-center display-flex justify-content-flex-end">
+                    <p class="margin0 pl-10 pr-10 bold-text">Data firma accordo</p>
+                </div>
+            </td>
+            <td class="width-30">
+                <div *ngIf="action == 'dettaglio' || action == 'modifica'">
+                    <mat-form-field class="widthData">
+                        <input matInput [matDatepicker]="pickerDataFirma" name="dataDal"
+                            (click)="pickerDataFirma.open()" [(ngModel)]="datiSif.dtFirmaAccordo"
+                            [disabled]="action == 'dettaglio' || isModificaLimited">
+                        <mat-datepicker-toggle matSuffix [for]="pickerDataFirma" class="blueColor">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataFirma></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </td>
+            <td class="width-20">
+                <div *ngIf="action == 'dettaglio' || action == 'modifica'"
+                    class="align-items-center display-flex justify-content-flex-end">
+                    <p class="margin0 pl-10 pr-10 bold-text">Data completamento valutazione </p>
+                </div>
+            </td>
+            <td class="width-30">
+                <div *ngIf="action == 'dettaglio' || action == 'modifica'">
+                    <mat-form-field class="widthData">
+                        <input matInput [matDatepicker]="pickerDataCompl" name="dataAl" (click)="pickerDataCompl.open()"
+                            [(ngModel)]="datiSif.dtCompletamentoValutazione"
+                            [disabled]="action == 'dettaglio' || isModificaLimited">
+                        <mat-datepicker-toggle matSuffix [for]="pickerDataCompl" class="blueColor">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataCompl></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!--div class="display-flex justify-content-space-around">
+    <div class="display-flex">
+        <div *ngIf=" action=='dettaglio' || action=='modifica'"
+            class="align-items-center display-flex justify-content-flex-end">
+            <p class="margin0 pl-10 pr-10 bold-text">Data firma accordo</p>
+        </div>
+        <div *ngIf="action == 'dettaglio' || action == 'modifica'">
+            <mat-form-field class="widthData">
+                <input matInput [matDatepicker]="pickerDataFirma" name="dataDal" (click)="pickerDataFirma.open()"
+                    [(ngModel)]="datiSif.dtFirmaAccordo" [disabled]="action == 'dettaglio' || isModificaLimited">
+                <mat-datepicker-toggle matSuffix [for]="pickerDataFirma" class="blueColor">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerDataFirma></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="display-flex">
+        <div *ngIf="action == 'dettaglio' || action == 'modifica'"
+            class="align-items-center display-flex justify-content-flex-end">
+            <p class="margin0 pl-10 pr-10 bold-text">Data completamento valutazione </p>
+        </div>
+        <div *ngIf="action == 'dettaglio' || action == 'modifica'">
+            <mat-form-field class="widthData">
+                <input matInput [matDatepicker]="pickerDataCompl" name="dataAl" (click)="pickerDataCompl.open()"
+                    [(ngModel)]="datiSif.dtCompletamentoValutazione"
+                    [disabled]="action == 'dettaglio' || isModificaLimited">
+                <mat-datepicker-toggle matSuffix [for]="pickerDataCompl" class="blueColor">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerDataCompl></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+</div-->
+<div *ngIf="action == 'modifica' && isModificaLimited" class="row no-gutters mb-12">
+    <div class="col text-right mr-10">
+        <button class="button-style-2 margin0" mat-raised-button type="button" (click)="modifica()">
+            MODIFICA
+        </button>
+    </div>
+</div>
+<div *ngIf="action == 'modifica' && !isModificaLimited" class="no-gutters mb-12 fullWidth">
+    <div class="display-flex justify-content-flex-end mr-10">
+        <div matTooltip="Valorizzare tutti i campi"
+            [matTooltipDisabled]="datiSif.dtFirmaAccordo && datiSif.dtCompletamentoValutazione">
+            <button class="button-style-2 margin0" mat-raised-button type="button" (click)="salva()"
+                [disabled]="!datiSif.dtFirmaAccordo || !datiSif.dtCompletamentoValutazione">
+                SALVA
+            </button>
+        </div>
+    </div>
+</div>

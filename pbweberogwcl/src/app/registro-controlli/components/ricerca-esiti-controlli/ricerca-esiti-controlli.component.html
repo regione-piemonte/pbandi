@@ -1,0 +1,81 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <h2>Registro Controlli</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <!--mat-icon class="material-icons-outlined">settings_applications</mat-icon-->
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form #ricercaForm="ngForm">
+                        <div class="fullWidth">
+                            <mat-form-field [formGroup]="beneficiarioGroup" class="fullWidth">
+                                <input type="text"
+                                    wai-aria="Selezionare il beneficiario per il quale si intende operare"
+                                    placeholder="Selezionare un beneficiario" aria-label="Number" matInput
+                                    formControlName="beneficiarioControl" [matAutocomplete]="auto"
+                                    (input)="loadBeneficiari()" (blur)="check()">
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    [displayWith]="displayFn" (optionSelected)="click($event)">
+                                    <mat-option disabled *ngIf="!this.loadedBeneficiari">Caricamento...</mat-option>
+                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                        {{ option.descrizione }} - {{ option.codiceFiscale }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="fullWidth">
+                            <mat-form-field class="marginRight10 width-50-perc">
+                                <mat-label>Selezionare progetto</mat-label>
+                                <mat-select [(ngModel)]="progettoSelected" name="progetto">
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let progetto of progetti" [value]="progetto">
+                                        {{ progetto.codiceVisualizzatoProgetto }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="width-data">
+                                <mat-label>Data comunicazione</mat-label>
+                                <input matInput [matDatepicker]="pickerDataComunicazione"
+                                    [formControl]="dataComunicazione">
+                                <mat-datepicker-toggle matSuffix [for]="pickerDataComunicazione">
+                                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDataComunicazione></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <button mat-raised-button class="button-style-2" type="button" (click)="cerca()">
+                            CERCA
+                        </button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <app-registro-controlli-tables [dataSourceRegolari]="dataSourceRegolari"
+        [displayedColumnsRegolari]="displayedColumnsRegolari" [dataSourceIrregolari]="dataSourceIrregolari"
+        [displayedColumnsIrregolari]="displayedColumnsIrregolari" [dataSourceRetForf]="dataSourceRetForf"
+        [displayedColumnsRetForf]="displayedColumnsRetForf" [showTable]="showTable" (resetMessages)="resetMessages()">
+    </app-registro-controlli-tables>
+
+</div>

@@ -1,0 +1,45 @@
+<div class="flexEnd">
+  <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  <table mat-table [dataSource]="dataSourcePresenti">
+
+    <ng-container matColumnDef="dataCampione">
+      <th mat-header-cell *matHeaderCellDef> Data campione </th>
+      <td mat-cell *matCellDef="let element"> {{element.dataCampionamento}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="idProgetto">
+      <th mat-header-cell *matHeaderCellDef> Id progetto </th>
+      <td mat-cell *matCellDef="let element"> {{element.idProgetto}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codiceProgetto">
+      <th mat-header-cell *matHeaderCellDef> Codice progetto </th>
+      <td mat-cell *matCellDef="let element"> {{element.codiceVisualizzatoProgetto}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="titoloProgetto">
+      <th mat-header-cell *matHeaderCellDef> Titolo progetto </th>
+      <td mat-cell *matCellDef="let element"> {{element.titoloProgetto}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="beneficiario">
+      <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+      <td mat-cell *matCellDef="let element"> {{element.denominazioneBeneficiario}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="bandoLinea">
+      <th mat-header-cell *matHeaderCellDef> Bando linea </th>
+      <td mat-cell *matCellDef="let element"> {{element.nomeBandoLinea}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsPresenti"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsPresenti;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="annulla()" class="button-style-1">CHIUDI</button>
+</mat-dialog-actions>

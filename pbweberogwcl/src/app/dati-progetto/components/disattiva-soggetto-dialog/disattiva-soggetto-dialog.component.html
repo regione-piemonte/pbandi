@@ -1,0 +1,18 @@
+<div class="spaceBetween">
+    <div>
+        <p>Disabilitare il soggetto:</p>
+        <mat-radio-group [(ngModel)]="tipoDisattivazione" name="tipo" class="display-flex flex-direction-column">
+            <mat-radio-button value="DEF"> definitivamente per tutti i ruoli ad esso associati
+            </mat-radio-button>
+            <mat-radio-button value="TEMP" class="margin-top-10">temporaneamente solo per il ruolo selezionato
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<div class="spaceBetween margin-top-20">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="conferma()" [disabled]="!tipoDisattivazione">CONFERMA</button>
+</div>

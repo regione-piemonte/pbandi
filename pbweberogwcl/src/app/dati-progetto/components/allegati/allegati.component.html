@@ -1,0 +1,22 @@
+<!--sezione in sola visualizzazione: nascosti pulsanti aggiungi allegati e disassociazione-->
+<!--sezione modificabile solo se presente la regola BR64-->
+<p class="mt-10 ml-10" *ngIf="!allegati || allegati.length===0">
+    Non ci sono elementi da visualizzare.</p>
+<div class="mt-10 mr-10 ml-10 margin-bottom-20">
+    <mat-grid-list class="mb-10" cols="3" rowHeight="45" *ngIf="allegati?.length>0">
+        <mat-grid-tile *ngFor="let allegato of allegati" [colspan]="1" [rowspan]="1">
+            <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                <a matTooltip="Download file" class="bold-text size13 linkAllegati"
+                    (click)="downloadAllegato(allegato.idDocumentoIndex,allegato.nomeFile)">{{allegato.nomeFile}}</a>
+                <button *ngIf="isModifica && isBR64" type="button" mat-icon-button class="blue-color"
+                    matTooltip="Disassocia allegato" style="width: 30px;"
+                    (click)="disassociaAllegato(allegato.idDocumentoIndex)">
+                    <mat-icon>link_off</mat-icon>
+                </button>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <button mat-button class="button-style-1" type='button' (click)="aggiungiAllegati()"
+        *ngIf="isModifica && isBR64">AGGIUNGI
+        ALLEGATI</button>
+</div>

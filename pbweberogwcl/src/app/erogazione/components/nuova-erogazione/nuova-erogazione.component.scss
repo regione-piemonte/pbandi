@@ -1,0 +1,151 @@
+.p-4 {
+    padding: 4px;
+}
+.min-height-40 {
+    min-height: 40px;
+}
+
+th,
+td {
+    padding-right: 10px !important;
+}
+
+td {
+    font-size: 13px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+// .h-80 {
+//     height: 80px;
+// }
+
+// ::ng-deep .color-red {
+//     color: #ff0000;
+// }
+
+::ng-deep .mat-sort-header-arrow {
+    color: #0060c1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.3 !important;
+    transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+.mat-datepicker-toggle {
+    color: #0060c1;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #0058b1;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 16px;
+}
+
+mat-tab-group {
+    background-color: #ffffff;
+    font-size: 16px;
+}
+
+::ng-deep tr .cdk-column-numeroRiferimento,
+::ng-deep tr .cdk-column-codRiferimentoErogazione {
+    //background-color: green;
+    width: 122px;
+    min-width: 122px;
+}
+
+::ng-deep tr .cdk-column-dtContabile,
+::ng-deep tr .cdk-column-dtContabile {
+    //background-color: yellow;
+    width: 70px;
+    min-width: 70px;
+}
+
+::ng-deep tr .cdk-column-ultimoImportoAgevolato,
+::ng-deep tr .cdk-column-importoErogazione {
+    //background-color: plum;
+    width: 98px; // 82px
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaErogato,  // old
+  ::ng-deep tr .cdk-column-importoTotaleErogazioni,
+  ::ng-deep tr .cdk-column-field1 {
+    //background-color: sienna;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaRecuperato,  // old
+  ::ng-deep tr .cdk-column-importoTotaleRecupero,
+  ::ng-deep tr .cdk-column-field2 {
+    //background-color: slategray;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoResiduoDaErogare,  // old
+  ::ng-deep tr .cdk-column-field3 {
+    //background-color: springgreen;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-azioni {
+    //background-color: violet;
+    width: 84px;
+    min-width: 84px;
+}
+
+.widthData246,
+::ng-deep .widthData246 .mat-form-field-wrapper {
+    width: 246px !important;
+}
+@media (max-width: 767.98) {
+    .widthData246,
+    ::ng-deep .widthData246 .mat-form-field-wrapper {
+        width: inherit !important;
+    }
+}
+.centerPage {
+    z-index: 20;
+    position: fixed;
+    left: 45%;
+}
+.visibilityHidden {
+    visibility: hidden;
+}

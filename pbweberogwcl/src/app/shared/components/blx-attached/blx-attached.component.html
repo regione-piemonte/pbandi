@@ -1,0 +1,34 @@
+<div class="row no-gutters justify-content-flex-end">
+  <label *ngIf="arrayFiles && arrayFiles.length" for="uploadFile" class="w-100 bold-text">File da allegare</label>
+  <mat-form-field *ngIf="false">
+    <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" name="uploadFileName" />
+  </mat-form-field>
+  <div *ngIf="arrayFiles && arrayFiles.length" class="w-100">
+    <div *ngFor="let f of arrayFiles; let i = index;" class="row no-gutters">
+      <div class="display-flex align-items-center w-90">{{f.name}}</div>
+      <div class="display-flex align-items-center w-10">
+        <button mat-icon-button class="redColor" matTooltip="Elimina" (click)="onEliminaFile(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div matTooltip="Scegliere i file da abbinare" [matTooltipDisabled]="!disabledSfoglia">
+    <button mat-button class="button-style-1" [disabled]="disabledSfoglia" (click)="uploadFile.click()">SFOGLIA</button>
+  </div>
+  <div matTooltip="Inserire almeno un file" [matTooltipDisabled]="!disabledAnnulla()">
+    <button mat-button class="button-style-1 orange-color" [disabled]="disabledAnnulla()"
+      (click)="onAnnullaClick()">ANNULLA</button><!-- [disabled]="!file" -->
+  </div>
+  <div matTooltip="Allegare la documentazione" [matTooltipDisabled]="!disabledAllegatiSubmit()">
+    <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit"
+      [disabled]="disabledAllegatiSubmit()" (click)="aggiungiAllegato()">
+      ASSOCIA ALLEGATI
+    </button>
+  </div>
+  <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile" multiple
+    (change)="uploadFiles($event)" /><!-- -->
+  <!--(change)="handleFileInput($event.target.files[0])" -->
+  <!-- #uploader accept={{this.estensioniAmmesse}} multiple (change)="uploadFile($event)" -->
+  <!-- estensioniAmmesse: string;  // '.jpg,.gif' -->
+</div>

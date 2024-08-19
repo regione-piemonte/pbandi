@@ -1,0 +1,39 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" *ngIf="!isLoading()">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Dettaglio esito controllo</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+        <p class="width-49-perc">Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data comunicazione esito: <span
+                class="bold-text">{{dataComunicazioneEsito}}</span></p>
+        <p class="width-49-perc">Tipo controlli: <span class="bold-text">{{tipoControlli}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Anno contabile: <span class="bold-text">{{annoContabile}}</span></p>
+        <p class="width-49-perc">Autorità controllante: <span class="bold-text">{{autoritaControllante}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data del Campione: <span class="bold-text">{{dataCampione}}</span></p>
+        <p class="width-49-perc">Data inizio controlli: <span class="bold-text">{{dataInizioControlli}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data fine controlli: <span
+                class="bold-text">{{dataFineControlli}}</span></p>
+        <p class="width-49-perc"><span class="bold-text"></span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Note: <span class="bold-text">{{note}}</span></p>
+    </div>
+</div>

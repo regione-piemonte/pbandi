@@ -1,0 +1,128 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+	<div class="title">
+		<div class="backContainer">
+			<button (click)="goToGestioneRevoche()" mat-button>
+				<mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+				<span class="backText">Torna all'elenco delle revoche</span>
+			</button>
+		</div>
+		<h2>Modifica Revoca</h2>
+	</div>
+	<div class="content">
+		<mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+			<mat-card-content class="messageSuccessContent">
+				<p>{{messageSuccess}}</p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+			<mat-card-content class="messageErrorContent">
+				<p>{{messageError}}</p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<div class="cod-progetto">
+					<p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+				</div>
+				<div class="cod-progetto">
+					<p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+					<button class="button-style-1 paddingLeft20" mat-button (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+						PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="content">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<h2 class="margin-bottom-20 bold-text">Riepilogo per modalità di agevolazione</h2>
+				<p><span class="bold-text">Modalità di agevolazione: </span> {{ dettaglioRevoca.modalitaAgevolazione }}</p>
+				<p><span class="bold-text"> Importo agevolato: </span> {{dettaglioRevoca.importoAgevolato | number: '1.2-2' :
+					'it' }}</p>
+				<p><span class="bold-text"> Importo erogato: </span> {{dettaglioRevoca.importoErogato | number: '1.2-2' : 'it'
+					}}</p>
+				<p><span class="bold-text"> Importo revocato: </span> {{dettaglioRevoca.importoRevocato | number: '1.2-2' : 'it'
+					}}</p>
+				<p><span class="bold-text"> Importo recuperato: </span> {{dettaglioRevoca.importoRecuperato | number: '1.2-2' :
+					'it' }}</p>
+
+			</mat-card-content>
+
+			<mat-card-content>
+				<h2 class="bold-text">Dati della revoca selezionata</h2>
+				<form #revocaForm="ngForm">
+					<div class="fullWidth">
+						<mat-form-field class="width-50-perc margin-right-10">
+							<mat-label> Selezionare un motivo * </mat-label>
+							<mat-select [(ngModel)]="motivoSelected" name="motivo" #motiv="ngModel">
+								<mat-option *ngFor="let option of motivazioni" [value]="option">
+									{{option.descrizione}}
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="motiv?.errors?.error === 'required'">
+								Campo obbligatorio
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field [ngClass]="{'width-data': !isBR69, 'width-data-extended margin-right-10': isBR69}">
+							<mat-label>Data * </mat-label>
+							<input matInput [matDatepicker]="pickerDataRevoca" [formControl]="formControlDataRevoca">
+							<mat-datepicker-toggle matSuffix [for]="pickerDataRevoca">
+								<mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+							</mat-datepicker-toggle>
+							<mat-datepicker #pickerDataRevoca></mat-datepicker>
+							<mat-error *ngIf="formControlDataRevoca?.errors?.error === 'required'">
+								Campo obbligatorio
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field class="width-data-extended" *ngIf="isBR69">
+							<mat-label>Data Decorrenza * </mat-label>
+							<input matInput [matDatepicker]="pickerDataDecorrenza" [formControl]="formControlDataDecorrenza">
+							<mat-datepicker-toggle matSuffix [for]="pickerDataDecorrenza">
+								<mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+							</mat-datepicker-toggle>
+							<mat-datepicker #pickerDataDecorrenza></mat-datepicker>
+							<mat-error *ngIf="formControlDataDecorrenza?.errors?.error === 'required'">
+								Campo obbligatorio
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<mat-form-field class="fullWidth" *ngIf="dettaglioRevoca">
+						<mat-label>Estremi determina </mat-label>
+						<input matInput [(ngModel)]="dettaglioRevoca.estremiDeterminaRevoca" name="estremi" />
+					</mat-form-field>
+					<mat-form-field class="fullWidth" *ngIf="dettaglioRevoca">
+						<mat-label>Note </mat-label>
+						<textarea matInput [(ngModel)]="dettaglioRevoca.noteRevoca" name="note" #desc="ngModel"
+							maxlength="2000"></textarea>
+						<mat-hint>{{desc.value?.length || 0}}/2000</mat-hint>
+					</mat-form-field>
+					<mat-form-field class="width-20-perc">
+						<input matInput type="text" placeholder="Importo *" name="importo" [(ngModel)]="importoFormatted"
+							pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImporto()" #imp="ngModel" />
+						<mat-error *ngIf="imp?.errors?.pattern">
+							Valore non valido
+						</mat-error>
+						<mat-error *ngIf="imp?.errors?.error === 'required'">
+							Campo obbligatorio
+						</mat-error>
+					</mat-form-field>
+				</form>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="content">
+		<div class="spaceBetween">
+			<div class="backContainer">
+				<button (click)="goToGestioneRevoche()" mat-button>
+					<mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+					<span class="backText">Torna all'elenco delle revoche</span>
+				</button>
+			</div>
+			<button mat-raised-button class="button-style-2" (click)="modificaRevoca()"> SALVA</button>
+		</div>
+	</div>
+
+</div>

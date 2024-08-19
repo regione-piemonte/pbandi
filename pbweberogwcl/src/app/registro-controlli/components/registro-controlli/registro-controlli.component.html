@@ -1,0 +1,70 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title" *ngIf="!isLoading()">
+    <div class="backContainer">
+      <button (click)="tornaAattivita()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alle attività da svolgere</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div>
+        <h2>Registro controlli</h2>
+      </div>
+      <div>
+        <button class="button-style-3" mat-stroked-button (click)="nuovoEsito()">
+          NUOVO ESITO
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="content" *ngIf="!isLoading()">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+        </div>
+        <div class="cod-progetto">
+          <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+            PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <app-registro-controlli-tables [dataSourceRegolari]="dataSourceRegolari"
+    [displayedColumnsRegolari]="displayedColumnsRegolari" [dataSourceIrregolari]="dataSourceIrregolari"
+    [displayedColumnsIrregolari]="displayedColumnsIrregolari" [dataSourceRetForf]="dataSourceRetForf"
+    [displayedColumnsRetForf]="displayedColumnsRetForf" [showTable]="showTable" [idProgetto]="idProgetto"
+    (loadEsitiRegolari)="loadEsitiRegolari($event)" (loadIrregolarita)="loadIrregolarita($event)"
+    (loadRettifiche)="loadRettifiche($event)" (resetMessages)="resetMessages()">
+  </app-registro-controlli-tables>
+
+  <div class="content">
+    <div class="flexEnd">
+      <div [hidden]="!showRetForfArea">
+        <button class="button-style-2 marginRight30" mat-raised-button (click)="rettificaForfettaria()">
+          RETTIFICA FORFETTARIA
+        </button>
+      </div>
+
+      <button class="button-style-3" mat-stroked-button (click)="nuovoEsito()">
+        NUOVO ESITO
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,296 @@
+<div class="margins">
+    <p *ngIf="!datiAggiuntivi?.numeroDomanda">Dati aggiuntivi non disponibli. </p>
+    <div *ngIf="datiAggiuntivi?.numeroDomanda">
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Denominazione referente tecnico
+                </span>
+                {{datiAggiuntivi?.nomeReferenteTecnico}} {{datiAggiuntivi?.cognomeReferenteTecnico}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    CF referente tecnico
+                </span>
+                {{datiAggiuntivi?.cfReferenteTecnico}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Telefono referente tecnico
+                </span>
+                {{datiAggiuntivi?.telefonoReferenteTecnico}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Email referente tecnico
+                </span>
+                {{datiAggiuntivi?.emailReferenteTecnico}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    PEC referente tecnico
+                </span>
+                {{datiAggiuntivi?.pecReferenteTecnico}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Data ultima trasmissione
+                </span>
+                {{datiAggiuntivi?.dataUltimaTrasmissione | date: "dd/MM/yyyy"}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Descrizione intervento
+                </span>
+                {{datiAggiuntivi?.descrizioneIntervento}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Livello progettuale
+                </span>
+                {{datiAggiuntivi?.livelloProgettuale}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Dichiarazione tipologia progetto
+                </span>
+                {{datiAggiuntivi?.dichTipologiaProgetto}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Individuazione ambito
+                </span>
+                {{datiAggiuntivi?.individuazioneAmbito}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Numero beni oggetto di intervento
+                </span>
+                {{datiAggiuntivi?.numeroBeniOggIntervento}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Descrizione oggetti intervento
+                </span>
+                {{datiAggiuntivi?.descrizioneOggettiIntervento}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Tipologia bene
+                </span>
+                {{datiAggiuntivi?.tipologiaBene}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Titolo displnibilità bene
+                </span>
+                {{datiAggiuntivi?.titoloDisponibilitaBene}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Tipologia vincolo istruttoria
+                </span>
+                {{datiAggiuntivi?.tipologiaVincoloIstruttoria}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Decreto soprintendenza
+                </span>
+                {{datiAggiuntivi?.decretoSoprintendenza}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Cofinanziamento
+                </span>
+                {{datiAggiuntivi?.cofinanziamento}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Tipologia intervento
+                </span>
+                {{datiAggiuntivi?.tipologiaIntervento}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    IVA detraibile / indetraibile
+                </span>
+                {{datiAggiuntivi?.ivaDetraibileIndetraibile}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Anno 2023
+                </span>
+                <span *ngIf="datiAggiuntivi?.anno2023!==null && datiAggiuntivi?.anno2023 !== undefined">€
+                    {{datiAggiuntivi?.anno2023 | number: '1.2-2' : 'it' }}</span>
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Impegno 2023 N.
+                </span>
+                {{datiAggiuntivi?.impegno2023N}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Anno 2024
+                </span>
+                <span *ngIf="datiAggiuntivi?.anno2024!==null && datiAggiuntivi?.anno2024 !== undefined">€
+                    {{datiAggiuntivi?.anno2024 | number: '1.2-2' : 'it' }}</span>
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Impegno 2024 N.
+                </span>
+                {{datiAggiuntivi?.impegno2024N}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Anno 2025
+                </span>
+                <span *ngIf="datiAggiuntivi?.anno2025!==null && datiAggiuntivi?.anno2025 !== undefined">€
+                    {{datiAggiuntivi?.anno2025 | number: '1.2-2' : 'it' }}</span>
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Impegno 2025 N.
+                </span>
+                {{datiAggiuntivi?.impegno2025N}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Modalità erogazione sostegno finanziario
+                </span>
+                {{datiAggiuntivi?.modErogSostFin}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Provincia
+                </span>
+                {{datiAggiuntivi?.provincia}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Comune catasto
+                </span>
+                {{datiAggiuntivi?.comuneCatasto}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Catasto codice comune
+                </span>
+                {{datiAggiuntivi?.catastoCodiceComune}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Foglio catasto
+                </span>
+                {{datiAggiuntivi?.foglioCatasto}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Particelle catasto
+                </span>
+                {{datiAggiuntivi?.particelleCatasto}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Sub particella catasto
+                </span>
+                {{datiAggiuntivi?.subParticellaCatasto}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Rea
+                </span>
+                {{datiAggiuntivi?.rea}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Codice ATECO
+                </span>
+                {{datiAggiuntivi?.codiceAteco}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Contabilia codice beneficiario
+                </span>
+                {{datiAggiuntivi?.contabiliaCodBen}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Codice COR
+                </span>
+                {{datiAggiuntivi?.codiceCor}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Modalità aiuto di stato concesso
+                </span>
+                {{datiAggiuntivi?.modAiutoStatoCon}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Prescrizioni de minimis
+                </span>
+                {{datiAggiuntivi?.prescrizioniDeMinimis}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    DD assegnazione N. del
+                </span>
+                {{datiAggiuntivi?.ddAssegnazioneNDel}}
+            </div>
+        </div>
+        <div class="fullWidth display-flex marginTop20">
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Entrata lettera atto obbligo data protocollo
+                </span>
+                {{datiAggiuntivi?.attoObbligoDataProtocollo | date: "dd/MM/yyyy"}}
+            </div>
+            <div class="width-50 display-flex">
+                <span class="width-50 text-right padding-right-10 bold-text">
+                    Entrata lettera atto obbligo N.
+                </span>
+                {{datiAggiuntivi?.attoObbligoNProtocollo}}
+            </div>
+        </div>
+    </div>
+</div>

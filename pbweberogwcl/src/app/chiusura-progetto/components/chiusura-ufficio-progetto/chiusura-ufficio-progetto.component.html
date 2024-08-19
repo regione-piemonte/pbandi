@@ -1,0 +1,98 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goToAttivita()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna all'elenco attività'</span>
+      </button>
+    </div>
+    <h2 [hidden]="isChiusuraProgettoRinuncia">Chiusura di ufficio del progetto</h2>
+    <h2 [hidden]="!isChiusuraProgettoRinuncia">Chiusura del progetto per rinuncia</h2>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p>{{messageSuccess}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="esisteRinuncia.esito">
+      <mat-card-content class="messageErrorContent">
+        <p>{{esisteRinuncia.msg}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <mat-icon>clear</mat-icon>
+        <p>{{messageError}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+        </div>
+        <div class="cod-progetto">
+          <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+            PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content" *ngIf="isMessageWarningVisible">
+    <mat-card class="mat-elevation-z2 messageWarning">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <h4 [hidden]="isChiusuraProgettoRinuncia">
+          <mat-icon>info</mat-icon>
+          Con la presente attività è possibile chiudere dufficio il progetto corrente, in qualunque momento durante la
+          gestione operativa, senza dover attendere la comunicazione di fine progetto o la rinuncia del Beneficiario.
+          Chiudendo dufficio il progetto, resteranno comunque ancora disponibili le attività per la gestione della spesa
+          validata del progetto, delle revoche e dei recuperi di erogazione, delle checklist e delle eventuali
+          irregolarità e lattività per la rimodulazione del conto economico.
+        </h4>
+
+        <h4 [hidden]="!isChiusuraProgettoRinuncia">
+          <mat-icon>info</mat-icon>
+          Con la presente attività è possibile chiudere definitivamente la gestione operativa del progetto corrente;
+          resteranno comunque disponibili le attività per la gestione della spesa validata del progetto, delle revoche e
+          dei recuperi di erogazione, delle checklist, delle eventuali irregolarità e lattività per la rimodulazione del
+          conto economico.
+        </h4>
+
+        <div class="mat-form">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Note </mat-label>
+            <textarea matInput [(ngModel)]="note" name="note" #desc="ngModel" maxlength="2000"></textarea>
+            <mat-hint>{{desc.value?.length || 0}}/2000</mat-hint>
+            <mat-error *ngIf="desc?.errors?.error ==='required'">
+              Campo obbligatorio.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <div class="spaceBetween">
+      <div class="backContainer">
+        <button (click)="goToAttivita()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna all'elenco attività'</span>
+        </button>
+      </div>
+      <button mat-raised-button class="button-style-2" (click)="congermaDialog()"> CHIUDI PROGETTO</button>
+    </div>
+  </div>
+
+</div>

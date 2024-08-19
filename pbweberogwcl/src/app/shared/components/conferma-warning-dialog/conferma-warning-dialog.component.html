@@ -1,0 +1,18 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">{{title}}</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<div [innerHtml]="message"></div>
+
+<mat-card class="mat-elevation-z2 messageWarning marginTop20" *ngIf="isMessageWarningVisible">
+    <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning"></p>
+    </mat-card-content>
+</mat-card>
+
+<div class="flexEnd marginTop20">
+    <button mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2 margin-left-20" (click)="continua()">CONTINUA</button>
+</div>

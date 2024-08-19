@@ -1,0 +1,147 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" id="scrollId" [ngClass]="{'displayNone': isLoading()}">
+  <div class="content margin-top-0">
+    <div class="title">
+      <div class="reportingContainerUp spaceBetween">
+        <div>
+          <h2>Trasferimenti</h2>
+        </div>
+        <div class="reportingContainerUpbutton">
+          <button (click)="goToNuovoTrasferimento()" mat-stroked-button class="button-style-3">NUOVO
+            TRASFERIMENTO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="header">
+          <h3 class="search">Criteri di ricerca</h3>
+          <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="criteriRicercaOpened">
+          <form #ricercaForm="ngForm" (submit)="ricerca(null)" class="mt-12">
+            <mat-grid-list cols="2" rowHeight="60px">
+              <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-form-field class="fullWidth margin-right-10">
+                  <mat-label>Selezionare una normativa *</mat-label>
+                  <mat-select [(ngModel)]="normativaSelected" name="normativa">
+                    <mat-option *ngFor="let option of normative" [value]="option">
+                      {{ option.descLinea }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="enableSelectBeneficiario">
+                <select-beneficiario class="fullWidth margin-right-10" [beneficiari]="beneficiariS"
+                  [(beneficiario)]="beneficiarioS">
+                </select-beneficiario>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="enableBasicSelectBeneficiario">
+                <mat-form-field class="fullWidth margin-right-10">
+                  <mat-label>Selezionare un beneficiario</mat-label>
+                  <mat-select [(ngModel)]="beneficiarioSelected" name="beneficiario" class="w-100"
+                    matTooltip="{{ (beneficiarioSelected)?beneficiarioSelected.denominazioneBeneficiario:'' }}"
+                    (selectionChange)="onSelectBeneficiario()">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let option of beneficiari" matTooltip="{{ option.denominazioneBeneficiario }}"
+                      [value]="option">
+                      {{ option.denominazioneBeneficiario }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-form-field class="fullWidth margin-right-10">
+                  <mat-label>Selezionare una causale</mat-label>
+                  <mat-select matOptionFirstChildUndefined [(ngModel)]="causaleSelected" name="causale"
+                    matTooltip="{{ (causaleSelected)?causaleSelected.descCausaleTrasferimento:'' }}"
+                    (selectionChange)="onSelectCausale()">
+                    <mat-option *ngFor="let option of causali" [value]="option">
+                      <span>{{ option.descCausaleTrasferimento }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-form-field class="fullWidth margin-right-10">
+                  <input type="text" matInput placeholder="Codice Trasferimento" name="codiceTrasferimento"
+                    [(ngModel)]="codiceTrasferimento">
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-radio-group [(ngModel)]="tipo" name="tipo" class="display-inherit w-100">
+                  <mat-label class="margin-right-10">Tipo</mat-label>
+                  <mat-radio-button value="1">Privati</mat-radio-button>
+                  <mat-radio-button value="2">Pubblici</mat-radio-button>
+                  <mat-radio-button value="0">Tutti</mat-radio-button>
+                </mat-radio-group>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <div class="display-flex justify-content-flex-start fullWidth">
+                  <mat-form-field class="width-data margin-right-10">
+                    <mat-label>Data Da</mat-label>
+                    <input matInput [matDatepicker]="pickerDataDal" name="dataDal" (click)="pickerDataDal.open()"
+                      [(ngModel)]="dataDal">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataDal" class="blueColor">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataDal></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field class="width-data">
+                    <mat-label>Data A</mat-label>
+                    <input matInput [matDatepicker]="pickerDataAl" name="dataAl" (click)="pickerDataAl.open()"
+                      [(ngModel)]="dataAl">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataAl" class="blueColor">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataAl></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+
+            <div matTooltip="Selezionare una normativa" [matTooltipDisabled]="normativaSelected">
+              <button mat-raised-button class="button-style-2" type="submit" [disabled]="!normativaSelected">CERCA
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div [ngClass]="{'displayNone': !dataSourceTrasferimenti || !dataSourceTrasferimenti.data}">
+    <mat-card class="mat-elevation-z4">
+      <mat-card-content class="overflow-auto">
+        <h3>Elenco trasferimenti</h3>
+        <!-- [data]="dataResponse" -->
+        <blx-data-table [dataSource]="dataSourceTrasferimenti" [displayedColumns]="displayedColumnsTrasferimenti"
+          [displayedHeaders]="displayedHeadersTrasferimenti" [displayedFooters]="displayedFootersTrasferimenti"
+          [displayedColumnsCustom]="displayedColumnsCustomTrasferimenti"
+          [displayedHeadersCustom]="displayedHeadersCustomTrasferimenti" [cwidth]="'100%'" [enableSort]="true"
+          [enablePaginator]="true" [azioni]="displayedColumnsCustomTrasferimentiAzioni"
+          (onVisualizza)="onVisualizzaTrasferimento($event)" (onModifica)="onModificaTrasferimento($event)"
+          (onElimina)="onEliminaTrasferimento($event)"></blx-data-table><!-- [columns]="columns" [rows]="rows" -->
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <div class="flexEnd">
+      <button (click)="goToNuovoTrasferimento()" mat-stroked-button class="button-style-3">NUOVO
+        TRASFERIMENTO</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+.width-49-perc {
+    width: 49%;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.width-data {
+    width: 170px !important;
+}
+
+
+.font-size-15 {
+    font-size: 15px !important;
+}
+
+.font-size-10-5 {
+    font-size: 10.5px;
+}
+
+.padding-left-3 {
+    padding-left: 3px;
+}
+
+.red-color {
+    color: #b8191a;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

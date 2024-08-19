@@ -1,0 +1,377 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" id="scrollId" *ngIf="!isLoading()">
+  <div class="title">
+    <h2>{{ title }}</h2>
+  </div>
+
+  <div class="content" *ngIf="!isLoading()">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-tab-group class="mt-12" (selectedTabChange)="onSelectedTabChange($event)" [(selectedIndex)]="tabIndex">
+      <mat-tab [label]="'Estrazione progetti campionati' | uppercase">
+        <form #ricercaForm="ngForm" (submit)="epcRicerca()" class="pl-20 pr-20">
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare una normativa</mat-label>
+                <mat-select [(ngModel)]="epcNormativaSelected" name="epcNormativaSelected"
+                  [compareWith]="compareWithCodiceDescrizione" (selectionChange)="onEpcNormativeSelected()">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let epcNormativa of epcNormativeLista" [value]="epcNormativa">
+                    <span>{{ epcNormativa.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un'asse</mat-label>
+                <mat-select [(ngModel)]="epcAsseSelected" name="epcAsseSelected"
+                  [compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledEpcAsse"
+                  (selectionChange)="onEpcAsseSelected()">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let epcAsse of epcAsseLista" [value]="epcAsse">
+                    <span>{{ epcAsse.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un bando</mat-label>
+                <mat-select [(ngModel)]="epcBandoSelected" name="epcBandoSelected"
+                  [compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledEpcBandi">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let epcBando of epcBandiLista" [value]="epcBando">
+                    <span>{{ epcBando.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col w-50">
+              Tipo controllo
+              <mat-radio-group class="w-100 justify-content-center marginLeft20" aria-label="Select an option"
+                [(ngModel)]="flagEpcTipoControllo" name="flagEpcTipoControllo">
+                <mat-radio-button [value]="'D'" class="mr-10">Documentale</mat-radio-button>
+                <mat-radio-button [value]="'L'" class="mr-10">In loco</mat-radio-button>
+                <mat-radio-button [value]="'A'">Tutti</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un anno contabile</mat-label>
+                <mat-select [(ngModel)]="epcAnnoContabileSelected" name="epcAnnoContabileSelected"
+                  [compareWith]="compareWithCodiceDescrizione">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let epcAnnoContabile of epcAnnoContabiliLista" [value]="epcAnnoContabile">
+                    <span>{{ epcAnnoContabile.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un'autorità controllante</mat-label>
+                <mat-select [(ngModel)]="epcAutoritaControlloSelected" name="epcAutoritaControlloSelected"
+                  [compareWith]="compareWithCodiceDescrizione">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let epcAutoritaControllo of epcAutoritaControlloLista"
+                    [value]="epcAutoritaControllo">
+                    <span>{{ epcAutoritaControllo.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="!isReportDisabled()" class="row no-gutters mt-12">
+            <div class="col">
+              <button (click)="scaricaIlReport()" mat-button class="button-style-1">
+                <mat-icon class="blue-icon">file_download</mat-icon>
+                <span class="backText">SCARICA IL REPORT</span>
+              </button>
+            </div>
+          </div>
+          <div class="row no-gutters mb-12">
+            <div class="col text-right mr-10">
+              <div matTooltip="Valorizzare la normativa." [matTooltipDisabled]="!isEpcFormDisabled()">
+                <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit"
+                  [disabled]="isEpcFormDisabled()">
+                  GENERA IL REPORT
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-tab>
+      <mat-tab [label]="'Acquisizione progetti campionati' | uppercase">
+        <form #ricercaForm="ngForm" (submit)="apcRicerca()" class="pl-20 pr-20">
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare una normativa *</mat-label>
+                <mat-select [(ngModel)]="apcNormativaSelected" name="apcNormativaSelected"
+                  [compareWith]="compareWithCodiceDescrizione" [disabled]="showNuovaAcquisizione">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let apcNormativa of apcNormativeLista" [value]="apcNormativa">
+                    <span>{{ apcNormativa.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col w-50">
+              Tipo controllo *
+              <mat-radio-group [disabled]="showNuovaAcquisizione" class="w-100 justify-content-center marginLeft20"
+                aria-label="Select an option" [(ngModel)]="flagApcTipoControllo" name="flagApcTipoControllo">
+                <mat-radio-button [value]="'D'" class="mr-10">Documentale</mat-radio-button>
+                <mat-radio-button [value]="'L'" class="mr-10">In loco</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un anno contabile *</mat-label>
+                <mat-select [(ngModel)]="apcAnnoContabileSelected" name="apcAnnoContabileSelected"
+                  [compareWith]="compareWithCodiceDescrizione" (selectionChange)="onApcAnnoContabileSelected()"
+                  [disabled]="showNuovaAcquisizione">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let apcAnnoContabile of apcAnnoContabiliLista" [value]="apcAnnoContabile">
+                    <span>{{ apcAnnoContabile.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-50">
+                <mat-label>Selezionare un'autorità controllante *</mat-label>
+                <mat-select [(ngModel)]="apcAutoritaControlloSelected" name="apcAutoritaControlloSelected"
+                  [compareWith]="compareWithCodiceDescrizione" [disabled]="showNuovaAcquisizione">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let apcAutoritaControllo of apcAutoritaControlloLista"
+                    [value]="apcAutoritaControllo">
+                    <span>{{ apcAutoritaControllo.descrizione }}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="widthData widthData246">
+                <mat-label>Data del campione *</mat-label>
+                <input matInput [matDatepicker]="pickerDataAl" name="dataAl" (click)="pickerDataAl.open()"
+                  [(ngModel)]="dtApcCampione" [disabled]="showNuovaAcquisizione">
+                <mat-datepicker-toggle matSuffix [for]="pickerDataAl" class="blueColor">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerDataAl></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row no-gutters mt-12">
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>Elenco identificativo progetti campionati (separati da ;) *</mat-label>
+                <textarea matInput [(ngModel)]="fieldElencoProgettiCampionati" name="fieldElencoProgettiCampionati"
+                  [disabled]="showNuovaAcquisizione" (ngModelChange)="changeElencoProgetti()"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="!isReportDisabled()" class="row no-gutters mt-12">
+            <div class="col">
+              <button (click)="scaricaIlReport()" mat-button class="button-style-1">
+                <mat-icon class="blue-icon">file_download</mat-icon>
+                <span class="backText">SCARICA IL REPORT</span>
+              </button>
+            </div>
+          </div>
+          <div class="row no-gutters mb-12">
+            <div class="col text-right mr-10">
+              <div matTooltip="Valorizzare i campi obbligatori." [matTooltipDisabled]="!isApcFormDisabled()">
+                <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit"
+                  [disabled]="isApcFormDisabled() || showNuovaAcquisizione">
+                  PROSEGUI
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row no-gutters">
+          <div class="col">
+            <mat-card class="ml-10 mat-elevation-z2 marginBottom18">
+              <mat-card-content class="overflow-auto">
+                <h2>Progetti già presenti nel campione</h2>
+                <div [hidden]="!(dataSourcePresenti.data.length == 0)">Non ci sono elementi da visualizzare.</div>
+                <div [hidden]="dataSourcePresenti.data.length == 0">
+                  <table mat-table [dataSource]="dataSourcePresenti">
+
+                    <ng-container matColumnDef="dataCampione">
+                      <th mat-header-cell *matHeaderCellDef> Data campione </th>
+                      <td mat-cell *matCellDef="let element"> {{element.dataCampionamento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="idProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Id progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.idProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codiceProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Codice progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.codiceVisualizzatoProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="titoloProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Titolo progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.titoloProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                      <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+                      <td mat-cell *matCellDef="let element"> {{element.denominazioneBeneficiario}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="bandoLinea">
+                      <th mat-header-cell *matHeaderCellDef> Bando linea </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nomeBandoLinea}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPresenti"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPresenti;"></tr>
+                  </table>
+                  <div class="textAlignRight">
+                    <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit"
+                      (click)="mostraProgetti()">
+                      Mostra tutti i progetti del campione
+                    </button>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="col">
+            <mat-card class="ml-10 mat-elevation-z2 marginBottom18">
+              <mat-card-content class="overflow-auto">
+                <h2>Progetti da aggiungere al campione</h2>
+                <div [hidden]="!(dataSourceAssenti.data.length == 0)">Non ci sono elementi da visualizzare.</div>
+                <div [hidden]="dataSourceAssenti.data.length == 0">
+                  <table mat-table [dataSource]="dataSourceAssenti">
+
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="idProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Id progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.idProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codiceProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Codice progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.codiceVisualizzatoProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="titoloProgetto">
+                      <th mat-header-cell *matHeaderCellDef> Titolo progetto </th>
+                      <td mat-cell *matCellDef="let element"> {{element.titoloProgetto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                      <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+                      <td mat-cell *matCellDef="let element"> {{element.denominazioneBeneficiario}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="bandoLinea">
+                      <th mat-header-cell *matHeaderCellDef> Bando linea </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nomeBandoLinea}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsAssenti"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsAssenti;"></tr>
+                  </table>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="col">
+            <mat-card class="ml-10 mat-elevation-z2 marginBottom18">
+              <mat-card-content class="overflow-auto">
+                <h2>Progetti inesistenti</h2>
+                <div [hidden]="!(progettiInesistenti.length == 0)">Non ci sono elementi da visualizzare.</div>
+                <div [hidden]="progettiInesistenti.length == 0">
+                  <div *ngFor="let inesistente of progettiInesistenti" class="col-full ml-20 text-align-center">
+                    {{ inesistente }}
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <div class="row no-gutters mb-12">
+          <div class="col text-right mr-10">
+            <div [hidden]="showNuovaAcquisizione">
+              <form #ricercaForm="ngForm" (submit)="apcRicercaConferma()">
+                <div>
+                  <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit">
+                    Conferma acquisizione
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div [hidden]="!showNuovaAcquisizione">
+              <form #ricercaForm="ngForm" (submit)="nuovaAcquiszione()">
+                <div>
+                  <button class="button-style-2 margin0 text-uppercase" mat-raised-button type="submit">
+                    Nuova acquisizione
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+.w-100 {
+    width: 100%;
+}
+.w-99 {
+    width: 99%;
+}
+.w-96 {
+    width: 96%;
+}
+.w-49 {
+    width: 49%;
+}
+.ml-24 {
+    margin-left: 24px;
+}
+.mr-10 {
+    margin-right: 10px;
+}
+.mx-24 {
+    margin: 0 24px;
+}
+.align-items-center {
+    align-items: center;
+}
+.h-80 {
+    height: 80px;
+}
+.reportingContainerUp {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reportingContainerUpbutton {
+    text-align: right;
+}

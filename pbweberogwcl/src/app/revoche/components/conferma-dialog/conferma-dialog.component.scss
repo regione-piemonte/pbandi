@@ -1,0 +1,16 @@
+::ng-deep .mat-dialog-container {
+  overflow-y: auto !important;
+  padding-bottom: 10px !important;
+  max-height: calc(100vh - 30px) !important;
+  height: auto !important;
+
+  .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+  .mat-select-value-text,
+  .cdk-text-field-autofill-monitored:-webkit-autofill {
+   font-weight: bold !important;
+  }
+
+}
+.cdk-overlay-pane{
+  overflow: scroll;
+  }

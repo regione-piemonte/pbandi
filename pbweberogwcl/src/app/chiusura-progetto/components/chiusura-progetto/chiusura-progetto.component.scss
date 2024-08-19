@@ -1,0 +1,90 @@
+.p-4 {
+  padding: 4px;
+}
+.min-height-40 {
+  min-height: 40px;
+}
+
+th,
+td {
+  padding-right: 10px !important;
+}
+
+td {
+  font-size: 13px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: #0060c1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+  opacity: 0.3 !important;
+  transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+  color: #0058b1 !important;
+}
+
+.mat-datepicker-toggle {
+  color: #0060c1;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+  font-size: 16px;
+}
+
+mat-tab-group {
+  background-color: #ffffff;
+  font-size: 16px;
+}
+
+::ng-deep tr .cdk-column-numeroRiferimento,
+::ng-deep tr .cdk-column-codRiferimentoErogazione {
+  //background-color: green;
+  width: 122px;
+  min-width: 122px;
+}
+
+::ng-deep tr .cdk-column-dtContabile,
+::ng-deep tr .cdk-column-dtContabile {
+  //background-color: yellow;
+  width: 70px;
+  min-width: 70px;
+}
+
+::ng-deep tr .cdk-column-ultimoImportoAgevolato,
+::ng-deep tr .cdk-column-importoErogazione {
+  width: 98px; // 82px
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaErogato,
+::ng-deep tr .cdk-column-field1 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaRecuperato,
+::ng-deep tr .cdk-column-field2 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoResiduoDaErogare,
+::ng-deep tr .cdk-column-field3 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-azioni {
+  //background-color: violet;
+  width: 84px;
+  min-width: 84px;
+}

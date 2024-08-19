@@ -1,0 +1,440 @@
+.page {
+    .title {
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .backText {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+
+            h2 {
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+
+            .arrow {
+                color: grey;
+            }
+        }
+
+        .row {
+            width: 100%;
+            display: flex;
+
+            .col {
+                flex-grow: 1;
+                padding-right: 10px;
+            }
+        }
+    }
+}
+
+.font-small {
+    //display: flex;
+    //justify-content: flex-start;
+    font-weight: 400;
+    font-size: 12px;
+}
+.color-grey {
+    color: grey;
+}
+.blueIcon {
+    color: #0060c1;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+.textSmallGrey {
+    display: flex;
+    justify-content: flex-start;
+    color: grey;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.paddingTop10 {
+    padding-top: 10px;
+}
+
+.paddingRight10 {
+    padding-right: 10px;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.centerPage {
+    z-index: 20;
+    position: fixed;
+    left: 45%;
+}
+
+.visibilityHidden {
+    visibility: hidden;
+}
+
+.w-10 {
+    width: 10%;
+}
+.w-30 {
+    width: 30%;
+}
+.w-74 {
+    width: 74% !important;
+}
+.w-75 {
+    width: 75% !important;
+}
+.w-90 {
+    width: 90%;
+}
+.w-96 {
+    width: 96% !important;
+}
+::ng-deep .w-96 > div.mat-form-field-wrapper {
+    width: 100% !important;
+}
+::ng-deep tr.grey-color > td {
+    color: grey;
+}
+::ng-deep blx-data-table tr.mat-row.beneficiario-corrente td.mat-cell {
+    font-weight: bold;
+}
+::ng-deep blx-data-table tr.mat-row.beneficiario-corrente td.mat-cell.mat-column-azioni > div > button:nth-child(2) {
+    margin-right: 40px;
+}
+//::ng-deep blx-data-table tr.mat-row.beneficiario-corrente td.mat-cell.mat-column-azioni > div
+::ng-deep
+    blx-data-table
+    tr.mat-row.beneficiario-corrente.isnt-1420
+    td.mat-cell.mat-column-azioni
+    > div
+    > button:nth-child(1),
+::ng-deep
+    blx-data-table
+    tr.mat-row.beneficiario-corrente.isnt-1420
+    td.mat-cell.mat-column-azioni
+    > div
+    > button:nth-child(2),
+::ng-deep blx-data-table tr.mat-row.beneficiario-corrente td.mat-cell.mat-column-azioni > div > mat-slide-toggle {
+    display: none;
+}
+::ng-deep mat-tab-group.hide-tab-2 div.mat-tab-label:nth-child(2) {
+    display: none;
+}
+
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.white-space-nowrap {
+    white-space: nowrap;
+}
+
+.w-100 {
+    width: 100%;
+}
+.ml-auto {
+    margin-left: auto;
+}
+.mr-auto {
+    margin-right: auto;
+}
+.ml-0 {
+    margin-left: 0;
+}
+.mr-0 {
+    margin-right: 0;
+}
+.mb-0 {
+    margin-bottom: 0;
+}
+.mt-12 {
+    margin-top: 12px;
+}
+.m-10 {
+    margin: 10px;
+}
+.mr-10 {
+    margin-right: 10px;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mb-15 {
+    margin-bottom: 15px;
+}
+.ml-24 {
+    margin-left: 24px;
+}
+.mr-24 {
+    margin-right: 24px;
+}
+.mx-24 {
+    margin: 0 24px;
+}
+.pl-5 {
+    padding-left: 5px;
+}
+.pr-5 {
+    padding-right: 5px;
+}
+.pt-10 {
+    padding-top: 16px;
+}
+.pl-10 {
+    padding-left: 10px;
+}
+.pr-10 {
+    padding-right: 10px;
+}
+.pt-16 {
+    padding-top: 16px;
+}
+.pb-16 {
+    padding-bottom: 16px;
+}
+// ::ng-deep .mat-radio-button-justify-content-center .mat-radio-label {
+//     justify-content: center;
+// }
+// ::ng-deep .mat-checkbox-p0 .mat-form-field-wrapper {
+//     padding-bottom: 0;
+// }
+// ::ng-deep .mat-checkbox-p0 .mat-form-field-wrapper .mat-form-field-infix {
+//     padding-top: 0;
+//     padding-bottom: 0;
+//     border-bottom: 0;
+// }
+::ng-deep .mat-checkbox-white-space-inherit .mat-checkbox-layout {
+    white-space: inherit;
+}
+.align-items-center {
+    align-items: center;
+}
+.vertical-align-middle {
+    vertical-align: middle;
+}
+.justify-content-end {
+    justify-content: end;
+}
+.h-80 {
+    height: 80px;
+}
+.reportingContainerUp {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reportingContainerUpbutton {
+    text-align: right;
+}
+
+.button-style-3 {
+    border: 2px solid #1844a8 !important;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0060c1;
+}
+
+.mat-datepicker-toggle {
+    color: #0060c1;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #0058b1;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 16px;
+}
+
+mat-tab-group {
+    background-color: #ffffff;
+    font-size: 16px;
+}
+
+table {
+    mat-icon {
+        color: #006cb4;
+    }
+}
+
+//
+.widthData160,
+.widthData160 .mat-form-field-wrapper {
+    width: 160px !important;
+}
+@media (max-width: 767.98) {
+    .widthData160,
+    .widthData160 .mat-form-field-wrapper {
+        width: inherit !important;
+    }
+}
+
+.widthData188,
+.widthData188 .mat-form-field-wrapper {
+    width: 188px !important;
+}
+@media (max-width: 767.98) {
+    .widthData188,
+    .widthData188 .mat-form-field-wrapper {
+        width: inherit !important;
+    }
+}
+
+.widthData42,
+::ng-deep .widthData42 .mat-form-field-wrapper {
+    width: 42px !important;
+}
+.widthData82,
+::ng-deep .widthData82 .mat-form-field-wrapper {
+    width: 82px !important;
+}
+.widthData120,
+::ng-deep .widthData120 .mat-form-field-wrapper {
+    width: 120px !important;
+}
+@media (max-width: 767.98) {
+    .widthData120,
+    ::ng-deep .widthData120 .mat-form-field-wrapper {
+        width: inherit !important;
+    }
+}
+.widthData246,
+::ng-deep .widthData246 .mat-form-field-wrapper {
+    width: 246px !important;
+}
+@media (max-width: 767.98) {
+    .widthData246,
+    ::ng-deep .widthData246 .mat-form-field-wrapper {
+        width: inherit !important;
+    }
+}
+
+//::ng-deep tr .cdk-column-descModalitaAgevolazione,
+//::ng-deep tr .cdk-column-descCausale {
+//background-color: red;
+//width: auto;
+//}
+
+::ng-deep tr .cdk-column-numeroRiferimento,
+::ng-deep tr .cdk-column-codRiferimentoErogazione {
+    //background-color: green;
+    width: 122px;
+    min-width: 122px;
+}
+
+::ng-deep tr .cdk-column-dtContabile,
+::ng-deep tr .cdk-column-dtContabile {
+    //background-color: yellow;
+    width: 70px;
+    min-width: 70px;
+}
+
+::ng-deep tr .cdk-column-ultimoImportoAgevolato,
+::ng-deep tr .cdk-column-importoErogazione {
+    //background-color: plum;
+    width: 98px; // 82px
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaErogato,
+::ng-deep tr .cdk-column-field1 {
+    //background-color: sienna;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaRecuperato,
+::ng-deep tr .cdk-column-field2 {
+    //background-color: slategray;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoResiduoDaErogare,
+::ng-deep tr .cdk-column-field3 {
+    //background-color: springgreen;
+    width: 98px;
+    min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-azioni {
+    //background-color: violet;
+    width: 84px;
+    min-width: 84px;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+// @media (max-width: 1200) {
+// }
+// @media (max-width: 992) {
+// }
+// @media (max-width: 767.98) {
+// }

@@ -1,0 +1,12 @@
+.height-57-px {
+    height: 57px;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}

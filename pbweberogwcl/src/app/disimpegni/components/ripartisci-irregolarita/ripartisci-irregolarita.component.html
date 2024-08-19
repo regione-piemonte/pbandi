@@ -1,0 +1,165 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" id="scrollId" [ngClass]="{'displayNone': isLoading()}">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goToDisimpegni()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna ai disimpegni</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div>
+        <h2 class="marginBottom16">Associazione tra Revoca e Irregolarità</h2>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <div class="row no-gutters spaceBetween">
+          <div class="col-auto"><span class="bold-text">Importo totale revoca</span> € {{ irregolarita?.importoRevocato
+            |
+            number: '1.2-2': 'it' }}</div>
+          <div class="col-auto"><span class="bold-text">Totale spesa irregolare</span> € {{ totaleImportoIrregolarita |
+            number: '1.2-2': 'it' }}</div>
+          <div class="col-auto"><span class="bold-text">Totale agevolazione irregolare</span> € {{
+            totaleIimportoAgevolazioneIrreg | number: '1.2-2': 'it' }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <h2>Irregolarità associabili</h2>
+        <table class="fullWidth"
+          [ngClass]="{'displayNone':!irregolarita || !irregolarita.irregolarita || irregolarita.irregolarita.length===0}">
+          <tbody>
+            <div *ngFor="let irr of irregolarita?.irregolarita; let i=index">
+              <tr class="bold-text fullWidth light-blue-background-color vertical-align-middle height-50">
+                <td>
+                  <mat-checkbox [(ngModel)]="irr.checked" name="check{{i}}" [disabled]="!isMaster"></mat-checkbox>
+                </td>
+                <td colspan="3">{{irr.descPeriodoVisualizzata}} {{i+1}}) {{irr.motivoRevocaIrregolarita}}</td>
+                <td class="min-width-137px">Spesa Irregolare</td>
+                <td class="text-right min-width-137px">{{irr.importoIrregolarita | number: '1.2-2': 'it'}}</td>
+                <td class="min-width-137px">Agevolazione Irregolare</td>
+                <td class="text-right min-width-137px">{{irr.importoAgevolazioneIrreg | number: '1.2-2': 'it'}}</td>
+                <td class="min-width-60px"></td>
+              </tr>
+              <tr class="bold-text fullWidth vertical-align-middle height-50">
+                <td></td>
+                <td class="fullWidth">Classificazione</td>
+                <td class="text-right min-width-137px">Importo</td>
+                <td class="text-right min-width-137px">Importo audit</td>
+                <td>Documentale [D] </td>
+                <td>Forfettario [F] </td>
+                <td>DS di riferimento </td>
+                <td class="text-right">Agevolazione irregolare DS </td>
+                <td></td>
+              </tr>
+              <tr class="fullWidth" *ngFor="let det of irr.dettagliRevocaIrregolarita; let j=index"
+                class="vertical-align-top" [ngClass]="{'height-50':det.tipologia==='F'}">
+                <td></td>
+                <td class="padding-top-20">{{getDescClassFromId(det.idClassRevocaIrreg)}}
+                </td>
+                <td class="text-right" class="padding-top-20">
+                  <span *ngIf="irr.checked">{{det.importo | number: '1.2-2': 'it'}}</span>
+                </td>
+                <td class="fullWidth form-field-table padding-inner-table">
+                  <mat-form-field class="text-right" *ngIf="irr.checked">
+                    <input matInput [(ngModel)]="det.importoAuditFormatted" name="impAudit{{i}}{{j}}"
+                      [disabled]="!isMaster" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImportoAudit(det)"
+                      #impAud="ngModel" />
+                    <mat-error *ngIf="impAud?.errors?.pattern">
+                      Valore non valido
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!irr.checked">
+                    <input matInput disabled />
+                  </mat-form-field>
+                </td>
+                <td class="padding-top-20">
+                  <mat-radio-group [(ngModel)]="det.tipologia" name="tipologia{{i}}{{j}}"
+                    [disabled]="!irr.checked || !isMaster" (change)="changeTipologia($event,det)">
+                    <mat-radio-button value="D">D</mat-radio-button>
+                  </mat-radio-group>
+                </td>
+                <td class="padding-top-20">
+                  <mat-radio-group [(ngModel)]="det.tipologia" name="tipologia{{i}}{{j}}"
+                    [disabled]="!irr.checked || !isMaster" (change)="changeTipologia($event,det)">
+                    <mat-radio-button value="F">F</mat-radio-button>
+                  </mat-radio-group>
+                </td>
+                <td colspan="3">
+                  <table class="fullWidth" [ngClass]="{'displayNone':det.tipologia==='F'}">
+                    <tbody>
+                      <tr class="fullWidth" *ngFor="let detds of det.dsDettagliRevocaIrregolarita; let z=index">
+                        <td class="fullWidth form-field-table padding-inner-table min-width-137px">
+                          <mat-form-field *ngIf="irr.checked">
+                            <mat-select [(ngModel)]="detds.idDichiarazioneSpesa" name="dich{{i}}{{j}}{{z}}"
+                              [disabled]="!isMaster">
+                              <mat-option *ngFor="let ds of dsIrregolarita" [value]="ds">
+                                <span>{{ ds }}</span>
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field *ngIf="!irr.checked">
+                            <mat-select disabled>
+                              <mat-option></mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td class="fullWidth form-field-table padding-inner-table min-width-137px">
+                          <mat-form-field *ngIf="irr.checked" class="text-right">
+                            <input matInput [(ngModel)]="detds.importoIrregolareDsFormatted"
+                              name="impIrrDs{{i}}{{j}}{{z}}" [disabled]="!isMaster"
+                              pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImportoIrrDs(detds)"
+                              #impIrrDs="ngModel" />
+                            <mat-error *ngIf="impIrrDs?.errors?.pattern">
+                              Valore non valido
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field *ngIf="!irr.checked">
+                            <input matInput disabled />
+                          </mat-form-field>
+                        </td>
+                        <td class="min-width-60px padding-inner-table">
+                          <button mat-icon-button *ngIf="irr.checked && isMaster" (click)="addRow(det, z)">
+                            <mat-icon>add_box</mat-icon>
+                          </button>
+                          <button mat-icon-button *ngIf="z!==0 && irr.checked && isMaster" (click)="deleteRow(det, z)">
+                            <mat-icon>indeterminate_check_box</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </div>
+          </tbody>
+        </table>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isMaster" class="textAlignRight margin-bottom-20">
+    <button mat-stroked-button class="button-style-2" (click)="salva()">SALVA</button>
+  </div>
+</div>

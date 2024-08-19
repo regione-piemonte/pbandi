@@ -1,0 +1,57 @@
+<div class="mt-12 pr-10 pl-10 text-right"
+    *ngIf="isIstruttore() || !(isBeneficiario() && (!isBeneficiarioRappresentanteLegale() || isFinPiemonte))">
+    <button mat-stroked-button class="button-style-2 " (click)="goToNuovoSoggetto()">NUOVO
+        SOGGETTO</button>
+</div>
+<div class="mt-12">
+    <div class="pr-10 pl-10 text-right">
+        <button *ngIf="!showOnlySoggettiVisible" mat-button class="button-style-1 "
+            (click)="onMostraSoloSoggettiAttiviClick($event)">
+            <mat-icon>visibility_off</mat-icon>
+            mostra solo soggetti attivi
+        </button>
+        <button *ngIf="showOnlySoggettiVisible" mat-button class="button-style-1 "
+            (click)="onMostraSoloSoggettiAttiviClick($event)">
+            <mat-icon>visibility</mat-icon>
+            mostra soggetti non più attivi
+        </button>
+    </div>
+    <div class="display-flex align-items-center mb-10" *ngIf="existsRichiesta">
+        <mat-icon class="yellow-color icon-display mr-10 ml-10">square</mat-icon> = richiesta di abilitazione del
+        soggetto da parte del beneficiario in attesa di conferma
+    </div>
+    <mat-card class="mat-elevation-z2 ml-10 mr-10">
+        <mat-card-content>
+            <blx-data-table [dataSource]="dataSourceSoggettiProgetto"
+                [displayedColumns]="displayedColumnsSoggettiProgetto"
+                [displayedHeaders]="displayedHeadersSoggettiProgetto"
+                [displayedFooters]="displayedFootersSoggettiProgetto"
+                [displayedColumnsCustom]="displayedColumnsCustomSoggettiProgetto"
+                [displayedHeadersCustom]="displayedHeadersCustomSoggettiProgetto" [cwidth]="'99%'" [pageSize]="1000"
+                [enableSort]="true" [azioni]="displayedColumnsCustomSoggettiProgettoAzioni"
+                (onVisualizza)="onVisualizzaSoggettiProgetto($event)" (onModifica)="onModificaSoggettiProgetto($event)"
+                [(slides)]="dataSourceSoggettiProgettoSlides" (onSlide)="onSlideSoggettiProgetto($event)"
+                (onPersonOff)="onRifiutaRichiestaSoggetto($event)"
+                [ngClassFunction]="ngClassFunctionTableSoggetti"></blx-data-table>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div class="mt-12 ml-10 display-flex" [ngClass]=" {'displayNone': !isBenPersonaFisica}">
+    <mat-form-field class="w-35" matTooltip="Indirizzo e-mail per il recapito delle notifiche di progetto">
+        <input class="w-100" type="text" matInput placeholder="Indirizzo e-mail" name="email" [(ngModel)]="email"
+            pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+            [disabled]="isDisabledEmail" required>
+    </mat-form-field>
+    <div *ngIf="!isDisabledEmail && recapiti?.flagEmailConfermata !== 'S'" class="pl-5 display-flex align-items-center">
+        <button mat-button class="button-style-1" (click)="loadSalvaRecapito('C')">CONFERMA</button>
+    </div>
+    <div *ngIf="!isDisabledEmail && recapiti?.flagEmailConfermata === 'S'" class="pl-5 display-flex align-items-center">
+        <button mat-button class="button-style-1" (click)="loadSalvaRecapito('S')">SALVA</button>
+        <span class="green-color">Indirizzo email confermato</span>
+    </div>
+</div>
+<div class="mt-12 mb-10 pr-10 pl-10 text-right"
+    *ngIf="isIstruttore() || !(isBeneficiario() && (!isBeneficiarioRappresentanteLegale() || isFinPiemonte))">
+    <button mat-stroked-button class="button-style-2" (click)="goToNuovoSoggetto()">NUOVO
+        SOGGETTO</button>
+</div>

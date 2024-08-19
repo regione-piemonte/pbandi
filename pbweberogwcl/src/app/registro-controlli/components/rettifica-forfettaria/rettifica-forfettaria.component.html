@@ -1,0 +1,152 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" id="scrollId" [ngClass]="{'displayNone': isLoading()}">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="indietro()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna al registro controlli</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Rettifiche forfettarie su Affidamenti</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content marginLeft15 marginRight15">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-grid-list cols="8" rowHeight="60px" class="marginLeft30">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="marginRight10 fullWidth">
+                            <input [disabled]="true" type="text" placeholder="Data inserimento *"
+                                [(ngModel)]="dataInserimento" matInput name="dataInserimento"
+                                [ngModelOptions]="{standalone: true}">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="8" rowHeight="60px" class="marginLeft30">
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <mat-form-field class="col fullWidth marginRight30">
+                            <mat-label>Selezionare autorità controllante *</mat-label>
+                            <mat-select [(ngModel)]="autoritaControllanteSelected" name="autoritaControllante">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let autoritaControllante of autoritasControllante"
+                                    [value]="autoritaControllante">
+                                    {{ autoritaControllante.descrizione }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="8" rowHeight="60px" class="marginLeft30">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <mat-form-field class="marginRight10 fullWidth">
+                            <input type="number" placeholder="Percentuale di rettifica *" [(ngModel)]="percRett"
+                                matInput name="percRett" [ngModelOptions]="{standalone: true}">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content marginLeft15 marginRight15 marginTop20">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h2 class="fontBold marginTop20 ">Affidamenti</h2>
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? changeSingleRowCheckbox(row) : null"
+                                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipologia">
+                        <th mat-header-cell *matHeaderCellDef> Tipologia </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descTipologiaAppalto}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="oggetto">
+                        <th mat-header-cell *matHeaderCellDef> Oggetto </th>
+                        <td mat-cell *matCellDef="let element"> {{element.oggettoAppalto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CPA-CIG">
+                        <th mat-header-cell *matHeaderCellDef> CPA-CIG </th>
+                        <td mat-cell *matCellDef="let element"> {{element.codProcAgg}} - {{element.cigProcAgg}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importo">
+                        <th mat-header-cell *matHeaderCellDef> Importo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.importo | number: '1.2-2' : 'it'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="esiti">
+                        <th mat-header-cell *matHeaderCellDef> Esiti </th>
+                        <td mat-cell *matCellDef="let element"> {{getEsitiInt(element.esitoIntermedio,
+                            element.flagRettificaIntermedio)}}<br>
+                            {{getEsitiDef(element.esitoDefinitivo, element.flagRettificaDefinitivo)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="checklist">
+                        <th mat-header-cell *matHeaderCellDef> Checklist</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngFor="let checklist of element.checklist"
+                                class="colorBlue clickableItem displayFlex">
+                                <div
+                                    [hidden]="autoritaControllanteSelected == undefined || !(autoritaControllanteSelected.descrizione == 'RdCA')">
+                                    <mat-checkbox [checked]="checklist.idChecklist == idChecklistSelected"
+                                        (change)="changeCheckBox(checklist.idChecklist, $event)">
+                                    </mat-checkbox>
+                                </div>
+                                <div (click)="downloadChecklist(checklist)" class="marginLeft5">
+                                    {{checklist.nomeFile}}
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="textAlignRight">
+        <button class="button-style-2 marginTop20 marginRight30 marginBottom30" mat-raised-button type="submit"
+            (click)="salva()">
+            SALVA
+        </button>
+    </div>
+</div>

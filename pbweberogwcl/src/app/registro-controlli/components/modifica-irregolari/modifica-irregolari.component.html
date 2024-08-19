@@ -1,0 +1,343 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" id="scrollId" *ngIf="!isLoading()">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Modifica irregolarità</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+        <p class="width-49-perc">Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+    </div>
+
+    <div class="fullWidth margin-bottom-10" *ngIf="showTrasformaRadio">
+        <a>Trasforma in</a>
+        <mat-radio-group aria-label="Select an option" (change)="trasformaInChange()" [(ngModel)]="trasformaInRadio"
+            name="doc4">
+            <mat-radio-button value="1" class="marginLeft20">esito Irregolare Definitivo
+            </mat-radio-button>
+            <mat-radio-button value="2" class="marginLeft20">esito Regolare</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <form #esitoForm="ngForm">
+        <mat-grid-list cols="4" rowHeight="60px" class="marginLeft30">
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <div class="fullWidth">
+                    <a>Tipo controlli *</a>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="tipoControlliRadio" name="doc1">
+                        <mat-radio-button value="1" class="marginLeft20">Documentale
+                        </mat-radio-button>
+                        <mat-radio-button value="2" class="marginLeft20">In loco</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <div class="fullWidth">
+                    <mat-form-field class="marginRight10 width-data">
+                        <input [disabled]="true" type="text" placeholder="Data inserimento esito"
+                            [(ngModel)]="dataInserimentoEsito" matInput name="dataInserimentoEsito">
+                    </mat-form-field>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginRight10">
+                    <mat-label>Selezionare anno contabile *</mat-label>
+                    <mat-select (selectionChange)="changeAnnoContabile()" [(ngModel)]="annoContabileSelected"
+                        name="annoContabile" #annoCont="ngModel">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let annoContabile of anniContabile" [value]="annoContabile">
+                            {{ annoContabile.descrizione }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="annoCont?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginRight10">
+                    <mat-label>Selezionare autorità controllante *</mat-label>
+                    <mat-select (selectionChange)="changeAutControl()" [(ngModel)]="autoritaControllanteSelected"
+                        name="autoritaControllante" #autContr="ngModel">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let autoritaControllante of autoritasControllante"
+                            [value]="autoritaControllante">
+                            {{ autoritaControllante.descrizione }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="autContr?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginRight10">
+                    <mat-label>Selezionare data del campione</mat-label>
+                    <mat-select [(ngModel)]="dataCampioneSelected" name="dataCampione">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let dataCampione of dateCampione" [value]="dataCampione">
+                            {{ dataCampione.descrizione }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <div class="fullWidth">
+                    <mat-form-field class="marginRight10 width-data">
+                        <mat-label>Data inizio controlli *</mat-label>
+                        <input matInput [matDatepicker]="pickerDataInizioControlli" [formControl]="dataInizioControlli">
+                        <mat-datepicker-toggle matSuffix [for]="pickerDataInizioControlli">
+                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataInizioControlli></mat-datepicker>
+                        <mat-error *ngIf="dataInizioControlli?.errors?.error==='required'">
+                            Campo obbligatorio
+                        </mat-error>
+                        <mat-error class="font-size-15 display-flex"
+                            matTooltip=" La data inizio controlli non può essere successiva alla data fine controlli"
+                            *ngIf="dataInizioControlli?.errors?.error==='notValid'">
+                            <mat-icon class="red-color">warning</mat-icon> <span
+                                class="font-size-10-5 padding-left-3">Errore</span>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="marginRight10 width-data">
+                        <mat-label>Data fine controlli <span *ngIf="tipologia !== 'provvisoria'">*</span></mat-label>
+                        <input matInput [matDatepicker]="pickerDataFineControlli" [formControl]="dataFineControlli"
+                            (dateChange)="changeDataFineControlli()">
+                        <mat-datepicker-toggle matSuffix [for]="pickerDataFineControlli">
+                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerDataFineControlli></mat-datepicker>
+                        <mat-error *ngIf="dataFineControlli?.errors?.error==='required'">
+                            Campo obbligatorio
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-grid-tile>
+            <!-- REGOLARE-->
+            <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="tipologia == 'regolare'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Note" [(ngModel)]="noteRegolare" matInput name="noteRegolare">
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- IRREGOLARITA' PROVVISORIA-->
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'provvisoria'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo spesa irregolare *"
+                        [(ngModel)]="importoSpesaIrregolareIrregProvv" matInput name="importoSpesaIrregolareIrregProvv"
+                        #impSpesaIrrProvv="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        (blur)="setImportoSpesaIrregolareIrregProvv()">
+                    <mat-error *ngIf="impSpesaIrrProvv?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="impSpesaIrrProvv?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'provvisoria'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo agevolazione irregolare"
+                        [(ngModel)]="importoAgevIrrIrregProvv" matInput name="importoAgevIrrIrregProvv"
+                        pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImportoAgevIrrIrregProvv()"
+                        #impAgevIrrProvv="ngModel">
+                    <mat-error *ngIf="impAgevIrrProvv?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'provvisoria'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo irregolare certificato *"
+                        [(ngModel)]="importoIrregCertIrregProvv" matInput name="importoIrregCertIrregProvv"
+                        #impIrrCertProvv="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        (blur)="setImportoIrregCertIrregProvv()">
+                    <mat-error *ngIf="impIrrCertProvv?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="impIrrCertProvv?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'provvisoria'">
+                <mat-form-field class="col fullWidth marginRight10">
+                    <mat-label>Selezionare motivo dell'irregolarità *</mat-label>
+                    <mat-select [(ngModel)]="motivoIrregIrregProvvSelected" name="motivoIrregIrregProvv"
+                        #motivoIrrProvv="ngModel">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let motivoIrregIrregProvv of motiviIrregIrregProvv"
+                            [value]="motivoIrregIrregProvv">
+                            {{ motivoIrregIrregProvv.descrizione }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="motivoIrrProvv?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="tipologia == 'provvisoria'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Note" [(ngModel)]="noteIrregProvv" matInput name="noteIrregProvv">
+                </mat-form-field>
+            </mat-grid-tile>
+            <!-- IRREGOLARITA' DEFINITIVA-->
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo spesa irregolare *"
+                        [(ngModel)]="importoSpesaIrregolareIrregDef" matInput name="importoSpesaIrregolareIrregDef"
+                        #impSpesaIrrDef="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        (blur)="setImportoSpesaIrregolareIrregDef()">
+                    <mat-error *ngIf="impSpesaIrrDef?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="impSpesaIrrDef?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo agevolazione irregolare *"
+                        [(ngModel)]="importoAgevIrrIrregDef" matInput name="importoAgevIrrIrregDef"
+                        #impAgevIrrDef="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        (blur)="setImportoAgevIrrIrregDef()">
+                    <mat-error *ngIf="impAgevIrrDef?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="impAgevIrrDef?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error class="font-size-15 display-flex"
+                        matTooltip="L'importo agevolazione irregolare non deve superare l'importo spesa irregolare"
+                        *ngIf="impAgevIrrDef?.errors?.error==='maggiore'">
+                        <mat-icon class="red-color">warning</mat-icon> <span
+                            class="font-size-10-5 padding-left-3">Errore</span>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Importo irregolare certificato *"
+                        [(ngModel)]="importoIrregCertIrregDef" matInput name="importoIrregCertIrregDef"
+                        #impIrrCertDef="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        (blur)="setImportoIrregCertIrregDef()">
+                    <mat-error *ngIf="impIrrCertDef?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="impIrrCertDef?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error class="font-size-15 display-flex"
+                        matTooltip="L'importo irregolare certificato non deve superare l'importo spesa irregolare"
+                        *ngIf="impIrrCertDef?.errors?.error==='maggiore'">
+                        <mat-icon class="red-color">warning</mat-icon> <span
+                            class="font-size-10-5 padding-left-3">Errore</span>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <div class="fullWidth">
+                    <a>Provvedimento</a>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="provvedimentoRadio" name="doc3">
+                        <mat-radio-button value="1" class="marginLeft20">Nessuno
+                        </mat-radio-button>
+                        <mat-radio-button value="2" class="marginLeft20">Disimpegno
+                        </mat-radio-button>
+                        <mat-radio-button value="3" class="marginLeft20">Soppressione
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="col fullWidth marginRight10">
+                    <mat-label>Selezionare motivo dell'irregolarità *</mat-label>
+                    <mat-select [(ngModel)]="motivoIrregIrregDefSelected" name="motivoIrregIrregDef"
+                        #motivoIrrDef="ngModel">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let motivoIrregIrregDef of motiviIrregIrregDef"
+                            [value]="motivoIrregIrregDef">
+                            {{ motivoIrregIrregDef.descrizione }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="motivoIrrDef?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Pratica usata nell'irregolarità"
+                        [(ngModel)]="praticaUsataIrregIrregDef" matInput name="praticaUsataIrregIrregDef">
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Soggetto da contattare per chiarimenti *"
+                        [(ngModel)]="soggContatChiarimIrregDef" matInput name="soggContatChiarimIrregDef"
+                        #soggChiar="ngModel" maxlength="300">
+                    <mat-error *ngIf="soggChiar?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input [readonly]="true" class="readOnly" type="text"
+                        placeholder="Allegato dati accessori irregolarità *" [(ngModel)]="allegDatiAccessIrreg" matInput
+                        name="allegDatiAccessIrreg" #allIrr="ngModel">
+                    <mat-error *ngIf="allIrr?.errors?.error==='required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <div class="fullWidth">
+                    <input (click)="clearFileOlaf()" hidden type="file" #uploader (change)="uploadFileOlaf($event)" />
+                    <button class="button-style-1 marginLeft20" mat-button (click)="uploader.click()">SFOGLIA</button>
+                    <button class="button-style-1 marginLeft20" mat-button
+                        (click)="annullaDatiAccessIrreg()">ANNULLA</button>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input [readonly]="true" class="readOnly" type="text"
+                        placeholder="Allegati vari ad integrazione dell'irregolarità (zippati)"
+                        [(ngModel)]="allegatiVariIntegIrreg" matInput name="allegatiVariIntegIrreg">
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <div class="fullWidth">
+                    <input (click)="clearFileDatiAgg()" hidden type="file" accept=".zip" #uploaderDatiAgg
+                        (change)="uploadFileDatiAgg($event)" />
+                    <button class="button-style-1 marginLeft20" mat-button
+                        (click)="uploaderDatiAgg.click()">SFOGLIA</button>
+                    <button class="button-style-1 marginLeft20" mat-button
+                        (click)="annullaAllegVariIntegIrreg()">ANNULLA</button>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="tipologia == 'definitiva'">
+                <mat-form-field class="marginRight10 fullWidth">
+                    <input type="text" placeholder="Note" [(ngModel)]="noteIrregDef" matInput name="noteIrregDef">
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+
+    <div class="textAlignRight">
+        <button class="button-style-2" mat-raised-button (click)="salva()">
+            SALVA
+        </button>
+    </div>
+</div>

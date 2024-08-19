@@ -1,0 +1,233 @@
+.p-4 {
+  padding: 4px;
+}
+.min-height-40 {
+  min-height: 40px;
+}
+
+.page {
+  .title {
+    .backContainer {
+      padding-bottom: 5px;
+      button {
+        padding: 0px;
+      }
+      .blue-icon {
+        color: #0060c1;
+      }
+      .backText {
+        color: #0060c1;
+        font-size: 16px;
+        padding-left: 10px;
+      }
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 0px;
+    }
+    .divider {
+      border-color: #b91818;
+      border-width: 6px;
+      width: 59px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    h3 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+
+      h2 {
+        margin-bottom: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .arrow {
+        color: grey;
+      }
+    }
+
+    h2 {
+      margin-bottom: 0px;
+      font-weight: bold;
+    }
+
+    .benef {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin: 0px;
+        font-size: 16px;
+      }
+
+      span {
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+th,
+td {
+  padding-right: 10px !important;
+}
+
+td {
+  font-size: 13px;
+}
+
+.messageSuccess {
+  margin-bottom: 10px;
+  border: 1px solid #065c00;
+  background-color: #e1ffd1;
+}
+
+.messageSuccessContent {
+  display: flex;
+  align-items: center;
+  color: #065c00;
+  font-weight: bold;
+
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    font-weight: bold;
+    padding-right: 15px;
+  }
+}
+
+.messageError {
+  margin-bottom: 10px;
+  border: 1px solid #b50000;
+  background-color: #ffe16133;
+}
+
+.messageErrorContent {
+  display: flex;
+  align-items: center;
+  color: #b50000;
+  font-weight: bold;
+
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    font-weight: bold;
+    padding-right: 15px;
+  }
+}
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: #0060c1;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+  opacity: 0.3 !important;
+  transform: translateY(0px) !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+  color: #0058b1 !important;
+}
+
+.mat-datepicker-toggle {
+  color: #0060c1;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color: #0058b1 !important; /*click effect color change*/
+}
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color: #0058b1 !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #0058b1;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+  font-size: 16px;
+}
+
+mat-tab-group {
+  background-color: #ffffff;
+  font-size: 16px;
+}
+
+::ng-deep tr .cdk-column-numeroRiferimento,
+::ng-deep tr .cdk-column-codRiferimentoErogazione {
+  //background-color: green;
+  width: 122px;
+  min-width: 122px;
+}
+
+::ng-deep tr .cdk-column-dtContabile,
+::ng-deep tr .cdk-column-dtContabile {
+  //background-color: yellow;
+  width: 70px;
+  min-width: 70px;
+}
+
+::ng-deep tr .cdk-column-ultimoImportoAgevolato,
+::ng-deep tr .cdk-column-importoErogazione {
+  width: 98px; // 82px
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaErogato,
+::ng-deep tr .cdk-column-field1 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoGiaRecuperato,
+::ng-deep tr .cdk-column-field2 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-importoResiduoDaErogare,
+::ng-deep tr .cdk-column-field3 {
+  width: 98px;
+  min-width: 98px;
+}
+
+::ng-deep tr .cdk-column-azioni {
+  //background-color: violet;
+  width: 84px;
+  min-width: 84px;
+}

@@ -1,0 +1,31 @@
+.displayNone {
+    display: none !important;
+}
+
+.centerPage {
+    z-index: 20;
+    position: fixed;
+    left: 45%;
+}
+
+::ng-deep mat-tab-group.hide-tab-2 div.mat-tab-label:nth-child(2) {
+    display: none;
+}
+
+.mt-12 {
+    margin-top: 12px;
+}
+
+.mx-24 {
+    margin: 0 24px;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 16px;
+}
+
+mat-tab-group {
+    background-color: #ffffff;
+    font-size: 16px;
+}

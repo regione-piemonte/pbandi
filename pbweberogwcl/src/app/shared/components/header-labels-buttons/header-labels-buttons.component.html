@@ -1,0 +1,13 @@
+<mat-card class="mat-elevation-z2 marginBottom18 {{ class }}">
+  <mat-card-content>
+    <div class="row no-gutters align-items-center">
+      <div *ngFor="let label of labels; let last = last;"
+        class="{{ ((last)?'col-auto':'col-full') }} margin0 font-size-16">{{ label.codice }}: <span
+          class="bold-text font-size-16">{{ label.descrizione }}</span></div>
+      <div *ngIf="buttons && buttons.length">
+        <button mat-button *ngFor="let button of buttons" class="button-style-1 paddingLeft20 text-uppercase"
+          (click)="onButtonsBtnClick(button)">{{ button.descrizione }}</button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

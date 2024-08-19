@@ -1,0 +1,130 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" id="scrollId" [ngClass]="{'displayNone': isLoading()}">
+  <div class="content margin-top-0">
+    <div class="title">
+      <div class="backContainer">
+        <button mat-button (click)="onTorna()">
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alle attività da svolgere</span>
+        </button>
+      </div>
+      <div class="spaceBetween">
+        <h2 *ngIf="codCausale==='PA'">Avvio lavori / Richiesta erogazione acconto</h2>
+        <h2 *ngIf="codCausale==='SA' || codCausale==='UA' || codCausale==='SAL'">Gestione richiesta erogazione</h2>
+        <div>
+          <button (click)="onNuovaErogazione()" mat-stroked-button class="button-style-3">CREA RICHIESTA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <h2>Riepilogo della spesa del progetto</h2>
+        <div class="row no-gutters">
+          <div class="w-50">
+            <p class="margin0 font-size-16">Totale della spesa sostenuta e dichiarata (€): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.totaleSpesaSostenuta
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+          <div class="w-50">
+            <p class="margin0 font-size-16">Avanzamento della spesa sostenuta e dichiarata (%): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.avanzamentoSpesaSostenuta
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="w-50">
+            <p class="margin0 font-size-16">Totale della spesa validata (€): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.totaleSpesaValidata
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+          <div class="w-50">
+            <p class="margin0 font-size-16">Avanzamento della spesa validata (%): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.avanzamentoSpesaValidata
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="w-50">
+            <p class="margin0 font-size-16">Avanzamento della spesa prevista da bando (%): <span
+                class="bold-text font-size-16">
+                {{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.avanzamentoSpesaPrevistaBando
+                | number: '1.2-2' : 'it'}}
+              </span></p>
+          </div>
+          <div class="w-50">
+            <p class="margin0 font-size-16">Importo della spesa da raggiungere (€): <span
+                class="bold-text font-size-16">
+                {{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.spesaProgetto?.importoSpesaDaRaggiungere
+                | number: '1.2-2' : 'it'}}
+              </span></p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <h2>Riepilogo della richiesta di erogazione del progetto</h2>
+        <div class="row no-gutters">
+          <div class="w-100">
+            <p class="margin0 font-size-16">Causale erogazione (€): <span class="bold-text font-size-16"
+                [ngClass]="{'text-uppercase orange-color': (datiRiepilogoRichiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione.descrizioneCausaleErogazione != 'primo acconto'), 'red-color text-uppercase': (datiRiepilogoRichiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione.descrizioneCausaleErogazione == 'primo acconto')}">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.descrizioneCausaleErogazione}}</span>
+            </p>
+          </div>
+          <div class="w-100">
+            <p class="margin0 font-size-16">Percentuale di erogazione (%): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.percentualeErogazione
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+          <div class="w-100">
+            <p class="margin0 font-size-16">Importo richiesto (€): <span
+                class="bold-text font-size-16">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.importoRichiesto
+                | number: '1.2-2' : 'it'}}</span></p>
+          </div>
+        </div>
+        <blx-data-table
+          *ngIf="false && !(!dataSourceRichiestaErogazione || !dataSourceRichiestaErogazione.data || dataSourceRichiestaErogazione.data.length===0)"
+          [dataSource]="dataSourceRichiestaErogazione" [displayedColumns]="displayedColumnsRichiestaErogazione"
+          [displayedHeaders]="displayedHeadersRichiestaErogazione"
+          [displayedFooters]="displayedFootersRichiestaErogazione"
+          [displayedColumnsCustom]="displayedColumnsCustomRichiestaErogazione"
+          [displayedHeadersCustom]="displayedHeadersCustomRichiestaErogazione" [cwidth]="'100%'"></blx-data-table>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <h2>Fideiussioni al momento presenti nel progetto</h2>
+        <blx-data-table [dataSource]="dataSourceFideiussioniTipoTrattamento"
+          [displayedColumns]="displayedColumnsFideiussioniTipoTrattamento"
+          [displayedHeaders]="displayedHeadersFideiussioniTipoTrattamento"
+          [displayedFooters]="displayedFootersFideiussioniTipoTrattamento"
+          [displayedColumnsCustom]="displayedColumnsCustomFideiussioniTipoTrattamento"
+          [displayedHeadersCustom]="displayedHeadersCustomFideiussioniTipoTrattamento" [cwidth]="'100%'">
+        </blx-data-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <div class="textAlignRight">
+      <button (click)="onNuovaErogazione()" mat-stroked-button class="button-style-3">CREA RICHIESTA</button>
+    </div>
+  </div>
+</div>

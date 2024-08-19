@@ -1,0 +1,175 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" id="scrollId" [ngClass]="{'displayNone': isLoading()}">
+  <div class="content margin-top-0">
+    <div class="title">
+      <div class="backContainer">
+        <button (click)="goToAttivita()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alle attività da svolgere</span>
+        </button>
+      </div>
+      <div class="display-flex justify-content-space-between align-items-center">
+        <h2 class="margin-bottom-0">Disimpegni</h2>
+        <button *ngIf="isMaster" (click)="onNuovoDisimpegno()" mat-stroked-button class="button-style-3">NUOVO
+          DISIMPEGNO</button>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <h2>Riepilogo erogazioni</h2>
+        <table mat-table [dataSource]="dataSourceModalitaAgevolazioneErogazione" class="fullWidth"
+          [ngClass]="{'displayNone': !dataSourceModalitaAgevolazioneErogazione || !dataSourceModalitaAgevolazioneErogazione.data || dataSourceModalitaAgevolazioneErogazione.data.length===0}">
+
+          <ng-container matColumnDef="descBreveModalitaAgevolaz">
+            <th mat-header-cell *matHeaderCellDef> Modalità di agevolazione / Causale </th>
+            <td mat-cell *matCellDef="let row"> {{row.descrizione}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quotaImportoAgevolato">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Importo agevolato</th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importoAgevolato | number: '1.2-2' : 'it'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importoErogazioni">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Importo erogato</th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importoErogato | number: '1.2-2' : 'it'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totaleImportoRecuperato">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Importo recuperato</th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importoRecuperato | number: '1.2-2' : 'it'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="data">
+            <th mat-header-cell *matHeaderCellDef> Data </th>
+            <td mat-cell *matCellDef="let row">{{row.data | date: "dd/MM/yyyy"}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="riferimento">
+            <th mat-header-cell *matHeaderCellDef> Riferimento </th>
+            <td mat-cell *matCellDef="let row"> {{row.riferimento}}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsModalitaAgevolazioneErogazione"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsModalitaAgevolazioneErogazione;"
+            [ngClass]="{'bold-text': row.isParent, 'light-blue-background-color': row.isParent}"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <h2>Disimpegni</h2>
+        <p *ngIf="!dataSourceDisimpegni || !dataSourceDisimpegni.data || dataSourceDisimpegni.data.length===0">Non ci
+          sono elementi da visualizzare.</p>
+        <table mat-table [dataSource]="dataSourceDisimpegni" class="fullWidth"
+          [ngClass]="{'displayNone': !dataSourceDisimpegni || !dataSourceDisimpegni.data || dataSourceDisimpegni.data.length===0}">
+
+          <ng-container matColumnDef="causaleDisimpegno">
+            <th mat-header-cell *matHeaderCellDef> Causale </th>
+            <td mat-cell *matCellDef="let row">
+              <span *ngIf="!row.isRigaTotale"> {{row.causaleDisimpegno}}</span>
+              <span *ngIf="row.isRigaTotale"> {{row.label}}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="motivazione">
+            <th mat-header-cell *matHeaderCellDef> Motivazione </th>
+            <td mat-cell *matCellDef="let row"> {{row.motivazione}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ordineRecupero">
+            <th mat-header-cell *matHeaderCellDef> Ordine recupero </th>
+            <td mat-cell *matCellDef="let row"> {{row.ordineRecupero}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="modalitaRecupero">
+            <th mat-header-cell *matHeaderCellDef> Modalità recupero </th>
+            <td mat-cell *matCellDef="let row"> {{row.descModalitaRecupero}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importoDisimpegno">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Importo disimpegno</th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importoRevocato | number: '1.2-2' : 'it'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="data">
+            <th mat-header-cell *matHeaderCellDef> Data </th>
+            <td mat-cell *matCellDef="let row">{{row.data ? row.data : (!row.isRigaTotale ? 'n.a.' : '')}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="riferimento">
+            <th mat-header-cell *matHeaderCellDef> Riferimento </th>
+            <td mat-cell *matCellDef="let row"> {{row.riferimento}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importoIrregolarita">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Importo Irr.</th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importoIrregolarita | number: '1.2-2' : 'it'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="azioni">
+            <th mat-header-cell *matHeaderCellDef class="width-120px"></th>
+            <td mat-cell *matCellDef="let row" class="width-120px">
+              <button mat-icon-button *ngIf="!row.isRigaTotale" matTooltip="Visualizza"
+                (click)="goToDettaglioDisimpegno(row.idRevoca)">
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="!row.isRigaTotale && isMaster" matTooltip="Modifica"
+                (click)="goToModificaDisimpegno(row.idRevoca)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="!row.isRigaTotale && isMaster" matTooltip="Elimina" class="red-color"
+                (click)="eliminaDisimpegno(row)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="row.isRigaRevoca" matTooltip="Associa irregolarità"
+                (click)="goToRipartisciIrregolarita(row.idRevoca)">
+                <mat-icon>assignment_late</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsDisimpegni"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsDisimpegni;"
+            [ngClass]="{'bold-text': row.isRigaTotale, 'light-blue-background-color': row.isRigaTotale}"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isMaster" class="content">
+    <div class="flexEnd">
+      <button (click)="onNuovoDisimpegno()" mat-stroked-button class="button-style-3">NUOVO
+        DISIMPEGNO</button>
+    </div>
+  </div>
+</div>

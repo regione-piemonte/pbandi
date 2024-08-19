@@ -1,0 +1,291 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="content margin-top-0">
+    <div class="title">
+      <div class="backContainer">
+        <button (click)="goToAttivita()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna all'elenco delle attività</span>
+        </button>
+      </div>
+      <div class="spaceBetween">
+        <h2>Gestione fideiussioni</h2>
+        <div>
+          <button (click)="goToNuovaFideiussione()" mat-stroked-button class="button-style-3">AGGIUNGI
+            FIDEIUSSIONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p>{{messageSuccess}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p>{{messageError}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="display-flex justify-content-space-between">
+          <div>
+            <div class="cod-progetto">
+              <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+            </div>
+            <div class="cod-progetto">
+              <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+              <button class="button-style-1 paddingLeft20" mat-button
+                (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+                PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+            </div>
+          </div>
+          <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+            [descBrevePagina]="descBrevePagina"></pbcommon-help>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="header">
+          <h3 class="search">Criteri di ricerca
+            <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+              <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+              <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+            </button>
+          </h3>
+        </div>
+        <div *ngIf="criteriRicercaOpened">
+          <form (submit)="cerca()">
+            <mat-form-field style="width: 100%;">
+              <mat-label> Codice riferimento </mat-label>
+              <input type="text" matInput name="codiceTrasferimento" [(ngModel)]="codiceRiferimento"
+                [disabled]="isModifica">
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label> Data decorrenza </mat-label>
+              <input matInput [matDatepicker]="picker1" name="dataDecorrenza" (click)="picker1.open()"
+                [(ngModel)]="dataDecorrenza" [disabled]="isModifica">
+              <mat-datepicker-toggle matSuffix [for]="picker1" class="blueColor">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field style="width: 100%;">
+              <mat-label> Data scadenza </mat-label>
+              <input matInput [matDatepicker]="picker2" name="dataScadenza" (click)="picker2.open()"
+                [(ngModel)]="dataScadenza" [disabled]="isModifica">
+              <mat-datepicker-toggle matSuffix [for]="picker2" class="blueColor">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+
+            <div class="textAlignRight">
+              <button mat-raised-button class="button-style-2" type="submit" [disabled]="isModifica">
+                <!--<mat-icon>search</mat-icon>--> CERCA
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!------------------------------------------------------------------------------------------------------
+                                            ELENCO FIDEIUSSIONI
+  -------------------------------------------------------------------------------------------------------->
+  <div class="content" *ngIf="noElementsMessageVisible">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="noElements">{{noElementsMessage}}</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content" [ngClass]="{'displayNone': !dataSource || elencoFideiussioni?.length==0}">
+    <div class="header">
+      <h2> Fideiussioni trovate </h2>
+    </div>
+    <p *ngIf="elencoFideiussioni.length == 1" class="textSmallGrey"> Un risultato trovato.
+      <span *ngIf="tuttiRisultatiVisualizzati">, tutti i risultati visualizzati. </span>
+    </p>
+    <p *ngIf="elencoFideiussioni.length > 1" class="textSmallGrey"> {{elencoFideiussioni.length}} risultati trovati.
+      <span *ngIf="tuttiRisultatiVisualizzati"> tutti i risultati visualizzati. </span>
+    </p>
+
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div *ngIf="noElementsMessageVisible">{{noElementsMessage}}</div>
+        <table mat-table *ngIf="dataSource && elencoFideiussioni.length>0 && !noElementsMessageVisible"
+          [dataSource]="dataSource" matSort #sort="matSort" matSortActive="data" style="width: 100%;">
+          <ng-container matColumnDef="codice">
+            <th mat-header-cell *matHeaderCellDef> Codice </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.codRiferimentoFideiussione }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataDecorrenza">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Decorrenza
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.dtDecorrenza | date: 'dd/MM/yyyy'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="enteEmittente">
+            <th mat-header-cell *matHeaderCellDef> Ente Emittente </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.descEnteEmittente }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importo">
+            <th mat-header-cell *matHeaderCellDef> Importo Fideiussione
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.importoFideiussione | number: '1.2-2' : 'it'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataScadenza">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Scadenza
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.dtScadenza | date:'dd/MM/yyyy'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descrizione">
+            <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.noteFideiussione }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="azioni">
+            <th mat-header-cell *matHeaderCellDef style="width: 15%; padding-right: 0;">
+            </th>
+            <td mat-cell *matCellDef="let row" style="width: 15%; padding-right: 0;">
+              <button mat-icon-button class="redColor" [disabled]="isModifica" matTooltip="Elimina fideiussione"
+                (click)="eliminaFideiussione(row.idFideiussione)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button class="blueColor" matTooltip="Modifica Fideiussione" [disabled]="isModifica"
+                (click)="showModificaFideiussione(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="blueColor" matTooltip="Dettaglio Fideiussione"
+                (click)="goToDettaglioFideiussione(row.idFideiussione)">
+                <mat-icon>format_list_bulleted</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-----------------------------------------------------------------------------------------------------
+                                              MODIFICA FIDEIUSSIONE
+  ------------------------------------------------------------------------------------------------------>
+  <div class="content" [ngClass]="{'displayNone': !isModifica}">
+    <div class="header">
+      <h2> Modifica della fideiussione </h2>
+    </div>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div>
+          <form #ricercaForm="ngForm">
+            <mat-form-field class="width-49-perc margin-right-10" *ngIf="fideiussioneInModifica">
+              <mat-label> Codice riferimento </mat-label>
+              <input type="text" matInput name="codiceTrasferimento"
+                [(ngModel)]="fideiussioneInModifica.codRiferimentoFideiussione">
+            </mat-form-field>
+
+            <mat-form-field class="width-data" *ngIf="fideiussioneInModifica">
+              <mat-label> importo * </mat-label>
+              <input type="text" matInput name="importo" [(ngModel)]="fideiussioneInModifica.importoFideiussione"
+                disabled>
+            </mat-form-field>
+
+            <mat-form-field class="fullWidth" *ngIf="fideiussioneInModifica">
+              <mat-label> Descrizione </mat-label>
+              <input type="text" matInput name="descrizione" [(ngModel)]="fideiussioneInModifica.noteFideiussione">
+            </mat-form-field>
+
+            <mat-form-field class="width-49-perc margin-right-10" *ngIf="fideiussioneInModifica">
+              <mat-label> Ente emittente * </mat-label>
+              <input type="text" matInput name="enteEmittente" [(ngModel)]="fideiussioneInModifica.descEnteEmittente"
+                #ente="ngModel">
+              <mat-error *ngIf="ente?.errors?.error === 'required'">
+                Campo obbligatorio
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="width-datamargin-right-10" *ngIf="fideiussioneInModifica">
+              <mat-label> Data decorrenza * </mat-label>
+              <input matInput [matDatepicker]="picker1" name="dtDecorrenza" (click)="picker1.open()"
+                [(ngModel)]="fideiussioneInModifica.dtDecorrenza" #dtDec="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker1" class="blueColor">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="dtDec?.errors?.error === 'required'">
+                Campo obbligatorio
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="width-data" *ngIf="fideiussioneInModifica">
+              <mat-label> Data scadenza </mat-label>
+              <input matInput [matDatepicker]="picker2" name="dtScadenza" (click)="picker2.open()"
+                [(ngModel)]="fideiussioneInModifica.dtScadenza">
+              <mat-datepicker-toggle matSuffix [for]="picker2" class="blueColor">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="width-49-perc" *ngIf="tipoTrattamentoSelected">
+              <mat-label> Tipo trattamento *</mat-label>
+              <mat-select [(ngModel)]="tipoTrattamentoSelected.codice" name="tipoTrattamento"
+                (selectionChange)="onSelectTipoTrat($event.source.value)" #tipo="ngModel">
+                <mat-option *ngFor="let option of tipiTrattamento" [value]="option.codice">
+                  {{option.descrizione}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="tipo?.errors?.error === 'required'">
+                Campo obbligatorio
+              </mat-error>
+            </mat-form-field>
+
+            <div class="textAlignRight">
+              <button mat-raised-button class="button-style-2" (click)="modifica()"> SALVA
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <div class="textAlignRight">
+      <button mat-stroked-button class="button-style-3" (click)="goToNuovaFideiussione()">
+        AGGIUNGI FIDEIUSSIONE
+      </button>
+    </div>
+  </div>
+
+</div>

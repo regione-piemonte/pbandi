@@ -1,0 +1,60 @@
+.light-blue-background-color {
+    background-color: #178cd633;
+}
+
+td {
+    padding-right: 10px;
+}
+
+.padding-inner-table {
+    padding: 0 7px 0 0;
+}
+
+.padding-top-20 {
+    padding-top: 20px;
+}
+
+.padding-bottom-20 {
+    padding-bottom: 20px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.min-width-60px {
+    min-width: 60px;
+}
+
+.min-width-137px {
+    min-width: 137px !important;
+}
+
+.height-50 {
+    height: 50px;
+}
+
+.vertical-align-top {
+    vertical-align: top;
+}
+
+.vertical-align-middle {
+    vertical-align: middle;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+::ng-deep .form-field-table .mat-form-field-infix {
+    width: 130px !important;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}

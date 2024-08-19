@@ -1,0 +1,179 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+
+
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alle attività da svolgere</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div>
+        <h2>Comunicazione di rinuncia</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="display-flex justify-content-space-between">
+          <div>
+            <div class="cod-progetto">
+              <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+            </div>
+            <div class="cod-progetto">
+              <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+              <button class="button-style-1 paddingLeft20" mat-button (click)="datiProgettoEAttivitaPregresse()">DATI
+                PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+              <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                ECONOMICO</button>
+            </div>
+          </div>
+          <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+            [descBrevePagina]="descBrevePagina"></pbcommon-help>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p [innerHTML]="messageWarning"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <div class="content" *ngIf="!isConcluded">
+    <div class="avviso-content">
+      <mat-card class="mat-elevation-z0">
+        <mat-card-content>
+          <div class="avviso">
+
+            Per l'invio elettronico con <span class="bold-text"> firma digitale</span>,
+            eseguire il download della comunicazione di rinuncia senza variare il nome del file,
+            firmare il file digitalmente (secondo la normativa italiana - formato CAdES p7m) e procedere con l'invio.
+            <br>
+            Per l’invio elettronico con <span class="bold-text"> firma autografa</span>,
+            eseguire il download della comunicazione di rinuncia,
+            stampare e firmare manualmente il documento. Successivamente, effettuare l’upload della scansione del file
+            sottoscritto unitamente
+            alla copia del documento d'identità del sottoscrittore, assegnando al pdf il nome originale generato dal
+            sistema.
+            <br>
+            <br>
+            È sempre possibile inviare il documento firmato anche in un secondo momento dalla sezione <span
+              class="bold-text">Documenti di progetto </span>.
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+
+
+  <!-- Invio documenti -->
+  <div class="content" *ngIf="!isConcluded">
+
+
+
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <mat-tab-group mat-align-tabs="start" #tabs (selectedTabChange)="onTabChange($event)">
+
+          <!-- prima tab -->
+          <mat-tab label="INVIO CON FIRMA DIGITALE" *ngIf="tipoInvioDS!=='C'">
+            <div class="marginTop15">
+              Scarica il documento da firmare
+              <br>
+              <a class="blue-color boldText cursor-pointer" (click)="download()"
+                matTooltip="Download file">{{nomePdf}}</a> del
+              {{todayDate | date: 'dd/MM/yyyy'}}
+              <br>
+              <br>
+              <span>Carica il documento firmato digitalmente e procedi all'invio</span>
+              <div class="textAlignCenter">
+                <mat-form-field class="paddingRight10" style="width: 50%;">
+                  <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+                </mat-form-field>
+                <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+                <button mat-button class="button-style-1 orange-color" (click)="file=null"
+                  [disabled]="!file">ANNULLA</button>
+                <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                  (change)="handleFileInput($event.target.files[0])" />
+                <!--PULSANTE CARICA ?-->
+                <button mat-raised-button class="button-style-2" (click)="inviaComunicazioneRinunciaDigitale()"
+                  [disabled]="!file">INVIA</button>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- seconda tab regola attiva-->
+          <mat-tab *ngIf="isBR50" label="INVIO FIRMA CON AUTOGRAFA">
+
+            <!-- Regola BR50 attiva -->
+            <div class="marginTop15">
+              Scarica il documento da firmare
+              <br>
+              <a class="blue-color boldText cursor-pointer" (click)="download()"
+                matTooltip="Download file">{{nomePdf}}</a> del
+              {{todayDate | date: 'dd/MM/yyyy'}}
+              <br>
+              <br>
+              <span>Carica il documento firmato digitalmente e procedi all'invio</span>
+              <div class="textAlignCenter">
+                <mat-form-field class="paddingRight10" style="width: 50%;">
+                  <input type="text" matInput placeholder="Nome file" disabled [ngModel]="file?.name" />
+                </mat-form-field>
+                <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+                <button mat-button class="button-style-1 orange-color" (click)="file=null"
+                  [disabled]="!file">ANNULLA</button>
+                <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                  (change)="handleFileInput($event.target.files[0])" />
+                <!--PULSANTE CARICA ?-->
+                <button mat-raised-button class="button-style-2" (click)="inviaComunicazioneRinunciaAutografa()"
+                  [disabled]="!file">INVIA</button>
+              </div>
+            </div>
+
+          </mat-tab>
+
+          <!-- seconda tab regola non attiva-->
+          <mat-tab *ngIf="!isBR50" label="INVIO EXTRA-PROCEDURA">
+            <div class="marginTop15">
+              Scarica il documento da firmare
+              <br>
+              <a class="blue-color boldText cursor-pointer" (click)="download()"
+                matTooltip="Download file">{{nomePdf}}</a> del
+              {{todayDate | date: 'dd/MM/yyyy'}}
+              <br>
+              <br>
+              <div class="boldText">Il documento, scaricato e firmato, dovrà essere inviato extra
+                procedura all'ente competente.</div>
+              <button mat-raised-button class="button-style-2 marginTop15" (click)="concludi()">CONCLUDI</button>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+</div>

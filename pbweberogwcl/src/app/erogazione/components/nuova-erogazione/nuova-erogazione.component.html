@@ -1,0 +1,293 @@
+<mat-spinner-pbandi class="page centerPage" [ngClass]="{'visibilityHidden': !isLoading()}"></mat-spinner-pbandi>
+<div class="page mx-24" [ngClass]="{'visibilityHidden': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button mat-button (click)="onTorna()">
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna all'erogazione</span>
+      </button>
+    </div>
+    <div>
+      <h2>{{ title }}</h2>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <!--<mat-icon>done</mat-icon>-->
+        <p [innerHTML]="messageSuccess | safeHTML"></p><!-- {{messageSuccess}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <!--<mat-icon>warning</mat-icon>-->
+        <p [innerHTML]="messageWarning | safeHTML"></p><!-- {{messageWarning}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <!--<mat-icon>clear</mat-icon>-->
+        <p [innerHTML]="messageError | safeHTML"></p><!-- {{messageError}} -->
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18" [ngClass]="{'displayNone': hideForm }">
+      <mat-card-content>
+        <div class="header">
+          <!--<mat-icon>search</mat-icon>-->
+          <h2>Erogazione della quota di {{descModalitaAgevolazione}}</h2>
+          <!-- ErogazioneDTO -->
+          <!---- >
+          <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+              <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+              <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+          </button>
+          <!---->
+        </div>
+        <!-- Messaggio 404: messages: Per il progetto corrente, l’attività di erogazione non è abilitata. -->
+
+        <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isErogazioneMessageWarningVisible">
+          <mat-card-content class="messageWarningContent">
+            <!--<mat-icon>warning</mat-icon>-->
+            <p [innerHTML]="erogazioneMessageWarning | safeHTML"></p><!-- {{messageError}} -->
+          </mat-card-content>
+        </mat-card>
+
+        <div [ngClass]="{'displayNone': !(!disabilitaNuovaErogazione && criteriRicercaOpened)}">
+          <!-- *ngIf="erogazione?.isRegolaAttiva && criteriRicercaOpened" -->
+          <form #ricercaForm="ngForm" class="mt-12" (submit)="ricerca()">
+            <!-- [formGroup]="ricercaForm" -->
+            <mat-form-field class="display-flex auto-width w-50">
+              <mat-label>Selezionare una causale erogazione</mat-label>
+              <!-- getCausaliErogazioni -->
+              <!-- !NO! - erogazione.erogazioni.idErogazione - descModalitaAgevolazione - descrizioneCausaleErogazione? -->
+              <mat-select [(ngModel)]="causaleSelected" name="causale" class="w-100"
+                matTooltip="{{ (causaleSelected)?causaleSelected.descrizione:'' }}" [disabled]="action == 'dettaglio'"
+                [compareWith]="compareWithCodiceDescrizione" (selectionChange)="onSelectCausale()" required>
+                <mat-option *ngFor="let causale of causali" [value]="extractCodiceDescrizione(causale)">
+                  {{ causale.descrizione }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!--
+            <br>1. {{ causaleSelected | json }}
+            <br>2. {{ causali | json }}
+            -->
+            <!---- >
+            <mat-grid-list cols="2" rowHeight="35"><!-- 35 -- >
+              <mat-grid-tile [colspan]="1" [rowspan]="1" class="justify-start">
+                <div><!-- class="alignItemsCenter w-100" -- >
+                  <p class="margin0 font-size-16">Erogazione da iter finanziario (%) <span class="bold-text font-size-16">{{erogazione?.erogazione?.percentualeErogazioneIterFinanziario}}</span></p>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1" class="justify-start">
+                <div>
+                  <p class="margin0 font-size-16">Importo da erogare da iter finanziario (€) <span class="bold-text font-size-16">{{erogazione?.erogazione?.importoErogazioneFinanziario}}</span></p>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1" class="justify-start">
+                <mat-form-field><!-- class="display-flex auto-width" -- >
+                  <input #percentualeEE type="text" [(inputNumber)]="inputNumberType" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" matInput placeholder="Percentuale di erogazione effettiva (%)" name="percentualeErogazioneEffettiva" [(ngModel)]="fieldPercentualeErogazioneEffettiva" (ngModelChange)="onPercentualeErogazioneEffettivaChange($event)" autocomplete="off" required><!-- (keyup)="onPercentualeErogazioneEffettivaChange($event)" (blur)="onPercentualeErogazioneEffettivaBlur()" -- >
+                    {{erogazione?.erogazione?.percentualeErogazioneEffettiva}}
+                  <mat-error *ngIf="percentualeEE?.errors?.pattern">
+                    Valore non valido
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="1" class="justify-start">
+                <mat-form-field>
+                  <input #importoEE type="text" [(inputNumber)]="inputNumberType" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" matInput placeholder="Importo di erogazione effettiva (€)" name="importoErogazioneEffettivo" [(ngModel)]="fieldImportoErogazioneEffettivo" (ngModelChange)="onImportoErogazioneEffettivoChange($event)" autocomplete="off" required><!-- (keyup)="onImportoErogazioneEffettivoChange($event)" (blur)="onImportoErogazioneEffettivoBlur()"-- >
+                    {{erogazione?.erogazione?.importoErogazioneEffettivo}}
+                  <mat-error *ngIf="importoEE?.errors?.pattern">
+                    Valore non valido
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </mat-grid-list>
+            <!---->
+            <div class="row no-gutters justify-content-space-around">
+              <div class="col-auto">
+                <div>
+                  <!-- class="alignItemsCenter w-100" -->
+                  <p class="margin0 font-size-16">Erogazione da iter finanziario (%) <span
+                      class="display-flex bold-text font-size-16">{{percentualeErogazioneIterFinanziario}}</span></p>
+                  <!-- {{erogazione?.erogazione?.percentualeErogazioneIterFinanziario}} -->
+                </div>
+              </div>
+              <div class="col-auto">
+                <div>
+                  <p class="margin0 font-size-16">Importo da erogare da iter finanziario (€) <span
+                      class="display-flex bold-text font-size-16">{{importoErogazioneFinanziario}}</span></p>
+                  <!-- {{erogazione?.erogazione?.importoErogazioneFinanziario}} -->
+                </div>
+              </div>
+            </div>
+            <div class="row no-gutters justify-content-space-around">
+              <div class="col-auto">
+                <mat-form-field class="display-flex justify-content-center widthData246">
+                  <!-- class="display-flex auto-width" -->
+                  <input #percentualeEE type="text" [(inputNumber)]="inputNumberType"
+                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" matInput
+                    placeholder="Percentuale di erogazione effettiva (%)" name="percentualeErogazioneEffettiva"
+                    [(ngModel)]="fieldPercentualeErogazioneEffettiva"
+                    (change)="onPercentualeErogazioneEffettivaChange($event)" autocomplete="off"
+                    [disabled]="action == 'dettaglio'" required>
+                  <!-- (keyup)="onPercentualeErogazioneEffettivaChange($event)" (blur)="onPercentualeErogazioneEffettivaBlur()" -->
+                  {{erogazione?.erogazione?.percentualeErogazioneEffettiva}}
+                  <mat-error *ngIf="percentualeEE?.errors?.pattern">
+                    Valore non valido
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <mat-form-field class="display-flex justify-content-center widthData246">
+                  <input #importoEE type="text" [(inputNumber)]="inputNumberType"
+                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" matInput placeholder="Importo di erogazione effettiva (€)"
+                    name="importoErogazioneEffettivo" [(ngModel)]="fieldImportoErogazioneEffettivo"
+                    (change)="onImportoErogazioneEffettivoChange($event)" autocomplete="off"
+                    [disabled]="action == 'dettaglio'" required>
+                  <!-- (keyup)="onImportoErogazioneEffettivoChange($event)" (blur)="onImportoErogazioneEffettivoBlur()"-->
+                  {{erogazione?.erogazione?.importoErogazioneEffettivo}}
+                  <mat-error *ngIf="importoEE?.errors?.pattern">
+                    Valore non valido
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <!---- >
+            <br>{{ fieldPercentualeErogazioneEffettiva | json }}
+            <br>{{ percentualeEE?.value | json }}
+            <br>
+            <br>{{ fieldImportoErogazioneEffettivo | json }}
+            <br>{{ importoEE?.value | json }}
+            <br>{{ inputNumberType | json }}
+            <!---->
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2" [ngClass]="{'displayNone': disabilitaNuovaErogazione || hideForm }">
+      <mat-card-content>
+        <div class="header">
+          <!--<mat-icon>search</mat-icon>-->
+          <h2>Estremi dell'atto di liquidazione</h2>
+          <!-- ErogazioneDTO -->
+          <!---- >
+          <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+              <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+              <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+          </button>
+          <!---->
+        </div>
+        <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+          <form #ricercaForm2="ngForm" (submit)="ricerca()">
+            <mat-form-field class="row no-gutters display-flex w-50">
+              <mat-label>Selezionare una modalità di agevolazione</mat-label>
+              <!-- getAllModalitaAgevolazioneContoEconomico -->
+              <mat-select [(ngModel)]="modalitaAgevolazioneContoEconomicoSelected"
+                name="modalitaAgevolazioneContoEconomico" class="w-100"
+                matTooltip="{{ (modalitaAgevolazioneContoEconomicoSelected)?modalitaAgevolazioneContoEconomicoSelected.descrizione:'' }}"
+                [disabled]="action == 'dettaglio'" [compareWith]="compareWithCodiceDescrizione"
+                (selectionChange)="onSelectModalitaAgevolazioneContoEconomico()" required>
+                <mat-option *ngFor="let smodalitaAgevolazioneContoEconomico of modalitaAgevolazioneContoEconomico"
+                  [value]="smodalitaAgevolazioneContoEconomico">
+                  {{ smodalitaAgevolazioneContoEconomico.descrizione }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!--
+            <br>1. {{ modalitaAgevolazioneContoEconomicoSelected | json }}
+            <br>2. {{ modalitaAgevolazioneContoEconomico | json }}
+            -->
+            <mat-form-field class="row no-gutters display-flex w-50">
+              <mat-label>Selezionare una modalità erogazione</mat-label>
+              <!-- getAllModalitaErogazione -->
+              <mat-select [(ngModel)]="modalitaErogazioneSelected" name="modalitaErogazione" class="w-100"
+                matTooltip="{{ (modalitaErogazioneSelected)?modalitaErogazioneSelected.descrizione:'' }}"
+                [disabled]="action == 'dettaglio'" [compareWith]="compareWithCodiceDescrizione"
+                (selectionChange)="onSelectModalitaErogazione()" required>
+                <mat-option *ngFor="let smodalitaErogazione of modalitaErogazione" [value]="smodalitaErogazione">
+                  <span>{{ smodalitaErogazione.descrizione }}</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!---- >
+            <br>1. {{ modalitaErogazioneSelected | json }}
+            <br>2. {{ modalitaErogazione | json }}
+            <br>{{ modalitaAgevolazioneContoEconomicoSelected | json }}
+            <br>{{ modalitaAgevolazioneContoEconomico | json }}
+            <br>
+            <!---->
+
+            <div class="row no-gutters">
+              <div class="col-auto marginRight20">
+                <mat-form-field class="widthData widthData246">
+                  <mat-label>Data contabile dell'erogazione</mat-label>
+                  <input matInput [matDatepicker]="pickerDataDal" name="dataDal" (click)="pickerDataDal.open()"
+                    [(ngModel)]="dataContabile" [disabled]="action == 'dettaglio'" required>
+                  <!-- erogazione?.erogazione?.dataContabile -->
+                  <!-- [formControl]="dataDal" -->
+                  <mat-datepicker-toggle matSuffix [for]="pickerDataDal" class="blueColor">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerDataDal></mat-datepicker>
+                </mat-form-field>
+                <!--
+                <br>1. {{ dataContabile | json }}
+                -->
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field class="row no-gutters w-100">
+                  <input class="w-100" type="text" matInput placeholder="Numero riferimento erogazione"
+                    name="numeroRiferimento" [(ngModel)]="numeroRiferimento" [disabled]="action == 'dettaglio'"
+                    required><!-- erogazione?.erogazione?.numeroRiferimento -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            <mat-form-field class="row no-gutters display-flex w-50">
+              <mat-label>Selezionare una direzione</mat-label>
+              <!-- getAllCodiciDirezione -->
+              <mat-select [(ngModel)]="codiciDirezioneSelected" name="codiciDirezione" class="w-100"
+                matTooltip="{{ (codiciDirezioneSelected)?codiciDirezioneSelected.descrizione:'' }}"
+                [disabled]="action == 'dettaglio'" [compareWith]="compareWithCodiceDescrizione"
+                (selectionChange)="onSelectCodiciDirezione()" required>
+                <mat-option *ngFor="let codiceDirezione of codiciDirezione"
+                  matTooltip="{{ codiceDirezione.descrizione }}" [value]="codiceDirezione">
+                  {{ codiceDirezione.descrizione }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!---- >
+            <br>1. {{ codiciDirezioneSelected | json }}
+            <br>2. {{ codiciDirezione | json }}
+            <!---->
+
+            <mat-form-field class="w-100">
+              <mat-label>Note</mat-label>
+              <textarea matInput [(ngModel)]="noteErogazione" name="noteErogazione"
+                [disabled]="action == 'dettaglio'"></textarea>
+              <!-- [disabled]="!erogazione?.isRegolaAttiva || disabled" -->
+              <!-- erogazione?.erogazione?.noteErogazione -->
+            </mat-form-field>
+
+            <div class="row no-gutters" *ngIf="!(action == 'dettaglio')">
+              <div matTooltip="Inserire almeno un campo di ricerca"
+                [matTooltipDisabled]="attivitaSelected || beneficiarioSelected || progettoSelected">
+                <button class="button-style-2 margin0" mat-raised-button type="submit"
+                  [disabled]="disabledFormDataSubmit()">
+                  SALVA
+                </button>
+              </div>
+            </div>
+            <!---- >
+            <br>isRegolaAttiva: {{ isRegolaAttiva | json }}
+            <!---->
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

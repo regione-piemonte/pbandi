@@ -1,0 +1,9 @@
+.bold-text {
+    font-weight: bold !important;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

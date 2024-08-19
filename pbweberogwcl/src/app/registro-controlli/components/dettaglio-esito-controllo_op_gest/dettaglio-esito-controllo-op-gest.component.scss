@@ -1,0 +1,13 @@
+.width-49-perc {
+    width: 49%;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

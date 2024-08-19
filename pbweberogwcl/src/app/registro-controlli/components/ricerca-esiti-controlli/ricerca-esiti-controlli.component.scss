@@ -1,0 +1,86 @@
+table {
+    width: 100%;
+}
+
+.marginRight {
+    margin-right: 15px;
+}
+
+.margin0 {
+    margin: 0px !important;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.marginRight25 {
+    margin-right: 25px;
+}
+
+.marginLeft25 {
+    margin-left: 25px;
+}
+
+.marginTop30 {
+    margin-top: 30px;
+}
+
+.width-data {
+    width: 170px !important;
+}
+
+.width-50-perc {
+    width: 50%;
+}
+
+.viewport {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.viewport-full {
+    height: 200px;
+}
+
+.viewport-1 {
+    height: 40px;
+}
+
+.viewport-2 {
+    height: 80px;
+}
+
+.viewport-3 {
+    height: 120px;
+}
+
+.viewport-4 {
+    height: 160px;
+}
+
+.viewport-item {
+    height: 40px;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100% !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}
+
+.colorBlue {
+    color: #016cb4;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}

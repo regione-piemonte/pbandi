@@ -1,0 +1,655 @@
+<form (submit)="salvaDatiGenerali()" class="margin-top-20 dati-generali"
+	[ngClass]="{ 'pl-20 pr-20': (action == 'modifica' && !isModificaLimited) }">
+	<div class="row no-gutters mt-12"
+		[ngClass]="{ 'w-96 pl-20 pr-20': action != 'dettaglio' && !(action == 'modifica' && !isModificaLimited) }">
+		<div *ngIf="action == 'dettaglio'" class="col-auto w-25">
+			<p class="margin0 pl-10 pr-10 text-right">CUP</p>
+		</div>
+		<div *ngIf="action == 'dettaglio'" class="col-auto w-74">{{datiProgetto?.cup}}</div>
+		<div *ngIf="action == 'modifica'" class="col-auto w-25">
+			<mat-form-field class="row no-gutters w-96" matTooltip="{{ fieldCup }}">
+				<input class="w-100" type="text" matInput placeholder="CUP" name="fieldCup" [(ngModel)]="fieldCup"
+					[disabled]="isDisabledCup && isModificaLimited">
+			</mat-form-field>
+		</div>
+		<div *ngIf="action == 'modifica' && isModificaLimited" class="col-auto w-25">
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': !isDefaultCup}"
+				(click)="onModificaCup()">MODIFICA</button>
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': isDefaultCup}"
+				(click)="onSalvaCup()">SALVA</button>
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': isDefaultCup}"
+				(click)="onAnnullaCup()">ANNULLA</button>
+		</div>
+	</div>
+	<div class="row no-gutters"
+		[ngClass]="{ 'w-96 pl-20 pr-20': action != 'dettaglio' && !(action == 'modifica' && !isModificaLimited) }">
+		<div *ngIf="action == 'dettaglio'" class="col-auto w-25">
+			<p class="margin0 pl-10 pr-10 text-right">Titolo progetto</p>
+		</div>
+		<div *ngIf="action == 'dettaglio'" class="col-auto w-74">{{datiProgetto?.titoloProgetto}}</div>
+		<div *ngIf="action == 'modifica'" class="col-auto w-75">
+			<mat-form-field class="row no-gutters w-96" matTooltip="{{ fieldTitoloProgetto }}">
+				<input class="w-100" type="text" matInput placeholder="Titolo progetto" name="fieldTitoloProgetto"
+					[(ngModel)]="fieldTitoloProgetto" [disabled]="isDisabledTitoloProgetto && isModificaLimited" required>
+			</mat-form-field>
+		</div>
+		<div *ngIf="action == 'modifica' && isModificaLimited" class="col-auto w-25">
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': !isDefaultTitoloProgetto}"
+				(click)="onModificaTitoloProgetto()">MODIFICA</button>
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': isDefaultTitoloProgetto}"
+				(click)="onSalvaTitoloProgetto()">SALVA</button>
+			<button mat-button class="button-style-1" type="button" [ngClass]="{'displayNone': isDefaultTitoloProgetto}"
+				(click)="onAnnullaTitoloProgetto()">ANNULLA</button>
+		</div>
+	</div>
+	<div class="row no-gutters">
+		<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+			<p class="margin0 pl-10 pr-10 text-right" [matTooltip]="test">Numero domanda</p>
+		</div>
+		<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+			{{datiProgetto?.numeroDomanda}}</div>
+		<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-50">
+			<mat-form-field class="row no-gutters w-96" matTooltip="{{ fieldNumeroDomanda }}">
+				<input class="w-100" type="text" matInput placeholder="Numero domanda" name="fieldNumeroDomanda"
+					[(ngModel)]="fieldNumeroDomanda" [disabled]="isDisabledNumeroDomanda && !isModificaLimited">
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row no-gutters">
+		<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+			<p class="margin0 pl-10 pr-10 text-right">Codice progetto</p>
+		</div>
+		<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+			{{datiProgetto?.codiceVisualizzato}}</div>
+		<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-50">
+			<mat-form-field class="row no-gutters w-96" matTooltip="{{ fieldCodiceVisualizzato }}">
+				<input class="w-100" type="text" matInput placeholder="Codice visualizzato" name="fieldCodiceVisualizzato"
+					[(ngModel)]="fieldCodiceVisualizzato" [disabled]="isDisabledCodiceVisualizzato && !isModificaLimited">
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row no-gutters">
+		<div *ngIf="!isBR58" class="w-35 align-items-center display-flex justify-content-flex-end">
+			<div *ngIf="action == 'dettaglio' || (action == 'modifica' && isModificaLimited)"
+				class="display-flex justify-content-flex-end">
+				<p class="margin0 pl-10 pr-10">Data comitato</p>
+			</div>
+			<div *ngIf="false && action == 'dettaglio'" class="col-auto w-25">{{datiProgetto?.dettaglio?.dtComitato}}
+			</div>
+			<div *ngIf="action == 'dettaglio' || action == 'modifica'" class="col-auto"
+				[ngClass]="{ 'w-25': action == 'modifica' && !isModificaLimited }">
+				<mat-form-field class="widthData widthData120">
+					<input matInput [matDatepicker]="pickerDataDal" name="dataDal" (click)="pickerDataDal.open()"
+						[(ngModel)]="dtComitato" [disabled]="action == 'dettaglio' || is1420 || (!is1420 && isModificaLimited)"
+						[placeholder]="action == 'modifica' && !isModificaLimited ? 'Data comitato' : ''">
+					<mat-datepicker-toggle matSuffix [for]="pickerDataDal" class="blueColor">
+					</mat-datepicker-toggle>
+					<mat-datepicker #pickerDataDal></mat-datepicker>
+				</mat-form-field>
+			</div>
+		</div>
+		<div *ngIf="action == 'dettaglio' || (action == 'modifica' && isModificaLimited)"
+			class="col-auto w-25 align-items-center display-flex justify-content-flex-end">
+			<p class="margin0 pl-10 pr-10 ">Data concessione </p>
+		</div>
+		<div *ngIf="false && action == 'dettaglio'" class="col-auto w-25">
+			{{datiProgetto?.dettaglio?.dtConcessione}}
+		</div>
+		<div *ngIf="action == 'dettaglio' || action == 'modifica'" class="col-auto"
+			[ngClass]="{ 'w-25': action == 'modifica' && !isModificaLimited }">
+			<mat-form-field class="widthData widthData120">
+				<input matInput [matDatepicker]="pickerDataAl" name="dataAl" (click)="pickerDataAl.open()"
+					[(ngModel)]="dtConcessione" disabled
+					[placeholder]="action == 'modifica' && !isModificaLimited ? 'Data concessione' : ''">
+				<mat-datepicker-toggle matSuffix [for]="pickerDataAl" class="blueColor">
+				</mat-datepicker-toggle>
+				<mat-datepicker #pickerDataAl></mat-datepicker>
+			</mat-form-field>
+		</div>
+	</div>
+	<div [ngClass]="{'displayNone':isLineaBANDIREGP}">
+		<div [ngClass]="{'displayNone':isLineaPNRR}">
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Settore attivita</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descSettore}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un settore di attività</mat-label>
+						<mat-select [(ngModel)]="descSettoreSelected" name="descSettoreSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescSettore"
+							(selectionChange)="onSelectFieldDescSettoreSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let settoreAttivita of settoreAttivitaLista" [value]="settoreAttivita">
+								<span>{{ settoreAttivita.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Attivita Ateco</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descAteco}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un'attività Ateco</mat-label>
+						<mat-select [(ngModel)]="descAtecoSelected" name="descAtecoSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescAteco">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let attivitaAteco of attivitaAtecoLista" [value]="attivitaAteco">
+								<span>{{ attivitaAteco.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Tipo operazione</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descTipoOperazione}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un tipo di operazione</mat-label>
+						<mat-select [(ngModel)]="descTipoOperazioneSelected" name="descTipoOperazioneSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTipoOperazione" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let tipoOperazione of tipoOperazioneLista" [value]="tipoOperazione">
+								<span>{{ tipoOperazione.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="true || is1420" class="row no-gutters">
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Obiettivo tematico</p>
+				</div>
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descObiettivoTem}}</div>
+				<div *ngIf="is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un obiettivo tematico</mat-label>
+						<mat-select [(ngModel)]="descObiettivoTemSelected" name="descObiettivoTemSelected"
+							[compareWith]="compareWithCodiceDescrizione" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let obiettivoTematico of obiettivoTematicoLista" [value]="obiettivoTematico">
+								<span>{{ obiettivoTematico.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="true || is1420" class="row no-gutters">
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Classificazione RA</p>
+				</div>
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descClassificazioneRa}}</div>
+				<div *ngIf="is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una classificazione RA</mat-label>
+						<mat-select [(ngModel)]="descClassificazioneRaSelected" name="descClassificazioneRaSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescClassificazioneRa" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let classificazioneRA of classificazioneRALista" [value]="classificazioneRA">
+								<span>{{ classificazioneRA.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="action == 'dettaglio' || !is1420" class="row no-gutters">
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Priorità Qsn</p>
+				</div>
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descPrioritaQsn}}</div>
+				<div *ngIf="!is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una priorità Qsn</mat-label>
+						<mat-select [(ngModel)]="descPrioritaQsnSelected" name="descPrioritaQsnSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescPrioritaQsn"
+							(selectionChange)="onSelectDescPrioritaQsnSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let prioritaQsn of prioritaQsnLista" [value]="prioritaQsn">
+								<span>{{ prioritaQsn.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="action == 'dettaglio' || !is1420" class="row no-gutters">
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Obiettivo generale Qsn</p>
+				</div>
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descObiettivoGeneraleQsn}}</div>
+				<div *ngIf="!is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un obiettivo generale Qsn</mat-label>
+						<mat-select [(ngModel)]="descObiettivoGeneraleQsnSelected" name="descObiettivoGeneraleQsnSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescObiettivoGeneraleQsn"
+							(selectionChange)="onSelectDescObiettivoGeneraleQsnSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let obiettivoGeneraleQsn of obiettivoGeneraleQsnLista" [value]="obiettivoGeneraleQsn">
+								<span>{{ obiettivoGeneraleQsn.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="action == 'dettaglio' || !is1420" class="row no-gutters">
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Obiettivo specifico Qsn</p>
+				</div>
+				<div *ngIf="!is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descObiettivoSpecificoQsn}}</div>
+				<div *ngIf="!is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un obiettivo specifico Qsn</mat-label>
+						<mat-select [(ngModel)]="descObiettivoSpecificoQsnSelected" name="descObiettivoSpecificoQsnSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescObiettivoSpecificoQsn">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let obiettivoSpecificoQsn of obiettivoSpecificoQsnLista"
+								[value]="obiettivoSpecificoQsn">
+								<span>{{ obiettivoSpecificoQsn.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Strumento / Programma attuativo</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descStrumentoAttuativo}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare uno strumento / programma attuativo</mat-label>
+						<mat-select [(ngModel)]="descStrumentoAttuativoSelected" name="descStrumentoAttuativoSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescStrumentoAttuativo" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let strumentoAttuativo of strumentoAttuativoLista" [value]="strumentoAttuativo">
+								<span>{{ strumentoAttuativo.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Settore Cpt</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descSettoreCpt}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un settore Cpt</mat-label>
+						<mat-select [(ngModel)]="descSettoreCptSelected" name="descSettoreCptSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescSettoreCpt" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let settoreCpt of settoreCptLista" [value]="settoreCpt">
+								<span>{{ settoreCpt.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Tema prioritario</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descTemaPrioritario}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un tema prioritario</mat-label>
+						<mat-select [(ngModel)]="descTemaPrioritarioSelected" name="descTemaPrioritarioSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTemaPrioritario" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let temaPrioritario of temaPrioritarioLista" [value]="temaPrioritario">
+								<span>{{ temaPrioritario.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Indicatore risultato programma</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descIndRisultatoProgramma}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un indicatore risultato programma</mat-label>
+						<mat-select [(ngModel)]="descIndRisultatoProgrammaSelected" name="descIndRisultatoProgrammaSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescIndRisultatoProgramma" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let indicatoreRisultatoProgramma of indicatoreRisultatoProgrammaLista"
+								[value]="indicatoreRisultatoProgramma">
+								<span>{{ indicatoreRisultatoProgramma.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Indicatore Qsn</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descIndicatoreQsn}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un indicatore Qsn</mat-label>
+						<mat-select [(ngModel)]="descIndicatoreQsnSelected" name="descIndicatoreQsnSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescIndicatoreQsn" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let indicatoreQsn of indicatoreQsnLista" [value]="indicatoreQsn">
+								<span>{{ indicatoreQsn.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="row no-gutters">
+			<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+				<p class="margin0 pl-10 pr-10 text-right">Tipo aiuto</p>
+			</div>
+			<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+				{{datiProgetto?.dettaglio?.descTipoAiuto}}</div>
+			<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+				<mat-form-field class="w-96">
+					<mat-label>Selezionare un tipo aiuto</mat-label>
+					<mat-select [(ngModel)]="descTipoAiutoSelected" name="descTipoAiutoSelected"
+						[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTipoAiuto" required>
+						<mat-option></mat-option>
+						<mat-option *ngFor="let tipoAiuto of tipoAiutoLista" [value]="tipoAiuto">
+							<span>{{ tipoAiuto.descrizione }}</span>
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+		<div [ngClass]="{'displayNone':isLineaPNRR}">
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Tipo strumento di programmazione</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descTipoStrumento}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un tipo strumento di programmazione</mat-label>
+						<mat-select [(ngModel)]="descTipoStrumentoSelected" name="descTipoStrumentoSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTipoStrumento" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let strumentoProgrammazione of strumentoProgrammazioneLista"
+								[value]="strumentoProgrammazione">
+								<span>{{ strumentoProgrammazione.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Dimensione territoriale</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descDimensioneTerritoriale}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una dimensione territoriale</mat-label>
+						<mat-select [(ngModel)]="descDimensioneTerritorialeSelected" name="descDimensioneTerritorialeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescDimensioneTerritoriale" required>
+							<mat-option></mat-option>
+							<mat-option *ngFor="let dimensioneTerritoriale of dimensioneTerritorialeLista"
+								[value]="dimensioneTerritoriale">
+								<span>{{ dimensioneTerritoriale.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Progetto complesso</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descProgettoComplesso}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un progetto complesso</mat-label>
+						<mat-select [(ngModel)]="descProgettoComplessoSelected" name="descProgettoComplessoSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescProgettoComplesso">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let progettoComplesso of progettoComplessoLista" [value]="progettoComplesso">
+								<span>{{ progettoComplesso.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="is1420" class="row no-gutters">
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Grande progetto</p>
+				</div>
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descGrandeProgetto}}</div>
+				<div *ngIf="is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un grande progetto</mat-label>
+						<mat-select [(ngModel)]="descGrandeProgettoSelected" name="descGrandeProgettoSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescGrandeProgetto"
+							(selectionChange)="onSelectDescGrandeProgettoSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let grandeProgetto of grandeProgettoLista" [value]="grandeProgetto">
+								<span>{{ grandeProgetto.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Settore Cipe</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descSettoreCipe}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un settore Cipe</mat-label>
+						<mat-select [(ngModel)]="descSettoreCipeSelected" name="descSettoreCipeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescSettoreCipe"
+							(selectionChange)="onSelectDescSettoreCipeSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let settoreCipe of settoreCipeLista" [value]="settoreCipe">
+								<span>{{ settoreCipe.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Sotto-settore Cipe</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descSottoSettoreCipe}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un sotto-settore Cipe</mat-label>
+						<mat-select [(ngModel)]="descSottoSettoreCipeSelected" name="descSottoSettoreCipeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescSottoSettoreCipe"
+							(selectionChange)="onSelectDescSottoSettoreCipeSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let sottoSettoreCipe of sottoSettoreCipeLista" [value]="sottoSettoreCipe">
+								<span>{{ sottoSettoreCipe.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Categoria Cipe</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descCategoriaCipe}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una categoria Cipe</mat-label>
+						<mat-select [(ngModel)]="descCategoriaCipeSelected" name="descCategoriaCipeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescCategoriaCipe">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let categoriaCipe of categoriaCipeLista" [value]="categoriaCipe">
+								<span>{{ categoriaCipe.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Natura Cipe</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descNaturaCipe}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una natura Cipe</mat-label>
+						<mat-select [(ngModel)]="descNaturaCipeSelected" name="descNaturaCipeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescNaturaCipe"
+							(selectionChange)="onSelectDescNaturaCipeSelected()">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let naturaCipe of naturaCipeLista" [value]="naturaCipe">
+								<span>{{ naturaCipe.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters">
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Tipologia Cipe</p>
+				</div>
+				<div *ngIf="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" class="col-auto w-74">
+					{{datiProgetto?.dettaglio?.descTipologiaCipe}}</div>
+				<div *ngIf="action == 'modifica' && !isModificaLimited" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare una tipologia Cipe</mat-label>
+						<mat-select [(ngModel)]="descTipologiaCipeSelected" name="descTipologiaCipeSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTipologiaCipe">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let tipologiaCipe of tipologiaCipeLista" [value]="tipologiaCipe">
+								<span>{{ tipologiaCipe.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="is1420" class="row no-gutters">
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Tipo Procedura Originaria</p>
+				</div>
+				<div *ngIf="is1420 && (action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited))"
+					class="col-auto w-74">{{datiProgetto?.dettaglio?.descTipoProceduraOrig}}</div>
+				<div *ngIf="is1420 && (action == 'modifica' && !isModificaLimited)" class="col-auto w-100">
+					<mat-form-field class="w-96">
+						<mat-label>Selezionare un tipo Procedura Originaria</mat-label>
+						<mat-select [(ngModel)]="descTipoProceduraOrigSelected" name="descTipoProceduraOrigSelected"
+							[compareWith]="compareWithCodiceDescrizione" [disabled]="isDisabledDescTipoProceduraOrig">
+							<mat-option></mat-option>
+							<mat-option *ngFor="let tipoProceduraOriginaria of tipoProceduraOriginariaLista"
+								[value]="tipoProceduraOriginaria">
+								<span>{{ tipoProceduraOriginaria.descrizione }}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row no-gutters margin-bottom-20">
+				<div class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Progetto da inviare al monitoraggio?</p>
+				</div>
+				<div class="col-auto w-25">
+					<mat-radio-group class="w-100 justify-content-center" aria-label="Select an option"
+						[(ngModel)]="flagInvioMonit" name="flagInvioMonit"
+						[disabled]="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" required>
+						<mat-radio-button [value]="true" class="mr-10">Si</mat-radio-button>
+						<mat-radio-button [value]="false">No</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<div class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Richiesta automatica del CUP?</p>
+				</div>
+				<div class="col-auto w-25">
+					<mat-radio-group class="w-100 justify-content-center" aria-label="Select an option"
+						[(ngModel)]="flagRichiestaCup" name="flagRichiestaCup"
+						[disabled]="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" required>
+						<mat-radio-button [value]="true" class="mr-10">Si</mat-radio-button>
+						<mat-radio-button [value]="false">No</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div>
+			<div class="row no-gutters margin-bottom-20" *ngIf="isProgrammazione2127">
+				<div class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">PPP</p>
+				</div>
+				<div class="col-auto w-25">
+					<mat-radio-group class="w-100 justify-content-center" aria-label="Select an option" [(ngModel)]="ppp"
+						name="ppp" [disabled]="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" required>
+						<mat-radio-button [value]="true" class="mr-10">Si</mat-radio-button>
+						<mat-radio-button [value]="false">No</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<div class="col-auto w-25">
+					<p class="margin0 pl-10 pr-10 text-right">Progetto di Importanza Strategica</p>
+				</div>
+				<div class="col-auto w-25">
+					<mat-radio-group class="w-100 justify-content-center" aria-label="Select an option"
+						[(ngModel)]="flagStrategico" name="flagStrategico"
+						[disabled]="action == 'dettaglio' || !(action == 'modifica' && !isModificaLimited)" required>
+						<mat-radio-button [value]="true" class="mr-10">Si</mat-radio-button>
+						<mat-radio-button [value]="false">No</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="action == 'modifica' && isModificaLimited" class="row no-gutters mb-12">
+		<div class="col text-right mr-10">
+			<button class="button-style-2 margin0" mat-raised-button type="submit" [disabled]="isFormDatiGeneraliDisabled()">
+				MODIFICA
+			</button>
+		</div>
+	</div>
+	<div *ngIf="action == 'modifica' && !isModificaLimited" class="row no-gutters mb-12">
+		<div class="col text-right mr-10">
+			<div matTooltip="Valorizzare tutti i campi." [matTooltipDisabled]="!isFormDatiGeneraliDisabled()">
+				<button class="button-style-2 margin0" mat-raised-button type="submit"
+					[disabled]="isFormDatiGeneraliDisabled()">
+					SALVA
+				</button>
+			</div>
+		</div>
+	</div>
+</form>

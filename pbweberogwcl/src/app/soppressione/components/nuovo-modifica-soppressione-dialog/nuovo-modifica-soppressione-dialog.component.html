@@ -1,0 +1,77 @@
+<mat-spinner-pbandi class="page" [ngClass]="{'displayNone': !isLoading()}"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text" *ngIf="isNuovo">Nuova soppressione</h3>
+        <h3 class="bold-text" *ngIf="!isNuovo">Modifica soppressione</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+        <mat-card-content class="messageWarningContent">
+            <p [innerHTML]="messageWarning"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="content">
+        <p><span class="bold-text">Importo certificabile lordo (ultima proposta di certificazione
+                approvata): </span>{{importoCertificabileLordo | number: '1.2-2' : 'it'}}</p>
+        <p><span class="bold-text">Importo totale dei disimpegni: </span> {{importoTotaleDisimpegni | number: '1.2-2' :
+            'it'}}</p>
+        <form #sopprForm="ngForm" (submit)="salva()">
+            <div class="display-flex align-items-center">
+                <mat-form-field class="width-data margin-right-10">
+                    <input matInput type="text" placeholder="Importo soppressione *" name="importo"
+                        [(ngModel)]="importoFormatted" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImporto()"
+                        #imp="ngModel" />
+                    <mat-error *ngIf="imp?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error *ngIf="imp?.errors?.error === 'required'">
+                        Campo obbligatorio
+                    </mat-error>
+                    <mat-error *ngIf="imp?.errors?.error === 'notValid'">
+                        Valore non valido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="width-data margin-right-20">
+                    <mat-label>Data soppressione * </mat-label>
+                    <input matInput [matDatepicker]="picker" [formControl]="dataSoppr">
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="dataSoppr?.errors?.error === 'required'">
+                        Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+                <mat-checkbox name="flagMonitoraggio" [(ngModel)]="flagMonitoraggio">
+                    Flag Monitoraggio
+                </mat-checkbox>
+            </div>
+            <mat-form-field class="fullWidth">
+                <mat-label>Estremi della determina </mat-label>
+                <input matInput [(ngModel)]="estremi" name="estremi" />
+            </mat-form-field>
+            <mat-form-field class="fullWidth">
+                <mat-label>Note</mat-label>
+                <textarea matInput [(ngModel)]="note" name="note" #desc="ngModel" maxlength="4000"></textarea>
+                <mat-hint>{{desc.value?.length || 0}}/4000</mat-hint>
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="spaceBetween">
+        <button mat-button (click)="close()" class="button-style-1">ANNULLA</button>
+        <button mat-button (click)="salva()" class="button-style-1">SALVA</button>
+    </div>
+</div>

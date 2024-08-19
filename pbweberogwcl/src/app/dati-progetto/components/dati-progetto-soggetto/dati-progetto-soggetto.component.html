@@ -1,0 +1,282 @@
+<mat-spinner-pbandi class="page centerPage" [ngClass]="{'visibilityHidden': !isLoading()}"></mat-spinner-pbandi>
+<div class="page mx-24" [ngClass]="{'visibilityHidden': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button mat-button (click)="goToDatiProgettoSoggetto()">
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla gestione dati del progetto</span>
+      </button>
+    </div>
+    <div>
+      <h2>{{ title }}</h2>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <!--<mat-icon>done</mat-icon>-->
+        <p [innerHTML]="messageSuccess | safeHTML"></p><!-- {{messageSuccess}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <!--<mat-icon>warning</mat-icon>-->
+        <p [innerHTML]="messageWarning | safeHTML"></p><!-- {{messageWarning}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <!--<mat-icon>clear</mat-icon>-->
+        <p [innerHTML]="messageError | safeHTML"></p><!-- {{messageError}} -->
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <div class="header">
+          <h2>Dati soggetto</h2>
+        </div>
+        <div class="body">
+          <!---- >
+          <mat-divider class="divider" [inset]="true"></mat-divider>
+          <!---->
+          <form #nascitaForm="ngForm">
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label class="mr-24">Nome</mat-label>
+                  <input type="text" matInput name="fieldNome" [(ngModel)]="fieldNome"
+                    [disabled]="action == 'dettaglio'" />
+                </mat-form-field>
+              </div>
+              <div class="col-auto w-50"
+                *ngIf="fieldRuoloSelected?.codice === '1'|| fieldRuoloSelected?.codice === '21' || isBenefPersonaFisica">
+                <p class="margin0 mb-0">Sesso</p>
+                <mat-radio-group class="w-96 justify-content-center" aria-label="Select an option"
+                  [(ngModel)]="fieldSesso" (ngModelChange)="onFlagSessoChange($event)" name="fieldSesso"
+                  [disabled]="action == 'dettaglio' || isBenefPersonaFisica">
+                  <mat-radio-button [value]="'M'" class="mr-10">M</mat-radio-button>
+                  <!-- [checked]="flagCardine == true" -->
+                  <mat-radio-button [value]="'F'">F</mat-radio-button>
+                  <!-- w-96 mat-radio-button-justify-content-center -->
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label class="mr-24">Cognome</mat-label>
+                  <input type="text" matInput name="fieldCognome" [(ngModel)]="fieldCognome"
+                    [disabled]="action == 'dettaglio'" />
+                </mat-form-field>
+              </div>
+              <div class="col-auto w-50"
+                *ngIf="fieldRuoloSelected?.codice === '1'|| fieldRuoloSelected?.codice === '21' || isBenefPersonaFisica">
+                <mat-form-field class="w-96">
+                  <mat-label>Nato il</mat-label>
+                  <input matInput [matDatepicker]="pickerData" name="fielddtNascita" (click)="pickerData.open()"
+                    [(ngModel)]="fielddtNascita" placeholder="gg/mm/aaaa"
+                    [disabled]="action == 'dettaglio' || isBenefPersonaFisica">
+                  <!-- [formControl]="data" -->
+                  <mat-datepicker-toggle matSuffix [for]="pickerData">
+                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerData></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label class="mr-24">Codice fiscale</mat-label>
+                  <input type="text" matInput name="fieldCodiceFiscale" [ngModel]="fieldCodiceFiscale"
+                    (ngModelChange)="fieldCodiceFiscale = $event.toUpperCase()"
+                    [disabled]="action == 'dettaglio' || action === 'modifica'" />
+                </mat-form-field>
+              </div>
+              <div class="col-auto w-50"
+                *ngIf="fieldRuoloSelected?.codice === '1'|| fieldRuoloSelected?.codice === '21' || isBenefPersonaFisica">
+                <mat-form-field class="w-96">
+                  <!-- matOptionFirstChildUndefined="true" -->
+                  <mat-label>Selezionare uno stato</mat-label>
+                  <mat-select [(ngModel)]="fieldNazioneSelected" name="fieldNazioneSelected"
+                    [compareWith]="compareWithCodiceDescrizione"
+                    [disabled]="action == 'dettaglio' || isBenefPersonaFisica"
+                    (selectionChange)="onSelectFieldNazione()">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let nazione of nazioni" [value]="nazione">
+                      <span>{{ nazione.descrizione }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label>Selezionare un ruolo</mat-label>
+                  <mat-select [(ngModel)]="fieldRuoloSelected" name="fieldRuoloSelected"
+                    [compareWith]="compareWithCodiceDescrizione" [disabled]="action == 'dettaglio' "
+                    (selectionChange)="onSelectFieldRuolo()">
+                    <mat-option *ngFor="let ruolo of ruoli" [value]="ruolo">
+                      <span>{{ ruolo.descrizione }}</span>
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint *ngIf="action == 'modifica' || action == 'inserisci'">Solo il rappresentante legale viene
+                    automaticamente abilitato all'accesso</mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="col-auto w-50"
+                *ngIf="fieldRuoloSelected?.codice === '1'|| fieldRuoloSelected?.codice === '21' || isBenefPersonaFisica">
+                <mat-form-field class="w-96">
+                  <mat-label>Selezionare una provincia</mat-label>
+                  <mat-select [(ngModel)]="fieldProvinciaSelected" name="fieldProvinciaSelected"
+                    [compareWith]="compareWithCodiceDescrizione"
+                    [disabled]="action == 'dettaglio' || !fieldNazioneSelected || (fieldNazioneSelected && fieldNazioneSelected.codice!=='118') || isBenefPersonaFisica"
+                    (selectionChange)="onSelectFieldProvincia()">
+                    <mat-option *ngFor="let provincia of province" [value]="provincia">
+                      <span>{{ provincia.descrizione }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50 display-flex align-items-center height-57-px">
+                <mat-checkbox [(ngModel)]="isAbilitatoAccesso" name="isAbilitatoAccesso"
+                  [disabled]="fieldRuoloSelected?.codice === '1' || isBenefPersonaFisica">Abilitato all'accesso
+                </mat-checkbox>
+              </div>
+              <div class="col-auto w-50"
+                *ngIf="fieldRuoloSelected?.codice === '1'|| fieldRuoloSelected?.codice === '21' || isBenefPersonaFisica">
+                <mat-form-field class="w-96">
+                  <mat-label>Selezionare un comune</mat-label>
+                  <mat-select [(ngModel)]="fieldComuneSelected" name="fieldComuneSelected"
+                    [compareWith]="compareWithCodiceDescrizione"
+                    [disabled]="action == 'dettaglio' || !fieldNazioneSelected || (fieldNazioneSelected.codice==='118' && !fieldProvinciaSelected) || isBenefPersonaFisica">
+                    <mat-option *ngFor="let comune of comuni" [value]="comune">
+                      <span>{{ comune.descrizione }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <div
+          [ngClass]="{'displayNone': fieldRuoloSelected?.codice !== '1' && fieldRuoloSelected?.codice !== '21'  && !isBenefPersonaFisica}">
+          <div class="header">
+            <h2>Dati residenza</h2>
+          </div>
+          <div class="body">
+            <form #residenzaForm="ngForm">
+              <div class="row no-gutters">
+                <div class="col-auto w-50">
+                  <div class="row no-gutters">
+                    <div class="col-auto w-75">
+                      <mat-form-field class="w-96">
+                        <mat-label class="mr-24">Indirizzo</mat-label>
+                        <input type="text" matInput name="fieldResidenzaIndirizzo" [(ngModel)]="fieldResidenzaIndirizzo"
+                          [disabled]="action == 'dettaglio' || isBenefPersonaFisica" />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-auto w-25">
+                      <mat-form-field class="w-84">
+                        <mat-label class="mr-24">n°</mat-label>
+                        <input type="text" matInput name="fieldResidenzaNumeroIndirizzo"
+                          [(ngModel)]="fieldResidenzaNumeroIndirizzo"
+                          [disabled]="action == 'dettaglio' || isBenefPersonaFisica" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-auto w-50">
+                  <div class="row no-gutters">
+                    <div class="col-auto w-25">
+                      <mat-form-field class="w-84" matTooltip="Codice di Avviamento postale">
+                        <mat-label class="mr-24">CAP</mat-label>
+                        <input type="text" matInput name="fieldResidenzaCap" [(ngModel)]="fieldResidenzaCap"
+                          maxlength="5" [disabled]="action == 'dettaglio' || isBenefPersonaFisica" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row no-gutters">
+                <div class="col-auto w-50">
+                  <mat-form-field class="w-96">
+                    <!-- matOptionFirstChildUndefined="true" -->
+                    <mat-label>Selezionare uno stato</mat-label>
+                    <mat-select [(ngModel)]="fieldResidenzaNazioneSelected" name="fieldResidenzaNazioneSelected"
+                      [compareWith]="compareWithCodiceDescrizione"
+                      [disabled]="action == 'dettaglio' || isBenefPersonaFisica"
+                      (selectionChange)="onSelectFieldResidenzaNazione()">
+                      <mat-option *ngFor="let nazione of nazioni" [value]="nazione">
+                        <span>{{ nazione.descrizione }}</span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-auto w-50">
+                  <mat-form-field class="w-96">
+                    <mat-label>Selezionare una regione</mat-label>
+                    <mat-select [(ngModel)]="fieldResidenzaRegioneSelected" name="fieldResidenzaRegioneSelected"
+                      [compareWith]="compareWithCodiceDescrizione"
+                      [disabled]="action == 'dettaglio' || !fieldResidenzaNazioneSelected || fieldResidenzaNazioneSelected.codice!=='118' || isBenefPersonaFisica"
+                      (selectionChange)="onSelectFieldResidenzaRegione()">
+                      <mat-option *ngFor="let regione of regioni" [value]="regione">
+                        <span>{{ regione.descrizione }}</span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row no-gutters">
+                <div class="col-auto w-50">
+                  <mat-form-field class="w-96">
+                    <mat-label>Selezionare una provincia</mat-label>
+                    <mat-select [(ngModel)]="fieldResidenzaProvinciaSelected" name="fieldResidenzaProvinciaSelected"
+                      [compareWith]="compareWithCodiceDescrizione"
+                      [disabled]="action == 'dettaglio' || !fieldResidenzaRegioneSelected || isBenefPersonaFisica"
+                      (selectionChange)="onSelectFieldResidenzaProvincia()">
+                      <mat-option *ngFor="let residenzaProvincia of residenzaProvince" [value]="residenzaProvincia">
+                        <span>{{ residenzaProvincia.descrizione }}</span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-auto w-50">
+                  <mat-form-field class="w-96">
+                    <mat-label>Selezionare un comune</mat-label>
+                    <mat-select [(ngModel)]="fieldResidenzaComuneSelected" name="fieldResidenzaComuneSelected"
+                      [compareWith]="compareWithCodiceDescrizione"
+                      [disabled]="action == 'dettaglio' || !fieldResidenzaNazioneSelected || (fieldResidenzaNazioneSelected.codice==='118' && !fieldResidenzaProvinciaSelected) || isBenefPersonaFisica">
+                      <mat-option *ngFor="let residenzaComune of residenzaComuni" [value]="residenzaComune">
+                        <span>{{ residenzaComune.descrizione }}</span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row no-gutters" *ngIf="!(action == 'dettaglio')">
+          <div matTooltip="Valorizzare tutti i campi." [matTooltipDisabled]="!isSalvaDisabled()">
+            <button class="button-style-2 margin0" mat-raised-button type="button"
+              (click)="loadSalvaDatiProgettoDettaglio()" [disabled]="isSalvaDisabled()">
+              SALVA
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

@@ -1,0 +1,153 @@
+.page {
+
+  .title {
+
+    .backContainer {
+      padding-bottom: 5px;
+
+      button {
+        padding: 0px;
+      }
+      .blue-icon {
+        color: #0060C1;
+      }
+
+      .backText{
+        color: #0060C1;
+        font-size: 16px;
+        padding-left: 10px;
+      }
+    }
+
+  }
+
+  .content {
+    .header {
+      display: flex;
+      align-items: center;
+
+      h2 {
+        margin-bottom: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+        //font-weight: bold;
+      }
+
+      .arrow {
+        color: grey;
+      }
+    }
+
+    mat-card-content {
+      padding-left: 25px;
+      padding-right: 25px;
+    }
+
+    h2 {
+      margin-bottom: 0px;
+      font-weight: bold;
+    }
+
+    .benef {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin: 0px;
+        font-size: 16px;
+      }
+
+      span {
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+  }
+}
+.textAlignRight {
+  display: flex;
+  justify-content: flex-end;
+}
+.noElements{
+  display: flex;
+  justify-content: center;
+  color: grey;
+  font-weight: 400;
+  font-size: 13px;
+}
+mat-radio-button {
+  padding-left: 15px;
+}
+
+.blueColor {
+  color: #0060C1;
+}
+
+.displayNone {
+  display: none !important;
+}
+
+.spaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.paddingLeft20 {
+  padding-left: 20px;
+}
+
+.endPageButton {
+  display: flex;
+  justify-content: space-between;
+  /* width: 80%;*/
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.button-style-1 {
+  color: #0060C1;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+
+textarea.disabled {
+  cursor: not-allowed;
+}
+
+/* Chrome, Safari, Edge, Opera -  remove arrows from input type number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox -  remove arrows from input type number */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color:  #0058B1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color:  #0058B1 !important;   /*inner circle color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0058B1 !important; /*outer ring color change*/
+}
+
+
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #0060C1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color:  #0058B1 !important; /*click effect color change*/
+}
+

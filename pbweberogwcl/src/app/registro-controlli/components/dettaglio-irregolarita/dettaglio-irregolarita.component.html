@@ -1,0 +1,107 @@
+<mat-spinner-pbandi *ngIf="isLoading()"></mat-spinner-pbandi>
+<div *ngIf="!isLoading()">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Dettaglio esito controllo</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+        <p class="width-49-perc margin-right-10">Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+    </div>
+    <div class="display-flex" *ngIf="irregDefinitiva !== false">
+        <p class="width-49-perc margin-right-10">Numero versione: <span class="bold-text">{{numeroVersione}}</span>
+        </p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data comunicazione esito: <span
+                class="bold-text">{{dataComunicazioneEsito}}</span></p>
+        <p class="width-49-perc margin-right-10">Tipo controlli (Documentali/In loco): <span
+                class="bold-text">{{tipoControlli}}</span>
+        </p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Anno contabile: <span class="bold-text">{{annoContabile}}</span></p>
+        <p class="width-49-perc margin-right-10">Autorità controllante: <span
+                class="bold-text">{{autoritaControllante}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data del Campione: <span class="bold-text">{{dataCampione}}</span></p>
+        <p class="width-49-perc margin-right-10">Data inizio controlli: <span
+                class="bold-text">{{dataInizioControlli}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Data fine controlli: <span
+                class="bold-text">{{dataFineControlli}}</span></p>
+        <p class="width-49-perc margin-right-10">Importo spesa irregolare: <span
+                class="bold-text">{{importoSpesaIrregolare | number: '1.2-2' : 'it'}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Importo dell'agevolazione irregolare: <span
+                class="bold-text">{{impAgevIrr | number: '1.2-2' : 'it'}}</span></p>
+        <p class="width-49-perc margin-right-10">Importo irregolare certificato: <span class="bold-text">{{impIrregCert
+                | number: '1.2-2' : 'it'}}</span></p>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Motivo dell'irregolarità: <span
+                class="bold-text">{{motivoIrregolarita}}</span></p>
+        <p class="width-49-perc margin-right-10">Irregolarità bloccata: <span
+                class="bold-text">{{irregolaritaAnnullata}}</span></p>
+    </div>
+    <div class="display-flex" *ngIf="irregDefinitiva !== false">
+        <p class="width-49-perc margin-right-10">Provvedimento: <span class="bold-text">{{provvedimento}}</span></p>
+        <p class="width-49-perc margin-right-10">Pratica usata nell'irregolarità: <span
+                class="bold-text">{{pratUsataIrreg}}</span></p>
+    </div>
+    <div class="display-flex" *ngIf="irregDefinitiva !== false">
+        <p class="width-49-perc margin-right-10">Soggetto da contattare per chiarimenti: <span
+                class="bold-text">{{soggContattChiarim}}</span></p>
+    </div>
+    <div class="display-flex" *ngIf="irregDefinitiva !== false">
+        <p class="width-49-perc margin-right-10">Allegato dati accessori irregolarità: <span
+                class="bold-text">{{allegDatiAccessIrreg}}</span></p>
+
+        <div class="width-49-perc">
+            <button [disabled]="allegDatiAccessIrreg == undefined" class="button-style-1 padding-0" mat-button
+                (click)="scaricaAllegatoAccessIrreg()">SCARICA ALLEGATO</button>
+        </div>
+    </div>
+    <div class="display-flex" *ngIf="irregDefinitiva !== false">
+        <p class="width-49-perc margin-right-10">Allegato vari ad integrazione dell'irregolarità: <span
+                class="bold-text">{{allegVariIntegIrreg}}</span></p>
+        <div class="width-49-perc">
+            <button [disabled]="allegVariIntegIrreg == undefined" class="button-style-1 padding-0" mat-button
+                (click)="scaricaAllegatoIntegIrreg()">SCARICA ALLEGATO</button>
+        </div>
+    </div>
+    <div class="display-flex">
+        <p class="width-49-perc margin-right-10">Note: <span class="bold-text">{{note}}</span></p>
+    </div>
+
+    <div class="textAlignRight" *ngIf="irregDefinitiva == true && isAdgCert">
+        <div [hidden]="irregolaritaAnnullata == 'S'">
+            <button class="button-style-2 margin-right-10" mat-raised-button (click)="blocca()">
+                BLOCCA
+            </button>
+        </div>
+        <div [hidden]="!(irregolaritaAnnullata == 'S')">
+            <button class="button-style-2 margin-right-10" mat-raised-button (click)="blocca()">
+                SBLOCCA
+            </button>
+        </div>
+        <button class="button-style-2 margin-right-10" mat-raised-button (click)="registraInvio()">
+            REGISTRA INVIO
+        </button>
+    </div>
+</div>

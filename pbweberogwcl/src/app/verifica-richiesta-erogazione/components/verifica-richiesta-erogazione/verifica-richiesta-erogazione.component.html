@@ -1,0 +1,277 @@
+<!-- AGGIUNGI SPINNER -->
+<mat-spinner-pbandi class="page" *ngIf="!loadedPage"></mat-spinner-pbandi>
+<div class="page" *ngIf="loadedPage">
+	<div class="title">
+		<div class="backContainer">
+			<button mat-button (click)="onTorna()">
+				<mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+				<span class="backText">Torna alle attività da svolgere</span>
+			</button>
+		</div>
+		<div class="reportingContainerUp">
+			<div class="flex-between content margin0" content>
+				<h2>Verifica Richiesta Erogazione</h2>
+				<div class="bottoni-erogazione" *ngIf="!isReadOnly">
+					<button (click)="verificaRichiestaErogazione(true)" mat-stroked-button
+						class="button-style-3 margin-right-5">APPROVA RICHIESTA</button>
+					<button (click)="verificaRichiestaErogazione(false)" mat-stroked-button class="button-style-3">RIGETTA
+						RICHIESTA</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+		<mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+			<mat-card-content class="messageSuccessContent">
+				<p [innerHTML]="messageSuccess"></p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+			<mat-card-content class="messageErrorContent">
+				<p [innerHTML]="messageError"></p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isReadOnly && statoVerifica">
+			<mat-card-content class="messageSuccessContent">
+				<p>La richiesta di erogazione è stata verificata con esito <strong>POSITIVO</strong></p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isReadOnly && !statoVerifica">
+			<mat-card-content class="messageSuccessContent">
+				<p>La richiesta di erogazione è stata verificata con esito <strong>NEGATIVO</strong></p>
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="content">
+		<div class="content">
+			<mat-card class="mat-elevation-z2">
+				<mat-card-content>
+					<div class="cod-progetto">
+						<p style="padding-bottom: 9px">
+							Beneficiario: <span class="bold-text">{{ beneficiario }}</span>
+						</p>
+					</div>
+					<div class="cod-progetto">
+						<p>
+							Codice progetto: <span class="bold-text">{{ codiceProgetto }}</span>
+						</p>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2 marginBottom18">
+				<mat-card-content>
+					<h2 class="bold-text">Riepilogo della richiesta di erogazione del progetto</h2>
+					<div class="row no-gutters marginBottom5">
+						<div class="w-50">
+							<p class="margin0 font-size-16">
+								Causale erogazione:
+								<span class="font-size-16 bold-text">
+									{{ causaleErogazione }}
+								</span>
+							</p>
+						</div>
+						<div class="w-50">
+							<p class="margin0 font-size-16">
+								Numero richiesta:
+								<span class="bold-text font-size-16 blue-color"> {{ idErogazione }} </span>
+							</p>
+						</div>
+					</div>
+					<div class="row no-gutters marginBottom5">
+						<div class="w-50">
+							<p class="margin0 font-size-16">
+								Importo richiesto:
+								<span class="bold-text font-size-16">
+									{{ importoRichiesto || 0 | currency : 'EUR' : 'symbol' : '1.2' : 'it' }}
+								</span>
+							</p>
+						</div>
+						<div class="w-50">
+							<p class="margin0 font-size-16">
+								Data richiesta (gg/mm/aaaa):
+								<span class="font-size-16 bold-text">{{ dataRichiesta }} </span>
+							</p>
+						</div>
+					</div>
+
+					<div class="col no-gutters">
+						<div *ngFor="let allegato of allegatoRiepilogo" class="w-50 display-align-center">
+							<mat-icon class="margin-right-3 cursor-pointer" (click)="anteprimaAllegato(allegato)">
+								remove_red_eye</mat-icon>
+							<div class="display-align-center cursor-pointer" (click)="downloadAllegato(allegato)">
+								<mat-icon class="margin-right-3">download</mat-icon>
+								<a class="bold-text font-size-16 blue-color"> {{ allegato.nomeFile }} </a>
+							</div>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2 marginBottom18">
+				<mat-card-content>
+					<h2 class="bold-text">Fideiussioni al momento presenti nel progetto</h2>
+					<p *ngIf="!fideiussioni || !fideiussioni.length">Non ci sono elementi da visualizzare</p>
+					<h3>Tipo trattamento</h3>
+					<div *ngFor="let fideiussione of fideiussioni" class="no-gutters justify-between flex-nowrap">
+						<div class="flex-nowrap">
+							<span class="font-size-16">
+								{{ fideiussione.descrizioneTipoTrattamento }}
+							</span>
+						</div>
+						<div class="flex-nowrap">
+							<span class="font-size-16 bold-text">
+								{{ fideiussione.importo || 0 | currency : 'EUR' : 'symbol' : '1.2' : 'it' }}
+							</span>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2 marginBottom18">
+				<mat-card-content>
+					<h2 class="bold-text">Allegati alla richiesta di erogazione</h2>
+					<div class="flex-wrap no-gutters">
+						<p *ngIf="!allegati || !allegati.length">Non ci sono elementi da visualizzare</p>
+						<div *ngFor="let allegato of allegati"
+							class="allegati no-gutters justify-between display-align-center flex-nowrap">
+							<div class="display-align-center cursor-pointer flex-nowrap" (click)="downloadAllegato(allegato)">
+								<mat-icon class="margin-right-5">attachment</mat-icon>
+								<span class="font-size-16 blue-color bold-text">
+									{{ allegato.nomeFile }}
+								</span>
+							</div>
+							<div class="display-align-center flex-nowrap">
+								<span class="font-size-16"> {{ allegato.sizeFile | cutDecimal }} KB</span>
+								<mat-icon class="marginLeft5 cursor-pointer" (click)="anteprimaAllegato(allegato)">remove_red_eye
+								</mat-icon>
+							</div>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<mat-card class="mat-elevation-z2 marginBottom18">
+				<mat-card-content>
+					<h2 class="bold-text">Rappresentante legale ed estremi bancari</h2>
+					<div class="row no-gutters marginBottom5">
+						<div class="w-50">
+							<div class="margin0 font-size-16">
+								<p class="bold-text">{{ nome }} {{ cognome }}</p>
+								<p>
+									Nata/o a: <span class="bold-text">{{ comuneNascita }}, il {{ dataNascita &&
+										dataNascita.toLocaleDateString() }}</span>
+								</p>
+							</div>
+						</div>
+						<div class="w-50">
+							<p class="margin0 font-size-16">
+								<span>IBAN:</span>
+								<span class="bold-text"> {{ iban }} </span>
+							</p>
+						</div>
+					</div>
+					<div class="row no-gutters marginBottom5">
+						<div class="w-50">
+							<div class="margin0 font-size-16">
+								<p>
+									Residente a: <span class="bold-text">{{ comuneResidenza }}</span>
+								</p>
+								<p>
+									CAP: <span class="bold-text">{{ capResidenza }}</span>
+								</p>
+								<p>
+									Indirizzo: <span class="bold-text"> {{ indirizzoResidenza }}</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="content">
+			<div class="content">
+				<mat-card class="mat-elevation-z2 marginBottom18">
+					<mat-card-content>
+						<h2 class="bold-text">Affidamenti al momento presenti nel progetto</h2>
+						<p *ngIf="!affidamenti || !affidamenti.length">Non ci sono elementi da visualizzare</p>
+						<h3 *ngIf="affidamenti && affidamenti.length" class="margin0 mt-3">Affidamenti dei servizi tecnici di
+							ingegneria</h3>
+						<table *ngIf="affidamenti && affidamenti.length" mat-table [dataSource]="dataSourceIng"
+							class="fullWidth marginBottom20"
+							[ngClass]="{ displayNone: !dataSourceIng || !dataSourceIng.data || dataSourceIng.data.length === 0 }">
+							<ng-container matColumnDef="fornitore">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Fornitore</th>
+								<td mat-cell *matCellDef="let row">{{ row.fornitore}}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="servizioAffidato">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Servizio affidato</th>
+								<td mat-cell *matCellDef="let row">{{ row.servizioAffidato }}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="documento">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Documento</th>
+								<td mat-cell *matCellDef="let row">{{ row.documento}}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="denominazioneFile">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Denominazione file</th>
+								<td mat-cell *matCellDef="let row">{{ row.nomeFile}}</td>
+							</ng-container>
+
+							<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+						</table>
+
+						<h3 *ngIf="affidamenti && affidamenti.length" class="margin0 mt-3">Affidamenti dei lavori/fornitue/servizi
+						</h3>
+						<table *ngIf="affidamenti && affidamenti.length" mat-table [dataSource]="dataSourceLav"
+							class="fullWidth marginBottom20"
+							[ngClass]="{ displayNone: !dataSourceLav || !dataSourceLav.data || dataSourceLav.data.length === 0 }">
+							<ng-container matColumnDef="fornitore">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Fornitore</th>
+								<td mat-cell *matCellDef="let row">{{ row.fornitore }}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="servizioAffidato">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Servizio affidato</th>
+								<td mat-cell *matCellDef="let row">{{ row.servizioAffidato }}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="documento">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Documento</th>
+								<td mat-cell *matCellDef="let row">{{ row.documento }}</td>
+							</ng-container>
+
+							<ng-container matColumnDef="denominazioneFile">
+								<th class="width-25" mat-header-cell *matHeaderCellDef>Denominazione file</th>
+								<td mat-cell *matCellDef="let row">{{ row.nomeFile }}</td>
+							</ng-container>
+
+							<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+						</table>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div>
+		<div class="bottoni-erogazione" *ngIf="!isReadOnly">
+			<button (click)="verificaRichiestaErogazione(true)" mat-stroked-button
+				class="button-style-3 margin-right-5">APPROVA
+				RICHIESTA</button>
+			<button (click)="verificaRichiestaErogazione(false)" mat-stroked-button class="button-style-3">RIGETTA
+				RICHIESTA</button>
+		</div>
+	</div>
+</div>

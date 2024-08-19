@@ -1,0 +1,456 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button mat-button (click)="onTorna()">
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna al riepilogo dei dati</span>
+      </button>
+    </div>
+    <div>
+      <h2 *ngIf="codCausale==='PA'">Avvio lavori / Richiesta erogazione acconto</h2>
+      <h2 *ngIf="codCausale==='SA' || codCausale==='UA' || codCausale==='SAL'">Gestione richiesta erogazione</h2>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <header-labels-buttons [class]="''" [labels]="headerLabels" [buttons]="headerButtons"
+      (onBtnClick)="onHeaderButtonsClick($event)"></header-labels-buttons>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <h2 *ngIf="codCausale==='PA'">Dichiarazione avvio lavori / Richiesta di erogazione</h2>
+        <h2 *ngIf="codCausale==='SA' || codCausale==='UA' || codCausale==='SAL'">Creazione richiesta di erogazione</h2>
+        <div class="header">
+          <h2 class="w-100 text-align-center text-uppercase">Dichiaro</h2>
+        </div>
+        <div>
+          <mat-divider class="divider" [inset]="true"></mat-divider>
+          <form #ricercaForm1="ngForm" class="mt-12">
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <p class="margin0 pl-10 pr-10 font-size-16 text-right bold-text">- che le spese sostenute per la
+                  realizzazione del
+                  progetto ammontano a</p>
+              </div>
+              <div class="col-auto w-50">
+                <p class="font-size-16 bold-text"> € {{totaleSpesaSostenuta | number: '1.2-2' : 'it'}}</p>
+              </div>
+            </div>
+            <div class="row no-gutters margin-top-20">
+              <div class="col">
+                <p class="margin0 font-size-16">1. NEL CASO L'INTERVENTO CONSISTA ESCLUSIVAMENTE O PREVALENTEMENTE IN
+                  LAVORI</p>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50 display-flex justify-content-end align-items-center">
+                <p class="margin0 pl-10 pr-10 font-size-16 text-right bold-text">- che i lavori per la realizzazione
+                  dell'intervento sopra indicato sono iniziati in data</p>
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field class="widthData widthData260">
+                  <mat-label>Data inizio lavori</mat-label>
+                  <input matInput [matDatepicker]="pickerDataDal" name="dataDal" (click)="pickerDataDal.open()"
+                    [(ngModel)]="dataInizioLavori">
+                  <mat-datepicker-toggle matSuffix [for]="pickerDataDal" class="blueColor">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerDataDal></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50 display-flex justify-content-end align-items-center">
+                <p class="margin0 pl-10 pr-10 font-size-16 text-right bold-text">- che la direzione lavori e' stata
+                  affidata al
+                  Sig.</p>
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field>
+                  <input #importoEE type="text" matInput placeholder="Direzione lavori" name="codDirezione"
+                    [(ngModel)]="codDirezione" autocomplete="off">
+                  <mat-error *ngIf="importoEE?.errors?.pattern">
+                    Valore non valido
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50 display-flex justify-content-end align-items-center">
+                <p class="margin0 pl-10 pr-10 font-size-16 text-right bold-text">residente all'indirizzo</p>
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Indirizzo" name="residenza" [(ngModel)]="residenza">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters margin-top-20">
+              <div class="col">
+                <p class="margin0 font-size-16">2. NEL CASO L'INTERVENTO CONSISTA ESCLUSIVAMENTE O PREVALENTEMENTE IN
+                  FORNITURE</p>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-auto w-50 display-flex justify-content-end align-items-center">
+                <p class="margin0 pl-10 pr-10 font-size-16 text-right bold-text">- che per le forniture necessarie per
+                  la
+                  realizzazione dell'intervento sono stati stipulati i relativi contratti/ordine di acquisto in data</p>
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field class="widthData widthData260">
+                  <mat-label>Data contratti/ordine di acquisto</mat-label>
+                  <input matInput [matDatepicker]="pickerDataAl" name="dataAl" (click)="pickerDataAl.open()"
+                    [(ngModel)]="dataContratti">
+                  <mat-datepicker-toggle matSuffix [for]="pickerDataAl" class="blueColor">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerDataAl></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters margin-top-20">
+              <div
+                *ngIf="datiRiepilogoRichiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione.descBreveCausaleErogazione == 'PA'"
+                class="col">
+                <mat-radio-group class="w-100 display-grid justify-content-center" aria-label="Select an option"
+                  [(ngModel)]="graduatoriaRadio" (ngModelChange)="onGraduatoriaRadioChange($event)" name="doc">
+                  <mat-radio-button value="1" class="bold-text">Chiedo l'erogazione del <span
+                      class="bold-text font-size-16 red-color text-uppercase">
+                      {{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.descrizioneCausaleErogazione}}</span>
+                    del contributo concesso</mat-radio-button>
+                  <mat-radio-button value="2" class="margin-top-10 bold-text">NON chiedo l'erogazione dell'acconto
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <div
+                *ngIf="datiRiepilogoRichiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione && datiRiepilogoRichiestaErogazione.richiestaErogazione.descBreveCausaleErogazione !== 'PA'"
+                class="col text-align-center">
+                Chiedo l'erogazione del <span
+                  class="bold-text font-size-16 text-uppercase orange-color">{{datiRiepilogoRichiestaErogazione?.richiestaErogazione?.descrizioneCausaleErogazione}}</span>
+                del contributo concesso
+              </div>
+            </div>
+            <div class="row no-gutters margin-top-20">
+              <div class="col display-flex justify-content-center">
+                <p class="bold-text">
+                  pari al (%)
+                  <mat-form-field class="widthData42">
+                    <input type="text" [(inputNumber)]="inputNumberType" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                      matInput aria-label="Percentuale spettante ed equivalente (%)"
+                      name="percentualeErogazioneEffettiva" [(ngModel)]="fieldPercentualeErogazioneEffettiva" disabled>
+                  </mat-form-field>
+                  del totale spettante ed equivalente a (€)
+                  <mat-form-field class="widthData82">
+                    <input type="text" [(inputNumber)]="inputNumberType" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                      matInput aria-label="Totale spettante ed equivalente (€)" name="importoErogazioneEffettivo"
+                      [(ngModel)]="fieldImportoErogazioneEffettivo" disabled>
+                  </mat-form-field>
+                </p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content class="overflow-auto">
+        <h2>Fideiussione bancaria del progetto</h2>
+        <blx-data-table [dataSource]="dataSourceFideiussioniTipoTrattamento"
+          [displayedColumns]="displayedColumnsFideiussioniTipoTrattamento"
+          [displayedHeaders]="displayedHeadersFideiussioniTipoTrattamento"
+          [displayedFooters]="displayedFootersFideiussioniTipoTrattamento"
+          [displayedColumnsCustom]="displayedColumnsCustomFideiussioniTipoTrattamento"
+          [displayedHeadersCustom]="displayedHeadersCustomFideiussioniTipoTrattamento" [cwidth]="'100%'">
+        </blx-data-table>
+      </mat-card-content>
+    </mat-card>
+    <div id="scrollAllegatiId"></div>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessAllegatiVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccessAllegati | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorAllegatiVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageErrorAllegati | safeHTML"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <h2>Allegati</h2>
+        <p *ngIf="!allegati || allegati.length===0">Nessun allegato associato.</p>
+        <mat-grid-list cols="3" rowHeight="45" class="margin-bottom-10" *ngIf="allegati?.length>0">
+          <mat-grid-tile *ngFor="let allegato of allegati" [colspan]="1" [rowspan]="1">
+            <div
+              class="display-flex justify-content-space-between align-items-center width-98-perc height-80-perc light-blue-background-color">
+              <span
+                class="bold-text font-size-13 padding-left-5 text-overflow-ellipsis overflow-hidden">{{allegato.nomeFile}}</span>
+              <div class="display-flex align-items-center">
+                <div class="white-space-no-wrap">{{(allegato.sizeFile/1024) | number: '1.2-2' : 'it' }} KB</div>
+                <button type="button" mat-icon-button class="blue-color width-30-px" matTooltip="Disassocia allegato"
+                  (click)="disassociaAllegato(allegato.idDocumentoIndex)">
+                  <mat-icon>link_off</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+
+        <div *ngIf="!tipoAllegatiCompleti || !tipoAllegatiCompleti.length" class='nessunallegato'>
+          <p>La documentazione obbligatoria da allegare &egrave; quella definita dal bando.</p>
+          <p>Non &egrave; prevista altra documentazione specifica.</p>
+        </div>
+        <div *ngFor="let tipoAllegato of tipoAllegatiCompleti; let i = index" class='allegato'>
+          <span *ngIf="i===0" [innerHTML]="tipoAllegato.descTipoAllegato | safeHTML"></span>
+          <mat-checkbox *ngIf="i>0" class="display-flex mat-checkbox-white-space-inherit"
+            [(ngModel)]="tipoAllegato.checked" name="tipo{{i}}">
+            <span [innerHTML]="tipoAllegato.descTipoAllegato | safeHTML"></span>
+          </mat-checkbox>
+        </div>
+        <div class=" display-flex justify-content-end">
+          <button class="button-style-2" mat-raised-button type="button" (click)="aggiungiAllegato()">
+            ASSOCIA ALLEGATI
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <div class="header">
+          <h2>Estremi bancari</h2>
+        </div>
+        <div>
+          <form #ricercaForm21="ngForm">
+            <p class="margin0"><span class="bold-text">IBAN</span> {{ iban }}</p>
+            <div class="display-flex align-items-center margin-top-10">
+              <mat-checkbox class="mat-checkbox-white-space-inherit" [(ngModel)]="ibanConfirmed" name="check1input"
+                required>
+                Si conferma la correttezza dell'IBAN *
+              </mat-checkbox>
+              <mat-icon
+                matTooltip="Per richiedere l'eventuale rettifica dell'IBAN contattare il servizio assistenza prima di procedere.">
+                info</mat-icon>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 marginBottom18">
+      <mat-card-content>
+        <div class="header">
+          <h2>Scelta rappresentante legale</h2>
+        </div>
+        <div>
+          <form #ricercaForm23="ngForm">
+            <div class="row no-gutters">
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label>Selezionare un rappresentante legale</mat-label>
+                  <mat-select [(ngModel)]="rappresentanteSelected" name="rappresentante" required class="w-100"
+                    matTooltip="{{ (rappresentanteSelected)?rappresentanteSelected.descrizione:'' }}"
+                    [compareWith]="compareWithCodiceDescrizione">
+                    <mat-option *ngFor="let rappresentante of rappresentanti" [value]="rappresentante">
+                      {{ rappresentante.descrizione }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto w-50">
+                <mat-form-field class="w-96">
+                  <mat-label>Selezionare un delegato legale</mat-label>
+                  <mat-select [(ngModel)]="delegatoSelected" name="delegato" class="w-100"
+                    matTooltip="{{ (delegatoSelected)?delegatoSelected.descrizione:'' }}"
+                    [compareWith]="compareWithCodiceDescrizione">
+                    <mat-option *ngFor="let delegato of delegati" [value]="delegato">
+                      {{ delegato.descrizione }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <form #affidamentiForm="ngForm">
+      <mat-card class="mat-elevation-z2 marginBottom18" *ngIf="isBR59">
+        <mat-card-content>
+          <div class="header">
+            <h2>Affidamento dei servizi tecnici di ingegneria</h2>
+          </div>
+          <table mat-table [dataSource]="dataSourceAffServizi" class="fullWidth">
+
+            <ng-container matColumnDef="fornitore">
+              <th mat-header-cell *matHeaderCellDef> Fornitore </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.fornitore" name="fornitoreS{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.documento?.length > 0 || row.nomeFile?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('fornitoreS' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="servizio">
+              <th mat-header-cell *matHeaderCellDef> Servizio affidato </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.servizioAffidato" name="servizioAffidatoS{{i}}"
+                    [required]="row.fornitore?.length > 0 || row.documento?.length > 0 || row.nomeFile?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('servizioAffidatoS' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="documento">
+              <th mat-header-cell *matHeaderCellDef> Documento </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <mat-select [(ngModel)]="row.documento" name="documentoS{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.fornitore?.length > 0 || row.nomeFile?.length > 0">
+                    <mat-option></mat-option>
+                    <mat-option value="Preventivo/i">Preventivo/i</mat-option>
+                    <mat-option value="Lettera di incarico">Lettera di incarico</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('documentoS' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nomeFile">
+              <th mat-header-cell *matHeaderCellDef> Denominazione file </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.nomeFile" name="nomeFileS{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.documento?.length > 0 || row.fornitore?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('nomeFileS' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsAff"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsAff; let i = index"></tr>
+          </table>
+          <div class="display-flex justify-content-end margin-top-10">
+            <button class=" button-style-1" mat-button type="button" (click)="aggiungiRigaAffServizi()">
+              AGGIUNGI RIGA
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="mat-elevation-z2 marginBottom18" *ngIf="isBR59">
+        <mat-card-content>
+          <div class="header">
+            <h2>Affidamento dei lavori/forniture/servizi</h2>
+          </div>
+          <table mat-table [dataSource]="dataSourceAffLavori" class="fullWidth">
+
+            <ng-container matColumnDef="fornitore">
+              <th mat-header-cell *matHeaderCellDef> Fornitore </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.fornitore" name="fornitoreL{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.documento?.length > 0 || row.nomeFile?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('fornitoreL' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="servizio">
+              <th mat-header-cell *matHeaderCellDef> Servizio affidato </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.servizioAffidato" name="servizioAffidatoL{{i}}"
+                    [required]="row.fornitore?.length > 0 || row.documento?.length > 0 || row.nomeFile?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('servizioAffidatoL' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="documento">
+              <th mat-header-cell *matHeaderCellDef> Documento </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <mat-select [(ngModel)]="row.documento" name="documentoL{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.fornitore?.length > 0 || row.nomeFile?.length > 0">
+                    <mat-option></mat-option>
+                    <mat-option value="Preventivo/i">Preventivo/i</mat-option>
+                    <mat-option value="Contratto di appalto (1)">Contratto di appalto (1) </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('documentoL' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nomeFile">
+              <th mat-header-cell *matHeaderCellDef> Denominazione file </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field class="fullWidth">
+                  <textarea matInput rows="1" [(ngModel)]="row.nomeFile" name="nomeFileL{{i}}"
+                    [required]="row.servizioAffidato?.length > 0 || row.documento?.length > 0 || row.fornitore?.length > 0"></textarea>
+                  <mat-error *ngIf="affidamentiForm?.form?.get('nomeFileL' + i)?.errors?.required">
+                    Campo obbligatorio
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsAff"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsAff; let i = index"></tr>
+          </table>
+          <div class="display-flex spaceBetween margin-top-10">
+            <p>(1) siglati con l'impresa appaltatrice, con indicazione del capitolato degli interventi e delle opere
+              da effettuarsi e date previste per inizio e consegna lavori, per gli eventuali SAL e termine dei pagamenti
+              delle opere</p>
+            <div>
+              <button class=" button-style-1" mat-button type="button" (click)="aggiungiRigaAffLavori()">
+                AGGIUNGI RIGA
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+  <div class="content">
+    <div class="spaceBetween">
+      <div class="backContainer">
+        <button mat-button (click)="onTorna()">
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna al riepilogo dei dati</span>
+        </button>
+      </div>
+      <div matTooltip="Correggere o completare i dati contrassegnati prima di proseguire."
+        [matTooltipDisabled]="!disabledFormDataSubmit()">
+        <button class="button-style-2 margin0" mat-raised-button type="button" [disabled]="disabledFormDataSubmit()"
+          (click)="crea()">
+          CREA RICHIESTA DI EROGAZIONE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

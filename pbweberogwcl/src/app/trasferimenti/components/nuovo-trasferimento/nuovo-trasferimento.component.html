@@ -1,0 +1,135 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page mx-24" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button mat-button
+        *ngIf="!tipoOperazioneFrom || tipoOperazioneFrom==='inserisci' || tipoOperazioneFrom==='dettaglio'"
+        (click)="onTorna()">
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna ai trasferimenti</span>
+      </button>
+    </div>
+    <div>
+      <h2>{{ title }}</h2>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <!--<mat-icon>done</mat-icon>-->
+        <p [innerHTML]="messageSuccess | safeHTML"></p><!-- {{messageSuccess}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <!--<mat-icon>clear</mat-icon>-->
+        <p [innerHTML]="messageError | safeHTML"></p><!-- {{messageError}} -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div *ngIf="criteriRicercaOpened">
+          <form #ricercaForm="ngForm" (submit)="salva()">
+            <div class="row no-gutters">
+              <mat-form-field class="display-flex w-50">
+                <mat-label>Selezionare una normativa *</mat-label>
+                <mat-select [(ngModel)]="normativaSelected" name="normativa" [disabled]="action==='modifica'">
+                  <mat-option *ngFor="let option of normative" [value]="option">
+                    {{ option.descLinea }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <select-beneficiario *ngIf="enableSelectBeneficiario" [beneficiari]="beneficiariS"
+                [(beneficiario)]="beneficiarioS" [disabled]="action == 'modifica' || action == 'dettaglio'"
+                [required]="true" class="pr-10 w-100">
+              </select-beneficiario>
+              <mat-form-field *ngIf="enableBasicSelectBeneficiario" class="col">
+                <mat-label>Selezionare un beneficiario</mat-label>
+                <mat-select [(ngModel)]="beneficiarioSelected" name="beneficiario"
+                  [compareWith]="compareWithSelectBeneficiario" [disabled]="action !== 'inserisci'" [required]="true"
+                  (selectionChange)="onSelectBeneficiario()">
+                  <mat-option *ngFor="let option of beneficiari" [value]="option">
+                    <span>{{ option.denominazioneBeneficiario }}</span>
+                    <!-- {{ option.desc }} [{{option.codiceFiscale}}] -->
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="row no-gutters">
+              <mat-form-field class="col">
+                <mat-label>Selezionare una causale</mat-label>
+                <mat-select matOptionFirstChildUndefined="true" [(ngModel)]="causaleSelected" name="causale"
+                  [compareWith]="compareWithSelectCausale" [disabled]="action == 'dettaglio'" [required]="true"
+                  (selectionChange)="onSelectCausale()">
+                  <mat-option *ngFor="let option of causali" [value]="option">
+                    <span>{{ option.descCausaleTrasferimento }}</span>
+                    <!--
+                    <span>{{ option.descBreveLinea }} -
+                      {{option.descLinea}}</span>
+                    -->
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="row no-gutters">
+              <div class="col">
+                <mat-form-field class="widthData">
+                  <mat-label>Data</mat-label>
+                  <input matInput [matDatepicker]="pickerData" name="data" (click)="pickerData.open()"
+                    [(ngModel)]="data" [disabled]="action == 'dettaglio'" placeholder="gg/mm/aaaa" required>
+                  <!-- [formControl]="data" -->
+                  <mat-datepicker-toggle matSuffix [for]="pickerData">
+                    <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerData></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <mat-form-field class="col">
+                <mat-label>Codice</mat-label>
+                <input type="text" matInput name="codice" [(ngModel)]="codice" [disabled]="action == 'dettaglio'"
+                  required />
+              </mat-form-field>
+            </div>
+            <div class="row no-gutters marginBottom16">
+              <div class="col-auto">
+                <mat-label class="mr-24 font-small textSmallGrey" [ngClass]="{'grey-color': action == 'dettaglio'}">Tipo
+                  *</mat-label>
+              </div>
+              <div class="col">
+                <mat-radio-group [(ngModel)]="tipoRadio" [disabled]="action == 'dettaglio'" name="tipo"
+                  aria-label="Select an option" required>
+                  <!-- class="row no-gutters marginRadioButton" -->
+                  <mat-radio-button class="mr-24" value="1">privati</mat-radio-button><!-- class="col"-->
+                  <mat-radio-button class="mr-24" value="2">pubblici</mat-radio-button><!-- class="col ml-24"-->
+                  <!--<mat-radio-button class="mr-24" value="0">tutti</mat-radio-button>-->
+                  <!-- class="col ml-24"-->
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <mat-form-field class="col">
+                <mat-label class="mr-24">Importo *</mat-label>
+                <input type="text" [(inputNumber)]="inputNumberType" matInput name="importo" [(ngModel)]="importo"
+                  [disabled]="action == 'dettaglio'" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?">
+                <!-- placeholder="Importo *" pattern="([0-9]+)([.][0-9]+)?" -->
+              </mat-form-field>
+            </div>
+            <div class="row no-gutters" *ngIf="action == 'inserisci' || action == 'modifica'">
+              <div matTooltip="Inserire almeno un campo di ricerca" [matTooltipDisabled]="!disabledSalva()">
+                <!-- beneficiarioSelected -->
+                <button class="button-style-2 margin0" mat-raised-button type="submit" [disabled]="disabledSalva()">
+                  <!-- beneficiarioSelected -->
+                  SALVA
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

@@ -1,0 +1,150 @@
+<div class="mt-12 mr-10 ml-10">
+	<div class="mt-12 ml-10 mr-10">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<div class="header">
+					<h2 class="mb-0">Dati anagrafici</h2>
+				</div>
+				<form>
+					<div class="row no-gutters align-items-baseline">
+						<div class="col-auto w-50">
+							<span class="bold-text">Denominazione </span>
+							{{dettaglioSoggettoBeneficiario?.descrizioneBeneficiario}}
+						</div>
+						<div class="col-auto w-17">
+							<mat-radio-group *ngIf="dettaglioSoggettoBeneficiario" class="w-96 justify-content-center"
+								aria-label="Select an option" [(ngModel)]="dettaglioSoggettoBeneficiario.flagPubblicoPrivato"
+								(change)="onFlagPubblicoPrivatoChange($event)" name="flagPubblicoPrivato"
+								[disabled]="action == 'dettaglio'">
+								<mat-radio-button [value]="1" class="mr-10">Pubblico</mat-radio-button>
+								<mat-radio-button [value]="2">Privato</mat-radio-button>
+							</mat-radio-group>
+						</div>
+						<div class="col-auto w-33">
+							<mat-form-field class="w-96" *ngIf="dettaglioSoggettoBeneficiario">
+								<mat-label class="mr-24">Codice UNI IPA</mat-label>
+								<input type="text" matInput name="fieldCodUniIpa" [(ngModel)]="dettaglioSoggettoBeneficiario.codUniIpa"
+									[disabled]="action == 'dettaglio' || dettaglioSoggettoBeneficiario?.flagPubblicoPrivato != 1" />
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="mt-12 ml-10 mr-10">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<div class="header">
+					<h2>Recapiti</h2>
+				</div>
+				<form #recapitiForm="ngForm">
+					<div class="row no-gutters">
+						<div class="col-auto w-50">
+							<mat-form-field class="w-96" *ngIf="dettaglioSoggettoBeneficiario">
+								<mat-label class="mr-24">Telefono</mat-label>
+								<input type="text" matInput name="telefono" [(ngModel)]="dettaglioSoggettoBeneficiario.telefono"
+									[disabled]="action == 'dettaglio'" />
+							</mat-form-field>
+						</div>
+						<div class="col-auto w-50">
+							<mat-form-field class="w-96" *ngIf="dettaglioSoggettoBeneficiario">
+								<mat-label class="mr-24">FAX</mat-label>
+								<input type="text" matInput name="fax" [(ngModel)]="dettaglioSoggettoBeneficiario.fax"
+									[disabled]="action == 'dettaglio'" />
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row no-gutters mt-12">
+						<div class="col-auto w-50">
+							<div class="row no-gutters">
+								<mat-form-field class="row no-gutters width-70"
+									matTooltip="Indirizzo e-mail (NO PEC) per il recapito delle notifiche di progetto">
+									<input class="w-100" type="text" matInput placeholder="Indirizzo e-mail (NO PEC)" name="email"
+										[(ngModel)]="email" #mail="ngModel"
+										pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+										[disabled]="isDisabledEmail" required>
+									<mat-error *ngIf="mail?.errors?.required">
+										Campo obbligatorio
+									</mat-error>
+									<mat-error *ngIf="mail?.errors?.pattern">
+										Formato non valido
+									</mat-error>
+								</mat-form-field>
+								<div *ngIf="!isDisabledEmail && recapiti?.flagEmailConfermata !== 'S'"
+									class="col-auto w-25 display-flex align-items-center">
+									<button mat-button class="button-style-1" (click)="loadSalvaRecapito('C')">CONFERMA</button>
+								</div>
+								<div *ngIf="!isDisabledEmail && recapiti?.flagEmailConfermata === 'S'"
+									class="width-30 display-flex align-items-center">
+									<button mat-button class="button-style-1" (click)="loadSalvaRecapito('S')">SALVA</button>
+									<span class="green-color width-40">Indirizzo email confermato</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-auto w-50">
+							<div class="row no-gutters">
+								<mat-form-field class="row no-gutters width-70">
+									<input class="w-100" type="text" matInput placeholder="PEC" name="pec" [(ngModel)]="pec" #pc="ngModel"
+										pattern="^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+										[disabled]="isDisabledPec" required>
+									<mat-error *ngIf="pc?.errors?.required">
+										Campo obbligatorio
+									</mat-error>
+									<mat-error *ngIf="pc?.errors?.pattern">
+										Formato non valido
+									</mat-error>
+								</mat-form-field>
+								<div *ngIf="!isDisabledPec && recapiti?.flagPecConfermata !== 'S'"
+									class="col-auto w-25 display-flex align-items-center">
+									<button mat-button class="button-style-1" (click)="loadSalvaRecapitoPec('C')">CONFERMA</button>
+								</div>
+								<div *ngIf="!isDisabledPec && recapiti?.flagPecConfermata === 'S'"
+									class="width-30 display-flex align-items-center">
+									<button mat-button class="button-style-1" (click)="loadSalvaRecapitoPec('S')">SALVA</button>
+									<span class="green-color width-40">Indirizzo PEC confermato</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="mt-12 ml-10 mr-10 marginBottom18">
+		<mat-card class="mat-elevation-z2">
+			<mat-card-content>
+				<div class="header">
+					<h2>Sedi</h2>
+				</div>
+				<div class="row no-gutters" *ngIf="dettaglioSoggettoBeneficiario">
+					<div class="col">
+						<span class="bold-text">Sede legale</span> {{ dettaglioSoggettoBeneficiario.sedeLegale }}
+					</div>
+					<div class="col mt-12">
+						<span class="bold-text">Altre sedi</span>
+						<mat-card class="mat-elevation-z2 mt-12">
+							<blx-data-table [dataSource]="dataSourceSediProgetto" [displayedColumns]="displayedColumnsSediProgetto"
+								[displayedHeaders]="displayedHeadersSediProgetto" [displayedFooters]="displayedFootersSediProgetto"
+								[displayedColumnsCustom]="displayedColumnsCustomSediProgetto"
+								[displayedHeadersCustom]="displayedHeadersCustomSediProgetto" [cwidth]="'99%'" [enableSort]="true"
+								[azioni]="displayedColumnsCustomSediProgettoAzioni" (onVisualizza)="onVisualizzaSediProgetto($event)"
+								(onModifica)="onModificaSediProgetto($event)" (onElimina)="onEliminaSediProgetto($event)">
+							</blx-data-table>
+						</mat-card>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+		<div class="spaceBetween">
+			<!--pulsante vai alla mappa nascosto per il rilascio in produzione-->
+			<button *ngIf="false" class="button-style-2 mt-20" mat-raised-button type="button" (click)="goToMappe()">
+				VAI ALLA MAPPA
+			</button>
+			<button *ngIf="action !== 'dettaglio'" class="button-style-2 mt-20" mat-raised-button type="button"
+				(click)="salvaDatiBeneficiarioSedi()" [disabled]="!dettaglioSoggettoBeneficiario?.flagPubblicoPrivato">
+				SALVA
+			</button>
+		</div>
+	</div>
+</div>

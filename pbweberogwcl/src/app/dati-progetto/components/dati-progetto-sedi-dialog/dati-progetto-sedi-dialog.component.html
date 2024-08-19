@@ -1,0 +1,95 @@
+<mat-spinner-pbandi class="page" [ngClass]="{'displayNone': !isLoading()}"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+  <div class="spaceBetween">
+    <h3 class="bold-text">{{title}}</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <mat-card class="mat-elevation-z2 marginBottom18 messageSuccess" *ngIf="isMessageSuccessVisible">
+    <mat-card-content class="messageSuccessContent">
+      <p [innerHTML]="messageSuccess | safeHTML"></p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mat-elevation-z2 marginBottom18 messageWarning" *ngIf="isMessageWarningVisible">
+    <mat-card-content class="messageWarningContent">
+      <p [innerHTML]="messageWarning | safeHTML"></p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mat-elevation-z2 marginBottom18 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+      <p [innerHTML]="messageError | safeHTML"></p>
+    </mat-card-content>
+  </mat-card>
+  <div class="marginBottom18">
+    <div class="row no-gutters">
+      <div class="col">
+        <span class="bold-text">Indirizzo </span> {{ dettaglioSedeProgetto?.descIndirizzo }}
+        {{dettaglioSedeProgetto?.civico}},
+        {{dettaglioSedeProgetto?.cap}} - {{dettaglioSedeProgetto?.descComune}}
+        ({{dettaglioSedeProgetto?.descProvincia}})
+      </div>
+    </div>
+    <div class="row no-gutters">
+      <div class="col">
+        <span class="bold-text">Regione </span> {{ dettaglioSedeProgetto?.descRegione }}
+      </div>
+    </div>
+  </div>
+  <div class="marginBottom18">
+    <form #ricercaForm="ngForm" (submit)="salva()">
+      <div class="row no-gutters">
+        <div class="col-auto w-49">
+          <mat-form-field class="fullWidth" *ngIf="dettaglioSedeProgetto">
+            <input type="text" matInput placeholder="C.F. / P.IVA" name="fieldPartitaIva"
+              [(ngModel)]="dettaglioSedeProgetto.partitaIva"
+              [disabled]="action === 'dettaglio' || action === 'modifica'" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <mat-form-field class="fullWidth" *ngIf="dettaglioSedeProgetto">
+          <mat-label>E-mail</mat-label>
+          <input type="text" matInput name="fieldEmail" [(ngModel)]="dettaglioSedeProgetto.email"
+            [disabled]="action === 'dettaglio'" />
+        </mat-form-field>
+      </div>
+      <div class="row no-gutters spaceBetween">
+        <div class="col-auto w-49">
+          <mat-form-field class="fullWidth" *ngIf="dettaglioSedeProgetto">
+            <mat-label>Fax</mat-label>
+            <input type="text" matInput name="fieldFax" [(ngModel)]="dettaglioSedeProgetto.fax"
+              [disabled]="action === 'dettaglio'" />
+          </mat-form-field>
+        </div>
+        <div class="col-auto w-49">
+          <mat-form-field class="fullWidth" *ngIf="dettaglioSedeProgetto">
+            <mat-label>Telefono</mat-label>
+            <input type="text" matInput name="fieldTelefono" [(ngModel)]="dettaglioSedeProgetto.telefono"
+              [disabled]="action === 'dettaglio'" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-auto w-50" *ngIf="dettaglioSedeProgetto">
+
+          <mat-checkbox class="mat-checkbox-white-space-inherit"
+            [checked]="dettaglioSedeProgetto.flagSedeAmministrativa == 'S'" [value]="'S'"
+            [disabled]="action === 'dettaglio'" name="flagSedeAmministrativa"
+            (change)="onMatCheckboxChange($event, 'flagSedeAmministrativa')">
+            Sede Amministrativa
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="spaceBetween mt-12" *ngIf="!(action === 'dettaglio')">
+        <button class="button-style-1 margin0" mat-button type="button" (click)="close()">
+          ANNULLA
+        </button>
+        <button class="button-style-1 margin0" mat-button type="submit">
+          SALVA
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

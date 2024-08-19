@@ -1,0 +1,88 @@
+.page {
+    .title {
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060c1;
+            }
+
+            .backText {
+                color: #0060c1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .content {
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+
+            h2 {
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+
+            .arrow {
+                color: grey;
+            }
+        }
+
+        .row {
+            width: 100%;
+            display: flex;
+
+            .col {
+                flex-grow: 1;
+                padding-right: 10px;
+            }
+        }
+    }
+}
+
+.reportingContainerUp {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reportingContainerUpbutton {
+    text-align: right;
+}
+
+.button-style-3 {
+    border: 2px solid #1844a8 !important;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0060c1;
+}
+
+.mat-datepicker-toggle {
+    color: #0060c1;
+}
+
+mat-label,
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 16px;
+}
+
+mat-tab-group {
+    background-color: #ffffff;
+    font-size: 16px;
+}
+
+table {
+    mat-icon {
+        color: #006cb4;
+    }
+}
