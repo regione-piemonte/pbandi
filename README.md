@@ -28,10 +28,10 @@ Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi m
 - [PBWEBCERTWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebcertwcl)  	Certificazione dei finanziamenti pubblici erogati (Front-End in Angular)
 - [PBWEBEROG](https://github.com/regione-piemonte/pbandi/tree/main/pbweberog)  	    Gestione dell'erogazione dei finanziamenti pubblici
 - [PBWEBEROGWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbweberogwcl)  	Gestione dell'erogazione dei finanziamenti pubblici (Front-End in Angular)
-- [PBWEBFIN](https://github.com/regione-piemonte/pbandi/pbwebfin)  	    Gestione integrazione con Bilancio Regionale
-- [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi/pbwebfinwcl)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
-- [PBWEBRCE](https://github.com/regione-piemonte/pbandi/pbwebrce)  	    Rimodulazione del conto economico
-- [PBWEBRCEWCL](https://github.com/regione-piemonte/pbandi/pbwebrcewcl)  	Rimodulazione del conto economico (Front-End in Angular)
+- [PBWEBFIN](https://github.com/regione-piemonte/pbandi/tree/main/pbwebfin)  	    Gestione integrazione con Bilancio Regionale
+- [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebfinwcl)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
+- [PBWEBRCE](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrce)  	    Rimodulazione del conto economico
+- [PBWEBRCEWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrcewcl)  	Rimodulazione del conto economico (Front-End in Angular)
 - [PBGESTFINBO](https://github.com/regione-piemonte/pbandi/pbgestfinbo)  	Servizi REST trasversali del BackOffice Gestionale Finanziamenti 
 - [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi/pbgestfinbowcl)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
 

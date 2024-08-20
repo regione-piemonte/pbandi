@@ -1,3 +1,4 @@
 - [Enzo Cartisano](mailto:enzo.cartisano@csi.it)
 - [Luigi Panarace](mailto:luigi.panarace@csi.it)
 - [Marco Pochettino](mailto:marco.pochettino@csi.it)
+- [Claudio Zamboni](mailto:claudio.zamboni@csi.it)

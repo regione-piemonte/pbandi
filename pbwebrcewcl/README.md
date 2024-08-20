@@ -44,8 +44,8 @@ Seguire le istruzioni del README.md della componente [PBWEBRCE](../pbwebrce)
 Per il versionamento del software si usa la tecnica Semantic Versioning (http://semver.org).
 
 ## Authors
-* [Claudio Zamboni](mailto:claudio.zamboni@csi.it)
 * [Marco Pochettino](mailto:marco.pochettino@csi.it)
+* [Claudio Zamboni](mailto:claudio.zamboni@csi.it)
 
 ## Copyrights
 “© Copyright Regione Piemonte – 2024”
