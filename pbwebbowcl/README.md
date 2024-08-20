@@ -8,7 +8,7 @@ PBWEBBOWCL
 Si tratta della parte di front-end della componente [PBWEBBO](../pbwebbo). 
 
 ## Configurazioni iniziali
-Questa deve essere compilata prima della componente PBWEB. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbwebwcl\buildfiles.
+Questa deve essere compilata prima della componente PBWEBBO. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbwebbowcl\buildfiles.
 
 ## Prerequisiti di sistema
 [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
@@ -24,7 +24,7 @@ Questa deve essere compilata prima della componente PBWEB. I file da configurare
 Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWEBBO](../pbwebbo), effettuare i seguenti step:
 
 0- Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <vh-di prod> con  il Virtual Host Apache su cui saranno presenti le locations
-1- cd pbwebwcl
+1- cd pbwebbowcl
 2- npm install
 3- npm run build-prod
 4- rmdir /S /Q node_modules

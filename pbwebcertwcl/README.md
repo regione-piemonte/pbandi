@@ -8,7 +8,7 @@ PBWEBCERTWCL
 Si tratta della parte di front-end della componente [PBWEBCERT](../pbwebcert). 
 
 ## Configurazioni iniziali
-Questa deve essere la prima componente ad essere installata in quanto funge da Desktop del prodotto PBANDI.
+Questa deve essere compilata prima della componente PBWEBCERT. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbwebcertwcl\buildfiles.
 
 ## Prerequisiti di sistema
 [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)

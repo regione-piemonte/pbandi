@@ -18,50 +18,50 @@ favorisce una serie di aspetti, tra cui:
 
 Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi moduli angular:
 
-- [PBWORKSPACE](https://github.com/regione-piemonte/pbandi)  	Workspace per BPM
-- [PBWORKSPACEWCL](https://github.com/regione-piemonte/pbandi)  Workspace per BPM (Front-End in Angular)
-- [PBWEB](https://github.com/regione-piemonte/pbandi)  	        Gestione fase di rendicontazione
-- [PBWEBWCL](https://github.com/regione-piemonte/pbandi)  	    Gestione fase di rendicontazione (Front-End in Angular)
-- [PBWEBBO](https://github.com/regione-piemonte/pbandi)  	    Gestione back-office
-- [PBWEBBOWCL](https://github.com/regione-piemonte/pbandi)  	Gestione back-office (Front-End in Angular)
-- [PBWEBCERT](https://github.com/regione-piemonte/pbandi)  	    Certificazione dei finanziamenti pubblici erogati 
-- [PBWEBCERTWCL](https://github.com/regione-piemonte/pbandi)  	Certificazione dei finanziamenti pubblici erogati (Front-End in Angular)
-- [PBWEBEROG](https://github.com/regione-piemonte/pbandi)  	    Gestione dell'erogazione dei finanziamenti pubblici
-- [PBWEBEROGWCL](https://github.com/regione-piemonte/pbandi)  	Gestione dell'erogazione dei finanziamenti pubblici (Front-End in Angular)
-- [PBWEBFIN](https://github.com/regione-piemonte/pbandi)  	    Gestione integrazione con Bilancio Regionale
-- [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
-- [PBWEBRCE](https://github.com/regione-piemonte/pbandi)  	    Rimodulazione del conto economico
-- [PBWEBRCEWCL](https://github.com/regione-piemonte/pbandi)  	Rimodulazione del conto economico (Front-End in Angular)
-- [PBGESTFINBO](https://github.com/regione-piemonte/pbandi)  	Servizi REST trasversali del BackOffice Gestionale Finanziamenti 
-- [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
+- [PBWORKSPACE](https://github.com/regione-piemonte/pbandi/pbworkspace)  	Workspace per BPM
+- [PBWORKSPACEWCL](https://github.com/regione-piemonte/pbandi/pbworkspacewcl)  Workspace per BPM (Front-End in Angular)
+- [PBWEB](https://github.com/regione-piemonte/pbandi/pbweb)  	        Gestione fase di rendicontazione
+- [PBWEBWCL](https://github.com/regione-piemonte/pbandi/pbwebwcl)  	    Gestione fase di rendicontazione (Front-End in Angular)
+- [PBWEBBO](https://github.com/regione-piemonte/pbandi/pbwebbo)  	    Gestione back-office
+- [PBWEBBOWCL](https://github.com/regione-piemonte/pbandi/pbwebbowcl)  	Gestione back-office (Front-End in Angular)
+- [PBWEBCERT](https://github.com/regione-piemonte/pbandi/pbwebcert)  	    Certificazione dei finanziamenti pubblici erogati 
+- [PBWEBCERTWCL](https://github.com/regione-piemonte/pbandi/pbwebcertwcl)  	Certificazione dei finanziamenti pubblici erogati (Front-End in Angular)
+- [PBWEBEROG](https://github.com/regione-piemonte/pbandi/pbweberog)  	    Gestione dell'erogazione dei finanziamenti pubblici
+- [PBWEBEROGWCL](https://github.com/regione-piemonte/pbandi/pbweberogwcl)  	Gestione dell'erogazione dei finanziamenti pubblici (Front-End in Angular)
+- [PBWEBFIN](https://github.com/regione-piemonte/pbandi/pbwebfin)  	    Gestione integrazione con Bilancio Regionale
+- [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi/pbwebfinwcl)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
+- [PBWEBRCE](https://github.com/regione-piemonte/pbandi/pbwebrce)  	    Rimodulazione del conto economico
+- [PBWEBRCEWCL](https://github.com/regione-piemonte/pbandi/pbwebrcewcl)  	Rimodulazione del conto economico (Front-End in Angular)
+- [PBGESTFINBO](https://github.com/regione-piemonte/pbandi/pbgestfinbo)  	Servizi REST trasversali del BackOffice Gestionale Finanziamenti 
+- [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi/pbgestfinbowcl)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
 
 una componente trasversale per le componenti Angular
-- [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi)     Componente funzionalità comuni per BPM (Angular)
+- [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi/pbcommonwcl)     Componente funzionalità comuni per BPM (Angular)
 
 tre componenti di esposizione servizi:
-- [PBSERVWELFARE](https://github.com/regione-piemonte/pbandi)   Componente di esposizione servizi per i bandi welfare 
-- [PBSERVIZIT](https://github.com/regione-piemonte/pbandi)  	Servizi REST trasversali  	
-- [PBSERVREST](https://github.com/regione-piemonte/pbandi)  	Servizi esposti verso fruitori esterni 	
+- [PBSERVWELFARE](https://github.com/regione-piemonte/pbandi/pbservwelfare)   Componente di esposizione servizi per i bandi welfare 
+- [PBSERVIZIT](https://github.com/regione-piemonte/pbandi/pbservizit)  	Servizi REST trasversali  	
+- [PBSERVREST](https://github.com/regione-piemonte/pbandi/pbservrest)  	Servizi esposti verso fruitori esterni 	
 
 una componente trasversale di utility per la gesione dei file da archiviare
-- [FILESTORAGE](https://github.com/regione-piemonte/pbandi)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
+- [FILESTORAGE](https://github.com/regione-piemonte/pbandi/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
 
 due componenti di utilizi per le componenti online e batch
-- [UTILITYBATCH](https://github.com/regione-piemonte/pbandi)    Package plSql di utility batch 
-- [UTILITIONLINE](https://github.com/regione-piemonte/pbandi)   Componente logica plsql usata dall'online 
+- [UTILITYBATCH](https://github.com/regione-piemonte/pbandi/utilitybatch)    Package plSql di utility batch 
+- [UTILITIONLINE](https://github.com/regione-piemonte/pbandi/utilityonline)   Componente logica plsql usata dall'online 
 
 tre componenti Sql-Schema DB
-- [PBANDIDB](https://github.com/regione-piemonte/pbandi)        Componente schema pbandi
-- [PBANDIDBRO](https://github.com/regione-piemonte/pbandi)      Componente schema pbandi_ro
-- [PBANDIDBRW](https://github.com/regione-piemonte/pbandi)      Componente schema pbandi_rw
+- [PBANDIDB](https://github.com/regione-piemonte/pbandi/pbandidb)        Componente schema pbandi
+- [PBANDIDBRO](https://github.com/regione-piemonte/pbandi/pbandidbro)      Componente schema pbandi_ro
+- [PBANDIDBRW](https://github.com/regione-piemonte/pbandi/pbandidbrw)      Componente schema pbandi_rw
 
 sei componenti ORACLE/PLSQL
-- [PROCESSO](https://github.com/regione-piemonte/pbandi)  	    Gestione del nuovo processo interno  	
-- [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi) Componente pl/sql per procedura restituzione cup  	
-- [RETTIFICAFORF](https://github.com/regione-piemonte/pbandi)  	Calcolo importo validato rettificato  	
-- [RICHIESTACUP](https://github.com/regione-piemonte/pbandi)  	Procedura PLSQL di richiesta CUP  	
-- [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
-- [CARICAMENTOUTE](https://github.com/regione-piemonte/pbandi)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
+- [PROCESSO](https://github.com/regione-piemonte/pbandi/processo)  	    Gestione del nuovo processo interno  	
+- [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi/restituzionecup) Componente pl/sql per procedura restituzione cup  	
+- [RETTIFICAFORF](https://github.com/regione-piemonte/pbandirettificaforf)  	Calcolo importo validato rettificato  	
+- [RICHIESTACUP](https://github.com/regione-piemonte/pbandi/richiestacup)  	Procedura PLSQL di richiesta CUP  	
+- [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi/campionamento)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
+- [CARICAMENTOUTE](https://github.com/regione-piemonte/pbandi/caricamentoute)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
 # Configurazioni iniziali
 Nei file README.md delle singole componenti verranno elencati i dettagli per la loro configurazione iniziale.
 # Prerequisiti di sistema

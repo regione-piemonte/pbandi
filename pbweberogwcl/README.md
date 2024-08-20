@@ -8,7 +8,7 @@ PBWEBEROGWCL
 Si tratta della parte di front-end della componente [PBWEBEROG](../pbweberog). 
 
 ## Configurazioni iniziali
-Questa deve essere la prima componente ad essere installata in quanto funge da Desktop del prodotto PBANDI.
+Questa deve essere compilata prima della componente PBWEBEROG. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbweberogwcl\buildfiles.
 
 ## Prerequisiti di sistema
 [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)

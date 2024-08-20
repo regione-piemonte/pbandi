@@ -27,7 +27,7 @@ I parametri di configurazione per l'accesso al DB da parametrizzare in base agli
 Per generare i pacchetti effettuare i seguenti step:
 
 1- cd pbworkspace
-2- generare il file pbwebbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip come indicato nel README.md della componete [PBWEBBOWCLL](../pbwebbowcl)
+2- generare il file pbwebbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip come indicato nel README.md della componete [PBWEBBOWCL](../pbwebbowcl)
 2- unzip -o pbwebbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip -d pbwebbo-web\src\main\webapp\
 3- del pbwebbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip
 4- mvn clean package -P prod-rp-01 -Dpostfix="" -Dmaven.test.skip=true
