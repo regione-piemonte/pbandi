@@ -1,0 +1,409 @@
+<pbandi-master-spinner *ngIf="spinner"></pbandi-master-spinner>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+    <div>
+        <div class="title">
+            <h2>Gestione Garanzie</h2>
+        </div>
+
+        <div class="content">
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                <mat-card-content class="messageErrorContent">
+                    <p [innerHTML]="messageError"></p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="content">
+            <mat-expansion-panel [expanded]="criteriRicercaState" (opened)="criteriRicercaState = true" (closed)="criteriRicercaState = false" hideToggle>
+                <mat-expansion-panel-header style="padding-top: 10px; padding-bottom: 10px;">
+                    <div class="header">
+                        <h3 class="search" style="display: flex; align-items: center;">Criteri di ricerca
+                            <mat-icon class="arrow" style="padding-left: 7px;" *ngIf="criteriRicercaState">expand_less</mat-icon>
+                            <mat-icon class="arrow" style="padding-left: 7px;" *ngIf="!criteriRicercaState">expand_more</mat-icon>
+                        </h3>
+                    </div>
+                </mat-expansion-panel-header>
+
+                <div>
+                    <form [formGroup]="myForm">
+                        <mat-grid-list cols="8" rowHeight="60px">
+                            
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Descrizione Bando</mat-label>
+                                            <input matInput type="text" formControlName="descrizioneBando" [matAutocomplete]="auto1">
+                                            <button type="button" *ngIf="myForm.get('descrizioneBando').value" matSuffix mat-icon-button (click)="myForm.get('descrizioneBando').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto1="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggBando | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Codice Progetto</mat-label>
+                                            <input matInput type="text" formControlName="codiceProgetto" [matAutocomplete]="auto2">
+                                            <button type="button" *ngIf="myForm.get('codiceProgetto').value" matSuffix mat-icon-button (click)="myForm.get('codiceProgetto').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggCodProg | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input matInput type="text" formControlName="codiceFiscale" [matAutocomplete]="auto3">
+                                            <button type="button" *ngIf="myForm.get('codiceFiscale').value" matSuffix mat-icon-button (click)="myForm.get('codiceFiscale').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto3="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggCodFis | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>NDG</mat-label>
+                                            <input matInput type="text" formControlName="nag" [matAutocomplete]="auto4">
+                                            <button type="button" *ngIf="myForm.get('nag').value" matSuffix mat-icon-button (click)="myForm.get('nag').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto4="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggNdg | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Partita IVA</mat-label>
+                                            <input matInput formControlName="partitaIva" [matAutocomplete]="auto5">
+                                            <button type="button" *ngIf="myForm.get('partitaIva').value" matSuffix mat-icon-button (click)="myForm.get('partitaIva').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto5="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggIva | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Denominazione / Cognome e Nome</mat-label>
+                                            <input matInput type="text" formControlName="denominazioneCognomeNome" [matAutocomplete]="auto6">
+                                            <button type="button" *ngIf="myForm.get('denominazioneCognomeNome').value" matSuffix mat-icon-button (click)="myForm.get('denominazioneCognomeNome').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto6="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                    Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggDenom | async" [value]="option">
+                                                    {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Stato Escussione</mat-label>
+                                            <mat-select formControlName="statoEscussione">
+                                                <mat-option value="">-</mat-option>
+                                                <mat-option *ngFor="let option of listaStatiEscussione" [value]="option">
+                                                    {{option}}
+                                                </mat-option>
+                                                <mat-option value="-1">Domande Concesse</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="campo-ricerca" appearance="standard">
+                                            <mat-label>Denominazione Banca</mat-label>
+                                            <input matInput type="text" formControlName="denominazioneBanca" [matAutocomplete]="auto7">
+                                            <button type="button" *ngIf="myForm.get('denominazioneBanca').value" matSuffix mat-icon-button (click)="myForm.get('denominazioneBanca').setValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-autocomplete #auto7="matAutocomplete" autoActiveFirstOption>
+                                                <!-- Mostra il messaggio di "Caricamento..." mentre attendo la risposta dal server -->
+                                                <mat-option *ngIf="loadingSuggestions" class="loading-option" [disabled]="true">
+                                                  Caricamento...
+                                                </mat-option>
+                                                <!-- Mostra i suggerimenti normali -->
+                                                <mat-option *ngFor="let option of suggBanca | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+                        </mat-grid-list>
+                        <br>
+                        <button mat-raised-button class="button-style-2" (click)="search()">CERCA</button>
+                        <button mat-button type="button" class="button-style-1" (click)="reset()" style="margin-left: 10px;">RESET</button>
+                    </form>
+                </div>
+            </mat-expansion-panel>
+        </div>
+
+
+        <div class="content">
+            <mat-card [ngClass]="{'displayNone': !showResults}">
+                <mat-card-title>
+                    <h3>Risultati di ricerca</h3>
+                </mat-card-title>
+                
+                <mat-card-content class="scrollable-content">
+                    <p *ngIf="!listaGaranzie || !listaGaranzie.length"><b>Non esistono progetti con agevolazione garanzia per i criteri selezionati.</b></p>
+
+                    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="tab"
+                    [ngClass]="{'displayNone': !listaGaranzie || !listaGaranzie.length }" matSort>
+
+                    
+                    <ng-container matColumnDef="progetto">
+                        <th mat-header-cell *matHeaderCellDef>Progetto</th>
+                        <td mat-cell *matCellDef="let element">{{element.codiceProgetto ? element.codiceProgetto : '-' }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ndg">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>NDG</th>
+                        <td mat-cell *matCellDef="let element">{{element.ndg ? element.ndg : '-'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="beneficiario">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Beneficiario</th>
+                        <td mat-cell *matCellDef="let element">{{element.denomBeneficiario ? element.denomBeneficiario : '-'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="banca">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Banca</th>
+                        <td mat-cell *matCellDef="let element">{{element.denomBanca ? element.denomBanca : '-'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dataRicevimentoEscussione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Richiesta Escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.dataRichiestaEscussione === null ? "-" : element.dataRichiestaEscussione | date:'dd/MM/yyyy'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipoEscussione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.descTipoEscussione === null ? "-" : element.descTipoEscussione}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="statoEscussione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stato Escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.descStatoEscussione === null ? "Domanda concessa" : element.descStatoEscussione}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dataStato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Stato</th>
+                        <td mat-cell *matCellDef="let element">{{element.dataStato === null ? "-" : element.dataStato | date:'dd/MM/yyyy'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importoRichiesto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="value-column">Importo Richiesto Totale</th>
+                        <td mat-cell *matCellDef="let element" class="value-column">{{element.importoRichiesto === null ? "-" : element.importoRichiesto | number: '1.2-2' : 'it'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importoApprovato">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="value-column">Importo Approvato Totale</th>
+                        <td mat-cell *matCellDef="let element" class="value-column">{{element.importoApprovato === null ? "-" : element.importoApprovato | number: '1.2-2' : 'it'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                       <th mat-header-cell *matHeaderCellDef></th>
+                       <td mat-cell *matCellDef="let element" layout="row">
+                        <div class="options">
+                            <button mat-icon-button (click)="goToAttivitaIstruttore(element.idProgetto, element.listaDettagli[0].totaleFondo, element.listaDettagli[0].totaleBanca)" >
+                                <mat-icon matTooltip="Vai ad Attività Istruttore">library_books</mat-icon>
+                              </button>
+                            <button mat-icon-button (click)="goToGestioneEscussione(element)">
+                                <mat-icon matTooltip="Vai a Gestione Escussione">edit</mat-icon>
+                            </button>
+                            <button mat-icon-button> <!-- (click)="expandedElement = expandedElement === element ? null : element"-->
+                                <mat-icon inline *ngIf="expandedElement != element" class="font-size-large" matTooltip="Visualizza dettaglio agevolazioni">expand_more</mat-icon>
+                                <mat-icon inline *ngIf="expandedElement == element" class="font-size-large" matTooltip="Nascondi dettaglio">expand_less</mat-icon>
+                            </button>
+                        </div>
+                       </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let inElement" [attr.colspan]="displayedColumns.length" class="detalBoxRow">
+                          <div class="example-element-detail"
+                            [@detailExpand]="inElement == expandedElement ? 'expanded' : 'collapsed'">
+          
+                            <table mat-table [dataSource]="inElement.listaDettagli" multiTemplateDataRows class="innerTable">
+          
+                              <ng-container matColumnDef="tipoAgevolazione">
+                                <th mat-header-cell *matHeaderCellDef> Tipo Agevolazione </th>
+                                <td mat-cell *matCellDef="let element"> {{element.descBreveModalitaAgevolazione === null ? "-" : element.descBreveModalitaAgevolazione}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="importoAmmesso">
+                                <th mat-header-cell *matHeaderCellDef class="value-column"> Importo Ammesso </th>
+                                <td mat-cell *matCellDef="let element" class="value-column"> {{element.importoAmmesso === null ? "-" : element.importoAmmesso | number: '1.2-2' : 'it'}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="totaleFondo">
+                                <th mat-header-cell *matHeaderCellDef class="value-column"> Totale Fondo </th>
+                                <td mat-cell *matCellDef="let element" class="value-column"> {{element.totaleFondo === null ? "-" : element.totaleFondo | number: '1.2-2' : 'it'}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="totaleBanca">
+                                <th mat-header-cell *matHeaderCellDef class="value-column"> Totale Banca </th>
+                                <td mat-cell *matCellDef="let element" class="value-column"> {{element.totaleBanca === null ? "-" : element.totaleBanca | number: '1.2-2' : 'it'}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="dtConcessione">
+                                <th mat-header-cell *matHeaderCellDef> Data Concessione </th>
+                                <td mat-cell *matCellDef="let element"> {{element.dataConcessione === null ? "-" : element.dataConcessione | date:'dd/MM/yyyy'}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="dtErogazioneFinanziamento">
+                                <th mat-header-cell *matHeaderCellDef> Data Erogazione </th>
+                                <td mat-cell *matCellDef="let element"> {{element.dataErogazione === null ? "-" : element.dataErogazione | date:'dd/MM/yyyy'}} </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="importoDebitoResiduo">
+                                <th mat-header-cell *matHeaderCellDef class="value-column"> Importo Debito Residuo </th>
+                                <td mat-cell *matCellDef="let element" class="value-column">
+                                    <ng-container *ngIf="element.isImportoDebitoLoading; else dataLoaded">
+                                        <mat-spinner [diameter]="40"></mat-spinner>
+                                    </ng-container>
+                                    <ng-template #dataLoaded>
+                                        {{element.importoDebitoResiduo === null ? "-" : element.importoDebitoResiduo | number: '1.2-2' : 'it'}}
+                                    </ng-template>
+                                </td>
+                              </ng-container>
+          
+                              <ng-container matColumnDef="importoEscusso">
+                                <th mat-header-cell *matHeaderCellDef class="value-column"> Importo Escusso </th>
+                                <td mat-cell *matCellDef="let element" class="value-column"> {{element.importoEscusso === null ? "-" : element.importoEscusso | number: '1.2-2' : 'it'}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="statoCredito">
+                                <th mat-header-cell *matHeaderCellDef> Stato Credito </th>
+                                <td mat-cell *matCellDef="let element"> {{element?.statoCredito === null ? "-" : element?.statoCredito}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="revocaBancaria">
+                                <th mat-header-cell *matHeaderCellDef> Revoca Bancaria </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button *ngIf="element.revocaBancaria === 'Si' || element.revocaBancaria === 'Sì'" mat-button (click)="openDettaglioRevocaBancaria(element.idProgetto)" color="primary">Si</button>
+                                    <span *ngIf="element.revocaBancaria === 'No'">No</span>
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="azioniRecuperoBanca">
+                                <th mat-header-cell *matHeaderCellDef> Azioni Recupero Banca </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button *ngIf="element.azioniRecuperoBanca === 'Si' || element.azioniRecuperoBanca === 'Sì'" (click)="openDettaglioAzioniRecuperoBanca(element.idProgetto)" mat-button color="primary">Si</button>
+                                    <span *ngIf="element.azioniRecuperoBanca === 'No'">No</span>
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="saldoEStralcio">
+                                <th mat-header-cell *matHeaderCellDef> Saldo e Stralcio </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button *ngIf="element.saldoStralcio === 'Si' || element.saldoStralcio === 'Sì'" (click)="openDettaglioSaldoStralcio(element.idProgetto)" mat-button color="primary">Si</button>
+                                    <span *ngIf="element.saldoStralcio === 'No'">No</span>
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                  <div class="options">
+                                    <button mat-icon-button (click)="openPianoAmmortamento(inElement, element)">
+                                      <mat-icon matTooltip="Apri Piano di Ammortamento">pending</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="openEstrattoConto(inElement, element)">
+                                      <mat-icon matTooltip="Apri Estratto Conto">receipt</mat-icon>
+                                    </button>
+                                  </div>
+                                </td>
+                              </ng-container>
+          
+                              <tr mat-header-row *matHeaderRowDef="displayedInnerColumns"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedInnerColumns;"></tr>
+                            </table>
+                          </div>
+                        </td>
+                      </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row" [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>    
+
+                    </table>
+
+                    <div class="bottom-options" [ngClass]="{'displayNone': !listaGaranzie || !listaGaranzie.length}">
+                        <button class="button-style-2 download-button-component" mat-button [disabled]="loadingFromAmmvo > 0" (click)="download()"><span class="download-button-container">SCARICA EXCEL<mat-icon class="download-icon">save_alt</mat-icon></span></button>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true" [ngClass]="{'displayNone': !listaGaranzie || !listaGaranzie.length }"></mat-paginator>
+                    </div>
+                    
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

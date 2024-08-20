@@ -1,0 +1,76 @@
+<div>
+  <div class="spaceBetween">
+    <h3 class="bold-text">Richiesta di integrazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <div class="content" [hidden]="!error">
+    <mat-card-content class="messageError">
+    <p id="ellipsisP" >ERRORE</p>
+    <span>{{messageError}}</span>
+    </mat-card-content>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+    <div class="content"*ngIf="erroreAllegato === true">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{messageAllegato}}</span>
+      </mat-card-content>
+    </div>
+
+    <div class="content" *ngIf="erroreAllegato === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{messageAllegato}}</span>
+        </mat-card-content>
+    </div>
+  <form [formGroup]="myForm">
+
+    <!-- <mat-form-field style="width: 50em!important;"  class="fullWidth" class="font">
+      <mat-label>Motivazione</mat-label>
+      <textarea style="width: 50em!important;" type="text" matInput formControlName="motivazione" name="motivazione" placeholder="Motivazione"></textarea>
+    </mat-form-field> -->
+
+      <mat-form-field class="w-50" appearance="standard">
+        <mat-label>Giorni scadenza</mat-label>
+        <input matInput type="number" formControlName="giorniScadenza">
+        <mat-error *ngIf="myForm.get('giorniScadenza')?.errors?.required">
+          È obbligatorio specificare il numero di giorni scadenza 
+        </mat-error>
+      </mat-form-field>
+
+    <div class="col" style="margin-top: 2em;">
+      <div >
+        <button [disabled]="allegatiInseriti == true" mat-button class="button-style-1" (click)="uploadFileEscussione.click()">AGGIUNGI ALLEGATO</button>
+        <input type="file" [hidden]="true" #uploadFileEscussione id="uploadFileEscussione" name="uploadFileEscussione"
+          (change)="handleFileEscussione($event.target.files)" />
+      </div>
+      
+    
+
+      <div style="display: flex; align-items: baseline;">
+        <h3>Lettera accompagnatoria :</h3>
+        <div *ngFor="let file of allegati; let i = index" class="alignItemsCenter">
+        <span> <span class="bold-text">{{file.name}}</span> - {{file.size}} bytes</span>
+        <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaFileIntegrazioneLocale(i)">
+            <mat-icon>delete</mat-icon>
+        </button>
+        </div>
+    </div>
+  
+    </div>
+
+  </form>
+</div>
+<div class="spaceBetween">
+  <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+  <button mat-button class="button-style-1" [disabled]="isLoading" (click)="inviaIntegrazione()">CONFERMA</button>
+</div>

@@ -1,0 +1,79 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
+export interface SoggettoGiuridicoIndipendenteDomanda {
+	// private String codiceFondo;
+	// private String numeroDomanda;
+	// private String statoDomanda;
+	// private String codiceProgetto;
+	// private String statoProgetto;
+	// private String ruolo; 
+	// private Long idIscrizione;
+    // private String numIscrizione;            
+    // private Date dtIscrizione;
+    // private String flagIscrizione;
+    // private Long idTipoIscrizione;
+    // private Long idProvinciaIscrizione;
+    // private Long idIndirizzo;
+    // private String descIndirizzo;            
+    // private String cap;                         
+    // private String descComune;                 
+    // private Long idComune;                   
+    // private String descProvincia;              
+    // private Long idProvincia;                
+    // private String descRegione;                
+    // private Long idRegione;                  
+    // private String descNazione;                
+    // private Long idNazione;                  
+    // private String cfSoggetto;     
+    // private Long idTipoSogg;            
+    // private String codAteco;                   
+    // private String descAteco;                  
+    // private Long idSoggetto;                 
+    // private String ragSoc;
+    // private Date dtCostituzione;             
+    // private Long capSociale;            
+    // private Long idAttIuc;             
+    // private Long idFormaGiuridica;          
+    // private Long idClassEnte;     
+    // private Long idDimensioneImpresa;       
+    // private Long idEnteGiuridico;           
+    // private Date dtInizioVal;          
+    // private Date dtFineVal;            
+    // private Date dtUltimoEseChiuso;  
+    // private Long idUtenteIns;               
+    // private Long idUtenteAgg;               
+    // private Long flagPubblicoPrivato;       
+    // private String codUniIpa;                 
+    // private Long idStatoAtt;           
+    // private Date dtValEsito;        
+    // private String periodoScadEse;  
+    // private Date dtInizioAttEsito;    
+    // private String flagRatingLeg;        
+    // private String descFormaGiur;        
+    // private String pIva; 
+    // private Long idSede;
+    // private Long idAttAteco;
+    // private Date dtInizioValSede;
+    // private String descTipoSoggetto;
+    // private String descTipoAnagrafica;
+    // private String descStatoAttivita;
+    // private String descSezioneSpeciale;
+    // private String descProvinciaIscriz; 
+    // private String descStatoDomanda; 
+    // private String descPEC; 
+    // private String quotaPartecipazione; 
+    // private Long idSezioneSpeciale; 
+    // private Long idTipoSoggCorr; 
+    // private String descTipoSoggCorr; 
+    // private boolean datiAnagrafici; 
+    // private boolean  sedeLegale; 
+    // private boolean  attivitaEconomica; 
+    // private boolean  datiIscrizione; 
+    // private boolean  sezioneAppartenenza; 
+    // private Long idEnteSezione; 
+    // private String progSoggDomanda; 
+    // private String progSoggProgetto; 
+}

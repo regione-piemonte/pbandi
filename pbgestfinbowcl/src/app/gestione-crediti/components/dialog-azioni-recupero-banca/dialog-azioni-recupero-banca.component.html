@@ -1,0 +1,80 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Azioni recupero banca</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+        <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <table mat-table [dataSource]="storicoAzioniRecupBanca" multiTemplateDataRows style="width: 100%;">
+
+        <!-- Descrizione azione -->
+        <ng-container matColumnDef="azione">
+            <th mat-header-cell *matHeaderCellDef> <b>Azione</b> </th>
+            <td mat-cell *matCellDef="let element"> {{ element.descrizioneAttivita}} </td>
+        </ng-container>
+
+        <!-- Data Column -->
+        <ng-container matColumnDef="dataAzione">
+            <th mat-header-cell *matHeaderCellDef> <b>Data azione</b> </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.dataAzione|date:"dd/MM/yyyy"}}</td>
+        </ng-container>
+
+        <!-- Istruttore Column -->
+        <ng-container matColumnDef="utente">
+            <th mat-header-cell *matHeaderCellDef> <b>Utente modifica</b> </th>
+            <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                element.nome}} </td>
+        </ng-container>
+
+        <!-- Row Options Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                <div class="text-right">
+
+                    <button mat-icon-button
+                        (click)="expandedElement = expandedElement != element ? element : null">
+                        <mat-icon> visibility </mat-icon>
+                    </button>
+
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- per visualizzare i dettagli dell'azione: expanded -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                class="detailBoxRow">
+                <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <table>
+                        <tr>
+                            <td><b>N. protocollo </b></td>
+                            <td>{{element.numProtocollo}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Note </b></td>
+                            <td>{{element.note}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element"
+            [hidden]="element.fineValidita != null">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+    </table>
+</div>

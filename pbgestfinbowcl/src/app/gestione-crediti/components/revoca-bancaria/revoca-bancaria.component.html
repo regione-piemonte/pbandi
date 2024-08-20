@@ -1,0 +1,198 @@
+<div>
+    <mat-card class="padding0">
+        <mat-card-header>
+            <mat-card-title>
+                <h3 class="cardtitle">Revoca bancaria</h3>
+            </mat-card-title>
+        </mat-card-header>
+
+
+        <mat-card-content class="scroll">
+            <!--SPINNER-->
+            <div style="height: 100%;" *ngIf="isLoading()">
+                <mat-spinner class="loading"></mat-spinner>
+            </div>
+
+            <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveSuccess">
+                <mat-card-content class="messageSuccessContent">
+                    <p>{{messageSuccess}}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiControl">
+                <mat-card-content class="messageErrorContent">
+                    <p>Gli importi devono avere due cifre dopo la virgola</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiVuoti">
+                <mat-card-content class="messageErrorContent">
+                    <p> Almeno un campo deve essere valorizzato</p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+                <mat-card-content class="messageErrorContent">
+                    <p> Modificare almeno un campo</p>
+                </mat-card-content>
+            </mat-card>
+
+
+            <div *ngIf=isConferma>
+                <form #revocaBancariaForm="ngForm" style="margin-left: 0%;">
+
+                    <mat-grid-list cols="8" rowHeight="70px" [gutterSize]="'5px'">
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data ricez. communicaz.</mat-label>
+                                <input matInput [matDatepicker]="picker" name="dataRicezComunicazioneRevoca"
+                                    [(ngModel)]="dataRicezComunicazioneRevoca"  disabled [max]="todayDate" />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataRicezComunicazioneRevoca"
+                                    (click)="setDataNull(1)" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data revoca</mat-label>
+                                <input matInput [matDatepicker]="picker2" name="dataRevoca" [(ngModel)]="dataRevoca"
+                                    disabled  [max]="todayDate" />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataRevoca" (click)="setDataNull(2)"
+                                    class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Debito residuo banca</mat-label>
+                                <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                    [(ngModel)]="impDebitoResiduoBancaFormatted" name="impDebitoResiduoBanca"
+                                    (blur)="setImpDebitoResiduoBanca()" #numP="ngModel" step="0.01">
+                                <mat-error *ngIf="numP?.errors?.pattern">
+                                    Valore non valido
+                                </mat-error>
+                                <mat-error *ngIf="numP?.errors?.error === 'min'">Il valore deve essere maggiore o
+                                    uguale a 0</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Debito residuo Finpiemonte</mat-label>
+                                <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                    [(ngModel)]="impDebitoResiduoFinpiemonteFormatted"
+                                    name="impDebitoResiduoFinpiemonte" (blur)="setImpDebitoResiduoFinpiemonte()"
+                                    #numP1="ngModel" step="0.01">
+                                <mat-error *ngIf="numP1?.errors?.pattern">
+                                    Valore non valido
+                                </mat-error>
+                                <mat-error *ngIf="numP1?.errors?.error === 'min'">Il valore deve essere maggiore o
+                                    uguale a 0</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Percentuale cofinanziamento Finpiemonte: </mat-label>
+                                <b> <input type="number" matInput [(ngModel)]="perCofinanziamentoFinpiemonte"
+                                        name="perCofinanziamentoFinpiemonte" disabled=true />
+                                </b>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Numero protocollo</mat-label>
+                                <input type="text" [(ngModel)]="numeroProtocollo" matInput name="numeroProtocollo"
+                                    #numP3="ngModel" maxlength="30" />
+                                <!-- <mat-error *ngIf="numP3?.errors?.pattern">Valore non valido</mat-error> -->
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Note</mat-label>
+                                <input type="text" matInput [(ngModel)]="note" name="note" />
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+
+
+
+                    </mat-grid-list>
+                </form>
+            </div>
+
+
+            <!-- modifica -->
+
+            <div *ngIf=isRevoca>
+
+                <mat-grid-list cols="8" rowHeight="40px">
+
+                    <mat-grid-tile [colspan]="4">
+                        <div class="text-inside-grid">
+                            Data ricezione comunicazione: <b>{{dataRicezComunicazioneRevoca |date: "dd/MM/yyyy"}}
+                            </b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Data revoca: <b>{{dataRevoca |date: "dd/MM/yyyy"}} </b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Debito residuo banca: <b>{{impDebitoResiduoBanca | number: '1.2-2' : 'it'}}</b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Debito residuo Finpiemonte:<b> {{impDebitoResiduoFinpiemonte | number: '1.2-2' : 'it'}}</b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Percentuale cofinanziamento Finpiemonte: <b>{{ perCofinanziamentoFinpiemonte }}%
+                            </b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Numero protocollo:<b> {{numeroProtocollo}}</b>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <table>
+                    <td>
+                        Note: <b>{{note}}</b>
+                    </td>
+                </table>
+
+            </div>
+
+            <!-- <app-gestione-allegati *ngIf="ambito != 'escussioni'" [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+
+            <!-- per visualizzare lo storico -->
+            <!-- *ngIf="isRevoca && user.codiceRuolo === 'ISTR-CREDITI'" -->
+
+        </mat-card-content>
+        <mat-card-actions align="end">
+            <button mat-button class="button-style-1" (click)="openStorico()"
+                [disabled]="disableStorico == true">STORICO</button>
+            <button mat-button class="button-style-1" (click)="onAnnulla()" *ngIf=isConferma>ANNULLA</button>
+            <!-- <div fxFlex></div> -->
+            <button mat-raised-button class="button-style-2" (click)="controllaCampi()" *ngIf=isConferma>CONFERMA</button>
+            <button mat-raised-button class="button-style-2" (click)="onModifica()" *ngIf="revocaBancariaDTO.idRevoca!=null && !isConferma">MODIFICA</button>
+        </mat-card-actions>
+    </mat-card>
+    
+</div>

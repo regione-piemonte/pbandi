@@ -1,0 +1,98 @@
+.row {
+  display: flex;
+  align-items: center;
+
+  .col {
+    flex-grow: 1;
+    padding-right: 10px;
+  }
+}
+
+.titleBar{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding-right: 1rem;
+}
+
+.reportingContainerUp {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reportingContainerUpbutton {
+  text-align: right;
+}
+
+.reportingContainerDown {
+  display: flex;
+  justify-content: flex-end;
+}
+
+table {
+  width: 100%;
+}
+
+.marginRight {
+  margin-right: 15px;
+}
+
+.margin0 {
+  margin: 0px !important;
+}
+
+.marginLeft20 {
+  margin-left: 20px;
+}
+
+.marginRight25 {
+  margin-right: 25px;
+}
+
+.scarica-button {
+  color: #0a9de5;
+}
+
+mat-option {
+  height: 35px !important;
+  line-height: 35px !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+  color: #0058b1 !important;
+}
+.nuova-button {
+  background-color: rgba(245, 124, 0, 1);
+  color: #fff;
+}
+
+.width-data {
+  width: 155px !important;
+}
+
+.width-50-perc {
+  width: 50%;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.margin-top-15 {
+  margin-top: 15px;
+}
+
+.padding-left-10 {
+  padding-left: 10px;
+}
+.margin-left-10 {
+  margin-left: 18px;
+}
+
+.button-marty{
+  display: flex; 
+  justify-content: end;     
+  margin-top: 4em;;
+}
+

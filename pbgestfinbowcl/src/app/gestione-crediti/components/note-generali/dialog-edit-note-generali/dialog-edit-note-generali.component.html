@@ -1,0 +1,29 @@
+<div>
+    <div mat-dialog-title>
+        <div class="spaceBetween">
+            <h3 *ngIf="op == 1" class="bold-text">Nuova nota generale</h3>
+            <h3 *ngIf="op == 2" class="bold-text">Modifica nota generale</h3>
+
+            <button type="button" mat-icon-button class="blue-color" mat-dialog-close><mat-icon>clear</mat-icon></button>
+        </div>
+    </div>
+
+    <div mat-dialog-content>
+
+        <mat-form-field appearance="fill" style="width: 100%;">
+            <textarea matInput name="note" rows="7" placeholder="Nota" [(ngModel)]="textNota"></textarea>
+        </mat-form-field>
+
+        <br>
+
+        <!--Allegati-->
+        <!-- OLD <app-gestione-allegati [nomeBox]="'pbandi_T_ANNOTAZ_GENERALI'" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati>-->
+        <app-gestione-allegati idComponente="2" [allegatiPresenti]="data.allegatiPresenti" (newFileEvent)="recuperaFile($event)" (needsUpdateEvent)="update($event)"></app-gestione-allegati>
+
+    </div>
+
+    <div mat-dialog-actions class="spaceBetween">
+        <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+        <button mat-button class="button-style-2" [disabled]="textNota == ''" (click)="salvaNota()">SALVA</button>
+    </div>
+</div>

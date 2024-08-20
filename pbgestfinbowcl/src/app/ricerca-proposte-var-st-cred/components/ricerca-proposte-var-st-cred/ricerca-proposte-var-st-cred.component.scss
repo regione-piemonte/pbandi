@@ -1,0 +1,197 @@
+.margin-left-10 {
+    margin-left: 18px;
+  }
+  
+  mat-option {
+    height: 35px !important;
+    line-height: 35px !important;
+  }
+  
+  .padding-left-10 {
+    padding-left: 10px;
+  }
+  
+  .elem1 {
+    width: 98%;
+  }
+  
+  .mat-elevation-z8 {
+    //width: 98%;
+    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%);
+    font-size: 10px !important;
+  }
+  
+  .mat-grid-tile .mat-figure {
+    display: block !important;
+  }
+  
+  .mat-form-field-appearance-standard .mat-form-field-flex {
+    padding-top: 0 !important;
+  }
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+.options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+  
+  
+  table th.mat-header-cell,
+  #app .page-content table td.mat-cell,
+  #app .page-content table td.mat-footer-cell {
+    padding: 3px !important;
+  }
+
+  .proposte-container {
+    width: fit-content;
+    //padding-right: 20px;
+  }
+  
+  .tab {
+  
+
+    ::ng-deep .mat-sort-header-button {
+      text-align: left;
+  }
+
+  ::ng-deep .mat-sort-header-content {
+      text-align: left;
+      display: flex;
+      align-items: center;
+  }
+
+  ::ng-deep .mat-sort-header-button {
+      text-align: left;
+  }
+
+  th.text-align-left,th.text-align-left .mat-sort-header-button {
+      text-align: left !important;
+  }
+
+  th.align-left .mat-sort-header-container {
+      justify-content: flex-start;
+  }
+  }
+  
+  th.text-align-left,
+  th.text-align-left .mat-sort-header-button {
+    text-align: left !important;
+  }
+  
+  th.align-left .mat-sort-header-container {
+    justify-content: flex-start;
+  }
+
+  
+th.text-align-left,th.text-align-left .mat-sort-header-button {
+  text-align: left !important;
+}
+
+th.align-left .mat-sort-header-container {
+  justify-content: flex-start;
+}
+
+  
+  table {
+    width: 100%;
+    th.mat-header-cell {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        width: 3em;
+      }
+  }
+  
+  .mat-column-titoloBando {
+    width: 10vw;
+  }
+
+  .mat-column-select , .mat-column-giorniSconf{
+    width: 1%;
+  }
+
+  
+
+  .mieCheckBox {
+    margin-left: 2px;
+    margin-right: 8px;
+}
+
+.button-margin{
+  margin-left: 20px;
+}
+
+#overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.marty-card {
+  width: max-content;
+  margin-right: 20px;
+} 
+
+.bottom-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .right-options {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.download-button-component {
+  .download-button-container {
+      display: flex;
+      align-items: center;
+
+      .download-icon {
+          color: white;
+          padding-left: 9px;
+      }
+  }
+  &:hover {
+      .download-button-container {
+          display: flex;
+          align-items: center;
+
+          .download-icon {
+              color: blue;
+              padding-left: 9px;
+          }
+      }
+  }
+  &:disabled {
+      .download-button-container {
+          display: flex;
+          align-items: center;
+
+          .download-icon {
+              color: rgba(0,0,0,.26);
+              padding-left: 9px;
+          }
+      }
+  }
+}

@@ -1,0 +1,172 @@
+<div mat-dialog-title>
+    <div class="spaceBetween">
+        <h3 *ngIf="isNew" class="bold-text">Nuova Messa in mora</h3>
+        <h3 *ngIf="!isNew" class="bold-text">Modifica Messa in mora</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiVuoti">
+        <mat-card-content class="messageErrorContent">
+            <p> Almeno un campo deve essere valorizzato</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isControllaCampi">
+        <mat-card-content class="messageErrorContent">
+            <p> Gli importi devono avere massimo due cifre dopo la virgola</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<mat-dialog-content>
+    <form>
+        <mat-grid-list cols="8" rowHeight="55px" style="margin-left: 0%;" [gutterSize]="'10px'">
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data messa in mora </mat-label>
+                    <input matInput [matDatepicker]="picker" name="dataMessaInMora" [(ngModel)]="dataMessaInMora" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataMessaInMora" (click)="setDataNull(1)" class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1"> <!-- Aggiunto da richiesta da FP -->
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Numero protocollo</mat-label>
+                    <input type="text" [(ngModel)]="numeroProtocollo" name="numeroProtocollo" matInput>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field appearance="standard" class="elem1">
+                    <mat-label>Selezionare una tipologia</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaMora" name="attivitaDTO">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaMessaMora" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo totale messa in mora</mat-label>
+                    <input type="text" [(ngModel)]="importoMessaMoraComplessivaFormatted" matInput
+                        name="importoMessaMoraComplessiva" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP="ngModel"
+                        (blur)="setImporto(1)" step="0.01">
+                    <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo quota cap. revoca</mat-label>
+                    <input type="text" [(ngModel)]="importoQuotaCapitaleRevocaFormatted" matInput
+                        name="importoQuotaCapitaleRevoca" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP1="ngModel"
+                        (blur)="setImporto(2)" step="0.01">
+                    <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo agevolaz. revoca</mat-label>
+                    <input type="text" [(ngModel)]="importoAgevolazRevocaFormatted" matInput
+                        name="importoAgevolazRevoca" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel"
+                        (blur)="setImporto(3)" step="0.01">
+                    <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo credito residuo </mat-label>
+                    <input type="text" [(ngModel)]="importoCreditoResiduoFormatted" matInput
+                        name="importoCreditoResiduo" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel"
+                        (blur)="setImporto(4)" step="0.01">
+                    <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo interessi di mora </mat-label>
+                    <input type="text" [(ngModel)]="importoInteressiMoraFormatted" matInput name="importoInteressiMora"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel" (blur)="setImporto(5)" step="0.01">
+                    <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field appearance="standard" class="elem1">
+                    <mat-label>Selezionare un recupero </mat-label>
+                    <mat-select [(ngModel)]="idAttivitaRecuperoMora" name="attivitaDTO1">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaRecupero" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data pagamento</mat-label>
+                    <input matInput [matDatepicker]="picker3" name="dataPagamento" [(ngModel)]="dataPagamento" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataPagamento" (click)="setDataNull(2)" class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data notifica</mat-label>
+                    <input matInput [matDatepicker]="picker4" name="dataNotificaMessaMora"
+                        [(ngModel)]="dataNotificaMessaMora" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataNotificaMessaMora" (click)="setDataNull(3)" class="icons">
+                       <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker4"  class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Note</mat-label>
+                    <input type="text" maxlength="4000" matInput [(ngModel)]="note" name="note" />
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    <!-- <app-gestione-allegati  [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+
+    <br>
+  
+</mat-dialog-content>
+
+<mat-dialog-actions class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="controllaCampi()">SALVA</button>
+</mat-dialog-actions>
+

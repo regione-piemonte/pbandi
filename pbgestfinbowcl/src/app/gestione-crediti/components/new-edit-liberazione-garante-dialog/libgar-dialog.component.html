@@ -1,0 +1,74 @@
+<div>
+  <div class="spaceBetween">
+    <h3 *ngIf="operation == 'new'" class="bold-text">Nuova liberazione garante</h3>
+    <h3 *ngIf="operation == 'edit'" class="bold-text">Modifica liberazione garante</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <mat-card class="messageError" *ngIf="showError">
+    <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+    </mat-card-content>
+  </mat-card>
+  <div class="content"*ngIf="showError">
+    <mat-card-content class="messageError">
+    <p >ERRORE</p>
+    <span>{{messageError}}</span>
+    </mat-card-content>
+  </div>
+  <div class="content" *ngIf="showSucc">
+      <mat-card-content class="messageSuccess">
+      <p >SUCCESSO</p>
+      <span>{{messageSuccess}}</span>
+      </mat-card-content>
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="myForm">
+      <p class="fullWi">
+        <mat-form-field class="halfWi">
+          <mat-label>Data liberazione garante</mat-label>
+          <input matInput formControlName="dataLiberazione" [matDatepicker]="picker1" class="datepicker" disabled [max]="today"
+            required>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataLiberazione').value"
+            (click)="this.myForm.get('dataLiberazione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+          <mat-error *ngIf="myForm.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="halfWi">
+          <mat-label>Importo liberazione</mat-label>
+          <input matInput type="text" formControlName="importoLiberazione" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+          (blur)="this.myForm.get('importoLiberazione').setValue(this.sharedService.formatValue((this.sharedService.getNumberFromFormattedString(this.myForm.get('importoLiberazione').value)).toString()))" required>
+          <!--<span matPrefix>€&nbsp;</span>-->
+          <mat-error *ngIf="myForm.invalid">Campo obbligatorio</mat-error>
+          <!--<mat-error *ngIf="importoLiberazione?.errors?.pattern">Valore non valido</mat-error>-->
+        </mat-form-field>
+      </p>
+  
+      <p class="fullWi">
+        <mat-form-field style="width:100%;">
+          <mat-label>Nominativo garante liberato</mat-label>
+          <input matInput formControlName="nominativoGarante" required>
+          <mat-error *ngIf="myForm.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+      <p class="fullWi">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </p>
+     <!--  <app-gestione-allegati [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="salva()">CONFERMA</button>
+  </div>
+</div>

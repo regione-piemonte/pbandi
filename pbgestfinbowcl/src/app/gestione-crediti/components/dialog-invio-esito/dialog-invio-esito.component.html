@@ -1,0 +1,83 @@
+<div mat-dialog-title class="spaceBetween">
+  <h3 class="bold-text">Invio Esito</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+
+<!--<div mat-dialog-content *ngIf="isLoading">
+  <div style="height: 20vh;">
+    <mat-spinner class="loading"></mat-spinner>
+  </div>
+</div>-->
+
+<mat-spinner-pbandi class="page" *ngIf="isLoading"></mat-spinner-pbandi>
+
+<div mat-dialog-content>
+
+  <mat-card class="messageError" *ngIf="showError">
+    <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="messageSuccess" *ngIf="showSucc">
+    <mat-card-content class="messageSuccessContent">
+        <p>{{succMsg}}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!--<div mat-dialog-content *ngIf="!isLoading">
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content" *ngIf="erroreAllegato === true">
+    <mat-card-content class="messageError">
+      <p>ERRORE</p>
+      <span>{{messageAllegato}}</span>
+    </mat-card-content>
+  </div>
+
+  <div class="content" *ngIf="erroreAllegato === false">
+    <mat-card-content class="messageSuccess">
+      <p>SUCCESSO</p>
+      <span>{{messageAllegato}}</span>
+    </mat-card-content>
+  </div>-->
+
+
+  <div class="col">
+
+    <span *ngIf="idStatoEscussione != 5"><div>
+      <button [disabled]="allegatiInseriti" mat-button class="button-style-1"
+        (click)="uploadFileEscussione.click()">CARICA LETTERA ACCOMPAGNATORIA</button>
+
+      <input type="file" [hidden]="true" #uploadFileEscussione id="uploadFileEscussione" name="uploadFileEscussione"
+        (change)="handleFileEscussione($event.target.files)" />
+    </div>
+
+    <div style="display: flex; align-items: baseline;" *ngIf="allegatiInseriti">
+      <h3>Lettera accompagnatoria: </h3>
+      <div *ngFor="let file of allegati; let i = index" class="alignItemsCenter">
+        <span> <span class="bold-text">{{file.name}}</span> - {{file.size}} bytes</span>
+        <button mat-icon-button class="red-color"(click)="eliminaFileIntegrazione(i)">
+          <mat-icon matTooltip="Elimina" >delete</mat-icon>
+        </button>
+      </div>
+    </div></span>
+
+    <p *ngIf="idStatoEscussione == 5">
+      <b>Sicuro di voler inviare l'esito?</b>
+    </p>
+
+    <br>
+  </div>
+</div>
+
+<div mat-dialog-actions class="spaceBetween">
+  <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+  <button mat-button class="button-style-1" [disabled]="isLoading" (click)="inviaEsito()">CONFERMA</button>
+</div>

@@ -1,0 +1,164 @@
+
+.campo-ricerca {
+    width: 98%;
+}
+
+
+.mat-grid-tile .mat-figure {
+    display: block !important;
+}
+
+.mat-form-field-appearance-standard .mat-form-field-flex {
+    padding-top: 0 !important;
+}
+
+tr.example-detail-row {
+    height: 0;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.detalBoxRow {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    background-color: #178cd61a;
+    border-radius: 5px;
+
+    .innerTable {
+        background: #0043e900;
+        width: 100%;
+    }
+}
+
+table th.mat-header-cell,
+#app .page-content table td.mat-cell,
+#app .page-content table td.mat-footer-cell {
+    padding: 3px !important;
+}
+
+
+.tab {
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    ::ng-deep .mat-sort-header-content {
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    th.text-align-left,th.text-align-left .mat-sort-header-button {
+        text-align: left !important;
+    }
+
+    th.align-left .mat-sort-header-container {
+        justify-content: flex-start;
+    }
+
+    .value-column{
+        text-align: end;
+        ::ng-deep.mat-sort-header-content{
+            text-align: right;
+        }
+    }
+}
+
+
+/*.case-sensitive-tab {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+}*/
+
+// Per il testo del caricamento nei criteri di ricerca
+.loading-option {
+    //padding: 5px 0;
+    color: #888;
+    font-style: italic;
+}
+
+.bottom-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .right-options {
+      display: flex;
+      align-items: center;
+    }
+}
+
+.font-size-large {
+    font-size: xx-large;
+}
+
+.scrollable-content {
+    overflow: auto;
+}
+
+// Per rendere la riga colorata per il click
+tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+    cursor: pointer;
+}  
+tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+    cursor: pointer;
+}
+
+
+.download-button-component {
+    .download-button-container {
+        display: flex;
+        align-items: center;
+
+        .download-icon {
+            color: white;
+            padding-left: 9px;
+        }
+    }
+
+    &:hover {
+        .download-button-container {
+            display: flex;
+            align-items: center;
+
+            .download-icon {
+                color: blue;
+                padding-left: 9px;
+            }
+        }
+    }
+
+    &:disabled {
+        .download-button-container {
+            display: flex;
+            align-items: center;
+
+            .download-icon {
+                color: rgba(0, 0, 0, .26);
+                padding-left: 9px;
+            }
+        }
+    }
+}

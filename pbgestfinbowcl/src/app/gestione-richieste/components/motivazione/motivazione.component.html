@@ -1,0 +1,16 @@
+<div>
+    <h2>Motivazione dell'annullamento</h2>
+</div>
+<form [formGroup]="myForm">
+    <mat-form-field style="width: 100%;">
+        <textarea matInput formControlName="motivazione" rows="9" required></textarea>
+    </mat-form-field>
+</form>
+<div class="flexEnd">
+    <button mat-raised-button class="button-style-2" (click)="conferma()" mat-dialog-close  [disabled]="!myForm.valid">
+        CONFERMA
+    </button>
+    <button mat-button class="button-style-1" mat-dialog-close>
+        ANNULLA
+    </button>
+</div>

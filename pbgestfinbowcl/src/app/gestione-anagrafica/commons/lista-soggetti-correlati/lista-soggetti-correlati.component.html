@@ -1,0 +1,56 @@
+<mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+
+
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="fullWidth" matSort
+    #soggettiCorrelatiIndipSort="matSort" [ngClass]="{'displayNone': !dataSource || !dataSource.data?.length }">
+
+    <ng-container matColumnDef="tipologia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+        <td mat-cell *matCellDef="let element"> {{element.tipologia}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ndg">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> NDG </th>
+        <td mat-cell *matCellDef="let element"> {{element.ndg}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cognome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Denominazione / Cognome e Nome </th>
+        <td mat-cell *matCellDef="let element"> {{ element.cognome }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codiceFiscale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale </th>
+        <td mat-cell *matCellDef="let element"> {{element.codiceFiscale}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ruolo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Ruolo </th>
+        <td mat-cell *matCellDef="let element"> {{element.ruolo}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quotaPartecipazione">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Quota partecipazione </th>
+        <td mat-cell *matCellDef="let element"> {{element?.quotaPartecipazione}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button style="width: 30px;" matTooltip="Visualizza dettagli" (click)="dettagliSoggetto(element)">
+                <mat-icon>info</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator #soggettiCorrelatiIndip [pageSizeOptions]="[2, 5, 10, 25, 100]" [pageSize]="5"
+    [showFirstLastButtons]="true" [ngClass]="{'displayNone': !dataSource || !dataSource.data?.length }">
+</mat-paginator>
+
+<div *ngIf="!isTable">
+    <p>Il soggetto beneficiario non ha soggetti correlati</p>
+</div>

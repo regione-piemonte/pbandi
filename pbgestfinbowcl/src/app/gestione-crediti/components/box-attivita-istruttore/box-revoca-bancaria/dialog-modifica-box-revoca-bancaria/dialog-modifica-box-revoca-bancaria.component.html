@@ -1,0 +1,118 @@
+<div mat-dialog-title>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Modifica revoca bancaria</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="messageSuccess" *ngIf="isSaveSuccess">
+        <mat-card-content class="messageSuccessContent">
+            <p>{{messageSuccess}}</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="messageError" *ngIf="isCampiControl">
+        <mat-card-content class="messageErrorContent">
+            <p>Gli importi devono avere due cifre dopo la virgola</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="messageError" *ngIf="isCampiVuoti">
+        <mat-card-content class="messageErrorContent">
+            <p> Almeno un campo deve essere valorizzato</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+
+<div mat-dialog-content>
+
+    <form #revocaBancariaForm="ngForm" style="margin-left: 0%;">
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data ricez. communicaz.</mat-label>
+            <input matInput [matDatepicker]="picker" name="dataRicezComunicazioneRevoca"
+                [(ngModel)]="dataRicezComunicazioneRevoca" disabled [max]="todayDate" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataRicezComunicazioneRevoca"
+                (click)="setDataNull(1)" class="icons">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data revoca</mat-label>
+            <input matInput [matDatepicker]="picker2" name="dataRevoca" [(ngModel)]="dataRevoca"
+                disabled [max]="todayDate" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataRevoca" (click)="setDataNull(2)"
+                class="icons">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Debito residuo banca</mat-label>
+            <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                [(ngModel)]="impDebitoResiduoBancaFormatted" name="impDebitoResiduoBanca"
+                (blur)="setImpDebitoResiduoBanca()" #numP="ngModel" step="0.01">
+            <mat-error *ngIf="numP?.errors?.pattern">
+                Valore non valido
+            </mat-error>
+            <mat-error *ngIf="numP?.errors?.error === 'min'">Il valore deve essere maggiore o
+                uguale a 0</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Debito residuo Finpiemonte</mat-label>
+            <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                [(ngModel)]="impDebitoResiduoFinpiemonteFormatted" name="impDebitoResiduoFinpiemonte"
+                (blur)="setImpDebitoResiduoFinpiemonte()" #numP1="ngModel" step="0.01">
+            <mat-error *ngIf="numP1?.errors?.pattern">
+                Valore non valido
+            </mat-error>
+            <mat-error *ngIf="numP1?.errors?.error === 'min'">Il valore deve essere maggiore o
+                uguale a 0</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Percentuale cofinanziamento Finpiemonte: </mat-label>
+            <b> <input type="number" matInput [(ngModel)]="perCofinanziamentoFinpiemonte"
+                    name="perCofinanziamentoFinpiemonte" disabled=true />
+            </b>
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Numero protocollo</mat-label>
+            <input type="text" [(ngModel)]="numeroProtocollo" matInput name="numeroProtocollo"
+                #numP3="ngModel" maxlength="30" />
+            <!-- <mat-error *ngIf="numP3?.errors?.pattern">Valore non valido</mat-error> -->
+        </mat-form-field>
+
+        <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Note</mat-label>
+            <input type="text" matInput [(ngModel)]="note" name="note" />
+        </mat-form-field>
+
+
+    </form>
+
+
+</div>
+
+
+<div mat-dialog-actions class="spaceBetween">
+    
+    <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+
+    <button mat-button class="button-style-2" mat-button (click)="downloadStorico()">SALVA</button>
+
+</div>

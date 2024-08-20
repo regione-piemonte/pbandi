@@ -1,0 +1,435 @@
+<!-- MODIFICA STATO AZIENDA -->
+<div *ngIf="idComponentToShow == 1">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica stato azienda</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formStatoAzienda">
+      <p>
+        <mat-form-field appearance="standard" class="fullWidth">
+          <mat-label>Selezionare uno stato</mat-label>
+          <mat-select formControlName="staAz_statoAzienda" required>
+            <mat-option *ngFor="let stato of schedaCliente.stAz_statiAzienda" [value]="stato">
+              {{stato}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formStatoAzienda.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+      <p class="flecs">
+        <mat-form-field appearance="standard" class="foofPerc">
+          <mat-label>Data inizio</mat-label>
+          <input matInput [matDatepicker]="picker1" formControlName="staAz_dataInizio" class="datepicker" [max]="today" disabled required>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.formStatoAzienda.get('staAz_dataInizio').value" (click)="this.formStatoAzienda.get('staAz_dataInizio').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+          <mat-error *ngIf="formStatoAzienda.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="foofPerc">
+          <mat-label>Data fine</mat-label>
+          <input matInput [matDatepicker]="picker2" formControlName="staAz_dataFine" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.formStatoAzienda.get('staAz_dataFine').value" (click)="this.formStatoAzienda.get('staAz_dataFine').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </p>
+    </form>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick(1)">CONFERMA</button>
+  </div>
+</div>
+
+<!-- MODIFICA STATO CREDITO FINPIMONTE -->
+<div *ngIf="idComponentToShow == 2">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica stato credito Finpiemonte</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formCreditoFin">
+      <p>
+        <mat-form-field appearance="standard" class="fullWidth">
+          <mat-label>Selezionare uno stato</mat-label>
+          <mat-select formControlName="staCre_statoCredito" required>
+            <mat-option *ngFor="let stato of schedaCliente.staCre_statiCredito" [value]="stato">
+              {{stato}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formCreditoFin.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="standard" class="fullWidth">
+          <mat-label>Data modifica</mat-label>
+          <input matInput [matDatepicker]="picker3" formControlName="staCre_dataModifica" class="datepicker" [max]="today" disabled required>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.formCreditoFin.get('staCre_dataModifica').value" (click)="this.formCreditoFin.get('staCre_dataModifica').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+          <mat-error *ngIf="formCreditoFin.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+    </form>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick(2)">CONFERMA</button>
+  </div>
+</div>
+
+<!-- MODIFICA RATING -->
+<div *ngIf="idComponentToShow == 3">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica rating</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formRating">
+      <p>
+        <mat-form-field appearance="standard" class="fullWidth">
+          <mat-label>Rating</mat-label>
+          <mat-select formControlName="rat_rating" required (selectionChange)="updateProvider($event.value)">
+            <mat-option *ngFor="let stato of rating_optionsRating" [value]="stato.idRating">
+              {{stato.codiceRating + ' - ' + stato.descRating}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formRating.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+      <p class="flecs">
+        <mat-form-field appearance="standard" class="foofPerc">
+          <mat-label>Provider</mat-label>
+          <!--<mat-select formControlName="rat_provRating" required>
+            <mat-option *ngFor="let stato of schedaCliente.rating_providers" [value]="stato">
+              {{stato}}
+            </mat-option>
+          </mat-select>-->
+            <input matInput disabled formControlName="rat_provRating">
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="foofPerc">
+          <mat-label>Data classificazione</mat-label>
+          <input matInput [matDatepicker]="picker4" formControlName="rat_dataClass" class="datepicker" [max]="today" disabled required>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.formRating.get('rat_dataClass').value" (click)="this.formRating.get('rat_dataClass').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker4" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker4 disabled="false"></mat-datepicker>
+          <mat-error *ngIf="formRating.invalid">Campo obbligatorio</mat-error>
+        </mat-form-field>
+      </p>
+    </form>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick(3)">CONFERMA</button>
+  </div>
+</div>
+
+<!-- MODIFICA BANCA DEL BENEFICIARIO -->
+<div *ngIf="idComponentToShow == 4">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica banca del beneficiario</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formBancaBen">
+      <table class="fullWidth">
+        <tr>
+
+          <!--<mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Selezionare una banca</mat-label>
+            <mat-select formControlName="ban_banca" required>
+              <mat-option *ngFor="let banca of listBanche" [value]="banca">
+                {{banca}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>-->
+
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Selezionare una banca</mat-label>
+            <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+              (input)="sugg($event.target.value)">
+            <mat-autocomplete #auto1="matAutocomplete">
+              <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Data modifica</mat-label>
+            <input matInput [matDatepicker]="picker5" formControlName="ban_dataModifica" class="datepicker" [max]="today" disabled required>
+            <button mat-button mat-icon-button matSuffix *ngIf="this.formBancaBen.get('ban_dataModifica').value" (click)="this.formBancaBen.get('ban_dataModifica').setValue(null)" class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker5" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker5 disabled="false"></mat-datepicker>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Selezionare una motivazione</mat-label>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            <mat-select formControlName="ban_motivazione">
+              <mat-option *ngFor="let stato of schedaCliente.banBen_motivazioni" [value]="stato">
+                {{stato}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Soggetto Terzo</mat-label>
+            <input matInput formControlName="ban_soggTerzo">
+          </mat-form-field>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <!--<div mat-dialog-content *ngIf="isLoading" style="height: 300px;">
+    <mat-spinner class="loading"></mat-spinner>
+    <mat-label class="loadingLabel">Caricamento delle banche...</mat-label>
+  </div>-->
+
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick(4)" [disabled]="isLoading">CONFERMA</button>
+  </div>
+</div>
+
+<!-- MODIFICA ESCUSSIONE -->
+<div *ngIf="idComponentToShow == 5">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modifica escussione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formBancaBen">
+      <table class="fullWidth">
+        <tr>
+          <p class="flecs">
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Data ricev. rich. escussione</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="staAz_dataInizio" class="datepicker" disabled required>
+              <button mat-button mat-icon-button matSuffix *ngIf="this.formStatoAzienda.get('staAz_dataInizio').value" (click)="this.formStatoAzienda.get('staAz_dataInizio').setValue(null)" class="icons">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+              <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+              <mat-error *ngIf="formStatoAzienda.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Numero protocollo</mat-label>
+              <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+                (input)="sugg($event.target.value)">
+              <mat-autocomplete #auto1="matAutocomplete">
+                <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+          </p>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Tipo escussione</mat-label>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            <mat-select formControlName="ban_motivazione">
+              <mat-option *ngFor="let stato of schedaCliente.banBen_motivazioni" [value]="stato">
+                {{stato}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Stato escussione</mat-label>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            <mat-select formControlName="ban_motivazione">
+              <mat-option *ngFor="let stato of schedaCliente.banBen_motivazioni" [value]="stato">
+                {{stato}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Data stato</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="staAz_dataInizio" class="datepicker" [max]="today" disabled required>
+            <button mat-button mat-icon-button matSuffix *ngIf="this.formStatoAzienda.get('staAz_dataInizio').value" (click)="this.formStatoAzienda.get('staAz_dataInizio').setValue(null)" class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+            <mat-error *ngIf="formStatoAzienda.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <p class="flecs">
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Data notifica</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="staAz_dataInizio" class="datepicker" [max]="today" disabled required>
+              <button mat-button mat-icon-button matSuffix *ngIf="this.formStatoAzienda.get('staAz_dataInizio').value" (click)="this.formStatoAzienda.get('staAz_dataInizio').setValue(null)" class="icons">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+              <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+              <mat-error *ngIf="formStatoAzienda.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Numero protocollo</mat-label>
+              <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+                (input)="sugg($event.target.value)">
+              <mat-autocomplete #auto1="matAutocomplete">
+                <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+          </p>
+        </tr>
+        <tr>
+          <p class="flecs">
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Importo richiesto</mat-label>
+              <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+                (input)="sugg($event.target.value)">
+              <mat-autocomplete #auto1="matAutocomplete">
+                <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="foofPerc">
+              <mat-label>Importo approvato</mat-label>
+              <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+                (input)="sugg($event.target.value)">
+              <mat-autocomplete #auto1="matAutocomplete">
+                <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+          </p>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Causale bonifico</mat-label>
+            <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+              (input)="sugg($event.target.value)">
+            <mat-autocomplete #auto1="matAutocomplete">
+              <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>IBAN banca beneficiaria</mat-label>
+            <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+              (input)="sugg($event.target.value)">
+            <mat-autocomplete #auto1="matAutocomplete">
+              <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+        </tr>
+        <tr>
+          <mat-form-field appearance="standard" class="fullWidth">
+            <mat-label>Denominazione banca</mat-label>
+            <input matInput type="text" formControlName="ban_banca" [matAutocomplete]="auto1"
+              (input)="sugg($event.target.value)">
+            <mat-autocomplete #auto1="matAutocomplete">
+              <mat-option *ngFor="let option of listBanche" [value]="option" matTooltip="{{option}}" matTooltipPosition="above">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="formBancaBen.invalid">Campo obbligatorio</mat-error>
+          </mat-form-field>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <!--<div mat-dialog-content *ngIf="isLoading" style="height: 300px;">
+    <mat-spinner class="loading"></mat-spinner>
+    <mat-label class="loadingLabel">Caricamento delle banche...</mat-label>
+  </div>-->
+
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick(4)" [disabled]="isLoading">CONFERMA</button>
+  </div>
+</div>

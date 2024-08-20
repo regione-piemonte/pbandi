@@ -1,0 +1,35 @@
+<div class="page">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla ricerca delle garanzie</span>
+            </button>
+        </div>
+        <h2>Attività Istruttore</h2>
+    </div>
+
+    <mat-grid-list cols="2" [gutterSize]="'15px'" rowHeight="450px" class="grid">
+
+        <mat-grid-tile class="fif">
+            <app-revoca-bancaria  [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [ambito]="ambito" style="width: 98%; height: 100%;"></app-revoca-bancaria>
+        </mat-grid-tile>
+
+        <mat-grid-tile class="fif">
+            <app-azioni-recupero-banca  [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [ambito]="ambito" style="width: 98%; height: 100%;"></app-azioni-recupero-banca>
+        </mat-grid-tile>
+
+        <mat-grid-tile class="fif">
+            <app-liberazione-banca  [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" style="width: 98%; height: 100%;"></app-liberazione-banca>
+        </mat-grid-tile>
+
+        <mat-grid-tile class="fif">
+            <app-saldo-stralcio [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [ambito]="ambito" style="width: 98%; height: 100%;"></app-saldo-stralcio>
+        </mat-grid-tile>
+
+        <mat-grid-tile class="fif">
+            <app-note-generali [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [ambito]="ambito" style="width: 98%; height: 100%;"></app-note-generali>
+        </mat-grid-tile>
+
+    </mat-grid-list>
+</div>

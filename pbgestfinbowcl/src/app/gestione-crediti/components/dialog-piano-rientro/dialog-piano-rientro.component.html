@@ -1,0 +1,108 @@
+<div>
+  <div class="spaceBetween">
+    <h3 *ngIf="operation == 'new'" class="bold-text">Nuovo piano di rientro</h3>
+    <h3 *ngIf="operation == 'edit'" class="bold-text">Modifica piano di rientro</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content style="height: 384px; max-height: 82vh;">
+
+    <mat-card class="messageError" *ngIf="showError" id="scrollId">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="content"*ngIf="showError">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{messageError}}</span>
+      </mat-card-content>
+    </div>
+    <div class="content" *ngIf="showSucc">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{messageSuccess}}</span>
+        </mat-card-content>
+    </div>
+
+    <form [formGroup]="myForm">
+    
+      <p class="fullFlex">
+
+        <mat-form-field appearance="standard" class="fil">
+          <mat-label>Data proposta</mat-label>
+          <input matInput formControlName="dataProposta" [matDatepicker]="picker1" [max]="today" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataProposta').value"
+            (click)="this.myForm.get('dataProposta').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="fil">
+          <mat-label>Data esito</mat-label>
+          <input matInput formControlName="dataEsito" [matDatepicker]="picker2" [max]="today" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataEsito').value"
+            (click)="this.myForm.get('dataEsito').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </p>
+
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Importo piano di rientro quota capitale</mat-label>
+          <input matInput formControlName="importoCapitale" type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+          (blur)="this.myForm.get('importoCapitale').setValue(this.sharedService.formatValue((this.sharedService.getNumberFromFormattedString(this.myForm.get('importoCapitale').value)).toString()))">
+          <!--<span matPrefix>€&nbsp;</span>-->
+        </mat-form-field>
+      </p>
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Importo piano di rientro agevolazione</mat-label>
+          <input matInput formControlName="importoAgevolazione" type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+          (blur)="this.myForm.get('importoAgevolazione').setValue(this.sharedService.formatValue((this.sharedService.getNumberFromFormattedString(this.myForm.get('importoAgevolazione').value)).toString()))">
+          <!--<span matPrefix>€&nbsp;</span>-->
+        </mat-form-field>
+      </p>
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="fil">
+          <mat-label>Selezionare un esito</mat-label>
+          <mat-select formControlName="esito">
+            <mat-option value="-">-</mat-option>
+            <mat-option *ngFor="let esito of esiti" [value]="esito">
+              {{esito}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="fil">
+          <mat-label>Selezionare un recupero</mat-label>
+          <mat-select formControlName="recupero">
+            <mat-option value="-">-</mat-option>
+            <mat-option *ngFor="let recupero of recuperi" [value]="recupero">
+              {{recupero}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </p>
+ <!--  <app-gestione-allegati [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="salva()">CONFERMA</button>
+  </div>
+</div>

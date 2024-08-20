@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+<wsdl:definitions name="ManagementService"
+	targetNamespace="managementservice.acaris.acta.doqui.it"
+	xmlns:tns="managementservice.acaris.acta.doqui.it"
+	xmlns:common="common.acaris.acta.doqui.it"
+	xmlns:management="management.acaris.acta.doqui.it"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="common.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Common.xsd" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="management.acaris.acta.doqui.it">
+			<xsd:include schemaLocation="ACARIS-Management.xsd" />
+			<xsd:include
+				schemaLocation="ACARIS-ManagementMessaging.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- messaggi -->
+
+	<wsdl:message name="acarisException">
+		<wsdl:part name="fault" element="common:acarisFault" />
+	</wsdl:message>
+
+	<!-- getVitalRecordCode -->
+	<wsdl:message name="getVitalRecordCodeRequest">
+		<wsdl:part name="input"
+			element="management:getVitalRecordCode" />
+	</wsdl:message>
+	<wsdl:message name="getVitalRecordCodeResponse">
+		<wsdl:part name="output"
+			element="management:getVitalRecordCodeResponse" />
+	</wsdl:message>
+
+	<!-- getAnnotazioni <wsdl:message name="getAnnotazioniRequest"> <wsdl:part 
+		name="input" element="management:getAnnotazioni"/> </wsdl:message> <wsdl:message 
+		name="getAnnotazioniResponse"> <wsdl:part name="output" element="management:getAnnotazioniResponse"/> 
+		</wsdl:message> -->
+	<!-- addAnnotazioni -->
+	<wsdl:message name="addAnnotazioniRequest">
+		<wsdl:part name="input" element="management:addAnnotazioni" />
+	</wsdl:message>
+	<wsdl:message name="addAnnotazioniResponse">
+		<wsdl:part name="output"
+			element="management:addAnnotazioniResponse" />
+	</wsdl:message>
+
+	<!-- getMovimentazione <wsdl:message name="getMovimentazioneRequest"> <wsdl:part 
+		name="input" element="management:getMovimentazione"/> </wsdl:message> <wsdl:message 
+		name="getMovimentazioneResponse"> <wsdl:part name="output" element="management:getMovimentazioneResponse"/> 
+		</wsdl:message> -->
+	<!-- getProvvedimentoAutorizzativo <wsdl:message name="getProvvedimentoAutorizzativoRequest"> 
+		<wsdl:part name="input" element="management:getProvvedimentoAutorizzativo"/> 
+		</wsdl:message> <wsdl:message name="getProvvedimentoAutorizzativoResponse"> 
+		<wsdl:part name="output" element="management:getProvvedimentoAutorizzativoResponse"/> 
+		</wsdl:message> -->
+	<!-- getProtocollo <wsdl:message name="getProtocolloRequest"> <wsdl:part 
+		name="input" element="management:getProtocollo"/> </wsdl:message> <wsdl:message 
+		name="getProtocolloResponse"> <wsdl:part name="output" element="management:getProtocolloResponse"/> 
+		</wsdl:message> -->
+	<!-- query <wsdl:message name="queryRequest"> <wsdl:part name="input" element="common:query" 
+		/> </wsdl:message> <wsdl:message name="queryResponse"> <wsdl:part name="output" 
+		element="common:queryResponse" /> </wsdl:message> -->
+	<wsdl:portType name="ManagementServicePort">
+
+		<!-- getVitalRecordCode operation -->
+		<wsdl:operation name="getVitalRecordCode">
+			<wsdl:input message="tns:getVitalRecordCodeRequest" />
+			<wsdl:output message="tns:getVitalRecordCodeResponse" />
+			<wsdl:fault name="getVitalRecordCodeFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+		
+		<!-- addAnnotazioni operation -->
+		<wsdl:operation name="addAnnotazioni">
+			<wsdl:input message="tns:addAnnotazioniRequest" />
+			<wsdl:output message="tns:addAnnotazioniResponse" />
+			<wsdl:fault name="addAnnotazioniFault"
+				message="tns:acarisException" />
+		</wsdl:operation>
+        
+	    <!-- query <wsdl:operation name="query"> <wsdl:input message="tns:queryRequest" 
+			/> <wsdl:output message="tns:queryResponse" /> <wsdl:fault name="queryFault" 
+			message="tns:acarisException" /> </wsdl:operation> -->
+	</wsdl:portType>
+
+	<wsdl:binding name="ManagementServiceBinding"
+		type="tns:ManagementServicePort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<!-- getVitalRecordCode -->
+		<wsdl:operation name="getVitalRecordCode">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="getVitalRecordCodeFault">
+				<soap:fault name="getVitalRecordCodeFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- addAnnotazioni -->
+		<wsdl:operation name="addAnnotazioni">
+			<soap:operation />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="addAnnotazioniFault">
+				<soap:fault name="addAnnotazioniFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- query <wsdl:operation name="query"> <soap:operation /> <wsdl:input> 
+			<soap:body use="literal" /> </wsdl:input> <wsdl:output> <soap:body use="literal" 
+			/> </wsdl:output> <wsdl:fault name="queryFault"> <soap:fault name="queryFault" 
+			use="literal" /> </wsdl:fault> </wsdl:operation> -->
+	</wsdl:binding>
+
+	<wsdl:service name="ManagementService">
+		<wsdl:port name="ManagementServicePort"
+			binding="tns:ManagementServiceBinding">
+			<soap:address
+				location="http://localhost:${HttpDefaultPort}/managementservice/managementserviceaPort" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>
+
+

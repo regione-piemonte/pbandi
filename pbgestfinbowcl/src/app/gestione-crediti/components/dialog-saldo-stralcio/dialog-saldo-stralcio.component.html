@@ -1,0 +1,124 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Saldo e Stralcio</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+        <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <table mat-table [dataSource]="storicoSaldoStralcio" multiTemplateDataRows style="width: 100%;">
+
+        <!-- Descrizione Esito -->
+        <ng-container matColumnDef="esito">
+            <th mat-header-cell *matHeaderCellDef> <b> Esito </b> </th>
+            <td mat-cell *matCellDef="let element"> {{ element.descEsito}} </td>
+        </ng-container>
+
+        <!-- Data Column -->
+        <ng-container matColumnDef="dataEsito">
+            <th mat-header-cell *matHeaderCellDef> <b>Data esito</b> </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.dataEsito|date:"dd/MM/yyyy"}}</td>
+        </ng-container>
+
+        <!-- Istruttore Column -->
+        <ng-container matColumnDef="utente">
+            <th mat-header-cell *matHeaderCellDef> <b>Utente modifica</b> </th>
+            <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                element.nome}} </td>
+        </ng-container>
+
+        <!-- Row Options Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                <div class="text-right">
+
+                    <button mat-icon-button
+                        (click)="expandedElement = expandedElement != element ? element : null">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon">
+                            visibility
+                        </mat-icon>
+                    </button>
+
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- per visualizzare i dettagli del saldo e stralcio: expanded -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                class="detailBoxRow">
+                <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+                    <mat-grid-list cols="8" rowHeight="30px"
+                        style="width: 100%; margin-left: 5px; padding: 0;">
+                        <mat-grid-tile [colspan]="8" [rowspan]="6">
+                            <div class="text-inside-grid">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 33%;"><b>Data proposta</b></td>
+                                        <td>{{element.dataProposta|date:"dd/MM/yyyy"}}</td>
+                                        <td style="width: 27%;"><b>Data accettazione</b></td>
+                                        <td>{{element.dataAcettazione|date:"dd/MM/yyyy"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Tipo saldo e stralcio</b> </td>
+                                        <td> {{element.descSaldoStralcio}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Importo debitore </b></td>
+                                        <td>{{element.impDebitore | number: '1.2-2' : 'it'}}</td>
+                                        <td><b>Importo Confidi</b></td>
+                                        <td>{{element.impConfindi | number: '1.2-2' : 'it'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Data pagamento debitore</b></td>
+                                        <td>{{element.dataPagamDebitore|date:"dd/MM/yyyy"}}</td>
+                                        <td><b>Data pagamento Confidi</b></td>
+                                        <td>{{element.dataPagamConfidi|date:"dd/MM/yyyy"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Recupero</b></td>
+                                        <td>{{element.descRecupero}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Importo effettivamente recuperato </b></td>
+                                        <td>{{element.impRecuperato | number: '1.2-2' : 'it'}}</td>
+                                        <td><b>Importo da passare a perdita</b></td>
+                                        <td>{{element.impPerdita | number: '1.2-2' : 'it'}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="8" [rowspan]="1" style="width: 100%;">
+                            <table style="width: 100%;   position: absolute;
+                            left: 5px;">
+                                <tr>
+                                    <td style="width: 33%;"><b> Note </b> </td>
+                                    <td>{{element.note}}</td>
+                                </tr>
+                            </table>
+                        </mat-grid-tile>
+
+                    </mat-grid-list>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+    </table>
+</div>

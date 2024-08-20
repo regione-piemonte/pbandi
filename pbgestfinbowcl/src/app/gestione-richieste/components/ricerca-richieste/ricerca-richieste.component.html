@@ -1,0 +1,499 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+    <div class="content margin-top-0">
+        <div class="title">
+            <div class="reportingContainerUp">
+                <div>
+                    <h2>Gestione richieste</h2>
+                </div>
+                <!-- <div class="reportingContainerUpbutton">
+                    <button class="button-style-3" mat-stroked-button (click)="inserisciRichiesta()">
+                        NUOVA RICHIESTA
+                    </button>
+                </div> -->
+                <div class="button_title" style="display: flex;justify-content: flex-end;">
+                    <span>
+                        <button mat-raised-button class="button-style-2"
+                        (click)="inserisciRichiesta()">NUOVA RICHIESTA</button>
+                    </span>
+                </div>
+            </div>
+            <div [hidden]="!error">
+                <div  class="content width-100-perc margin-0 max-width-89-perc">
+                    <mat-card  class="mat-card mat-focus-indicator messageError"
+                        >
+                        <mat-card-content  class="mat-card-content messageWarningContent"
+                            >
+                            <h3  class="bold-text margin-bottom-5">
+                                ATTENZIONE!
+                            </h3>
+                            <p  id="ellipsisP"
+                                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                Oops, qualcosa è andato storto, controlla che i dati inseriti siano corretti.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div [hidden]="!success">
+                <div  class="content width-100-perc margin-0 max-width-89-perc">
+                    <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+                        >
+                        <mat-card-content  class="mat-card-content messageWarningContent"
+                            >
+                            <h3  class="bold-text margin-bottom-5">
+                                SUCCESSO!
+                            </h3>
+                            <p  id="ellipsisP"
+                                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                Messaggio di successo.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div *ngIf="criteriRicercaOpened">
+                    <form [formGroup]="myForm">
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare un tipo di richiesta</mat-label>
+                                <mat-select matInput formControlName="idTipoRichiesta">
+                                    <mat-option *ngFor="let richiesta of richieste" [value]="richiesta.value">
+                                        {{richiesta.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <mat-label>Selezionare uno stato della richiesta</mat-label>
+                                <mat-select matInput formControlName="idStatoRichiesta">
+                                    <mat-option *ngFor="let statoRichiesta of statiRichieste"
+                                        [value]="statoRichiesta.value">
+                                        {{statoRichiesta.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field class="col">
+                                <input type="text" matInput formControlName="domanda" [disabled]="false"
+                                    [matAutocomplete]="autoDomanda" placeholder="N. domanda" [(ngModel)]="domandaIns"
+                                    (input)="sugg(2, domandaIns)">
+                                <mat-autocomplete #autoDomanda="matAutocomplete">
+                                    <mat-option *ngFor="let option of suggDomanda" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+
+                            <mat-form-field class="col">
+                                <input type="text" matInput formControlName="codiceFondo" [disabled]="false"
+                                    [matAutocomplete]="autoCodiceFondo" placeholder="Cod. bando" [(ngModel)]="bandoIns"
+                                    (input)="sugg(3, bandoIns)">
+                                <mat-autocomplete #autoCodiceFondo="matAutocomplete">
+                                    <mat-option *ngFor="let option of suggBando" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+
+                            <mat-form-field class="col">
+                                <input type="text" matInput formControlName="richiedente" [disabled]="false"
+                                    [matAutocomplete]="autoRichiedente" placeholder="Richiedente"
+                                    [(ngModel)]="richiedenteIns" (input)="sugg(4, richiedenteIns)">
+                                <mat-autocomplete #autoRichiedente="matAutocomplete">
+                                    <mat-option *ngFor="let option of suggRichiedente" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="row">
+                            <button mat-raised-button class="button-style-2" (click)="cerca()">
+                                CERCA
+                            </button>
+                            <button mat-button class="button-style-1" (click)="reset()">
+                                AZZERA
+                            </button>
+                        </div> -->
+                        <div  class="button-marty">
+                            <button mat-raised-button (click)="cerca()" class="button-style-2">CERCA</button>
+                            <button mat-raised-button (click)="reset()" class="button-style-3 margin-left-10">ANNULLA FILTRI</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+
+    <!-- <div class="content">
+        <div *ngIf="!emptyTable">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-content>
+                    <h3>Richieste</h3>
+                    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns;let i=index;">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="column === 'visualizza'">
+                                <div *ngIf="column == 'visualizza'; else colonna">
+                                </div>
+                                <ng-template #colonna>
+                                    {{arrayTitoliColonne[i]}}
+                                </ng-template>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="column == 'visualizza'; else colonna">
+                                    <mat-icon>visibility</mat-icon>
+                                </div>
+                                <ng-template #colonna>
+                                    <div>
+                                        {{element[column]}}
+                                    </div>
+                                </ng-template>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="dettaglioRichiesta">
+                            <td mat-cell *matCellDef="let element; let i = dataIndex"
+                                [attr.colspan]="displayedColumns.length">
+                                <div class="detail" [@detailExpand]="element == espandi ? 'expanded' : 'collapsed'">
+                                    <table mat-table [dataSource]="element.listaDettaglio" class="mat-elevation-z8">
+                                        <ng-container matColumnDef="nag">
+                                            <th mat-header-cell *matHeaderCellDef> NAG</th>
+                                            <td mat-cell *matCellDef="let element">{{element.nag}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="denominazione">
+                                            <th mat-header-cell *matHeaderCellDef> Denominazione </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.denominazione}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="partitaIva">
+                                            <th mat-header-cell *matHeaderCellDef> Partita Iva </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.partitaIva}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="modalitaRichiesta">
+                                            <th mat-header-cell *matHeaderCellDef> Modalita Richiesta </th>
+
+                                            <td mat-cell *matCellDef="let element"> {{element.modalitaRichiesta}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="numeroRichiesta">
+                                            <th mat-header-cell *matHeaderCellDef> Numero Richiesta </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.numeroRichiesta}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="dataChiusura">
+                                            <th mat-header-cell *matHeaderCellDef> Data Chiusura </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.dataChiusura}}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="storico">
+                                            <th mat-header-cell *matHeaderCellDef></th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <button mat-button (click)="elaboraRichiesta(element.numeroRichiesta, element.nag, 
+                                               element.partitaIva, element.denominazione, element.numeroDomanda)"
+                                                    #idRichiesta>
+                                                    <mat-icon>build</mat-icon>
+                                                </button>
+                                                <button mat-button
+                                                    (click)="visualizzaStoricoRichiesta(element.numeroRichiesta)"
+                                                    #idRichiesta>
+                                                    <mat-icon>history</mat-icon>
+                                                </button>
+                                                <button mat-button
+                                                    (click)="eliminaRichiesta(element.numeroRichiesta, element.nag)"
+                                                    #idRichiesta>
+                                                    <mat-icon>delete_outline</mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedDettaglioColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedDettaglioColumns;"></tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="element-row"
+                            [class.example-expanded-row]="espandi === element"
+                            (click)="espandi = espandi === element ? null : element;" #element>
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: ['dettaglioRichiesta']" class="detail-row">
+                        </tr>
+                    </table>
+                    <div class="spaceBetween alignItemsCenter">
+                        <div>
+                            <button class="button-style-1" mat-button (click)="scaricaExcel()">
+                                <mat-icon class="padding-right-5">cloud_download</mat-icon>
+                                SCARICA ELENCO
+                            </button>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                            [showFirstLastButtons]="true">
+                        </mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div *ngIf="emptyTable">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-content>
+                    Nessuna richiesta trovata.
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div> -->
+
+
+    <!-- nuova tabella delle richieste -->
+    <div class="content" [ngClass]="{'displayNone': !sortedDataRichieste || !sortedDataRichieste.data?.length }">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+        <table mat-table [dataSource]="sortedDataRichieste" matSort #richiesteSort="matSort" multiTemplateDataRows
+            style="width: 100%;" [ngClass]="{'displayNone': !sortedDataRichieste || !sortedDataRichieste.data?.length }">
+
+            <!-- -->
+            <ng-container matColumnDef="richiedente">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b> Richiedente </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.richiedente}} </td>
+            </ng-container>
+
+            <!-- -->
+            <ng-container matColumnDef="codiceFiscale">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b> Codice Fiscale </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.codiceFiscale}} </td>
+            </ng-container>
+
+            <!-- -->
+            <ng-container matColumnDef="tipoRichiesta">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b> Tipo richiesta </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.tipoRichiesta}} </td>
+            </ng-container>
+
+            <!-- -->
+            <ng-container matColumnDef="statoRichiesta">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b> Stato richiesta </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.statoRichiesta}} </td>
+            </ng-container>
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataRichiesta">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Data Richiesta</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataRichiesta|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!---->
+            <ng-container matColumnDef="codiceBando">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Codice bando</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.codiceBando}} </td>
+            </ng-container>
+
+            <!---->
+            <ng-container matColumnDef="numeroDomanda">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Numero domanda</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.numeroDomanda}} </td>
+            </ng-container>
+
+            <!---->
+            <ng-container matColumnDef="codiceProgetto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Codice progetto</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.codiceProgetto}} </td>
+            </ng-container>
+
+
+            <!-- Row Options Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                    <button mat-icon-button (click)="expandedElement = expandedElement != element ? element : null">
+                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">
+                            visibility
+                        </mat-icon> -->
+                        <mat-icon class="blue-color" style="cursor: pointer"  matTooltip="Dettaglio richieste">
+                            info
+                        </mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- per visualizzare i dettagli -->
+            <ng-container matColumnDef="expandedDetail" >
+                <td mat-cell *matCellDef="let element" [attr.colspan]="disposizioneColonne.length" class="detailBoxRow " >
+                    <div class="example-element-detail expanded-marty"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <table >
+                            <tr style="text-align: left;">
+                                <th class="marty-td"> <b> NDG</b></th>
+                                <th class="marty-td"> <b>Denominazione </b></th>
+                                <th class="marty-td"> <b>Partita Iva </b></th>
+                                <th class="marty-td"> <b> Modalita Richiesta</b></th>
+                                <th class="marty-td"> <b> Data Chiusura</b></th>
+                                <th class="marty-td"> <b> </b></th>
+                            </tr>
+                            <tr class="">
+                                <td class="marty-td"> {{element.ndg}} </td>
+                                <td class="marty-td"> {{element.denominazione}} </td>
+                                <td class="marty-td"> {{element.partitaIva}} </td>
+                                <td class="marty-td"> {{element.modalitaRichiesta}} </td>
+                                <td class="marty-td"> {{element.dataChiusura}} </td>
+                                <td style="text-align: right;">
+                                    <button mat-button *ngIf="element.statoRichiesta != 'COMPLETATA' && element.statoRichiesta != 'ANNULLATA'"
+                                        (click)="elaboraRichiesta(element.numeroRichiesta, element.nag, 
+                                        element.partitaIva, element.denominazione, element.numeroDomanda, element.ndg)"
+                                        #idRichiesta>
+                                        <mat-icon matTooltip="Elabora">build</mat-icon>
+                                    </button>
+                                    <button mat-button (click)="visualizzaStoricoRichiesta(element.numeroRichiesta)"
+                                        #idRichiesta>
+                                        <mat-icon matTooltip="Storico">history</mat-icon>
+                                    </button>
+                                    <button mat-button *ngIf="element.statoRichiesta != 'COMPLETATA' && element.statoRichiesta != 'ANNULLATA' "
+                                       (click)="eliminaRichiesta(element.numeroRichiesta, element.nag)"
+                                        #idRichiesta>
+                                        <mat-icon matTooltip="Elimina">delete_outline</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="disposizioneColonne"></tr>
+            <tr mat-row *matRowDef="let element; columns: disposizioneColonne;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            
+        </table>
+        <mat-paginator #richiestePaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+            [showFirstLastButtons]="true"
+            [ngClass]="{'displayNone': !sortedDataRichieste || !sortedDataRichieste.data?.length }">
+        </mat-paginator>
+        <div class="button_title" style="display: flex;justify-content: flex-end;">
+            <span>
+                <button mat-raised-button class="button-style-3"(click)="scaricaExcel()" *ngIf="!emptyTable">
+                    <mat-icon class="padding-right-5 ">cloud_download</mat-icon>
+                    SCARICA ELENCO
+                </button>
+            </span>
+        </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- <div *ngIf="emptyTable">
+        <mat-card class="mat-elevation-z4">
+            <mat-card-content>
+                Nessuna richiesta trovata.
+            </mat-card-content>
+        </mat-card>
+    </div> -->
+
+    <div class="content" *ngIf="emptyTable">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                Nessuna richiesta trovata.
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- <div class="spaceBetween">
+        <button class="button-style-1" mat-button (click)="scaricaExcel()" *ngIf="!emptyTable">
+            <mat-icon class="padding-right-5">cloud_download</mat-icon>
+            SCARICA ELENCO
+        </button>
+    </div> -->
+
+    
+</div>
+
+
+
+<!-- TABELLA PER PRELEVARE I DATI DALLA TABELLA NEL GIUSTO FORMATO PER IL FILE EXCEL -->
+
+<table mat-table [hidden]="true" mat-table [dataSource]="dataSourceExcel" id="excel-table">
+
+    <ng-container matColumnDef="richiedente">
+        <th mat-header-cell *matHeaderCellDef> Richiedente </th>
+        <td mat-cell *matCellDef="let element"> {{element.richiedente}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codiceFiscale">
+        <th mat-header-cell *matHeaderCellDef> Codice Fiscale </th>
+        <td mat-cell *matCellDef="let element"> {{element.codiceFiscale}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tipoRichiesta">
+        <th mat-header-cell *matHeaderCellDef> Tipo Richiesta </th>
+        <td mat-cell *matCellDef="let element"> {{element.tipoRichiesta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="statoRichiesta">
+        <th mat-header-cell *matHeaderCellDef> Stato Richiesta </th>
+        <td mat-cell *matCellDef="let element"> {{element.statoRichiesta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataRichiesta">
+        <th mat-header-cell *matHeaderCellDef> Data Richiesta </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataRichiesta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codiceBando">
+        <th mat-header-cell *matHeaderCellDef> Codice Bando </th>
+        <td mat-cell *matCellDef="let element"> {{element.codiceBando}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroDomanda">
+        <th mat-header-cell *matHeaderCellDef> Numero Domanda </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroDomanda}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codiceProgetto">
+        <th mat-header-cell *matHeaderCellDef> Codice Progetto </th>
+        <td mat-cell *matCellDef="let element"> {{element.codiceProgetto}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nag">
+        <th mat-header-cell *matHeaderCellDef> NAG </th>
+        <td mat-cell *matCellDef="let element"> {{element.nag}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="denominazione">
+        <th mat-header-cell *matHeaderCellDef> Denominazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.denominazione}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="partitaIva">
+        <th mat-header-cell *matHeaderCellDef> Partita IVA </th>
+        <td mat-cell *matCellDef="let element"> {{element.partitaIva}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modalitaRichiesta">
+        <th mat-header-cell *matHeaderCellDef> Modalità Richiesta </th>
+        <td mat-cell *matCellDef="let element"> {{element.modalitaRichiesta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroRichiesta">
+        <th mat-header-cell *matHeaderCellDef> Numero Richiesta </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroRichiesta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataChiusura">
+        <th mat-header-cell *matHeaderCellDef> Data Chiusura </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataChiusura}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsExcel"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsExcel;"></tr>
+</table>

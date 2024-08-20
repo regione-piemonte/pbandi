@@ -1,0 +1,341 @@
+<div class="page">
+    <div class="title">
+        <div class="reportingContainerUp">
+            <div class="titleBar">
+                <h2>Dati beneficiario domanda</h2>
+                <p><b>NAG:</b> {{idSoggetto}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-divider class="divider" [inset]="true"></mat-divider>
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="
+                    Dati beneficiario domanda">
+                        <div>
+                            <div class="titleBar">
+                                <h3>Stato Domanda</h3>
+                            </div>
+                            <div>
+                                <form [formGroup]="myForm">
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Numero Domanda</mat-label>
+                                            <input type="text" matInput formControlName="numeroDomanda"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Stato Domanda</mat-label>
+                                            <input matInput type="text" formControlName="statoDomanda"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Data presentazione domanda</mat-label>
+                                            <input matInput [matDatepicker]="picker2"
+                                                formControlName="dataPresentazioneDomanda" [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Rappresentante legale</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Cognome</mat-label>
+                                            <input type="text" matInput formControlName="cognome" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nome</mat-label>
+                                            <input type="text" matInput formControlName="nome" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Tipo Soggetto</mat-label>
+                                            <input type="text" matInput formControlName="tipoSoggetto"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput formControlName="codiceFiscale"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune di nascita</mat-label>
+                                            <input type="text" matInput formControlName="comuneDiNascita"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia di nascita</mat-label>
+                                            <input type="text" matInput formControlName="provinciaDiNascita"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione di nascita</mat-label>
+                                            <input type="text" matInput formControlName="regioneDiNascita"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione di nascita</mat-label>
+                                            <input type="text" matInput formControlName="nazioneDiNascita"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Data di nascita</mat-label>
+                                            <input matInput [matDatepicker]="picker" formControlName="dataDiNascita"
+                                                [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Dati di residenza</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo di residenza</mat-label>
+                                            <input type="text" matInput formControlName="indirizzoRes"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP di residenza</mat-label>
+                                            <input type="text" matInput formControlName="capRes" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune di residenza</mat-label>
+                                            <input type="text" matInput formControlName="comuneRes"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia di residenza</mat-label>
+                                            <input type="text" matInput formControlName="provinciaRes"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione di residenza</mat-label>
+                                            <input type="text" matInput formControlName="regioneRes"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione di residenza</mat-label>
+                                            <input type="text" matInput formControlName="nazioneRes"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Sede amministrativa</h3>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo della sede</mat-label>
+                                            <input type="text" matInput formControlName="indirizzoSede"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP della sede</mat-label>
+                                            <input type="text" matInput formControlName="capSede" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune della sede</mat-label>
+                                            <input type="text" matInput formControlName="comuneSede"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia della sede</mat-label>
+                                            <input type="text" matInput formControlName="provinciaSede"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione della sede</mat-label>
+                                            <input type="text" matInput formControlName="regioneSede"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione della sede</mat-label>
+                                            <input type="text" matInput formControlName="nazioneSede"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Partita Iva</mat-label>
+                                            <input type="text" matInput formControlName="ivaSede" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Recapiti</h3>
+
+                                    <mat-form-field class="col">
+                                        <mat-label>Telefono</mat-label>
+                                        <input type="text" matInput formControlName="telefono" [disabled]="false" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Fax</mat-label>
+                                        <input type="text" matInput formControlName="fax" [disabled]="false" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Email</mat-label>
+                                        <input type="text" matInput formControlName="email" [disabled]="false" />
+                                    </mat-form-field>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Conto Corrente</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Numero conto</mat-label>
+                                            <input type="text" matInput formControlName="numeroConto"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>IBAN</mat-label>
+                                            <input type="text" matInput formControlName="iban" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Banca di appoggio</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Banca</mat-label>
+                                            <input type="text" matInput formControlName="banca" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>ABI</mat-label>
+                                            <input type="text" matInput formControlName="abi" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAB</mat-label>
+                                            <input type="text" matInput formControlName="cab" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Consulenti</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Denominazione</mat-label>
+                                            <input type="text" matInput formControlName="denominazione"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput formControlName="codiceFiscale"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Ruolo soggetto correlato</mat-label>
+                                            <input type="text" matInput formControlName="ruoloSoggettoCorrelato"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Tipo soggetto</mat-label>
+                                            <input type="text" matInput formControlName="tipoSoggetto"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div> -->
+
+                                    <!-- <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Sede Legale</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo</mat-label>
+                                            <input type="text" matInput formControlName="indirizzo" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Partita IVA</mat-label>
+                                            <input type="text" matInput formControlName="partitaIva"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP sede legale</mat-label>
+                                            <input type="text" matInput formControlName="capSedeLegale"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione sede legale</mat-label>
+                                            <input type="text" matInput formControlName="nazioneSedeLegale"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice ATECO prevalente</mat-label>
+                                            <input type="text" matInput formControlName="codiceAteco"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Descrizione ATECO</mat-label>
+                                            <input type="text" matInput formControlName="descrizioneAteco"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune</mat-label>
+                                            <input type="text" matInput formControlName="comune" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia</mat-label>
+                                            <input type="text" matInput formControlName="provincia" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione</mat-label>
+                                            <input type="text" matInput formControlName="regione" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div> -->
+                                </form>
+                            </div>
+                        </div>
+                        <button class="save-button" mat-raised-button (click)="salvaModifiche()">
+                            SALVA
+                        </button>
+                    </mat-tab>
+                    <mat-tab label="Soggetti correlati">
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

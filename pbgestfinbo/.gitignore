@@ -1,0 +1,20 @@
+<<<<<<< HEAD
+/.project
+/.settings
+/pbgestfinbo-jar/.project
+/pbgestfinbo-jar/.settings
+/pbgestfinbo-jar/target
+/pbgestfinbo-jar/.classpath
+/pbgestfinbo-ear/.project
+/pbgestfinbo-ear/.settings
+/pbgestfinbo-ear/target
+/pbgestfinbo-tar/.project
+/pbgestfinbo-tar/.settings
+/pbgestfinbo-web/.project
+/pbgestfinbo-web/.settings
+/pbgestfinbo-web/target
+/pbgestfinbo-web/.classpath
+=======
+/dist/
+>>>>>>> bd6f2058ac80a61274a253589c88764386cecbcf
+/bin/

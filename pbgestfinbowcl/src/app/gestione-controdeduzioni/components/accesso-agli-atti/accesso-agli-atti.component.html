@@ -1,0 +1,29 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Richiesta di accesso agli atti</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div class="content" *ngIf="errore === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+      <div class="content"*ngIf="errore === true">
+        <mat-card-content class="messageError">
+        <p >ERRORE</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+    <div>
+        <mat-card-content>
+            <span> Sei sicuro di voler richiede l'accesso agli atti per questa controdeduzione?</span>
+        </mat-card-content>
+    </div>
+</div>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" [disabled]="isLoading" (click)="accessoAgliAtti()">CONFERMA</button>
+</div>

@@ -1,0 +1,59 @@
+.content-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+}
+
+.dettaglio-table {
+    td {
+        padding: 0 20px 13px 0;
+    }
+
+    width: 100%;
+    padding-top: 0px !important;
+}
+
+.w-btn {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+.matlistItem {
+    font-size: 14px;
+    margin-left: -13px;
+}
+
+.mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+    height: 34px;
+}
+
+.width-40-perc {
+    width: 40%;
+}
+
+.width-28-perc {
+    width: 28%;
+}
+
+/* 
+::ng-deep .mat-tab-label {
+    opacity: 3.6 !important;
+    color: #0060c1;
+} */
+
+/*::ng-deep .mat-tab-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}*/
+
+.card-attivita-istruttore {
+    padding: 0px;
+}
+
+/*.mat-tab-body {
+    margin-left: 16px;
+    margin-right: 16px;
+}*/

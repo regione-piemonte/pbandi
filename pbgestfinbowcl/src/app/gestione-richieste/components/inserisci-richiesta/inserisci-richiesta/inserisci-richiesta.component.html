@@ -1,0 +1,163 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione richieste</span>
+            </button>
+        </div>
+        <h2>Nuova richiesta</h2>
+
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <h3 class="bold-text margin-bottom-5">
+                    SUCCESSO!
+                </h3>
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <h3 class="bold-text margin-bottom-5">
+                    ATTENZIONE!
+                </h3>
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+
+        <div [hidden]="!error">
+            <div class="content width-100-perc margin-0 max-width-89-perc">
+                <mat-card class="mat-card mat-focus-indicator messageError">
+                    <mat-card-content class="mat-card-content messageWarningContent">
+                        <h3 class="bold-text margin-bottom-5">
+                            ATTENZIONE!
+                        </h3>
+                        <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                            Oops, qualcosa è andato storto, controlla che i dati inseriti siano corretti.
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div [hidden]="!success">
+            <div class="content width-100-perc margin-0 max-width-89-perc">
+                <mat-card class="mat-card mat-focus-indicator messageSuccess">
+                    <mat-card-content class="mat-card-content messageWarningContent">
+                        <h3 class="bold-text margin-bottom-5">
+                            SUCCESSO!
+                        </h3>
+                        <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                            La richiesta è stata inserita correttamente.
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <form [formGroup]="myForm">
+                    <div class="row">
+                        <mat-form-field class="width-50-perc margin-right-10">
+                            <mat-label>Selezionare un tipo di richiesta *</mat-label>
+                            <mat-select matInput formControlName="idTipoRichiesta">
+                                <mat-option *ngFor="let richiesta of richieste" [value]="richiesta.value"
+                                    (click)="checkTipoRichiesta(richiesta.value)">
+                                    {{richiesta.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="hasError('idTipoRichiesta', 'required')">Selezionare tipo richiesta
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-radio-group class="width-50-perc" aria-label="Modalità richiesta"
+                            formControlName="urgenza">
+                            <mat-radio-button [disabled]="!antimafia" (click)="cambiaFlag(1)" value="1"
+                                class="margin-right-10">Urgente
+                            </mat-radio-button>
+                            <mat-radio-button [disabled]="!antimafia" (click)="cambiaFlag(2)" [checked]="true"
+                                value="2">Ordinaria
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="width-50-perc margin-right-10">
+                            <input type="text" matInput formControlName="codiceFiscale" [disabled]="false"
+                                [matAutocomplete]="autoCf" placeholder="Codice fiscale beneficiario *"
+                                [(ngModel)]="codFisIns" (input)="sugg(1, codFisIns)">
+                            <mat-autocomplete #autoCf="matAutocomplete">
+                                <mat-option *ngFor="let option of suggCodFis" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="hasError('codiceFiscale', 'required')">Inserire codice fiscale
+                            </mat-error>
+                        </mat-form-field>
+                        <form [formGroup]="myDate" class="col">
+                            <mat-form-field class="width-data">
+                                <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker"
+                                    placeholder="Data invio richiesta" formControlName="dataRichiesta"
+                                    [disabled]="true" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="codiceBando" [disabled]="false"
+                                [matAutocomplete]="autoCodiceBando" placeholder="Cod. bando *" [(ngModel)]="bandoIns"
+                                (input)="sugg(3, bandoIns)">
+                            <mat-autocomplete #autoCodiceBando="matAutocomplete">
+                                <mat-option *ngFor="let option of suggBando" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="hasError('codiceBando', 'required')">Inserire codice bando
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="numeroDomanda" [disabled]="false"
+                                [matAutocomplete]="autoDomanda" placeholder="N. domanda *" [(ngModel)]="domandaIns"
+                                (input)="sugg(2, domandaIns)">
+                            <mat-autocomplete #autoDomanda="matAutocomplete">
+                                <mat-option *ngFor="let option of suggDomanda" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="hasError('numeroDomanda', 'required')">Inserire numero domanda
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="codiceProgetto" [disabled]="false"
+                                [matAutocomplete]="autoProgetto" placeholder="Codice progetto" [(ngModel)]="progettoIns"
+                                (input)="sugg(5, progettoIns)">
+                            <mat-autocomplete #autoProgetto="matAutocomplete">
+                                <mat-option *ngFor="let option of suggProgetto" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- <div class="margin-top-15">
+                        <button mat-raised-button class="button-style-2" (click)="inserisciRichiesta()"
+                            [disabled]="!myForm.valid" type="submit">
+                            CONFERMA
+                        </button>
+                        <button mat-button class="button-style-1" (click)="reset()">
+                            AZZERA
+                        </button>
+                    </div> -->
+                    <div class="button-marty">
+                        <button mat-raised-button (click)="inserisciRichiesta()" [disabled]="!myForm.valid"
+                            type="submit" class="button-style-2">CONFERMA</button>
+                        <button mat-raised-button (click)="reset()" class="button-style-3 margin-left-10 ">PULISCI
+                            CAMPI</button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

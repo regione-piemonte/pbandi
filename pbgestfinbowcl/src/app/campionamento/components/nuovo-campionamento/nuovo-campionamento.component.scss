@@ -1,0 +1,36 @@
+.elem1 {
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  
+  ::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+.overflow-hidden {
+    overflow: hidden;
+}
+.white-space-nowrap {
+    white-space: nowrap;
+}
+.row {
+    display: flex;
+
+    .col {
+        flex-grow: 1;
+        padding-right: 10px;
+    }
+}
+mat-divider {
+    margin: 10px 0 20px 0;
+}
+.text-inside-grid {
+    position: absolute;
+    left: 5px;
+  }

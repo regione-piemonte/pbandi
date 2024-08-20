@@ -1,0 +1,134 @@
+<!-- 
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp" >
+            <h2>Inserimento Contestazioni</h2>
+        </div>
+        <mat-divider></mat-divider> 
+        <div class="content"*ngIf="errore === true">
+            <mat-card-content class="messageError">
+            <p >ERRORE</p>
+            <span>{{messageError}}</span>
+            </mat-card-content>
+        </div>
+    
+        <div class="content" *ngIf="errore === false">
+            <mat-card-content class="messageSuccess">
+            <p >SUCCESSO</p>
+            <span>{{messageSuccess}}</span>
+            </mat-card-content>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+            <mat-card-content class="padding-left-10">
+                <span>
+                    <table class="content-table">
+                        <tr>
+                            <td>Beneficiario: <b>{{user?.beneficiarioSelezionato.denominazione}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Codice progetto: <b>{{codiceProgetto}}</b></td>
+                        </tr>
+                    </table>
+                    <form [formGroup]="formContestazioni" (ngSubmit)="onSubmit()">
+                        <table class="fullWidth">
+                            <tr>
+                                <p class="flecs">
+                                    <mat-form-field appearance="standard" class="fullWidth">
+                                        <mat-label>Numero protocollo</mat-label>
+                                        <mat-select type="text" formControlName="numProtocollo" >
+                                            <mat-option *ngFor="let element of protocolli" [value]="element?.numeroProtocollo">
+                                                {{element?.numeroProtocollo}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </p>
+                                <p class="flecs">
+                                    <mat-form-field appearance="standard" class="fullWidth">
+                                        <mat-label>Numero provvedimento di revoca</mat-label>
+                                        <mat-select type="text" formControlName="numRevoca">
+                                            <mat-option *ngFor="let element of protocolli" [value]="element?.numeroRevoca">
+                                                {{element?.numeroRevoca}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </p>
+                            </tr>
+                        </table>
+                        <div *ngIf="errore == null || errore == true" class="dialog-footer-buttons end" style="display: flex;
+                        justify-content: flex-end;">
+                            <button type="submit" *ngIf="formContestazioni.invalid" mat-raised-button class="button-style-2"
+                              (click)="controllaForm()">CONFERMA</button>
+                            <button type="submit" *ngIf="formContestazioni.valid" mat-raised-button class="button-style-2">CONFERMA</button>
+                        </div>
+                    </form>
+                </span>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+    
+</div> -->
+
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Inserimento Contestazione</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div class="content" *ngIf="errore === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+      <div class="content"*ngIf="errore === true">
+        <mat-card-content class="messageError">
+        <p >ERRORE</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+    <form [formGroup]="formControdeduzione">
+        <table class="fullWidth">
+            <tr>
+                <p class="flecs" *ngIf="!revoca">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Num. procedimento di revoca</mat-label>
+                        <input matInput type="text" readonly class="noDecoration">
+                    </mat-form-field>
+                </p>
+                <p class="flecs" *ngIf="revoca">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Num. procedimento di revoca</mat-label>
+                        <input matInput type="text"  readonly [value]="revoca" class="noDecoration">
+                    </mat-form-field>
+                </p>
+            </tr>
+            <tr>
+                <p class="flecs">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Numero protocollo</mat-label>
+                        <mat-select type="text" formControlName="datiScelti" (selectionChange)="valorizzaRevoca($event)">
+                            <mat-option *ngFor="let element of info" [value]="element">
+                                {{element.numeroProtocollo}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </p>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="onConfirmClick()">CONFERMA</button>
+</div>

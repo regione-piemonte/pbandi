@@ -1,0 +1,150 @@
+
+<div> 
+  <div class="spaceBetween">
+    <h3 class="bold-text">Revoca amministrativa</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+
+  <mat-dialog-content *ngIf="faceId == 1">
+    <div class="loadingDiv">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-content *ngIf="faceId == 0">
+
+    <!-- <p>
+      Causa della revoca: <b style="padding-left: 3px;">{{revocam[0].descCausaleBlocco === null ? "-" : revocam[0].descCausaleBlocco}}</b>
+    </p>
+    <p>
+      Origine ultima revoca: <b style="padding-left: 3px;">{{revocam[0].descCateAnag === null ? "-" : revocam[0].descCateAnag}}</b>
+    </p>
+    <p>
+      Data ultimo provvedimento di revoca: <b style="padding-left: 3px;">{{revocam[0].dataGestione === null ? "-" : revocam[0].dataGestione | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Stato ultimo provvedimento di revoca: <b style="padding-left: 3px;">{{revocam[0].descStatoRevoca === null ? "-" : revocam[0].descStatoRevoca}}</b>
+    </p>
+    <p>
+      Data stato ultimo provvedimento di revoca: <b style="padding-left: 3px;">{{revocam[0].dataStatoRevoca === null ? "-" : revocam[0].dataStatoRevoca | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Motivo ultimo provvedimento di revoca: <b style="padding-left: 3px;">{{revocam[0].descMotivoRevoca === null ? "-" : revocam[0].descMotivoRevoca}}</b>
+    </p>
+    <p>
+      Data ricezione ultima notifica: <b style="padding-left: 3px;">{{revocam[0].dataRicezNotifica === null ? "-" : revocam[0].dataRicezNotifica | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Importo ammesso: <b style="padding-left: 3px;">{{revocam[0].impAmmesso === null ? "-" : revocam[0].impAmmesso | number: '1.2-2' : 'it'}}</b>
+    </p>
+    <p>
+      Importo bando: <b style="padding-left: 3px;">{{revocam[0].impBando === null ? "-" : revocam[0].impBando | number: '1.2-2' : 'it'}}</b>
+    </p>
+    <p>
+      Importo erogato: <b style="padding-left: 3px;">{{revocam[0].impErogato === null ? "-" : revocam[0].impErogato | number: '1.2-2' : 'it'}}</b>
+    </p>
+    <p>
+      Importo totale revocato: <b style="padding-left: 3px;">{{revocam[0].impRevoca === null ? "-" : revocam[0].impRevoca | number: '1.2-2' : 'it'}}</b>
+    </p>
+    <p>
+      Disimpegno: <b style="padding-left: 3px;">{{revocam[0].flagOrdineRecupero === null ? "-" : revocam[0].flagOrdineRecupero}}</b>
+    </p>
+    <p>
+      Recupero totale: <b style="padding-left: 3px;">{{revocam[0].impRecupero === null ? "-" : revocam[0].impRecupero | number: '1.2-2' : 'it'}}</b>
+    </p> -->
+
+
+    <table mat-table [dataSource]="revocam" multiTemplateDataRows style="width: 100%;">
+
+      <!--Numero revoca-->
+      <ng-container matColumnDef="numeroRevoca">
+          <th mat-header-cell *matHeaderCellDef> <b> Numero revoca </b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.numeroRevoca}} </td>
+      </ng-container>
+  
+      <!-- Data Column -->
+      <ng-container matColumnDef="dataNotificaProvRevoca">
+          <th mat-header-cell *matHeaderCellDef> <b>Data notifica provvedimento</b> </th>
+          <td mat-cell *matCellDef="let element">
+              {{element.dataNotificaProvRevoca|date:"dd/MM/yyyy"}}</td>
+      </ng-container>
+  
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="tipoRevoca">
+          <th mat-header-cell *matHeaderCellDef> <b>Tipo revoca</b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.tipoRevoca}} </td>
+      </ng-container>
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="descStatoRevoca">
+          <th mat-header-cell *matHeaderCellDef> <b>stato del provvedimento</b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.descStatoRevoca}} </td>
+      </ng-container>
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="descCausa">
+          <th mat-header-cell *matHeaderCellDef> <b>Causa</b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.descCausa}} </td>
+      </ng-container>
+  
+      <!-- Row Options Column -->
+      <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+              <div class="text-right">
+                  <button mat-icon-button
+                      (click)="expandedElement = expandedElement != element ? element : null">
+                      <mat-icon aria-hidden="false" aria-label="Example home icon">
+                          visibility
+                      </mat-icon>
+                  </button>
+  
+              </div>
+          </td>
+      </ng-container>
+  
+      <!-- per visualizzare i dettagli del saldo e stralcio: expanded -->
+      <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="detailBoxRow">
+              <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+  
+                  <p style="padding-top: 5px;"><b>Data provvedimento: </b>{{element.dataProvedimentoRevoca|date:"dd/MM/yyyy"}}</p>
+                  <p><b>Quota capitale: </b>{{element.quotaCapitale | number: '1.2-2' : 'it'}}</p>
+                  <p><b>Agevolazione: </b>{{element.impAgevolazione | number: '1.2-2' : 'it'}}</p>
+                  <p><b>Recupero quota capitale: </b>{{element.recuperoQuotaCapitale | number: '1.2-2' : 'it'}}</p>
+                  <p><b>Recupero agevolazione: </b>{{element.recuperoAgevolazione | number: '1.2-2' : 'it'}}</p>
+                  <p><b>Importo erogato Finpiemonte: </b>{{element.importoErogatoFinp | number: '1.2-2' : 'it'}}</p>
+                  <p><b>Importo totale revocato: </b>{{element.importoTotaleRevocato | number: '1.2-2' : 'it'}}</p>
+              </div>
+          </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  
+    </table>
+  </mat-dialog-content>
+
+
+ 
+
+
+
+  <mat-dialog-content *ngIf="faceId == 2">
+    <div style="height: 80px;">
+      <p>Nessun dato.</p>
+    </div>
+    
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="spaceBetween">
+      <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+  </mat-dialog-actions>
+
+</div>

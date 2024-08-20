@@ -1,0 +1,36 @@
+.elem1 {
+    width: 100%;
+    justify-content: flex-start !important;
+}
+.dim {
+    font-size: 10px;
+}
+.elem {
+    position: absolute;
+    right: 0px;
+}
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+.icons {
+    color: #272727;
+    display: inline-block !important;
+
+    .mat-icon {
+        color: #272727;
+    }
+}
+.text-inside-grid {
+    position: absolute;
+    left: 5px;
+}
+.flex-gap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.marginBottom10 {
+    margin-bottom: 10px;
+  }

@@ -1,0 +1,119 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+  <div class="title">
+    <h2>Caricamento distinte</h2>
+    <div [hidden]="!error">
+      <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageError">
+          <mat-card-content class="mat-card-content messageWarningContent">
+            <h3 class="bold-text margin-bottom-5">
+              ATTENZIONE!
+            </h3>
+            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+              {{messageError}}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div [hidden]="!success">
+      <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageSuccess">
+          <mat-card-content class="mat-card-content messageWarningContent">
+            <h3 class="bold-text margin-bottom-5">
+              SUCCESSO!
+            </h3>
+            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+              Salvataggio terminato con successo!
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="content marginTop20">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content class="padding-left-10">
+        <form [formGroup]="myForm">
+
+          <!-- CREA DISTINTA -->
+          <mat-grid-list cols="8" rowHeight="60px">
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+              <div class="fullWidth">
+                <mat-form-field class="elem1" appearance="standard">
+                  <mat-label>Selezionare un bando*</mat-label>
+                  <input matInput type="text" formControlName="bando" [matAutocomplete]="auto1"
+                    (input)=" sugg(1, $event.target.value)">
+                  <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayBando">
+                    <mat-option *ngFor="let option of suggBando" [value]="option">
+                      {{option.titoloBando}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<mat-error *ngIf="hasError('codiceFiscale', 'maxlength')">Raggiunto il
+                              limite massimo di caratteri</mat-error>-->
+                </mat-form-field>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+              <div class="fullWidth">
+                <mat-form-field class="elem1" appearance="standard">
+                  <mat-label>Selezionare un'agevolazione*</mat-label>
+                  <input matInput formControlName="agevolazione" [matAutocomplete]="auto2"
+                    (click)="sugg(2, $event.target.value)" (input)="sugg(2, $event.target.value)">
+                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayAgevolazione">
+                    <mat-option *ngFor="let option of suggAgevolazione" [value]="option">
+                      {{option.descModalitaAgevolazione}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="myForm.get('agevolazione')?.value.idModalitaAgevolazione == '10'">
+              <div class="fullWidth">
+               
+                  <mat-checkbox formControlName="flagEscussione" (change)="changeCheckboxFinistr('flagFinistrTrue', $event)" class="elem1" appearance="standard">
+                     Escussione
+                  </mat-checkbox>
+              
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+          <div class="marginTop20">
+            <button mat-raised-button (click)="creaDistinta()" class="button-style-2">CREA DISTINTA</button>
+          </div>
+
+
+
+          <!-- COPIA DISTINTA -->
+          <mat-grid-list cols="8" rowHeight="60px" class="marginTop20">
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+              <div class="fullWidth">
+                <mat-form-field class="elem1" appearance="standard">
+                  <mat-label>Selezionare una distinta*</mat-label>
+                  <input matInput type="text" formControlName="distinta" [matAutocomplete]="auto3"
+                    (click)="sugg(3, $event.target.value)" (input)="sugg(3, $event.target.value)">
+                  <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayDistinta">
+                    <mat-option *ngFor="let option of suggDistinta" [value]="option">
+                      {{option.idDistinta}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <!--<mat-error *ngIf="hasError('codiceFiscale', 'maxlength')">Raggiunto il
+                                        limite massimo di caratteri</mat-error>-->
+                </mat-form-field>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+          <div class="marginTop20">
+            <button mat-raised-button (click)="copiaDistinta()" class="button-style-2">COPIA DISTINTA</button>
+          </div>
+
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

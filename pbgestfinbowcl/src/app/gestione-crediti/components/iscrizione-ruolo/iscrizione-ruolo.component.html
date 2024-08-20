@@ -1,0 +1,274 @@
+<mat-card class="pad">
+  <mat-card-header>
+    <mat-card-title>
+      <h3 class="cardtitle">Iscrizione a ruolo</h3>
+    </mat-card-title>
+  </mat-card-header>
+
+
+  <mat-card-content *ngIf="isShowing == 1" class="scroll" [ngStyle]="{'height': compHeight}">
+    
+    <mat-card class="messageSuccess" *ngIf="isSuccVisible">
+      <mat-card-content class="messageSuccessContent">
+          <p>{{succMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <p>
+      Data richiesta iscrizione: <b style="padding-right: 10px;">{{iscrizione[0]?.dataRichiestaIscrizione === null ? "-" : iscrizione[0].dataRichiestaIscrizione | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      N. Protocollo iscrizione: <b>{{iscrizione[0]?.numProtocollo === null ? "-" : iscrizione[0].numProtocollo}}</b>
+    </p>
+    <p>
+      Data richiesta discarico: <b style="padding-right: 10px;">{{iscrizione[0]?.dataRichiestaDiscarico === null ? "-" : iscrizione[0].dataRichiestaDiscarico | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      N. protocollo discarico: <b>{{iscrizione[0]?.numProtocolloDiscarico === null ? "-" : iscrizione[0].numProtocolloDiscarico}}</b>
+    </p>
+    <p>Data iscrizione a ruolo: <b style="padding-right: 10px;">{{iscrizione[0]?.dataIscrizioneRuolo === null ? "-" : iscrizione[0].dataIscrizioneRuolo | date:'dd/MM/yyyy'}}</b>
+      Data discarico: <b>{{iscrizione[0]?.dataDiscarico === null ? "-" : iscrizione[0].dataDiscarico | date:'dd/MM/yyyy'}}</b></p>
+    <p>N. protocollo discarico Regione: <b>{{iscrizione[0]?.numProtoDiscReg === null ? "-" : iscrizione[0].numProtoDiscReg}}</b></p>
+    <p>
+      Data richiesta sospensione: <b style="padding-right: 10px;">{{iscrizione[0]?.dataRichiestaSospensione === null ? "-" : iscrizione[0].dataRichiestaSospensione | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      N. protocollo sospensione: <b>{{iscrizione[0]?.numProtoSosp === null ? "-" : iscrizione[0].numProtoSosp}}</b>
+    </p>
+    <p>Capitale iscritto a ruolo: <b>{{iscrizione[0]?.capitaleRuolo === null ? "-" : iscrizione[0].capitaleRuolo | number: '1.2-2' : 'it'}}</b></p>
+    <p>Agevolazione iscritta a ruolo: <b>{{iscrizione[0]?.agevolazioneRuolo === null ? "-" : iscrizione[0].agevolazioneRuolo | number: '1.2-2' : 'it'}}</b></p>
+    <!-- <p>
+      Data iscrizione: ELIMINATO - RICHIESTO DA FP 
+    </p> -->
+    <p>
+      N. protocollo Regione: <b>{{iscrizione[0]?.numProtoReg === null ? "-" : iscrizione[0].numProtoReg}}</b>
+    </p>
+    <p>Pagamento: <b>{{iscrizione[0]?.tipoPagamento}}</b></p>
+    <p>Note: <b>{{iscrizione[0]?.note === null ? "-" : iscrizione[0].note}}</b></p>
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="showError" style="height: 81px;">
+    <mat-card class="messageError" *ngIf="showError" id="scrollId">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+  </mat-card-content>
+
+
+  <mat-card-content *ngIf="isShowing == 2" class="scroll" [ngStyle]="{'height': compHeight}"> <!--MODIFICA-->
+
+    <form [formGroup]="myForm">
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data richiesta iscrizione</mat-label>
+          <input matInput formControlName="dataRichiestaIscrizione" [matDatepicker]="picker1" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataRichiestaIscrizione').value"
+            (click)="this.myForm.get('dataRichiestaIscrizione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>N. protocollo iscrizione</mat-label>
+          <input matInput formControlName="nProtocollo">
+          <mat-error *ngIf="myForm.controls.nProtocollo.errors?.maxlength">Valore non valido</mat-error>
+        </mat-form-field>
+      </p>
+    
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data richiesta discarico</mat-label>
+          <input matInput formControlName="dataRichiestaDiscarico" [matDatepicker]="picker2" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataRichiestaDiscarico').value"
+            (click)="this.myForm.get('dataRichiestaDiscarico').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>N. protocollo discarico</mat-label>
+          <input matInput formControlName="nProtocolloDiscarico">
+          <mat-error *ngIf="myForm.controls.nProtocolloDiscarico.errors?.maxlength">Valore non valido</mat-error>
+        </mat-form-field>
+      </p>
+    
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data iscrizione a ruolo</mat-label>
+          <input matInput formControlName="dataIscrizioneRuolo" [matDatepicker]="picker3" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataIscrizioneRuolo').value"
+            (click)="this.myForm.get('dataIscrizioneRuolo').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data discarico</mat-label>
+          <input matInput formControlName="dataDiscarico" [matDatepicker]="picker4" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataDiscarico').value"
+            (click)="this.myForm.get('dataDiscarico').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker4" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker4 disabled="false"></mat-datepicker>
+        </mat-form-field>
+    
+      </p>
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>N. protocollo disc. Regione</mat-label>
+          <input matInput formControlName="nProtDiscRegione">
+          <mat-error *ngIf="myForm.controls.nProtDiscRegione.errors?.maxlength">Valore non valido</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data rich. sospensione</mat-label>
+          <input matInput formControlName="dataRichiestaSospensione" [matDatepicker]="picker5" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataRichiestaSospensione').value"
+            (click)="this.myForm.get('dataRichiestaSospensione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker5" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker5 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </p>
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>N. protocollo sospensione</mat-label>
+          <input matInput formControlName="nProtocolloSospensione">
+          <mat-error *ngIf="myForm.controls.nProtocolloSospensione.errors?.maxlength">Valore non valido</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Capitale iscritto a ruolo</mat-label>
+          <input matInput type="text" formControlName="capitaleIscrittoRuolo" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+          (blur)="this.myForm.get('capitaleIscrittoRuolo').setValue(this.sharedService.formatValue((this.sharedService.getNumberFromFormattedString(this.myForm.get('capitaleIscrittoRuolo').value)).toString()))">
+        </mat-form-field>
+      </p>
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Agevolazione iscritta a ruolo</mat-label>
+          <input matInput type="text" formControlName="agevolazioneIscrittaRuolo" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+          (blur)="this.myForm.get('agevolazioneIscrittaRuolo').setValue(this.sharedService.formatValue((this.sharedService.getNumberFromFormattedString(this.myForm.get('agevolazioneIscrittaRuolo').value)).toString()))">
+        </mat-form-field>
+    
+        <!-- ELIMINATO - RICHIESTO DA FP
+          <mat-form-field appearance="standard" class="halfP">
+          <mat-label>Data iscrizione</mat-label>
+          <input matInput formControlName="dataIscrizione" [matDatepicker]="picker6" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataIscrizione').value"
+            (click)="this.myForm.get('dataIscrizione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker6" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker6 disabled="false"></mat-datepicker>
+        </mat-form-field> -->
+      </p>
+      <p class="fullFlex">
+        <mat-form-field appearance="standard" class="halfP">
+          <mat-label>N. protocollo Regione</mat-label>
+          <input matInput formControlName="nProtocolloRegione">
+          <mat-error *ngIf="myForm.controls.nProtocolloRegione.errors?.maxlength">Valore non valido</mat-error>
+        </mat-form-field>
+      
+        
+        <label style="width: 77px; display: flex; align-items: center;"><b>Pagamento: </b></label>
+        <mat-radio-group formControlName="pagamento" style="width: 123px; display: flex; flex-direction: column; justify-content: space-evenly;">
+          <mat-radio-button value="I">Integrale</mat-radio-button>
+          <mat-radio-button value="R">Rateizzato</mat-radio-button>
+          <mat-radio-button value="N">Non presente</mat-radio-button>
+        </mat-radio-group>
+        
+      </p>
+
+      <p class="fullPH">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </p>
+      <!-- <app-gestione-allegati  [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+
+    <!--<mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <br>-->
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 3" class="storico, scroll" [ngStyle]="{'height': compHeight}">
+    <!--STORICO-->
+
+    <p class="int">
+      <b>Storico iscrizione a ruolo</b>
+      <button mat-icon-button (click)="isShowing = 1">
+        <mat-icon class="material-icons-outlined">cancel</mat-icon>
+      </button>
+    </p>
+
+
+    <mat-divider [inset]="true"></mat-divider>
+
+    <table mat-table [dataSource]="iscrizione" class="table2">
+
+      <!-- Nominativo Column 
+      <ng-container matColumnDef="nominativo">
+        <th mat-header-cell *matHeaderCellDef> Nominativo </th>
+        <td mat-cell *matCellDef="let element"> {{element.nominativo}} </td>
+      </ng-container>-->
+
+      <!-- Data Column -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.stor_dataInserimento}} </td>
+      </ng-container>
+
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="istruttore">
+        <th mat-header-cell *matHeaderCellDef> Istruttore </th>
+        <td mat-cell *matCellDef="let element"> {{element.istruttore}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: historyDisplayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 4" class="scroll" [ngStyle]="{'height': compHeight}">
+    <!--SPINNER-->
+    <div style="height: 100%;">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 5" class="scroll" [ngStyle]="{'height': compHeight}">
+    <!--NO DATA-->
+    <div>
+      <mat-label>Nessuna Iscrizione a ruolo presente</mat-label>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button class="button-style-1" [disabled]="noData" (click)="openHistory()">STORICO</button>
+    <button mat-button class="button-style-1" *ngIf="isShowing == 2" (click)="action('cancel')">ANNULLA</button>
+    <!--<div fxFlex></div>-->
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 5" (click)="isShowing = 2">NUOVA ISCRIZIONE</button>
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 1" (click)="isShowing = 2">MODIFICA</button>
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 2" (click)="action('save')">CONFERMA</button>
+  </mat-card-actions>
+
+
+
+</mat-card>

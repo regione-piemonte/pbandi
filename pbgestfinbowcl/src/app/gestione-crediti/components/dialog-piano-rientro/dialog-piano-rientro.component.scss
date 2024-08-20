@@ -1,0 +1,71 @@
+.dati-anag-card {
+    width: 70%;
+}
+
+.dett-ero-card {
+    width: 85%;
+}
+
+.credit-card {
+    width: 95%;
+}
+
+.content-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+}
+
+.dettaglio-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+
+    width: 100%;
+}
+
+.w-btn {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+
+.datepicker {
+    color: #272727 !important;
+    cursor: default !important;
+    font-weight: normal !important;
+}
+
+.icons {
+    color: #272727;
+    display: inline-block !important;
+
+    .mat-icon {
+        color: #272727;
+    }
+}
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+
+.fullP {
+    width: 100%;
+    height: 62px;
+}
+
+.fullFlex {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 62px;
+}
+
+.fil {
+    width: 47%;
+    //height: 52px;
+}

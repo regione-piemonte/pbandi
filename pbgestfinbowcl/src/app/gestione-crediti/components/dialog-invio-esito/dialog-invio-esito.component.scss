@@ -1,0 +1,108 @@
+.dati-anag-card {
+    width: 70%;
+}
+
+.dett-ero-card {
+    width: 85%;
+}
+
+.credit-card {
+    width: 95%;
+}
+
+.content-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+}
+
+.dettaglio-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+
+    width: 100%;
+}
+
+.w-btn {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+.loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.loadingLabel {
+    display: flex;
+    justify-content: center;
+    height: 77%;
+    align-items: flex-end;
+}
+
+/*.datepicker {
+    color: #272727 !important;
+    cursor: default !important;
+    font-weight: normal !important;
+}*/
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+.datepicker {
+    color: #272727 !important;
+    cursor: default !important;
+    font-weight: normal !important;
+}
+
+.icons {
+    color: #272727;
+    display: inline-block !important;
+
+    .mat-icon {
+        color: #272727;
+    }
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.foofPerc {
+    width: 48%;
+}
+
+.flecs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.loading {
+    width: 100px;
+    height: 100px;    
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}

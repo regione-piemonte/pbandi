@@ -1,0 +1,330 @@
+<mat-spinner-pbandi class="page" *ngIf="masterSpinnerIsSpinning"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': masterSpinnerIsSpinning}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla ricerca delle Riassicurazioni</span>
+            </button>
+        </div>
+        <h2>Gestione escussione</h2>
+    </div>
+
+    <div class="content">
+        <!--<mat-card class="mat-elevation-z2">
+            <mat-card-content style="margin-bottom: -9px;">-->
+                <div class="cod-progetto">
+                    <p>Bando: <span class="bold-text">{{objEscussione.testata_bando == null ? "-" : objEscussione.testata_bando}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{objEscussione.testata_codProgetto == null ? "-" : objEscussione.testata_codProgetto}}</span></p>
+                </div>
+            <!--</mat-card-content>
+        </mat-card>-->
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-title>
+                <h3>Dati anagrafici</h3>
+            </mat-card-title>
+            <mat-card-content>
+                <table class="content-table">
+                    <tr>
+                        <td>Beneficiario: <b>{{objEscussione.datiAnagrafici_beneficiario == null ? "-" : objEscussione.datiAnagrafici_beneficiario}}</b></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Codice fiscale: <b>01725030017</b></td><!--{{objEscussione.datiAnagrafici_codFiscale == null ? "-" : objEscussione.datiAnagrafici_codFiscale}}-->
+                        <td>Partita IVA: <b>01725030017</b></td><!--{{objEscussione.datiAnagrafici_partitaIva == null ? "-" : objEscussione.datiAnagrafici_partitaIva}}-->
+                    </tr>
+                    <tr>
+                        <td>Forma giuridica: <b>Società Cooperativa</b></td><!--{{objEscussione.datiAnagrafici_formaGiuridica == null ? "-" : objEscussione.datiAnagrafici_formaGiuridica}}-->
+                        <td>Tipo anagrafica: <b>{{objEscussione.datiAnagrafici_tipoAnagrafica == null ? "-" : objEscussione.datiAnagrafici_tipoAnagrafica}}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Denominazione banca: <b>BANCA STANDARD</b></td><!--{{objEscussione.datiAnagrafici_denomBanca == null ? "-" : objEscussione.datiAnagrafici_denomBanca}}-->
+                        <td></td>
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div class="content">
+        <mat-card>
+            <mat-card-title>
+                <h3>Dettaglio Riassicurazione</h3>
+            </mat-card-title>
+            <mat-card-content class="dettaglio-elem">
+                <p>
+                    Importo debito residuo: <b>{{importoDebitoResuduo | number: '1.2-2' : 'it'}}</b>
+                </p>
+                <p>
+                    Importo approvato alla data: <b>{{importoApprovatoAllaData | number: '1.2-2' : 'it'}}</b>
+                </p>
+                <p>
+                    Percentuale debito approvato alla data: <b>{{importoApprovatoAllaData / importoDebitoResuduo | percent:'1.2-2' : 'it'}}</b>
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div class="content">
+        <mat-card>
+            <mat-card-title>
+                <h3>Riepilogo escussioni</h3>
+            </mat-card-title>
+            <mat-card-content class="dettaglio-elem">
+
+                <p *ngIf="!objEscussione.escussioniPassate || !objEscussione.escussioniPassate.length"><b>Nessun dato passato.</b></p>
+
+                <table mat-table [dataSource]="objEscussione.escussioniPassate" multiTemplateDataRows class="tab" [ngClass]="{'displayNone': !objEscussione.escussioniPassate || !objEscussione.escussioniPassate.length }" style="width: 100%;">
+            
+                    <ng-container matColumnDef="dataRicezione">
+                        <th mat-header-cell *matHeaderCellDef>Data ricezione Richiesta Escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_dataRicevimentoRichEscuss === null ? "-" : element.escussione_dataRicevimentoRichEscuss | date:'dd/MM/yyyy'}}</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="numeroProtocollo">
+                        <th mat-header-cell *matHeaderCellDef>Numero protocollo</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_numeroProtocolloRichiesta === null ? "-" : element.escussione_numeroProtocolloRichiesta}}</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="tipoEscussione">
+                        <th mat-header-cell *matHeaderCellDef>Tipo di Escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_tipoEscussione === null ? "-" : element.escussione_tipoEscussione}}</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="statoEscussione">
+                        <th mat-header-cell *matHeaderCellDef>Stato escussione</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_statoEscussione === null ? "-" : element.escussione_statoEscussione}}</td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="importoRichiesto">
+                        <th mat-header-cell *matHeaderCellDef>Importo richiesto</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_importoRichiesto === null ? "-" : element.escussione_importoRichiesto | number: '1.2-2' : 'it'}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importoApprovato">
+                        <th mat-header-cell *matHeaderCellDef>Importo approvato</th>
+                        <td mat-cell *matCellDef="let element">{{element.escussione_importoApprovato === null ? "-" : element.escussione_importoApprovato | number: '1.2-2' : 'it'}}</td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="options">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element"><button mat-raised-button class="button-style-2" [disabled]="!canEditEscussione" (click)="modificaEscussionePassataRiassicurazioni(element)">MODIFICA ESCUSSIONE</button></td>
+                    </ng-container>
+            
+                    <tr mat-header-row *matHeaderRowDef="colonneDettaglioRiassicurazioni"></tr>
+                    <tr mat-row *matRowDef="let element; columns: colonneDettaglioRiassicurazioni;" class="example-element-row"></tr>
+                </table>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-title>
+                <div class="button_title">
+                    <span><h3>Escussione corrente</h3></span>
+                    
+                    <span class="actions">
+
+                        <!-- Fintantoché il tipo d'escussione è Parziale, posso inserire nuove escussioni -->
+                        <button *ngIf="objEscussione?.escussione_idTipoEscussione == 4" mat-raised-button class="button-style-2" (click)="modificaEscussioneRiassicurazioni(true, true)" [disabled]="!canEditEscussione">NUOVA ESCUSSIONE PARZIALE</button>
+
+                        <!-- Stato pulsante comandato da backend -->
+                        <button mat-raised-button class="button-style-2" *ngIf="objEscussione?.statoPulsanteEscussione == 1" (click)="modificaEscussioneRiassicurazioni(true, false)" [disabled]="!canEditEscussione">NUOVA ESCUSSIONE</button>
+                        <button mat-raised-button class="button-style-2" *ngIf="objEscussione?.statoPulsanteEscussione == 2" (click)="modificaEscussioneRiassicurazioni(false, false)" [disabled]="!canEditEscussione">MODIFICA ESCUSSIONE</button>
+                                            
+                        <!--<button mat-raised-button class="button-style-2" *ngIf="objEscussione?.escussione_idEscussioneCorrente != null" (click)="cambiaStato(infoEscussione?.idStatoEscussione)" [disabled]="!canEditEscussione">CAMBIA STATO</button>-->
+                        
+                        <button mat-button class="button-style-1" (click)="openStoricoEscussione()">STORICO</button>
+
+                    </span>
+                </div>
+            </mat-card-title>
+                
+                
+                
+            <mat-card class="messageError" *ngIf="showErrorEscussione">
+                <mat-card-content class="messageErrorContent">
+                    <p>{{messageErrorEscussione}}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="messageWarning" *ngIf="showWarningEscussione">
+                <mat-card-content class="messageWarningContent">
+                    <p>{{messageWarningEscussione}}</p>
+                </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="messageSuccess" *ngIf="showSuccEscussione">
+                <mat-card-content class="messageSuccessContent">
+                  <p>{{messageSuccEscussione}}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <!--Solo per scopo di demo
+            <mat-card class="messageError" *ngIf="isImportoRichiestoRaggiunto()">
+                <mat-card-content class="messageErrorContent">
+                  <p>Limite escussione raggiunto.</p>
+                </mat-card-content>
+            </mat-card>-->
+
+            <mat-card-content class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+
+                <span *ngIf="objEscussione?.escussione_idEscussioneCorrente != null; else noEscussione">
+                    <table class="content-table">
+                        <br>
+                        <tr>
+                            <td>Data ricezione Richiesta Escussione: <b>{{objEscussione.escussione_dataRicevimentoRichEscuss == null ? "-" : objEscussione.escussione_dataRicevimentoRichEscuss | date:'dd/MM/yyyy'}}</b></td>
+                            <td>Numero protocollo Richiesta: <b>{{objEscussione.escussione_numeroProtocolloRichiesta == null ? "-" : objEscussione.escussione_numeroProtocolloRichiesta}}</b></td>
+                            <td>Tipo di Escussione: <b>{{objEscussione.escussione_tipoEscussione == null ? "-" : objEscussione.escussione_tipoEscussione}}</b></td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td>Stato escussione: <b>{{objEscussione.escussione_statoEscussione == null ? "-" : objEscussione.escussione_statoEscussione}}</b></td>
+                            <td>Data stato: <b>{{objEscussione.escussione_dataStatoEscussione == null ? "-" : objEscussione.escussione_dataStatoEscussione | date:'dd/MM/yyyy'}}</b></td>
+                            <td></td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td>Data notifica: <b>{{objEscussione.escussione_dataNotificaEscussione == null ? "-" : objEscussione.escussione_dataNotificaEscussione | date:'dd/MM/yyyy'}}</b></td>
+                            <td>Numero protocollo Notifica: <b>{{objEscussione.escussione_numeroProtocolloNotifica == null ? "-" : objEscussione.escussione_numeroProtocolloNotifica}}</b></td>
+                            <td></td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td>Importo richiesto: <b>{{objEscussione.escussione_importoRichiesto == null ? "-" : objEscussione.escussione_importoRichiesto | number: '1.2-2' : 'it'}}</b></td>
+                            <td>Importo approvato: <b>{{objEscussione.escussione_importoApprovato == null ? "-" : objEscussione.escussione_importoApprovato | number: '1.2-2' : 'it'}}</b></td>
+                            <td></td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td>Causale bonifico: <b>{{objEscussione.escussione_causaleBonifico == null ? "-" : objEscussione.escussione_causaleBonifico}}</b></td>
+                            <td>IBAN banca beneficiaria: <b>{{objEscussione.escussione_ibanBanca == null ? "-" : objEscussione.escussione_ibanBanca}}</b></td>
+                            <td>Denominazione banca: <b>{{objEscussione.escussione_denomBanca == null ? "-" : objEscussione.escussione_denomBanca}}</b></td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td>Note: <b style="white-space: pre-line">{{objEscussione.escussione_note == null ? "-" : objEscussione.escussione_note}}</b></td>
+                        </tr>
+                        <br>
+                    </table>
+                </span>
+
+                <ng-template #noEscussione>
+                    <div>
+                        <b>Nessuna Escussione inserita.</b>
+                    </div>
+                </ng-template>
+
+                <span class="rightbutton">
+                    <button mat-raised-button class="button-style-2" *ngIf="objEscussione?.canSendIntegrazione" (click)="richiediIntegrazione()">INVIA RICHIESTA DI INTEGRAZIONE</button>
+                    <button mat-raised-button class="button-style-2" *ngIf="objEscussione?.canSendEsito" (click)="inviaEsito()">INVIA ESITO</button>
+                </span>
+            </mat-card-content>
+
+            <!-- I pulsanti sarebbero troppo bassi
+                <mat-card-actions align="end">
+                <button mat-raised-button class="button-style-2" (click)="richiediIntegrazione()">RICHIESTA DI INTEGRAZIONE</button>
+                <button mat-raised-button class="button-style-2" (click)="inviaEsito(infoEscussione?.idStatoEscussione)">INVIA ESITO</button>
+            </mat-card-actions>-->
+        </mat-card>
+    </div>
+
+
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-title>
+                <div class="button_title">
+                    <span><h3>Allegati</h3></span>
+                    <span class="actions"><button mat-button class="button-style-2" (click)="uploadFileEscussione.click()">AGGIUNGI ALLEGATO</button></span>
+                </div>
+            </mat-card-title>
+            <div [hidden]="!error">
+                <div  class="content width-100-perc margin-0 max-width-89-perc">
+                  <mat-card  class="mat-card mat-focus-indicator messageError"
+                    >
+                    <mat-card-content  class="mat-card-content messageWarningContent"
+                      >
+                      <p  id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                        {{messageError}}
+                      </p>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            <div class="content"*ngIf="erroreAllegato === true">
+                <mat-card-content class="messageError">
+                <p >ERRORE</p>
+                <span>{{messageAllegato}}</span>
+                </mat-card-content>
+            </div>
+            
+            <div class="content" *ngIf="erroreAllegato === false">
+                <mat-card-content class="messageSuccess">
+                <p >SUCCESSO</p>
+                <span>{{messageAllegato}}</span>
+                </mat-card-content>
+            </div>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col" style="display: flex;
+                    justify-content: space-between;
+                    width: 30%;">
+                        <!--<button mat-button class="button-style-1" (click)="uploadFileEscussione.click()">AGGIUNGI ALLEGATO</button>-->
+                        <input type="file" [hidden]="true" #uploadFileEscussione id="uploadFileEscussione" name="uploadFileEscussione"
+                          (change)="handleFileEscussione($event.target.files)" />
+
+                          <button mat-button class="button-style-2" *ngIf="allegati.length > 0" (click)="salvaFileEscussione(idProgetto)">CONFERMA</button>
+                    </div>
+                      
+                </div>
+                <div>
+                    <ul>
+                        <li *ngFor="let file of allegati; let i = index">
+                            <div class="alignItemsCenter">
+                                <span> <b>{{file.name}} - {{file.size}} bytes </b> </span>
+                                <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaFileEscussioneLocale(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                    <span>ALLEGATI AGGIUNTI</span>
+                    <ul *ngIf="infoEscussione?.idEscussione == null || !(infoEscussione?.idTipoEscussione == 3 && infoEscussione?.idStatoEscussione == 5 && infoEscussione?.esitoInviato == true)">
+                        <li *ngFor="let files of objEscussione.allegatiInseriti; let x = index">
+                            <div class="alignItemsCenter">
+                                <span class="bold-text">{{files.nomeFile}}</span>
+                                <button mat-icon-button matTooltip="Scarica" (click)="downloadAllegato(files)">
+                                    <mat-icon>download</mat-icon>
+                                </button>
+                                <button mat-icon-button matTooltip="Elimina" (click)="eliminaFileEscussione(files.idDocIndex)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!--<div class="content">
+        <span class="rightbutton">
+            <button *ngIf="infoEscussione?.idStatoEscussione == 3" mat-raised-button class="button-style-2" (click)="richiediIntegrazione()">RICHIESTA DI INTEGRAZIONE</button>
+            <button *ngIf="infoEscussione?.esitoInviato == false && (infoEscussione?.idStatoEscussione == 5 || infoEscussione?.idStatoEscussione == 6) " mat-raised-button class="button-style-2" (click)="inviaEsito(infoEscussione?.idStatoEscussione)">INVIO ESITO</button>
+        </span>
+    </div>-->
+
+    <br>
+
+</div>

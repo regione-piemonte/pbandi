@@ -1,0 +1,338 @@
+<!-- bando -->
+
+<div *ngIf="element==1">
+
+  <div class="spaceBetween">
+
+    <h3><b> Scelta bandi </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <table>
+
+    <div>
+      <mat-checkbox class="marginRight10" *ngFor="let bando of listaBandoSelected" [(ngModel)]="bando.selected">
+        {{bando.descAttivita}}</mat-checkbox>
+    </div>
+
+  </table>
+
+  <form>
+    <mat-grid-list cols="8" rowHeight="70px">
+
+      <mat-grid-tile [colspan]="6" [rowspan]="1">
+        <div class="fullWidth">
+          <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Selezionare un bando</mat-label>
+            <input matInput [matAutocomplete]="auto4" [(ngModel)]="descBando" (input)="suggest(descBando)"
+              name="bandoDTO">
+            <mat-autocomplete #auto4="matAutocomplete">
+              <mat-option *ngFor="let attivita of listaBando" [value]="attivita.descAttivita">
+                {{attivita.descAttivita}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="1">
+        <button mat-button class="button-style-1" (click)="aggiungiBando()">AGGIUNGI </button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
+
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="confermaBando()">CONFERMA SELEZIONE</button>
+  </div>
+  <!-- <button mat-raised-button (click)="confermaBando()" class="button-style-2"> CONFERMA SELEZIONE
+    </button> -->
+</div>
+
+<!-- DICHIARAZIONE DI SPESA-->
+<div *ngIf="element==3" style="font-size: medium;">
+  <div class="spaceBetween">
+    <h3><b> Tipo dichiarazione </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+
+  <div>
+    <ul>
+      <li>
+        <mat-checkbox [(ngModel)]="allTipoDichSpesa" (change)="tutti($event)">Tutti i tipi</mat-checkbox>
+      </li>
+      <li *ngFor="let tipo of listaTipoDichiarazSpesaSelected">
+        <mat-checkbox class="marginRight10" [(ngModel)]="tipo.selected">
+          {{tipo.descAttivita}}</mat-checkbox>
+      </li>
+    </ul>
+  </div>
+
+  <mat-grid-list cols="8" rowHeight="70px">
+    <mat-grid-tile [colspan]="6" [rowspan]="1">
+      <mat-form-field class="elem1" appearance="standard">
+        <mat-label>Selezionare un tipo di garanzia</mat-label>
+        <mat-select [(ngModel)]="idTipoDichiarSpesa" name="tipoSpesaDTO">
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let tipo of listaTipoDichiarazSpesa" [value]="tipo.idAttivita">
+            {{tipo.descAttivita}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <button mat-button class="button-style-1" (click)="aggiungiTipoDichiarazSpesa()">AGGIUNGI </button>
+    </mat-grid-tile>
+
+
+  </mat-grid-list>
+
+  <h3><b> Stato dichiarazione </b></h3>
+  <mat-checkbox class="marginRight10" [(ngModel)]="validata" [disabled]="true">Validata</mat-checkbox>
+
+  <form #importiForm="ngForm">
+    <h3><b> Importi </b></h3>
+    <mat-grid-list cols="8" rowHeight="60px" style="margin-left: 0%;" [gutterSize]="'10px'">
+      <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-form-field class="elem1" appearance="standard">
+          <mat-label>Importo rendicontato(da)</mat-label>
+          <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+            [(ngModel)]="importoRendicontatoInizioFormatted" name="importoRendicontatoInizio"
+            (blur)="setImportoRendicontatoInizio()" #impRenDa="ngModel">
+          <mat-error *ngIf="impRenDa?.errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="impRenDa?.errors?.error === 'min'">Il valore deve essere maggiore o
+            uguale a 0</mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-form-field class="elem1" appearance="standard">
+          <mat-label>Importo rendicontato(a)</mat-label>
+          <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+            [(ngModel)]="importoRendicontatoFineFormatted" name="importoRendicontatoFine"
+            (blur)="setImportoRendicontatoFine()" #impRenA="ngModel">
+          <mat-error *ngIf="impRenDa?.errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="impRenA?.errors?.error === 'min'">Il valore deve essere maggiore o
+            uguale a 0</mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-form-field class="elem1" appearance="standard">
+          <mat-label>Importo validato(da)</mat-label>
+          <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+            [(ngModel)]="importoValidatoInizioFormatted" name="importoValidatoInizio"
+            (blur)="setImportoValidatoInizio()" #impValDa="ngModel">
+          <mat-error *ngIf="impValDa?.errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="impValDa?.errors?.error === 'min'">Il valore deve essere maggiore o
+            uguale a 0</mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-form-field class="elem1" appearance="standard">
+          <mat-label>Importo validato(a)</mat-label>
+          <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+            [(ngModel)]="importoValidatoFineFormatted" name="importoValidatoFine" (blur)="setImportoValidatoFine()"
+            #impValA="ngModel">
+          <mat-error *ngIf="impValA?.errors?.pattern">
+            Valore non valido
+          </mat-error>
+          <mat-error *ngIf="impValA?.errors?.error === 'min'">Il valore deve essere maggiore o
+            uguale a 0</mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+  </form>
+
+  <h3><b> Date</b></h3>
+
+  <form #dateForm="ngForm">
+
+    <table style="width: 100%;">
+      <tr>
+        <td>
+          <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data ricezione(da)</mat-label>
+            <input matInput [matDatepicker]="picker" name="dataRicezioneInizio" [(ngModel)]="dataRicezioneInizio"
+              disabled [max]="dataRicezioneFine" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataRicezioneInizio" (click)="setDataNull(1)"
+              class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </td>
+
+        <td>
+          <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data ricezione (a)</mat-label>
+            <input matInput [matDatepicker]="picker1" name="dataRicezioneFine" [(ngModel)]="dataRicezioneFine" disabled
+              [min]="dataRicezioneInizio" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataRicezioneFine" (click)="setDataNull(2)"
+              class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data ultimo esito (da)</mat-label>
+            <input matInput [matDatepicker]="picker2" name="dataUltimoEsitoInizio" [(ngModel)]="dataUltimoEsitoInizio"
+              disabled [max]="dataUltimoEsitoFine" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataUltimoEsitoInizio" (click)="setDataNull(3)"
+              class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+        </td>
+
+        <td>
+          <mat-form-field class="elem1" appearance="standard">
+            <mat-label>Data ultimo esito (a)</mat-label>
+            <input matInput [matDatepicker]="picker3" name="dataUltimoEsitoFine" [(ngModel)]="dataUltimoEsitoFine"
+              disabled [min]="dataUltimoEsitoInizio" />
+            <button mat-button mat-icon-button matSuffix *ngIf="dataUltimoEsitoFine" (click)="setDataNull(4)"
+              class="icons">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+            <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </form>
+
+
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="confermaDichiarazSpesa()">CONFERMA SELEZIONE</button>
+  </div>
+
+</div>
+
+<!-- MOTIVAZIONE ESCLUZIONE PROGETTO -->
+<div *ngIf="element==5">
+  <div class="spaceBetween">
+
+    <h3><b>Escludi progetto </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div>
+    <mat-form-field style="width: 100%;">
+      <textarea matInput name="note" rows="2" placeholder="Note" [(ngModel)]="motivazioneEscluzione"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="confermaEscluzione()">CONFERMA </button>
+  </div>
+</div>
+
+<div *ngIf="element==6">
+  <div class="spaceBetween">
+    <h3><b> Riammetti progetti esclusi </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+
+  <div>
+
+    <mat-card style="background-color: #daf0fc; width: 80%; margin: auto ;">
+      <table style="width: 100%;" style="color: #0099E8;">
+        <tr>
+          <th>
+            <mat-icon> info </mat-icon>
+          </th>
+          <th>
+            <div>
+              Tutti i progetti precedentemente esclusi
+              saranno riammessi tra i progetti estraibili
+            </div>
+          </th>
+        </tr>
+
+      </table>
+    </mat-card>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="confermaEscluzioneTutti()">CONFERMA </button>
+  </div>
+</div>
+
+<div *ngIf="element==7">
+  <div class="spaceBetween">
+    <h3><b> Creazione controlli </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <div>
+    <mat-card class="mat-elevation-z2 messageSuccess">
+      <mat-card-content class="messageSuccessContent">
+        <p>Creazione controlli avvenuta con successo</p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div style="float: right;">
+    <button mat-button class="button-style-1" (click)="closeDialog()">CHUIDI</button>
+  </div>
+</div>
+
+<div *ngIf="element==8">
+  <div class="spaceBetween">
+    <h3><b> Annulla campionamento </b></h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div>
+
+    <mat-card class="mat-elevation-z2 messageWarning" *ngIf="!isAnnullaCampionamento">
+      <mat-card-content class="messageSuccessContent">
+        <p>Attenzione!</p>
+        <p> Confermi di voler annullare il campionamento? </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isAnnullaCampionamento">
+      <mat-card-content class="messageSuccessContent">
+        <p> Il campionamento è stato annullato con successo </p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="spaceBetween" *ngIf="!isAnnullaCampionamento">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="annullaCampionamento()">CONFERMA </button>
+  </div>
+  <div class="spaceBetween" *ngIf="isAnnullaCampionamento">
+    <button mat-button class="button-style-1" (click)="ricercaCampionamento()">TORNA ALLA RICERCA </button>
+    <button mat-raised-button class="button-style-2" (click)="nuovoCampionamento()">NUOVO CAMPIONAMENTO </button>
+  </div>
+</div>

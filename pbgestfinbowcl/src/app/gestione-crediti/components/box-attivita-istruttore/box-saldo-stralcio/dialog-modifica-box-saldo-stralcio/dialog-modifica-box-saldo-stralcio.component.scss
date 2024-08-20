@@ -1,0 +1,23 @@
+.form-field-width {
+    width: 100%;
+}
+
+.right-form-field-width {
+    width: 100%;
+    margin-left: 4%;
+}
+
+.form-flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.dim {
+    font-size: 10px;
+}
+.elem {
+    position: absolute;
+    right: 0px;
+}
+

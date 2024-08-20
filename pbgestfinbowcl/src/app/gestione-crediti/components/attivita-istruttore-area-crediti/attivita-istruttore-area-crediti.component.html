@@ -1,0 +1,223 @@
+<!--<mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>-->
+<div class="page">
+  <!--<div class="title">
+     <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca dei beneficiari</span>
+      </button>
+    </div> 
+    <h3>Gestione attività credito</h3>
+  </div>-->
+
+  <!-- <mat-grid-list cols="2" [gutterSize]="'15px'" rowHeight="450px" class="grid">
+
+
+    <mat-grid-tile class="fif">
+      <app-revoca-bancaria [item]="item" style="width: 98%; height: 100%;"></app-revoca-bancaria>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-azioni-recupero-banca [item]="item" style="width: 98%; height: 100%;"></app-azioni-recupero-banca>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-liberazione-garante  [item]="item" style="width: 98%; height: 100%;"></app-liberazione-garante>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-abbattimento-garanzie  [item]="item" style="width: 98%; height: 100%;"></app-abbattimento-garanzie>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-escussione-confidi  [item]="item" style="width: 98%; height: 100%;"></app-escussione-confidi>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-piano-rientro  [item]="item" style="width: 98%; height: 100%;"></app-piano-rientro>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-saldo-stralcio  [item]="item" style="width: 98%; height: 100%;"></app-saldo-stralcio>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-passaggio-perdita  [item]="item" style="width: 98%; height: 100%;"></app-passaggio-perdita>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-liberazione-banca  [item]="item" style="width: 98%; height: 100%;"></app-liberazione-banca>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-messa-mora  [item]="item" style="width: 98%; height: 100%;"> </app-messa-mora>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-iscrizione-ruolo  [item]="item" style="width: 98%; height: 100%;"></app-iscrizione-ruolo>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-segnalazione-corte-conti  [item]="item" style="width: 98%; height: 100%;"></app-segnalazione-corte-conti>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-cessione-quota-fin  [item]="item" style="width: 98%; height: 100%;"></app-cessione-quota-fin>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-transazione  [item]="item" style="width: 98%; height: 100%;"></app-transazione>
+    </mat-grid-tile>
+
+    <mat-grid-tile class="fif">
+      <app-note-generali  [item]="item" style="width: 98%; height: 100%;"></app-note-generali>
+    </mat-grid-tile>
+
+  </mat-grid-list> -->
+
+   <!--  "pbandi_T_TRANSAZIONI_BANCA": false,
+    "pbandi_T_PROCEDURE_CONCORS": true,
+    "pbandi_T_CREDITORIE": false,
+    "pbandi_T_ALLUNG_PIANO_AMMORT": false, -->
+
+
+    <mat-grid-list cols="2" [gutterSize]="'15px'" rowHeight="450px" class="grid" *ngFor="let box of boxTrovate">
+
+      <!-- NUOVI BOX (IN SVILUPPO) - SOLO PER TEST -->
+      <!--<mat-grid-tile>
+        <box-revoca-bancaria [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [nomeBox]="'pbandi_T_REVOCA_BANCARIA'" style="width: 100%; height: 100%;"></box-revoca-bancaria>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <box-saldo-stralcio [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [nomeBox]="'pbandi_T_SALDO_STRALCIO'" style="width: 98%; height: 100%;"></box-saldo-stralcio>
+      </mat-grid-tile>-->
+
+
+      <mat-grid-tile *ngIf="box.pbandi_T_REVOCA_BANCARIA == true">
+        <app-revoca-bancaria [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [nomeBox]="'pbandi_T_REVOCA_BANCARIA'" style="width: 98%; height: 100%;"></app-revoca-bancaria>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_AZIONE_RECUP_BANCA == true">
+        <app-azioni-recupero-banca [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_AZIONE_RECUP_BANCA'" style="width: 98%; height: 100%;"></app-azioni-recupero-banca>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_SALDO_STRALCIO == true">
+        <app-saldo-stralcio  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_SALDO_STRALCIO'" style="width: 98%; height: 100%;"></app-saldo-stralcio>
+      </mat-grid-tile>
+
+       <mat-grid-tile *ngIf="box.pbandi_T_LIBERAZ_GARANTE == true">
+        <app-liberazione-garante  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_LIBERAZ_GARANTE'" style="width: 98%; height: 100%;"></app-liberazione-garante>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_ABBATTIM_GARANZIE == true">
+        <app-abbattimento-garanzie  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ABBATTIM_GARANZIE'" style="width: 98%; height: 100%;"></app-abbattimento-garanzie>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_ESCUSS_CONFIDI == true">
+        <app-escussione-confidi  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ESCUSS_CONFIDI'" style="width: 98%; height: 100%;"></app-escussione-confidi>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_PIANO_RIENTRO == true">
+        <app-piano-rientro  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_PIANO_RIENTRO'" style="width: 98%; height: 100%;"></app-piano-rientro>
+      </mat-grid-tile> 
+
+     <mat-grid-tile *ngIf="box.pbandi_T_PASSAGGIO_PERDITA == true">
+        <app-passaggio-perdita  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_PASSAGGIO_PERDITA'" style="width: 98%; height: 100%;"></app-passaggio-perdita>
+      </mat-grid-tile>
+
+       <mat-grid-tile *ngIf="box.pbandi_T_LIBERAZ_BANCA == true">
+        <app-liberazione-banca  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_LIBERAZ_BANCA'" style="width: 98%; height: 100%;"></app-liberazione-banca>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_MESSA_IN_MORA == true">
+        <app-messa-mora  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_MESSA_IN_MORA'" style="width: 98%; height: 100%;"> </app-messa-mora>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_ISCRIZIONE_RUOLO == true">
+        <app-iscrizione-ruolo  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ISCRIZIONE_RUOLO'"  style="width: 98%; height: 100%;"></app-iscrizione-ruolo>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_SEGNALAZ_CORTE_CONTI == true">
+        <app-segnalazione-corte-conti  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_SEGNALAZ_CORTE_CONTI'"  style="width: 98%; height: 100%;"></app-segnalazione-corte-conti>
+      </mat-grid-tile>
+
+       <mat-grid-tile *ngIf="box.pbandi_T_CESSIONE_QUOTA_FP == true">
+        <app-cessione-quota-fin  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"  [nomeBox]="'pbandi_T_CESSIONE_QUOTA_FP'" style="width: 98%; height: 100%;"></app-cessione-quota-fin>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="box.pbandi_T_TRANSAZIONI_BANCA == true">
+        <app-transazione  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"   [nomeBox]="'pbandi_T_TRANSAZIONI_BANCA'" style="width: 98%; height: 100%;"></app-transazione>
+      </mat-grid-tile>
+      
+      <mat-grid-tile *ngIf="box.pbandi_T_ANNOTAZ_GENERALI == true">
+        <app-note-generali  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"   [nomeBox]="'pbandi_T_ANNOTAZ_GENERALI'" style="width: 98%; height: 100%;"></app-note-generali>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <!-- <mat-grid-list cols="2" [gutterSize]="'15px'" rowHeight="450px" class="grid" *ngFor="let box of boxTrovate">
+      <mat-grid-tile class="fif" >
+        <app-revoca-bancaria [idModalitaAgevolazione]="idModalitaAgevolazione" [item]="item" [nomeBox]="'pbandi_T_REVOCA_BANCARIA'" style="width: 98%; height: 100%;"></app-revoca-bancaria>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-azioni-recupero-banca [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_AZIONE_RECUP_BANCA'" style="width: 98%; height: 100%;"></app-azioni-recupero-banca>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-saldo-stralcio  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_SALDO_STRALCIO'" style="width: 98%; height: 100%;"></app-saldo-stralcio>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-note-generali  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"   [nomeBox]="'pbandi_T_ANNOTAZ_GENERALI'" style="width: 98%; height: 100%;"></app-note-generali>
+      </mat-grid-tile>
+
+       <mat-grid-tile class="fif" >
+        <app-liberazione-garante  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_LIBERAZ_GARANTE'" style="width: 98%; height: 100%;"></app-liberazione-garante>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-abbattimento-garanzie  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ABBATTIM_GARANZIE'" style="width: 98%; height: 100%;"></app-abbattimento-garanzie>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-escussione-confidi  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ESCUSS_CONFIDI'" style="width: 98%; height: 100%;"></app-escussione-confidi>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-piano-rientro  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_PIANO_RIENTRO'" style="width: 98%; height: 100%;"></app-piano-rientro>
+      </mat-grid-tile> 
+
+      
+
+     <mat-grid-tile class="fif" >
+        <app-passaggio-perdita  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_PASSAGGIO_PERDITA'" style="width: 98%; height: 100%;"></app-passaggio-perdita>
+      </mat-grid-tile>
+
+       <mat-grid-tile class="fif" >
+        <app-liberazione-banca  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_LIBERAZ_BANCA'" style="width: 98%; height: 100%;"></app-liberazione-banca>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-messa-mora  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_MESSA_IN_MORA'" style="width: 98%; height: 100%;"> </app-messa-mora>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif">
+        <app-iscrizione-ruolo  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_ISCRIZIONE_RUOLO'"  style="width: 98%; height: 100%;"></app-iscrizione-ruolo>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-segnalazione-corte-conti  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item" [nomeBox]="'pbandi_T_SEGNALAZ_CORTE_CONTI'"  style="width: 98%; height: 100%;"></app-segnalazione-corte-conti>
+      </mat-grid-tile>
+
+       <mat-grid-tile class="fif" >
+        <app-cessione-quota-fin  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"  [nomeBox]="'pbandi_T_CESSIONE_QUOTA_FP'" style="width: 98%; height: 100%;"></app-cessione-quota-fin>
+      </mat-grid-tile>
+
+      <mat-grid-tile class="fif" >
+        <app-transazione  [idModalitaAgevolazione]="idModalitaAgevolazione"  [item]="item"   [nomeBox]="'pbandi_T_TRANSAZIONI_BANCA'" style="width: 98%; height: 100%;"></app-transazione>
+      </mat-grid-tile> 
+
+      
+
+    </mat-grid-list> -->
+</div>

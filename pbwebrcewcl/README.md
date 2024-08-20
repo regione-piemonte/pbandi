@@ -11,14 +11,14 @@ Si tratta della parte di front-end della componente [PBWEBRCE](../pbwebrce).
 Questa deve essere compilata prima della componente PBWEBRCE. I file da configurare in base alle proprie esigenze, sono sotto la cartella pbwebrcewcl\buildfiles.
 
 ## Prerequisiti di sistema
-[Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
-[Application Server: WildFly - 17.0](https://www.wildfly.org/)
-[RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
+* [Application Server: WildFly - 17.0](https://www.wildfly.org/)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
 ## Software
-[Java Development Kit (jdk): 8](https://www.oracle.org)
-[Angular CLI: 10.2.0](https://angular.io)
-[Node: 12.20.1](https://nodejs.org)
-[Maven: 3.2.5](https://maven.apache.org)
+* [Java Development Kit (jdk): 8](https://www.oracle.org)
+* [Angular CLI: 10.2.0](https://angular.io)
+* [Node: 12.20.1](https://nodejs.org)
+* [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
 Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWEBRCE](../pbwebrce), effettuare i seguenti step:

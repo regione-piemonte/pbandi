@@ -1,0 +1,54 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Inserimento Controdeduzione</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div class="content" *ngIf="errore === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+      <div class="content"*ngIf="errore === true">
+        <mat-card-content class="messageError">
+        <p >ERRORE</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+    <form [formGroup]="formControdeduzione">
+        <table class="fullWidth">
+            <tr>
+                <p class="flecs" *ngIf="!revoca">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Num. procedimento di revoca</mat-label>
+                        <input matInput type="text" readonly class="noDecoration">
+                    </mat-form-field>
+                </p>
+                <p class="flecs" *ngIf="revoca">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Num. procedimento di revoca</mat-label>
+                        <input matInput type="text"  readonly [value]="revoca" class="noDecoration">
+                    </mat-form-field>
+                </p>
+            </tr>
+            <tr>
+                <p class="flecs">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Numero protocollo</mat-label>
+                        <mat-select type="text" formControlName="datiScelti" (selectionChange)="valorizzaRevoca($event)">
+                            <mat-option *ngFor="let element of info" [value]="element">
+                                {{element.numeroProtocollo}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </p>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="onConfirmClick()">CONFERMA</button>
+</div>

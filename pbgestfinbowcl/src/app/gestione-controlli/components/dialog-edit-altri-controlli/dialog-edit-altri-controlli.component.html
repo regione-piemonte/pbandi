@@ -1,0 +1,573 @@
+<div *ngIf="element==1">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Allegati autorità controllante</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <h4>Comunicazione autorità controllante</h4>
+    </div>
+
+    <div class="row" *ngIf="!isFile" style="padding-bottom: 25px;">
+        <div class="col">
+            <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+            <!-- <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button> -->
+            <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                (change)="handleFileInput($event.target.files[0])" />
+        </div>
+    </div>
+
+    <div class="spaceBetween" *ngIf="isFile" style="padding-bottom: 25px;">
+
+        <mat-form-field class="margin-right-10" class="fullWidth">
+            <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileName" disabled="true" />
+        </mat-form-field>
+
+        <button mat-button class="button-style-1 orange-color" (click)="setFileNull()" [disabled]="!file">
+            <mat-icon class="padding-right-5">delete</mat-icon>
+        </button>
+    </div>
+
+
+    <div class="spaceBetween">
+        <button class="button-style-1" (click)="closeDialog()">
+            ANNULLA
+        </button>
+        <button class="button-style-2" (click)="conferma()">
+            CONFERMA
+        </button>
+    </div>
+
+</div>
+
+<!-- gestisci allegati -->
+<div *ngIf="element==2">
+    <div class="spaceBetween">
+        <h2 class="bold-text">Allegati controllo in loco</h2>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+    <!-- Lettera avvio Controllo in locco -->
+    <div>
+        <div class="row">
+            <span><b> Lettera avvio controllo in loco</b></span>
+        </div>
+
+        <div *ngIf="idAttivitaControllo==0||idAttivitaControllo==3">
+            <div class="row" *ngIf="!isLetteraAvvio">
+                <div class="col">
+                    <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                        (change)="handleFileInputAllegati($event.target.files[0], 1)" />
+                </div>
+            </div>
+            <div class="spaceBetween" *ngIf="isLetteraAvvio">
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileAvvContrName"
+                        disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati(1)"
+                    [disabled]="!fileLetteraAvvioControllo">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="letteraAvvioControllo?.idDocumentoIndex">
+            <!-- <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{letteraAvvioControllo.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(letteraAvvioControllo)">download</mat-icon>
+            </div> -->
+            <div *ngFor="let lettera of elencoLettereAvvioControllo">
+
+                <div class="spaceBetween">
+                    <div class="bold-text" style="width: 90%;color: rgb(86, 120, 233);">
+                        {{lettera.nomeDocumento}}
+                    </div>
+                    <div>
+                        <mat-icon style="width: 10%;" class="cursor-pointer"
+                            (click)="downloadAllegato(lettera)">download</mat-icon>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+
+    <!-- Lettera accompagnatoria richiesta di integrazione-->
+    <div>
+        <div class="row">
+            <span> <b>Lettera accompagnatoria richiesta di integrazione </b></span>
+        </div>
+
+        <div *ngIf="idAttivitaControllo==2">
+            <div class="row" *ngIf="!isLetteraAccomp">
+                <div class="col">
+                    <button mat-button class="button-style-1" (click)="uploadFile5.click()">AGGIUNGI ALLEGATO</button>
+                    <input [hidden]="true" type="file" #uploadFile5 id="uploadFile5" name="uploadFile5"
+                        (change)="handleFileInputAllegati($event.target.files[0], 2)" />
+                </div>
+            </div>
+            <div class="spaceBetween" *ngIf="isLetteraAccomp">
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileLetteraAccompName"
+                        disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati(2)"
+                    [disabled]="!fileLetteraAccompagnatoria">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="letteraAccompagnatoria?.idDocumentoIndex" class="spaceBetween">
+            <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{letteraAccompagnatoria.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(letteraAccompagnatoria)">download</mat-icon>
+            </div>
+        </div>
+    </div>
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+    <!-- Lettera accompgantoria beneficiario -->
+    <div *ngIf="isAllegatiBenef">
+        <div class="row">
+            <span> <b>File trasmessi dal BENEFICIARIO in integrazione in data
+                    {{letteraAccompagnatoriaBeneficario.dtInserimentoIndex | date:'dd/MM/yyyy'}}</b></span>
+        </div>
+
+
+        <!-- <div class="spaceBetween" *ngIf="letteraAccompagnatoriaBeneficario?.idDocumentoIndex">
+            <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{letteraAccompagnatoriaBeneficario.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(letteraAccompagnatoriaBeneficario)">download</mat-icon>
+            </div>
+        </div> -->
+        <!-- <div>
+            <ul>
+                <li *ngFor="let file of elencoAllegatiBenef; let y = index">
+                    <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                        {{file.nomeDocumento}}
+                    </div>
+                    <div class="col">
+                        <mat-icon class="cursor-pointer" (click)="downloadAllegato(file)">download</mat-icon>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
+
+        <div class="spaceBetween row" style="width: 100%;" *ngFor="let file of elencoAllegatiBenef; let y = index">
+            <div class="bold-text" style="width: 90%;color: rgb(86, 120, 233);">
+                {{file.nomeDocumento}}
+            </div>
+            <div>
+                <mat-icon style="width: 10%;" class="cursor-pointer"
+                    (click)="downloadAllegato(file)">download</mat-icon>
+            </div>
+        </div>
+    </div>
+
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+    <!-- Lettera di esito controllo in loco-->
+    <div>
+        <div class="row">
+            <span> <b>Lettera di esito controllo in loco </b></span>
+        </div>
+
+        <div *ngIf="idStatoControllo==2">
+            <div class="row" *ngIf="!isLetteraEsito">
+                <div class="col">
+                    <button mat-button class="button-style-1" (click)="uploadFile1.click()">AGGIUNGI ALLEGATO</button>
+                    <input [hidden]="true" type="file" #uploadFile1 id="uploadFile1" name="uploadFile1"
+                        (change)="handleFileInputAllegati($event.target.files[0],3)" />
+                </div>
+            </div>
+            <div class="spaceBetween" *ngIf="isLetteraEsito">
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileEsitoName" disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati(3)"
+                    [disabled]="!fileLetteraEsitoControllo">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="spaceBetween" *ngIf="letteraEsitoControllo?.idDocumentoIndex">
+            <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{letteraEsitoControllo.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(letteraEsitoControllo)">download</mat-icon>
+            </div>
+        </div>
+    </div>
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+
+    <!-- Verbale di controllo in loco-->
+    <div>
+        <div class="row">
+            <span><b>Verbale di controllo in loco</b></span>
+        </div>
+
+        <div *ngIf="idStatoControllo==2 || idStatoControllo==4 || idStatoControllo==5">
+            <div class="row" *ngIf="!isVerbaleContr">
+                <div class="col">
+                    <button mat-button class="button-style-1" (click)="uploadFile2.click()">AGGIUNGI ALLEGATO</button>
+                    <input [hidden]="true" type="file" #uploadFile2 id="uploadFile" name="uploadFile2"
+                        (change)="handleFileInputAllegati($event.target.files[0],4)" />
+                </div>
+            </div>
+            <div class="spaceBetween" *ngIf="isVerbaleContr">
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileVerbaleName" disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati(4)"
+                    [disabled]="!fileVerbaleControllo">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="spaceBetween" *ngIf="verbaleControllo?.idDocumentoIndex">
+            <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{verbaleControllo.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(verbaleControllo)">download</mat-icon>
+            </div>
+        </div>
+    </div>
+
+
+    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+
+    <!-- Checklist di controllo in loco-->
+    <div>
+        <div class="row">
+            <span><b> Checklist di controllo in loco interno </b></span>
+        </div>
+
+        <div *ngIf="idStatoControllo==2 || idStatoControllo==4 || idStatoControllo==5">
+            <div class="row" *ngIf="!isCheckList">
+                <div class="col">
+                    <button mat-button class="button-style-1" (click)="uploadFile3.click()">AGGIUNGI ALLEGATO</button>
+                    <input [hidden]="true" type="file" #uploadFile3 id="uploadFile" name="uploadFile3"
+                        (change)="handleFileInputAllegati($event.target.files[0],5)" />
+                </div>
+            </div>
+            <div class="spaceBetween" *ngIf="isCheckList">
+                <mat-form-field class="margin-right-10" class="fullWidth">
+                    <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileCheckListName"
+                        disabled="true" />
+                </mat-form-field>
+
+                <button mat-button class="button-style-1 orange-color" (click)="setFileNullAllegati(5)"
+                    [disabled]="!fileCheckListControllo">
+                    <mat-icon class="padding-right-5">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="spaceBetween" *ngIf="checkListControllo?.idDocumentoIndex">
+            <div class="col" class="bold-text" style="color: rgb(86, 120, 233);">
+                {{checkListControllo.nomeDocumento}}
+            </div>
+            <div class="col">
+                <mat-icon class="cursor-pointer" (click)="downloadAllegato(checkListControllo)">download</mat-icon>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">
+            ANNULLA
+        </button>
+        <button mat-button class="button-style-2" (click)="confermaAllegati()">
+            CONFERMA
+        </button>
+    </div>
+
+
+</div>
+
+<!-- avvio iter controllo in loco  -->
+<div *ngIf="element==3">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Avvio controllo in loco</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <h4>Lettera avvio controllo in loco</h4>
+    </div>
+
+    <div class="row" *ngIf="!isFile">
+        <div class="col">
+            <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+            <!-- <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button> -->
+            <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                (change)="handleFileInput($event.target.files[0])" />
+        </div>
+    </div>
+
+    <div class="spaceBetween" *ngIf="isFile">
+
+        <mat-form-field class="margin-right-10" class="fullWidth">
+            <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileName" disabled="true" />
+        </mat-form-field>
+
+        <button mat-button class="button-style-1 orange-color" (click)="setFileNull()" [disabled]="!file">
+            <mat-icon class="padding-right-5">delete</mat-icon>
+        </button>
+    </div>
+
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">
+            ANNULLA
+        </button>
+        <button mat-button class="button-style-2" (click)="avviaIter()">
+            AVVIA ITER
+        </button>
+    </div>
+
+</div>
+
+<!-- Richiesta di integrazione -->
+<div *ngIf="element==4">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Richiesta di integrazione</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <form>
+
+        <div class="row">
+            <mat-form-field class="elem1" appearance="standard" style="width: 25%;">
+                <mat-label>Giorni di scadenza</mat-label>
+                <input type="number" pattern="^[0-9]*$" maxlength="4000" matInput [(ngModel)]="giorniScadenza"
+                    name="note" required #numP="ngModel" />
+                <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+            </mat-form-field>
+        </div>
+
+    </form>
+
+    <div>
+        <h4>Lettera accompagnatoria</h4>
+    </div>
+
+    <div class="row" *ngIf="!isFile">
+        <div class="col">
+            <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+            <!-- <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button> -->
+            <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                (change)="handleFileInput($event.target.files[0])" />
+        </div>
+    </div>
+
+    <div class="spaceBetween" *ngIf="isFile">
+        <mat-form-field class="margin-right-10" class="fullWidth">
+            <input type="text" matInput placeholder="Nome file" [(ngModel)]="fileName" disabled="true" />
+        </mat-form-field>
+
+        <button mat-button class="button-style-1 orange-color" (click)="setFileNull()" [disabled]="!file">
+            <mat-icon class="padding-right-5">delete</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="closeDialog()">
+                ANNULLA
+            </button>
+            <button mat-button class="button-style-2" (click)="controllaCampi()">
+                AVVIA ITER
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- gestione proroga -->
+<div *ngIf="element==5">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Richiesta proroga</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="isShowTable">
+        <table mat-table [dataSource]="elencoProroghe" style="width: 100%;" id="excel">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataRichiesta">
+                <th mat-header-cell *matHeaderCellDef> <b>Data richiesta</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataRichiesta|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!--  Column -->
+            <ng-container matColumnDef="giorniRichiesti">
+                <th mat-header-cell *matHeaderCellDef> <b>Giorni richiesti </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.numGiorniRichiesta }} </td>
+            </ng-container>
+
+            <!-- motivazione -->
+            <ng-container matColumnDef="motivazione">
+                <th mat-header-cell *matHeaderCellDef style=" width: 40%;"> <b>Motivazione</b> </th>
+                <td mat-cell *matCellDef="let element" style=" width: 40%;" [matTooltip]="element.note">
+                    <mat-grid-list cols="1" rowHeight="30">
+                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+
+                            <div style="width: 99%; display: flex; justify-content: flex-start;">
+                                <a class="blue-color text-overflow-ellipsis overflow-hidden white-space-nowrap">
+                                    {{element.motivazione}}
+                                </a>
+                            </div>
+
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="giorniApprov">
+                <th mat-header-cell *matHeaderCellDef> <b>Giorni approvati </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.numGiorniApprov }} </td>
+            </ng-container>
+
+            <!-- stato richiesta Column -->
+            <ng-container matColumnDef="statoRichiesta">
+                <th mat-header-cell *matHeaderCellDef> <b>Stato Richiesta </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.descStatoProroga }} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+    <div *ngIf="isProroga">
+
+
+        <div style="padding-bottom: 25px;">
+            Motivazione :
+            <b> {{richProroga.motivazione}}</b>
+        </div>
+
+        <div class="row" style="padding-bottom: 25px;" class="spaceBetween">
+
+            <div>
+                Numero giorni proroga:
+                <b>{{richProroga.numGiorniRichiesta}}</b>
+            </div>
+            <div>
+                <mat-form-field class="elem1" appearance="standard" [disabled]="idStatoProroga!=1">
+                    <mat-label> Approvati</mat-label>
+                    <input type="number" pattern="^[0-9]*$" maxlength="4000" matInput [(ngModel)]="giorniApprovati"
+                        name="note" required #numP="ngModel" [disabled]="idStatoProroga!=1" />
+                    <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- <mat-grid-list cols="6" rowHeight="55px" [gutterSize]="'10px'">
+            <mat-grid-tile [colspan]="3">
+                <div class="text-inside-grid">
+                    Numero giorni proroga:  <b>{{richProroga.numGiorniRichiesta}}</b>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label> Approvati</mat-label>
+                    <input type="number" pattern="^[0-9]*$" maxlength="4000" matInput [(ngModel)]="giorniApprovati"
+                        name="note" required #numP="ngModel" />
+                    <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list> -->
+        </div>
+    </div>
+
+    <div class="spaceBetween" *ngIf="idStatoProroga==1">
+        <button mat-button class="button-style-1" (click)="gestisciProroga(2)">
+            RESPINGI
+        </button>
+        <button mat-button class="button-style-2" (click)="gestisciProroga(1)">
+            APPROVA
+        </button>
+    </div>
+
+
+
+</div>
+
+<!-- Chiusura richiesta integrazione  -->
+<div *ngIf="element==6">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Chuidi richiesta integrazione</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <mat-card class="mat-elevation-z2 messageWarning">
+            <mat-card-content class="messageSuccessContent">
+                <p>Attenzione!</p>
+                <p> Sei sicuro di voler chiudere la richiesta di integrazione? </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div>
+        <div class="spaceBetween">
+            <button mat-button class="button-style-1" (click)="closeDialog()">
+                ANNULLA
+            </button>
+            <button mat-button class="button-style-2" (click)="chiudiRichIntegr()">
+                CONFERMA
+            </button>
+        </div>
+    </div>
+
+</div>

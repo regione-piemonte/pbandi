@@ -1,0 +1,229 @@
+<div class="page">
+    <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+    <div class="title">
+        <!-- <div class="reportingContainerUp">
+            <div class="titleBar">
+                <h2>Anagrafica beneficiario</h2>
+                <p><b>Tipo Soggetto:</b> {{verificaTipoSoggetto}}</p>
+                <p><b>NAG:</b> {{idSoggetto}}</p>
+                <span><b>Stato ultima domanda presentata: </b> <span>{{statoUltimaDomanda ?
+                        statoUltimaDomanda.statoDomanda :
+                        null}}</span></span>
+            </div>
+        </div> -->
+
+        <div class="reportingContainerUp">
+            <div class="titleBar">
+              <h2>Anagrafica beneficiario</h2>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <span>
+                        <table class="content-table">
+                            <tr>
+                                <td>Tipo Soggetto: <b>{{verificaTipoSoggetto}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>NAG: <b>{{idSoggetto}}</b></td>
+                            </tr>
+                            <tr>
+                              <td>Stato ultima domanda: <b>{{statoUltimaDomanda ? statoUltimaDomanda.statoDomanda : null}}</b></td>
+                          </tr>
+                        </table>
+                    </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-divider class="divider" [inset]="true"></mat-divider>
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="DATI GENERALI">
+                        <div class="content" style="margin-top: 2em;">
+                        <div>
+                            <h3>Dati anagrafici</h3>
+                            <div>
+                                <form [formGroup]="myForm" novalidate>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Cognome</mat-label>
+                                            <input type="text" matInput formControlName="cognome" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('cognome', 'required')">Impossibile andare avanti
+                                                senza Cognome
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('cognome', 'maxlength')">Hai usato più di 20
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nome</mat-label>
+                                            <input matInput type="text" formControlName="nome" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('nome', 'required')">Impossibile andare avanti
+                                                senza Nome
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('nome', 'maxlength')">Hai usato più di 20
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Ruolo</mat-label>
+                                            <input type="text" matInput formControlName="tipoSoggetto"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput formControlName="codiceFiscale"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('codiceFiscale', 'required')">Impossibile andare
+                                                avanti
+                                                senza Codice Fiscale
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('codiceFiscale', 'maxlength')">Hai raggiunto il
+                                                limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune di nascita</mat-label>
+                                            <input type="text" matInput formControlName="comuneDiNascita"
+                                                [matAutocomplete]="auto">
+                                            <mat-error *ngIf="hasError('comuneDiNascita', 'required')">Impossibile
+                                                andare avanti
+                                                senza Comune
+                                            </mat-error>
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredOptions | async"
+                                                    [value]="option">
+                                                    {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia di nascita</mat-label>
+                                            <mat-select matInput formControlName="idProvinciaDiNascita"
+                                                (selectionChange)="getComuniNascita(provinciaNasc)" #provinciaNasc>
+                                                <mat-option *ngFor="let provincia of provincie"
+                                                    [value]="provincia.idProvincia">
+                                                    {{provincia.descProvincia}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione di nascita</mat-label>
+                                            <mat-select matInput formControlName="idRegioneDiNascita">
+                                                <mat-option *ngFor="let regione of regioni" [value]="regione.idRegione">
+                                                    {{regione.descRegione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione di nascita</mat-label>
+                                            <mat-select matInput formControlName="idNazioneDiNascita">
+                                                <mat-option *ngFor="let nazione of nazioni" [value]="nazione.idNazione">
+                                                    {{nazione.descNazione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Data di nascita</mat-label>
+                                            <input matInput [matDatepicker]="picker" formControlName="dataDiNascita"
+                                                [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Residenza</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo</mat-label>
+                                            <input type="text" matInput formControlName="indirizzoPF"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('indirizzoPF', 'required')">Impossibile andare
+                                                avanti
+                                                senza Indirizzo
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune</mat-label>
+                                            <input type="text" matInput formControlName="comunePF"
+                                                [matAutocomplete]="auto2">
+                                            <mat-error *ngIf="hasError('comunePF', 'required')">Impossibile
+                                                andare avanti
+                                                senza Comune
+                                            </mat-error>
+                                            <mat-autocomplete #auto2="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredOptions2 | async"
+                                                    [value]="option">
+                                                    {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia</mat-label>
+                                            <mat-select matInput formControlName="idProvinciaPF"
+                                                (selectionChange)="getComuniResidenza(provinciaRes)" #provinciaRes>
+                                                <mat-option *ngFor="let provincia of provincie"
+                                                    [value]="provincia.idProvincia">
+                                                    {{provincia.descProvincia}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP</mat-label>
+                                            <input type="text" matInput formControlName="capPF" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('capPF', 'required')">Impossibile andare
+                                                avanti
+                                                senza CAP
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('capPF', 'maxlength')">Hai raggiunto il
+                                                limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione</mat-label>
+                                            <mat-select matInput formControlName="idRegionePF">
+                                                <mat-option *ngFor="let regione of regioni" [value]="regione.idRegione">
+                                                    {{regione.descRegione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione</mat-label>
+                                            <mat-select matInput formControlName="idNazionePF">
+                                                <mat-option *ngFor="let nazione of nazioni" [value]="nazione.idNazione">
+                                                    {{nazione.descNazione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <button class="save-button" mat-raised-button [disabled]="!myForm.valid"
+                            (click)="salvaModifiche()">
+                            SALVA
+                        </button>
+                        <button mat-raised-button (click)="annullaModifiche()">
+                            ANNULLA
+                        </button>
+                    </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+        <mat-divider class="divider" [inset]="true"></mat-divider>
+    </div>
+</div>

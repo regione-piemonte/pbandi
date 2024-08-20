@@ -1,0 +1,158 @@
+<div mat-dialog-title>
+  <div class="spaceBetween">
+    <h3 class="bold-text">Piano di ammortamento</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <!-- Non usata
+  <mat-card class="messageSuccess" *ngIf="showSucc">
+    <mat-card-content class="messageSuccessContent">
+      <p>{{succMsg}}</p>
+    </mat-card-content>
+  </mat-card>-->
+  
+  <!-- Messaggio d'errore della pagina originaria, potrebbe servire, non si sa mai
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>-->
+
+
+  <mat-card class="messageError" *ngIf="showError">
+    <mat-card-content class="messageErrorContent">
+      <p>{{errorMsg}}</p>
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+<mat-dialog-content>
+
+  <!--<mat-spinner-pbandi class="page" *ngIf="isSpinnerSpinning"></mat-spinner-pbandi>-->
+
+  <!--  IMPORTANTE!!
+
+    Se dentro un tag avete un mat-table sortabile e quel tag può essere nascosto, usare la direttiva [ngClass] invece dell'*ngIf
+    altrimenti il sorting non funziona. Deve essere nel DOM per tutto il ciclo di vita.
+
+    - Il vostro caro Ame che ha perso mezza giornata e lanciato tante bestemmie cercando di capire perché non funzionasse -
+  -->
+  
+  <div [ngClass]="{'displayNone': !isLoading }">
+    <div class="loading-container">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>     
+  </div>
+
+  <div class="content" [ngClass]="{'displayNone': isLoading }">
+
+    <mat-card class="benef-detail">
+
+      <p>Bando: <b>{{dispBando ? dispBando : '-'}}</b></p>
+
+      <p>Identificativo progetto: <b>{{dispCodProg ? dispCodProg : '-'}}</b></p>
+
+      <p>Beneficiario: <b>{{dispBenef ? dispBenef : '-'}}</b></p>
+
+      <p>Debito residuo iniziale: <b>{{dispDebitoResInit !== null ? (dispDebitoResInit | number: '1.2-2' : 'it') : '-'}}</b></p>
+
+      <p>Debito residuo: <b>{{dispDebitoResAllaData !== null ? (dispDebitoResAllaData | number: '1.2-2' : 'it') : '-'}}</b></p>
+
+    </mat-card>
+    
+    <br>
+        
+    <p *ngIf="noData"><br><b>Non ci sono elementi da visualizzare.</b></p>
+    
+    <table mat-table [dataSource]="dataSource" class="tab" [ngClass]="{'displayNone': noData }" matSort>
+    
+      <!-- N. rata Column -->
+      <ng-container matColumnDef="numRata">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Numero rata </th>
+        <td mat-cell *matCellDef="let element"> {{element.numRata ? element.numRata : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef>  </td> -->
+      </ng-container>
+    
+      <!-- causale scadenza Column -->
+      <ng-container matColumnDef="causale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Causale </th>
+        <td mat-cell *matCellDef="let element"> {{element.causale ? element.causale : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Data scadenza Column -->
+      <ng-container matColumnDef="dataScadenza">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data scadenza </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataScadenza ? (element.dataScadenza | date:'dd/MM/yyyy') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Tipo rimborso Column -->
+      <ng-container matColumnDef="tipoRata">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo rimborso </th>
+        <td mat-cell *matCellDef="let element"> {{element.tipoRata ? element.tipoRata : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Importo capitale Column -->
+      <ng-container matColumnDef="capitale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Importo capitale </th>
+        <td mat-cell *matCellDef="let element"> {{element.capitale ? (element.capitale | number: '1.2-2' : 'it') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Importo agevolazione Column -->
+      <ng-container matColumnDef="importoAgevolazione">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Importo agevolazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoAgevolazione ? (element.importoAgevolazione | number: '1.2-2' : 'it') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Importo interessi Column -->
+      <ng-container matColumnDef="interessi">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Importo interessi </th>
+        <td mat-cell *matCellDef="let element"> {{element.interessi ? (element.interessi | number: '1.2-2' : 'it') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Debito residuo Column -->
+      <ng-container matColumnDef="debitoResiduo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Debito residuo </th>
+        <td mat-cell *matCellDef="let element"> {{element.debitoResiduo ? (element.debitoResiduo | number: '1.2-2' : 'it') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+      <!-- Debito residuo Column -->
+      <ng-container matColumnDef="importoBanca">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Importo banca </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoBanca ? (element.importoBanca | number: '1.2-2' : 'it') : '-'}} </td>
+        <!-- <td mat-footer-cell *matFooterCellDef> </td> -->
+      </ng-container>
+    
+    
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <!-- <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr> -->
+    </table>
+    
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+    [ngClass]="{'displayNone': !dataSource2 || !dataSource2.data?.length}" #pianoPaginator></mat-paginator>-->
+    
+    
+  </div>
+  
+  <br>
+  
+</mat-dialog-content>
+
+<mat-dialog-actions class="spaceBetween">
+  <button mat-button class="button-style-1" mat-dialog-close [disabled]="isLoading">CHIUDI</button>
+
+  <button mat-button class="button-style-2 download-button-component" [disabled]="noData || isLoading" (click)="download()"><span class="download-button-container">SCARICA EXCEL<mat-icon class="download-icon">save_alt</mat-icon></span></button>
+</mat-dialog-actions>

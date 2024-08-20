@@ -1,0 +1,55 @@
+<mat-dialog-content class="mat-typography">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Lista interventi sostitutivi</h3>
+        <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <!-- MAT CARD 7: TABELLA -->
+    <mat-card class="mat-elevation-z4 marginTop20 marginBot20">
+        <div>Importo totale: <strong>{{importoTotaleProposta() | number: '1.2-2' : 'it'}}</strong></div>
+        <div>Importo da erogare al beneficiario: <strong>{{importoBeneficiario | number:
+                '1.2-2' : 'it'}}</strong></div>
+        <div>Iban beneficiario: <strong>{{ibanBeneficiario}}</strong></div>
+
+        <table mat-table [dataSource]="dataSource" class="tab mt3 fullWidth" multiTemplateDataRows>
+
+            <ng-container matColumnDef="destinatario">
+                <th mat-header-cell *matHeaderCellDef> Destinatario </th>
+                <td mat-cell *matCellDef="let element">
+                    <input [disabled]="distintaCreata" [value]="element.denominazione" matInput [matAutocomplete]="auto1">
+                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayDestinatario"
+                        (optionSelected)="aggiornaDestinatario(element, $event)">
+                        <mat-option *ngFor="let option of destinatari" [value]="option">
+                            {{option.denominazione}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="iban">
+                <th mat-header-cell *matHeaderCellDef> Iban </th>
+                <td mat-cell *matCellDef="let element"> {{element?.iban}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="importoDaErogare">
+                <th mat-header-cell *matHeaderCellDef> Importo </th>
+                <td mat-cell *matCellDef="let element, let i = index">
+                    <div>
+                        <input [disabled]="distintaCreata" matInput [min]="0" [max]="importoBeneficiario"
+                            (blur)="aggiornaImporti()" type="number" [(ngModel)]="element.importoDaErogare" />
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-card>
+
+    <div class="marginBot20" *ngIf="!distintaCreata" style="display: flex; justify-content: end;">
+        <button mat-raised-button (click)="annulla()" class="button-style-3">ANNULLA</button>
+        <button mat-raised-button (click)="salva()" [disabled]="!isValid()" class="button-style-2">SALVA</button>
+    </div>
+
+</mat-dialog-content>

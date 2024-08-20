@@ -1,0 +1,144 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Emetti provvedimento di revoca</h3>
+  <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+
+<!-- ERROR o SUCCESS -->
+<div [hidden]="!error">
+  <div  class="content width-100-perc margin-0 max-width-89-perc">
+    <mat-card  class="mat-card mat-focus-indicator messageError"
+      >
+      <mat-card-content  class="mat-card-content messageWarningContent"
+        >
+        <p  id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+          {{messageError}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div [hidden]="!success">
+  <div  class="content width-100-perc margin-0 max-width-89-perc">
+    <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+      >
+      <mat-card-content  class="mat-card-content messageWarningContent"
+        >
+        <p  id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+          {{messageSuccess}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="fullWidth">
+  <form [formGroup]="myForm">
+
+    <div>
+      <mat-form-field class="w-50" appearance="standard">
+        <mat-label>Giorni scadenza</mat-label>
+        <input matInput type="number" formControlName="giorniScadenza">
+        <mat-error *ngIf="myForm.get('giorniScadenza')?.errors?.required">
+          È obbligatorio specificare il numero di giorni scadenza per controdedurre
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- LETTERA ACCOMPAGNATORIA -->
+    <mat-card-title>
+      <span>
+        <h3 style="margin-top: 2em;">Lettera accompagnatoria:</h3>
+      </span>
+    </mat-card-title>
+
+    <!-- Se NON è già presente nel DB la lettera accompagnatoria (quella di tipo DocumentoRevocaVO) -->
+    <div *ngIf="!letteraAccompagnatoria" class="fullWidth mv-2">
+
+      <!-- Se non è ancora stata aggiunta una lettera accompagnatoria NUOVA (tipo FILE) -->
+      <div *ngIf="!newLetteraAccompagnatoria">
+        <button mat-button class="button-style-1" (click)="uploadLetteraAccompagnatoria.click()">AGGIUNGI
+          ALLEGATI</button>
+
+        <input type="file" [hidden]="true" #uploadLetteraAccompagnatoria id="uploadLetteraAccompagnatoria"
+          name="uploadLetteraAccompagnatoria" (change)="handleFileInputLetteraAccompagnatoria($event.target.files)" />
+      </div>
+
+      <!-- Se è APPENA stata aggiunta una lettera accompagnatoria -->
+      <div *ngIf="newLetteraAccompagnatoria">
+        <div class="fullWidth">
+
+          <span class="bold-text">{{newLetteraAccompagnatoria.name}}</span> - {{newLetteraAccompagnatoria.size}} bytes
+          <button mat-icon-button class="red-color" matTooltip="Elimina"
+            (click)="eliminaLetteraAccompagnatoriaLocale()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Se è già presente nel DB la lettera accompagnatoria (quella di tipo DocumentoRevocaVO) -->
+    <div *ngIf="letteraAccompagnatoria != null" class="fullWidth mv-2">
+      <div class="d-grid-2 mv-2">
+        <div class="fullWidth">
+          <span class="spanLink"
+            (click)="downloadAllegato(letteraAccompagnatoria)">{{letteraAccompagnatoria?.nomeFile}}</span>
+          <button mat-icon-button class="red-color" matTooltip="Elimina"
+            (click)="deleteAllegato(letteraAccompagnatoria.idDocumento)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ALTRI ALLEGATI -->
+    <mat-card-title>
+      <span>
+        <h3>Altri allegati:</h3>
+      </span>
+    </mat-card-title>
+
+    <div class="fullWidth">
+      <div class="fullWidth mv-2">
+        <input multiple type="file" [hidden]="true" #uploadFile id="uploadFile" name="uploadFile"
+          (change)="handleFileInput($event.target.files)" />
+      </div>
+      <div *ngIf="altriAllegati" class="fullWidth mv-2">
+        <div *ngFor="let element of altriAllegati; let i = index">
+          <span class="spanLink" (click)="downloadAllegato(element)">{{element.nomeFile}}</span>
+          <button mat-icon-button class="red-color" matTooltip="Elimina"
+            (click)="deleteAllegato(element.idDocumento)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="newAltriAllegati?.length > 0" class="fullWidth mv-2">
+        <div *ngFor="let element of newAltriAllegati; let i = index">
+          <span> <span class="bold-text">{{element.name}}</span> - {{element.size}} bytes </span>
+          <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaFileLocale(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATI</button>
+    </div>
+
+  </form>
+</div>
+
+<div class="flexEnd textAlignRight marginTop20">
+    <button class="button-style-1 margin-right-2" mat-button mat-dialog-close>
+      CHIUDI
+    </button>
+    <button class="button-style-2 margin-right-2" mat-button (click)="salvaDocumenti()">
+      SALVA
+    </button>
+    <button class="button-style-2 margin-right-2" mat-button (click)="emettiProvvedimento()">
+      EMETTI
+    </button>
+</div>

@@ -1,0 +1,140 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Crea distinta con interventi sostitutivi</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<!-- ERROR o SUCCESS -->
+<div [hidden]="!error">
+    <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageError">
+            <mat-card-content class="mat-card-content messageWarningContent">
+                <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                    {{messageError}}
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div [hidden]="!success">
+    <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageSuccess">
+            <mat-card-content class="mat-card-content messageWarningContent">
+                <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                    {{messageSuccess}}
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<form [formGroup]="myForm">
+    <div class="fullWidth">
+        <mat-form-field class="elem1 fullWidth" appearance="standard">
+        <mat-label>Descrizione*</mat-label>
+        <input matInput type="text" formControlName="descrizione">
+        </mat-form-field>
+
+  </div>
+</form>
+
+<div class="fullWidth">
+    <div class="fullWidth marginTop20">
+        <mat-label>Lettera accompagnatoria</mat-label>
+    </div>
+    <div class="fullWidth">
+
+        <div class="row" [hidden]="letteraAccompagnatoria">
+            <div class="col">
+                <button mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI ALLEGATO</button>
+                <input type="file" [hidden]="true" #uploadFile id="uploadFile" name="uploadFile"
+                    (change)="handleFileLetteraAccompagnatoria($event.target.files)" />
+            </div>
+        </div>
+        <div>
+            <ul>
+                <li [hidden]="!letteraAccompagnatoria">
+                    <div>
+                        <p><span> <span class="bold-text">{{letteraAccompagnatoria?.name}}</span> - {{letteraAccompagnatoria?.size}} bytes </span></p>
+                        <p>
+                            <span>Flag visibilità: <input [checked]="visibilitaLettera" type="checkbox" (click)="toggleVisibilita(1)"></span>
+                            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaLetteraAccompagnatoria(uploadFile)"><mat-icon>delete</mat-icon></button>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="fullWidth">
+    <div class="fullWidth marginTop20">
+        <mat-label>Report validazione</mat-label>
+    </div>
+    <div class="fullWidth">
+
+        <div class="row" [hidden]="reportValidazioneSpesa">
+            <div class="col">
+                <button mat-button class="button-style-1" (click)="uploadFile2.click()">AGGIUNGI ALLEGATO</button>
+                <input type="file" [hidden]="true" #uploadFile2 id="uploadFile2" name="uploadFile2"
+                    (change)="handleFileReportValidazione($event.target.files)" />
+            </div>
+        </div>
+        <div>
+            <ul>
+                <li [hidden]="!reportValidazioneSpesa">
+                    <div>
+                        <p><span> <span class="bold-text">{{reportValidazioneSpesa?.name}}</span> - {{reportValidazioneSpesa?.size}} bytes</span></p>
+                        <p>
+                            <span>Flag visibilità: <input [checked]="visibilitaReport" type="checkbox" (click)="toggleVisibilita(2)"></span>
+                            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaReportValidazione(uploadFile2)"> <mat-icon>delete</mat-icon> </button>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="fullWidth">
+    <div class="fullWidth marginTop20">
+        <mat-label>Checklist interna</mat-label>
+    </div>
+    <div class="fullWidth">
+
+        <div class="row" [hidden]="checklistInterna">
+            <div class="col">
+                <button mat-button class="button-style-1" (click)="uploadFile3.click()">AGGIUNGI ALLEGATO</button>
+                <input type="file" [hidden]="true" #uploadFile3 id="uploadFile3" name="uploadFile3"
+                    (change)="handleFileChecklistInterna($event.target.files)" />
+            </div>
+        </div>
+        <div>
+            <ul>
+                <li [hidden]="!checklistInterna">
+                    <div>
+                        <p><span> <span class="bold-text">{{checklistInterna?.name}}</span> - {{checklistInterna?.size}} bytes </span></p>
+                        <p>
+                            <span>Flag visibilità: <input [checked]="visibilitaChecklist" type="checkbox" (click)="toggleVisibilita(3)"></span>
+                            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaChecklistInterna(uploadFile3)"><mat-icon>delete</mat-icon></button>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="flexEnd textAlignRight marginTop20">
+    <button class="button-style-1" mat-button mat-dialog-close>
+        CHIUDI
+    </button>
+    <button class="button-style-2" mat-button (click)="conferma()" [disabled]="!validateForm()">
+        CONFERMA
+    </button>
+</div>

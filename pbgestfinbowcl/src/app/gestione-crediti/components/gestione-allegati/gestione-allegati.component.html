@@ -1,0 +1,63 @@
+<div>
+
+    <mat-divider style="padding-bottom: 8px;"></mat-divider>
+
+    <span><h3><b>Allegati</b></h3></span>
+
+    <mat-card class="messageError" *ngIf="showError">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="messageSuccess" *ngIf="showSucc">
+        <mat-card-content class="messageSuccessContent">
+            <p>{{messageSucc}}</p>
+        </mat-card-content>
+    </mat-card>
+
+
+    <div style="margin-bottom: 15px;">
+        <button mat-button class="button-style-2 allegati-button-component" (click)="uploadFile.click()"><span class="allegati-button-container"><mat-icon class="allegati-icon">attach_file</mat-icon>AGGIUNGI ALLEGATO</span></button>
+        <input type="file" [hidden]="true" #uploadFile id="uploadFile" name="uploadFile" (change)="onFileSelected($event)"/>
+        
+    </div>
+
+    <div *ngIf="nuoviAllegati?.length > 0">
+        <span><h4 style="margin-bottom: 0;"><b>Nuovi allegati</b></h4></span>
+
+        <table>
+            <tr *ngFor="let file of nuoviAllegati; let i = index" style="vertical-align: baseline;">
+              <td>
+                <ul style="margin-bottom: 0px;">
+                  <li><b>{{file.nomeNuovoAllegato}}</b></li>
+                </ul>
+              </td>
+              <td style="padding-left: 10px;">{{formatFileSize(file.nuovoAllegatoFileSize, 0)}}</td>
+              <td>
+                <button mat-icon-button (click)="rimuoviAllegatoLocale(i)"><mat-icon matTooltip="Elimina allegato">delete</mat-icon></button>
+              </td>
+            </tr>
+        </table>
+        
+        <br>
+    </div>
+
+    <div *ngIf="allegatiPresenti?.length > 0">
+        <span><h4 style="margin-bottom: 0;"><b>Allegati aggiunti</b></h4></span>
+        
+        <table>
+            <tr *ngFor="let files of allegatiPresenti; let x = index" style="vertical-align: baseline;">
+              <td>
+                <ul style="margin-bottom: 0px;">
+                  <li><b>{{files.nomeFile}}</b></li>
+                </ul>
+              </td>
+              <td>
+                <button mat-icon-button (click)="scaricaAllegatoSalvato(files)"><mat-icon matTooltip="Scarica allegato">download</mat-icon></button>
+                <button mat-icon-button (click)="rimuoviAllegatoSalvato(files.idDocIndex)"><mat-icon matTooltip="Elimina allegato">delete</mat-icon></button>
+              </td>
+            </tr>
+        </table>
+    </div>
+</div>

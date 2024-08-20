@@ -1,0 +1,127 @@
+<div *ngIf="modifica==1">
+    <div class="spaceBetween">
+        <h3 class="bold-text"> Blocco beneficiario</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div class="row">
+        Data Blocco: <b>
+            {{dataBlocco|date:"dd/MM/yyyy"}}
+        </b>
+    </div>
+
+    <form>
+        <!-- <mat-form-field>
+            <mat-label>Numero domanda</mat-label>
+        </mat-form-field> -->
+
+        <table style="width: 100%;">
+
+            <td>
+
+                <mat-form-field style="width: 100%;"  appearance="standard">
+                    <mat-label>Causale blocco</mat-label>
+                    <mat-select [(ngModel)]="idCausaleBlocco" name="causaleDTO" [formControl]="causaleBloccoControl"
+                        required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let causale of listaCausali" [value]="causale.idAttivita">
+                            {{causale.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="causaleBloccoControl.hasError('required')">Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </td>
+        </table>
+
+    </form>
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-2" (click)="confermaBlocco()">CONFERMA</button>
+    </div>
+</div>
+<div *ngIf="modifica==2">
+    <div class="spaceBetween">
+        <h3 class="bold-text"> Sblocco beneficiario</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div class="row">
+        Data sblocco: <b>
+            {{dataBlocco|date:"dd/MM/yyyy"}}
+        </b>
+    </div>
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-2" (click)="confermaSblocco()">CONFERMA</button>
+    </div>
+
+</div>
+
+<div *ngIf="domanda==1">
+    <div class="spaceBetween">
+        <h3 class="bold-text"> Blocco beneficiario</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div class="row">
+        Data Blocco: <b>
+            {{dataBlocco|date:"dd/MM/yyyy"}}
+        </b>
+    </div>
+
+    <form>
+        <!-- <mat-form-field>
+            <mat-label>Numero domanda</mat-label>
+        </mat-form-field> -->
+
+        <table style="width: 100%;">
+
+            <td>
+
+                <mat-form-field style="width: 100%;"  appearance="standard">
+                    <mat-label>Causale blocco</mat-label>
+                    <mat-select [(ngModel)]="idCausaleBlocco" name="causaleDTO" [formControl]="causaleBloccoControl"
+                        required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let causale of listaCausali" [value]="causale.idAttivita">
+                            {{causale.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="causaleBloccoControl.hasError('required')">Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </td>
+        </table>
+
+    </form>
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-2" (click)="confermaBlocco()">CONFERMA</button>
+    </div>
+</div>
+<div *ngIf="domanda==2">
+    <div class="spaceBetween">
+        <h3 class="bold-text"> Sblocco beneficiario</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div class="row">
+        Data sblocco: <b>
+            {{dataBlocco|date:"dd/MM/yyyy"}}
+        </b>
+    </div>
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-2" (click)="confermaSblocco()">CONFERMA</button>
+    </div>
+
+</div>

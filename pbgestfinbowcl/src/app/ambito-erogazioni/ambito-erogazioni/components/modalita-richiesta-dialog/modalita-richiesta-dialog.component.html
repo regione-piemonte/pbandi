@@ -1,0 +1,21 @@
+<mat-dialog-content class="mat-typography">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Modalità richiesta</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <form #form="ngForm">
+    <mat-radio-group aria-label="Select an option" class="margin-top-15 d-flex" [(ngModel)]="val" name="radioGroup">
+      <mat-radio-button value="S" cdkFocusInitial>Urgente</mat-radio-button>
+      <mat-radio-button class="marginLeft20" value="N">Ordinaria</mat-radio-button>
+    </mat-radio-group>
+  </form>
+
+  <div class="flexEnd margin-top-15">
+    <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="conferma()">CONFERMA</button>
+  </div>
+
+</mat-dialog-content>

@@ -1,0 +1,22 @@
+<!--<div class="spaceBetween">-->
+    <h3 mat-dialog-title><b>Conferma nuovo stato credito</b></h3>
+    <!--<button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>-->
+<!--</div>-->
+
+<div mat-dialog-content style="display: flex; align-items: center;">
+
+    <div class="marginRight10">
+        <mat-icon>info</mat-icon>
+    </div>
+    <div>
+        <p [innerHTML]="messaggio"></p>
+    </div>
+    
+</div>
+
+<div mat-dialog-actions class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="salvaStato()">CONFERMA</button>
+</div>

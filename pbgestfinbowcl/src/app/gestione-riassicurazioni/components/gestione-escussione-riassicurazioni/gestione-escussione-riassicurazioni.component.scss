@@ -1,0 +1,116 @@
+.content-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+}
+
+.dettaglio-elem {
+    /*td {
+        padding: 0 20px 13px 0;
+    }*/
+    
+    overflow: auto;
+    max-height: 400px;
+
+    /*width: 100%;
+    padding-top: 0px !important;*/
+}
+
+.w-btn {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+.hover_link {
+    font-weight: bold;
+}
+
+.hover_link:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.matlistItem {
+    font-size: 14px;
+    margin-left: -13px;
+}
+
+.mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+    height: 34px;
+}
+
+.width-40-perc {
+    width: 40%;
+}
+
+.width-28-perc {
+    width: 28%;
+}
+
+.button_title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.case-sensitive-tab {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.rightbutton {
+    display: flex;
+    justify-content: right;
+
+    .mat-raised-button, .mat-button {
+        margin: 0px 6px 0px 6px;
+    }
+}
+
+.contentfinal {
+    margin-bottom: 5%;
+    width: 90%;
+}
+
+  .tab {
+
+  
+    ::ng-deep .mat-sort-header-button {
+      text-align: left;
+    }
+  
+    ::ng-deep .mat-sort-header-button {
+      text-align: left;
+    }
+  
+    th.text-align-left,
+    th.text-align-left .mat-sort-header-button {
+      text-align: left !important;
+    }
+  
+    th.align-left .mat-sort-header-container {
+      justify-content: flex-start;
+    }
+  
+    ::ng-deep .mat-sort-header-content {
+      //font-size: 14px !important;
+      text-align: left!important;
+      display: flex;
+      align-items: center;
+  }
+  
+  }
+  
+.actions {
+    .mat-raised-button, .mat-button {
+        margin: 0px 6px 0px 6px;
+    }
+}
+  
+  
+  
+  
+  

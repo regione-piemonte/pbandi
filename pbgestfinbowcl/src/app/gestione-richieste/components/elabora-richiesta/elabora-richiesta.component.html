@@ -1,0 +1,204 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione richieste</span>
+            </button>
+        </div>
+        <h2>Elabora richiesta</h2>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <span>
+                        <table class="content-table">
+                            <tr>
+                                <td>NDG: <b>{{ndg}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Denominazione: <b>{{denominazione}}</b></td> <!--TODO MAR-->
+                            </tr>
+                            <tr>
+                                <td>Numero Domanda: <b>{{numeroDomanda}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Partita IVA: <b>{{partitaIva}}</b></td> <!--TODO MAR-->
+                            </tr>
+                        </table>
+                    </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <!-- <div class="titleBar">
+            <p>NDG: <strong>{{ndg}}</strong></p>
+            <p>Denominazione: <strong>{{denominazione}}</strong></p>
+            <p>Numero Domanda: <strong>{{numeroDomanda}}</strong></p>
+            <p>Partita IVA: <strong>{{partitaIva}}</strong></p>
+        </div> -->
+        <div [hidden]="!error">
+            <div  class="content width-100-perc margin-0 max-width-89-perc">
+                <mat-card  class="mat-card mat-focus-indicator messageError"
+                    >
+                    <mat-card-content  class="mat-card-content messageWarningContent"
+                        >
+                        <h3  class="bold-text margin-bottom-5">
+                            ATTENZIONE!
+                        </h3>
+                        <p  id="ellipsisP"
+                            class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                            Ops! Qualcosa è andato storto, controlla che i campi sia compilati correttamente.
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div [hidden]="!success">
+            <div  class="content width-100-perc margin-0 max-width-89-perc">
+                <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+                    >
+                    <mat-card-content  class="mat-card-content messageWarningContent"
+                        >
+                        <h3  class="bold-text margin-bottom-5">
+                            SUCCESSO!
+                        </h3>
+                        <p  id="ellipsisP"
+                            class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                            La richiesta è stata elaborata correttamente.
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <form [formGroup]="myForm">
+                    <div class="row">
+                        <mat-form-field class="width-50-perc margin-right-10">
+                            <mat-label>Selezionare un tipo di richiesta</mat-label>
+                            <mat-select matInput formControlName="idTipoRichiesta">
+                                <div *ngIf="tipoRichiesta == 3; else richiestaDaVisualizzare">
+                                    <mat-option *ngFor="let richiesta of richiestaAntimafia" [value]="richiesta.value">
+                                        {{richiesta.viewValue}}
+                                    </mat-option>
+                                </div>
+                                <ng-template #richiestaDaVisualizzare>
+                                    <div *ngIf="tipoRichiesta == 1; else richiestaDaVisualizzarePlus">
+                                        <mat-option *ngFor="let richiesta of richieste" [value]="richiesta.value">
+                                            {{richiesta.viewValue}}
+                                        </mat-option>
+                                    </div>
+                                </ng-template>
+                                <ng-template #richiestaDaVisualizzarePlus>
+                                    <mat-option *ngFor="let richiesta of richiestaDsan" [value]="richiesta.value">
+                                        {{richiesta.viewValue}}
+                                    </mat-option>
+                                </ng-template>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-radio-group class="width-50-perc" aria-label="Modalità richiesta" formControlName="urgenza">
+                            <mat-radio-button [disabled]="!isAntimafia" (click)="cambiaFlag(1)" value="1"
+                                class="margin-right-10">Urgente
+                            </mat-radio-button>
+                            <mat-radio-button [disabled]="!isAntimafia" (click)="cambiaFlag(2)" [checked]="true"
+                                value="2">Ordinaria
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="width-50-perc margin-right-10">
+                            <mat-label>Selezionare uno stato della richiesta</mat-label>
+                            <mat-select matInput formControlName="idStatoRichiesta">
+                                <div *ngIf="isAntimafia == true; else statoRichiestaDaVisualizzare">
+                                    <mat-option *ngFor="let statoRichiesta of statoRichiestePerAntimafia"
+                                        [value]="statoRichiesta.value">
+                                        {{statoRichiesta.viewValue}}
+                                    </mat-option>
+                                </div>
+                                <ng-template #statoRichiestaDaVisualizzare>
+                                    <mat-option *ngFor="let statoRichiesta of statiRichieste"
+                                        [value]="statoRichiesta.value">
+                                        {{statoRichiesta.viewValue}}
+                                    </mat-option>
+                                </ng-template>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- LO METTO HIDDEN PERCHE' IL CLIENTE NON LO VUOLE PIU' VISUALIZZARE MA IN CASO DI PENTIMENTO LO RIMETTO VISIBILE-->
+                        <div [hidden]=true>
+                            <mat-form-field class="width-data">
+                                <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker"
+                                    formControlName="dataComunicazione" [disabled]="false"
+                                    placeholder="Data comunicazione" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col">
+                            <mat-label>Seleziona tipo di comunicazione *</mat-label>
+                            <mat-select matInput formControlName="tipoComunicazione">
+                                <mat-option *ngFor="let tipoComunicazione of tipiComunicazione"
+                                    [value]="tipoComunicazione.value">
+                                    {{tipoComunicazione.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="destinatarioMittente" [disabled]="false"
+                                [matAutocomplete]="autoDM" placeholder="Destinatario/Mittente *" [(ngModel)]="destMittIns"
+                                (input)="sugg(6, destMittIns)">
+                            <mat-autocomplete #autoDM="matAutocomplete">
+                                <mat-option *ngFor="let option of suggDestinatarioMittente" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="numeroProtocollo" [disabled]="false"
+                                [matAutocomplete]="autoNP" placeholder="Numero protocollo finpiemonte" [(ngModel)]="numProtIns"
+                                (input)="sugg(7, numProtIns)">
+                            <mat-autocomplete #autoNP="matAutocomplete">
+                                <mat-option *ngFor="let option of suggNumeroProtocollo" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="myForm.controls['numeroProtocollo'].hasError('maxlength')">
+                                Il numero di caratteri deve essere max 20
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col">
+                            <input type="text" matInput formControlName="motivazione" [disabled]="false"
+                                [matAutocomplete]="autoMo" placeholder="Selezionare una motivazione"
+                                [(ngModel)]="motiIns" (input)="sugg(8, motiIns)">
+                            <mat-autocomplete #autoMo="matAutocomplete">
+                                <mat-option *ngFor="let option of suggMotivazione" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <!-- <button mat-raised-button class="button-style-2" (click)="confermaElaborazione()"
+                        [disabled]="!myForm.valid" type="submit">
+                        CONFERMA
+                    </button>
+                    <button mat-button class="button-style-1" (click)="reset()">
+                        AZZERA
+                    </button> -->
+
+                    <div  class="button-marty">
+                        <button mat-raised-button (click)="confermaElaborazione()" class="button-style-2"
+                        [disabled]="!myForm.valid" type="submit"
+                        >CONFERMA</button>
+                        <button mat-raised-button (click)="reset()" class="button-style-3 margin-left-10">PULISCI CAMPI</button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

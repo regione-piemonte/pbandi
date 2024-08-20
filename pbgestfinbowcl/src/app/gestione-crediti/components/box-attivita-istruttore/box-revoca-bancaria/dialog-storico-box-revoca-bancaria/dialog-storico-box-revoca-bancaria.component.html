@@ -1,0 +1,462 @@
+<!-- Storico Revoca bancaria -->
+<div *ngIf="idComponentToShow == 1">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico revoca bancaria</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns1.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+        </table>
+
+    </div>
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+
+<!-- Storico Azione Recupero banca -->
+<div *ngIf="idComponentToShow == 2">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico azioni recupero banca </h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="Azione">
+                <th mat-header-cell *matHeaderCellDef> <b>Azione</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.descrizioneAttivita}} </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns2.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+
+<!-- Storico Abbattimento Garanzie -->
+<div *ngIf="idComponentToShow == 3">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico abbattimento garanzie</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data </b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="descrizione">
+                <th mat-header-cell *matHeaderCellDef> <b>Tipo garanzia</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.descAbbattimento}} </td>
+            </ng-container>
+
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns3.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+
+<!-- Storico Saldo e Stralcio -->
+<div *ngIf="idComponentToShow == 4">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico saldo e stralcio</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!--  -->
+            <ng-container matColumnDef="descrizione">
+                <th mat-header-cell *matHeaderCellDef> <b>Tipo saldo e stralcio</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.descSaldoStralcio}} </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns3.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+
+<!-- Storico Passaggio Perdita -->
+<div *ngIf="idComponentToShow == 5">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico passaggio perdita</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns1.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+<!-- Storico Messa in Mora-->
+<div *ngIf="idComponentToShow == 6">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico messa in mora </h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!--  -->
+            <ng-container matColumnDef="descrizione">
+                <th mat-header-cell *matHeaderCellDef> <b>Tipo messa in mora</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.descMessaMora}} </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns3.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+<!-- Storico Segnalazioni Corte dei Conti-->
+<div *ngIf="idComponentToShow == 7">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico segnalazione Corte dei Conti </h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+        <table mat-table [dataSource]="data.storico">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <!-- Num protocollo -->
+            <ng-container matColumnDef="descrizione">
+                <th mat-header-cell *matHeaderCellDef> <b>N. protocollo segnalazione</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.numProtocolloSegn}} </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns3.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+        </table>
+
+    </div>
+
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+<!-- Storico Transazioni  -->
+<div *ngIf="idComponentToShow == 8">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Storico transazioni </h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div>
+
+        <table mat-table [dataSource]="data.storico">
+
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns1.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+        </table>
+
+    </div>
+    <div>
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>
+
+
+
+<!-- Storico note generali -->
+<div *ngIf="idComponentToShow == 9">
+    <div mat-dialog-title>
+        <div class="spaceBetween">
+            <h3 class="bold-text">Note monitoraggio</h3>
+    
+            <button type="button" mat-icon-button class="blue-color"
+                (click)="closeDialog()"><mat-icon>clear</mat-icon></button>
+        </div>
+    </div>
+    <div mat-dialog-content>
+
+        <table mat-table [dataSource]="data.storico" style="width: 100%;" id="excel">
+
+            <!-- Data Column -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef> <b>Data</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.dataInserimento|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <!-- Istruttore Column -->
+            <ng-container matColumnDef="istruttore">
+                <th mat-header-cell *matHeaderCellDef> <b>Istruttore</b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.cognome +' '+
+                    element.nome}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="provenienza" >
+                <th mat-header-cell *matHeaderCellDef style="width: 27%;"> <b>Provenienza</b> </th>
+                <td mat-cell *matCellDef="let element" style="width: 27%;">{{element.provenienza}}</td>
+            </ng-container>
+
+            <!-- note -->
+            <ng-container matColumnDef="nota">
+                <th mat-header-cell *matHeaderCellDef style=" width: 40%;"> <b>Nota</b> </th>
+                <!-- <td mat-cell *matCellDef="let element" [matTooltip]="element.note"> {{ element.note}} </td> -->
+                <td mat-cell *matCellDef="let element" style=" width: 40%;">
+                    <mat-grid-list cols="1" rowHeight="30">
+                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+
+                            <div style="width: 99%; display: flex; justify-content: flex-start;">
+                                <a class="text-overflow-ellipsis overflow-hidden white-space-nowrap" [matTooltip]="element.note">
+                                    {{element.note}}
+                                </a>
+                            </div>
+
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </td>
+            </ng-container>
+
+            <!-- NO DATA FOUND ROW -->
+            <td [colSpan]="displayedColumns.length" *matNoDataRow>
+                <br>
+                <h1>Nessuno storico</h1>
+            </td>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+    </div>
+
+    <div mat-dialog-actions class="spaceBetween">
+
+        <!-- SCARICA STORICO -->
+        <button class="button-style-1" mat-button (click)="downloadStorico()"><mat-icon>save_alt</mat-icon></button>
+
+        <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+    </div>
+</div>

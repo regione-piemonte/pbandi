@@ -1,0 +1,46 @@
+<!-- <mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+ -->
+ 
+<div class="page">
+  <!-- <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi> -->
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca</span>
+      </button>
+    </div>
+    <div class="reportingContainerUp">
+      <div class="titleBar">
+        <h2>Anagrafica beneficiario</h2>
+      </div>
+    </div>
+    <div class="content">
+      <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+          <mat-card-content class="padding-left-10">
+              <span>
+                  <table class="content-table">
+                      <tr>
+                          <td>Tipo Soggetto: <b>{{verificaTipoSoggetto}}</b></td>
+                      </tr>
+                      <tr>
+                          <td>NDG: <b>{{ndg}}</b></td>
+                      </tr>
+                      <tr>
+                        <td>Stato ultima domanda: <b>{{statoUltimaDomanda ? statoUltimaDomanda.statoDomanda : null}}</b></td>
+                    </tr>
+                  </table>
+              </span>
+          </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div *ngIf="isEnteGiuridico">
+    <app-persona-giuridica-container></app-persona-giuridica-container>
+  </div>
+
+  <div *ngIf="!isEnteGiuridico">
+    <app-persona-fisica-container></app-persona-fisica-container>
+  </div>
+</div>

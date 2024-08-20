@@ -1,0 +1,249 @@
+<!-- <p>inserisci-richiesta works!</p> -->
+
+<!-- <div class="page">
+    <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+    <div class="title">
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Inserimento Liberatoria Antimafia</h2>
+                <div [hidden]="!error">
+                    <div  class="content width-100-perc margin-0 max-width-89-perc">
+                        <mat-card  class="mat-card mat-focus-indicator messageError"
+                            >
+                            <mat-card-content  class="mat-card-content messageWarningContent"
+                                >
+                                <h3  class="bold-text margin-bottom-5">
+                                    ATTENZIONE!
+                                </h3>
+                                <p  id="ellipsisP"
+                                    class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                    Ops! Qualcosa è andato storto, controlla che i campi sia compilati correttamente.
+                                </p>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+                <div [hidden]="!success">
+                    <div  class="content width-100-perc margin-0 max-width-89-perc">
+                        <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+                            >
+                            <mat-card-content  class="mat-card-content messageWarningContent"
+                                >
+                                <h3  class="bold-text margin-bottom-5">
+                                    SUCCESSO!
+                                </h3>
+                                <p  id="ellipsisP"
+                                    class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                    La richiesta è stata elaborata correttamente.
+                                </p>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <form [formGroup]="myForm">
+                    <div class="row">
+                        <mat-form-field class="col">
+                            <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker"
+                                formControlName="dataEmissione" [disabled]="false" placeholder="Data emissione"
+                                (dateChange)="setDataScadenza()" />
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <mat-label>Esito</mat-label>
+                            <mat-select matInput formControlName="esito">
+                                <mat-option *ngFor="let esito of esiti" [value]="esito.value">
+                                    {{esito.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col">
+                            <input matInput [matDatepicker]="picker2" formControlName="dataScadenza" [disabled]="true"
+                                placeholder="Data scadenza" />
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field class="col">
+                            <input matInput type="text" placeholder="N. Protocollo prefettura"
+                                formControlName="numeroProtocolloPrefettura" [disabled]="false" />
+                        </mat-form-field>
+                    </div>
+
+
+                    <h3>Documento</h3>
+                    <div class="row">
+                        <div class="col">
+                            <button mat-button class="button-style-1" (click)="uploadFile.click()">ALLEGA DOCUMENTO</button>
+                            <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                            (change)="handleFileInput($event.target.files[0])"/>
+                        </div>
+                        <div class="col">
+                            <button mat-button class="button-style-1 orange-color" (click)="setFileNull()" [disabled]="!file">ANNULLA</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="margin-right-10" class="fullWidth">
+                            <input type="text" matInput placeholder="Nome file" formControlName="nomeFile"
+                                disabled="true" />
+                        </mat-form-field>
+                    </div>
+
+
+                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                    <div class="row">
+                        <button mat-raised-button class="button-style-2 margin0" [disabled]="!myForm.valid"
+                            type="submit" (click)="confermaElaborazione()">
+                            CONFERMA
+                        </button>
+                        <button mat-button class="button-style-1" (click)="reset()">
+                            AZZERA
+                        </button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div> -->
+
+
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna indietro</span>
+            </button>
+        </div>
+        <div>
+            <h2>Inserimento Liberatoria Antimafia</h2>
+            <div [hidden]="!error">
+                <div class="content width-100-perc margin-0 max-width-89-perc">
+                    <mat-card class="mat-card mat-focus-indicator messageError">
+                        <mat-card-content class="mat-card-content messageWarningContent">
+                            <h3 class="bold-text margin-bottom-5">
+                                ATTENZIONE!
+                            </h3>
+                            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                Ops! Qualcosa è andato storto, controlla che i campi sia compilati correttamente.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div [hidden]="!success">
+                <div class="content width-100-perc margin-0 max-width-89-perc">
+                    <mat-card class="mat-card mat-focus-indicator messageSuccess">
+                        <mat-card-content class="mat-card-content messageWarningContent">
+                            <h3 class="bold-text margin-bottom-5">
+                                SUCCESSO!
+                            </h3>
+                            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                                La richiesta è stata elaborata correttamente.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <form [formGroup]="myForm">
+
+                        <div class="row" style="max-width: 70em;">
+                            <mat-form-field class="col">
+                                <input style="width: 20em;" matInput [matDatepickerFilter]="myFilter"
+                                    [matDatepicker]="picker" formControlName="dataEmissione" [disabled]="false"
+                                    placeholder="Data emissione" (dateChange)="setDataScadenza()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <mat-label>Esito</mat-label>
+                                <mat-select matInput formControlName="esito">
+                                    <mat-option *ngFor="let esito of esiti" [value]="esito.value">
+                                        {{esito.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="row" style="max-width: 70em;">
+                            <mat-form-field class="col">
+                                <input matInput [matDatepicker]="picker2" formControlName="dataScadenza"
+                                    [disabled]="true" placeholder="Data scadenza" />
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="col">
+                                <input matInput type="text" placeholder="N. Protocollo prefettura"
+                                    formControlName="numeroProtocolloPrefettura" [disabled]="false" />
+                                    <mat-error *ngIf="myForm.controls['numeroProtocolloPrefettura'].hasError('maxlength')">
+                                        Il numero di caratteri deve essere max 20
+                                    </mat-error>
+                            </mat-form-field>
+                        </div>
+
+
+                        <h3>Documento</h3>
+
+                        <div>
+                            <div class="row" style="width: auto;">
+                                <mat-form-field class="col">
+                                    <input type="text" matInput placeholder="Nome file" formControlName="nomeFile"
+                                        disabled="true" />
+                                </mat-form-field>
+                            </div>
+                            <div style="display: flex;">
+                                <div class="col">
+                                    <button mat-button class="button-style-1" (click)="uploadFile.click()"
+                                        style="padding: 0px!important;">ALLEGA DOCUMENTO</button>
+                                    <!-- <button mat-button class="button-style-1 orange-color" (click)="file=null" [disabled]="!file">ANNULLA</button> -->
+                                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                                        (change)="handleFileInput($event.target.files[0])" />
+                                </div>
+
+                                <div class="col">
+                                    <button mat-button class="button-style-1 orange-color" (click)="setFileNull()"
+                                        [disabled]="!file">ANNULLA</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                        <!--   <div class="row">
+                            <button mat-raised-button class="button-style-2 margin0" [disabled]="!myForm.valid"
+                                type="submit" (click)="confermaElaborazione()">
+                                CONFERMA
+                            </button>
+                            <button mat-button class="button-style-1" (click)="reset()">
+                                AZZERA
+                            </button>
+
+                        </div> -->
+                        <div class="button-marty">
+                            <button mat-raised-button (click)="confermaElaborazione()" class="button-style-2"
+                                [disabled]="!myForm.valid" type="submit">CONFERMA</button>
+                            <button mat-raised-button (click)="reset()" class="button-style-3 margin-left-10">
+                                PULISCI CAMPI</button>
+                        </div>
+
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,394 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+  <div>
+    <div class="title">
+      <h2>Elenco distinte</h2>
+    </div>
+
+    <div class="content">
+      <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+          <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+    <!-- CRITERI RICERCA -->
+    <div class="content">
+      <mat-card class="mat-elevation-z2">
+        <mat-card-content class="padding-left-10">
+          <div class="header">
+            <h3 class="search">Criteri di ricerca
+              <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+              </button>
+            </h3>
+          </div>
+          <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+            <form [formGroup]="myForm">
+
+              <mat-grid-list cols="8" rowHeight="60px">
+
+                <!-- BANDO -->
+                <mat-grid-tile [colspan]="5" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Selezionare un bando</mat-label>
+                      <input matInput formControlName="bando" [matAutocomplete]="auto4"
+                        (input)="suggBan($event.target.value)">
+                      <mat-autocomplete #auto4="matAutocomplete" [displayWith]="displayBando">
+                        <mat-option *ngFor="let option of suggBando" [value]="option">
+                          {{option.titoloBando}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- AGEVOLAZIONE -->
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Selezionare una modalita di agevolazione</mat-label>
+                      <input matInput formControlName="agevolazione" [matAutocomplete]="auto5"
+                        (input)="suggAgev($event.target.value)">
+                      <mat-autocomplete #auto5="matAutocomplete" [displayWith]="displayAgevolazione">
+                        <mat-option *ngFor="let option of suggAgevolazione" [value]="option">
+                          {{option.descModalitaAgevolazione}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- CODICE FONDO FINPIS -->
+                <mat-grid-tile [colspan]="8" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Codice Fondo</mat-label>
+                      <input matInput formControlName="codiceFondoFinpis" [matAutocomplete]="auto6"
+                        (input)="suggCodiceFondo($event.target.value)">
+                      <mat-autocomplete #auto6="matAutocomplete" [displayWith]="displayCodiceFondoFinpis">
+                        <mat-option *ngFor="let option of suggCodiceFondoFinpis" [value]="option">
+                          {{option.desc}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- BENEFICIARIO -->
+                <mat-grid-tile [colspan]="8" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Selezionare un beneficiario</mat-label>
+                      <input matInput formControlName="beneficiario" [matAutocomplete]="auto1"
+                        (input)="suggBen($event.target.value)">
+                      <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayBeneficiario">
+                        <mat-option *ngFor="let option of suggBeneficiario" [value]="option">
+                          {{option.denominazione + (option.codiceFiscaleSoggetto ? ' - ' + option.codiceFiscaleSoggetto : '')}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- PROGETTO -->
+                <mat-grid-tile [colspan]="5" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Selezionare un progetto</mat-label>
+                      <input matInput formControlName="progetto" [matAutocomplete]="auto2"
+                        (input)="suggProg($event.target.value)">
+                      <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayProgetto">
+                        <mat-option *ngFor="let option of suggProgetto" [value]="option">
+                          {{option.codiceVisualizzato}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- DISTINTA -->
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1" appearance="standard">
+                      <mat-label>Numero distinta</mat-label>
+                      <input matInput type="text" formControlName="distinta" [matAutocomplete]="auto3"
+                        (input)="suggDis($event.target.value)">
+                      <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayDistinta">
+                        <mat-option *ngFor="let option of suggDistinta" [value]="option">
+                          {{option.idDistinta}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- DATE -->
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field style="width: 95%;">
+                      <mat-label>Data creazione distinta (da):</mat-label>
+                      <input matInput [matDatepicker]="picker1" placeholder="DD/MM/YYY"
+                        formControlName="dataCreazioneDistintaDa" />
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field style="width: 95%;">
+                      <mat-label>Data creazione distinta (a):</mat-label>
+                      <input matInput [matDatepicker]="picker2" placeholder="DD/MM/YYY"
+                        formControlName="dataCreazioneDistintaA" />
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="4" [rowspan]="1"></mat-grid-tile>
+
+              </mat-grid-list>
+              <div style="display: flex; justify-content: end;">
+                <button mat-raised-button (click)="search()" class="button-style-2">CERCA</button>
+                <button mat-raised-button (click)="annullaFiltri()" class="button-style-3 margin-left-10">ANNULLA FILTRI</button>
+              </div>            </form>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+
+
+
+
+    <!-- ELENCO DISTINTE PER RICERCA GENERICA -->
+    <div class="content" [ngClass]="{'displayNone': !mostraTabGenerica }"> <!-- WAS class fullWidth -->
+      <mat-card> <!-- WAS class="mat-elevation-z4" -->
+        <mat-card-content class="scrollable-results">
+          <h3>Elenco distinte per ricerca generica</h3>
+          <p *ngIf="!listTabGenerica || !listTabGenerica.length">Non ci sono elementi da visualizzare.</p>
+          <table mat-table [dataSource]="dataSourceGenerica" multiTemplateDataRows class="tab fullWidth"
+            [ngClass]="{'displayNone': !listTabGenerica || !listTabGenerica.length }" #matSortGenerico="matSort"
+            matSort>
+
+            <!-- Numero distinta Column -->
+            <ng-container matColumnDef="numeroDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero distinta</th>
+              <td mat-cell *matCellDef="let element">
+                  <button matTooltip="Visualizza dettaglio distinta" matTooltipPosition="left" (click)="visualizzaDettaglioDistinta(element)" mat-button
+                    style="padding: 0 0px; line-height: 20px" color="primary">
+                    {{element.idDistinta === null ? "-" : element.idDistinta}}
+                  </button>
+              </td>
+            </ng-container>
+
+            <!-- Descrizione Column -->
+            <ng-container matColumnDef="descrizione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrizione</th>
+              <td mat-cell *matCellDef="let element"> {{element.descrizioneDistinta === null ? "-" :
+                element.descrizioneDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Data creazione distinta Column -->
+            <ng-container matColumnDef="dataCreazioneDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data creazione distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.dataCreazioneDistinta === null ? "-" :
+                element.dataCreazioneDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Utente creazione distinta Column -->
+            <ng-container matColumnDef="utente">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Utente creazione distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.utenteCreazione === null ? "-" :
+                element.utenteCreazione}}
+              </td>
+            </ng-container>
+
+            <!-- Stato distinta Column -->
+            <ng-container matColumnDef="statoDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stato distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.descStatoDistinta === null ? "-" :
+                element.descStatoDistinta}} </td>
+            </ng-container>
+
+            <!-- Stato Iter Autorizzativo Column -->
+            <ng-container matColumnDef="statoIterAutorizzativo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stato Iter Autorizzativo</th>
+              <td mat-cell *matCellDef="let element"> {{element.statoIterAutorizzativo === null ? "-" :
+                element.statoIterAutorizzativo}}
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+              <td mat-cell *matCellDef="let element">
+                <div class="d-flex">
+                  <button class="button-style-1" mat-button (click)="esportaExcel(element)">
+                    <mat-icon matTooltip="Scarica file Excel" class="padding-right-5">cloud_download</mat-icon>
+                  </button>
+
+                </div>
+
+              </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsGenerica"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumnsGenerica;" class="example-element-row"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+            #paginatorGenerico [ngClass]="{'displayNone': !listTabGenerica || !listTabGenerica.length }">
+          </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+
+    <!-- ELENCO DISTINTE PER BENEFICIARIO O PER PROGETTO -->
+    <div class="content" [ngClass]="{'displayNone': !mostraTabBenProg }"> <!-- WAS class fullWidth -->
+      <mat-card> <!-- WAS class="mat-elevation-z4" -->
+        <mat-card-content class="scrollable-results">
+          <h3>Elenco distinte per beneficiario o per progetto</h3>
+          <p *ngIf="!listTabBenProg || !listTabBenProg.length">Non ci sono elementi da visualizzare.</p>
+          <table mat-table [dataSource]="dataSourceBenProg" multiTemplateDataRows class="tab fullWidth"
+            [ngClass]="{'displayNone': !listTabBenProg || !listTabBenProg.length }" #matSortBenProg="matSort" matSort>
+
+            <!-- Numero distinta Column -->
+            <ng-container matColumnDef="numeroDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero distinta</th>
+              <td mat-cell *matCellDef="let element">
+                <div matTooltip="Visualizza dettaglio distinta" matTooltipPosition="left">
+                  <button (click)="visualizzaDettaglioDistinta(element)" mat-button
+                    style="padding: 0 0px; line-height: 20px" color="primary">
+                    {{element.idDistinta === null ? "-" : element.idDistinta}}
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Descrizione Column -->
+            <ng-container matColumnDef="descrizione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrizione</th>
+              <td mat-cell *matCellDef="let element"> {{element.descrizioneDistinta === null ? "-" :
+                element.descrizioneDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Tipologia distinta Column -->
+            <ng-container matColumnDef="tipologiaDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipologia distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.descTipoDistinta === null ? "-" :
+                element.descTipoDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Data creazione distinta Column -->
+            <ng-container matColumnDef="dataCreazioneDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data creazione distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.dataCreazioneDistinta === null ? "-" :
+                element.dataCreazioneDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Utente creazione distinta Column -->
+            <ng-container matColumnDef="utente">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Utente creazione distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.utenteCreazione === null ? "-" :
+                element.utenteCreazione}} </td>
+            </ng-container>
+
+            <!-- Stato distinta Column -->
+            <ng-container matColumnDef="statoDistinta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stato distinta</th>
+              <td mat-cell *matCellDef="let element"> {{element.descStatoDistinta === null ? "-" :
+                element.descStatoDistinta}}
+              </td>
+            </ng-container>
+
+            <!-- Stato Iter Autorizzativo Column -->
+            <ng-container matColumnDef="statoIterAutorizzativo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stato Iter Autorizzativo</th>
+              <td mat-cell *matCellDef="let element"> {{element.statoIterAutorizzativo === null ? "-" :
+                element.statoIterAutorizzativo}}
+              </td>
+            </ng-container>
+
+            <!-- Progetto Column -->
+            <ng-container matColumnDef="progetto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Progetto</th>
+              <td mat-cell *matCellDef="let element">
+                <p matTooltip="codice progetto">
+                  {{element.codiceVisualizzato === null ? "- " : (element.codiceVisualizzato + " ")}} -
+                </p>
+                <p matTooltip="codice fondo findis">
+                  {{element.codiceFondoFinpis === null ? "-" : element.codiceFondoFinpis}}
+                </p>
+
+              </td>
+            </ng-container>
+
+            <!-- Beneficiario Column -->
+            <ng-container matColumnDef="beneficiario">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Beneficiario</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.denominazione === null ? "-" : element.denominazione}}
+              </td>
+            </ng-container>
+
+            <!-- Importo Lordo Column -->
+            <ng-container matColumnDef="importoLordo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo da erogare lordo</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.importoLordo === null ? "-" : element.importoLordo}}
+              </td>
+            </ng-container>
+
+            <!-- Importo Netto Column -->
+            <ng-container matColumnDef="importoNetto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo da erogare netto</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.importoNetto === null ? "-" : element.importoNetto}}
+              </td>
+            </ng-container>
+
+            <!-- Data contabile erogazione Column -->
+            <ng-container matColumnDef="dataContabileErogazione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data contabile erogazione</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.dataContabileErogazione === null ? "-" : element.dataContabileErogazione | date:'dd/MM/yyyy'}}
+              </td>
+            </ng-container>
+
+            <!-- Importo erogato Column -->
+            <ng-container matColumnDef="importoErogato">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo erogato</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.importoErogato === null ? "-" : element.importoErogato}}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsBenProg"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumnsBenProg;" class="example-element-row"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+            #paginatorBenProg [ngClass]="{'displayNone': !listTabBenProg || !listTabBenProg.length }">
+          </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+  </div>
+</div>

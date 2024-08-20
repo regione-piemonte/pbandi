@@ -1,0 +1,94 @@
+
+<mat-card style="height: 92%;width: 92%;display:flex;flex-direction: column;background-color: aliceblue;">
+
+    <mat-card-header style="flex-shrink: 0;">
+        <mat-card-title>
+            <mat-card-title>
+                <h3>Revoca bancaria</h3>
+            </mat-card-title>
+        </mat-card-title>
+    </mat-card-header>
+
+
+    <!--TEST NEW SPINNER
+    <div style="flex-grow: 1;overflow: auto"> <!--;height: 100%;-->
+        <!--<pbandi-local-spinner></pbandi-local-spinner> <!-- class="loading" subText="Caricamento..."-->
+    <!--</div>-->
+    
+    <mat-card-content style="flex-grow: 1;overflow: auto;">
+        <!--SPINNER-->
+        <!--<div style="height: 100%;" *ngIf="isLoading()">
+            <mat-spinner class="loading"></mat-spinner>
+        </div>-->
+
+        <!--NEW SPINNER
+        <div style="height: 100%;">
+            <pbandi-local-spinner class="loading"></pbandi-local-spinner>
+        </div>-->
+
+        <mat-card class="messageSuccess" *ngIf="isSaveSuccess">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="messageError" *ngIf="isCampiControl">
+            <mat-card-content class="messageErrorContent">
+                <p>Gli importi devono avere due cifre dopo la virgola</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="messageError" *ngIf="isCampiVuoti">
+            <mat-card-content class="messageErrorContent">
+                <p> Almeno un campo deve essere valorizzato</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="messageError" *ngIf="isModifica">
+            <mat-card-content class="messageErrorContent">
+                <p> Modificare almeno un campo</p>
+            </mat-card-content>
+        </mat-card>
+
+
+
+        <div *ngIf=isRevoca>
+            
+            <p>
+                Data ricezione comunicazione: <b>{{dataRicezComunicazioneRevoca | date: "dd/MM/yyyy"}}</b>
+            </p>
+            <p>
+                Data revoca: <b>{{dataRevoca | date: "dd/MM/yyyy"}}</b>
+            </p>        
+            <p>
+                Debito residuo banca: <b>{{impDebitoResiduoBanca | number: '1.2-2' : 'it'}}</b>
+            </p>
+            <p>
+                Debito residuo Finpiemonte:<b> {{impDebitoResiduoFinpiemonte | number: '1.2-2' : 'it'}}</b>
+            </p>
+            <p>
+                Percentuale cofinanziamento Finpiemonte: <b>{{ perCofinanziamentoFinpiemonte }}%</b>
+            </p>
+            <p>
+                Numero protocollo:<b> {{numeroProtocollo}}</b>
+            </p>
+            <p>
+                Note: <b>{{note}}</b>
+            </p>
+ 
+        </div>
+
+        <!-- <app-gestione-allegati *ngIf="ambito != 'escussioni'" [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+
+
+    </mat-card-content>
+
+    <mat-card-actions style="display: flex;justify-content: space-between;">
+        <button mat-button class="button-style-1" (click)="openDialogStorico()">STORICO</button>
+
+        <!--<button mat-button class="button-style-1" (click)="onAnnulla()" *ngIf=isConferma>ANNULLA</button>
+        <button mat-raised-button class="button-style-2" (click)="controllaCampi()" *ngIf=isConferma>CONFERMA</button>-->
+
+        <button mat-raised-button class="button-style-2" (click)="openDialogModifica()" *ngIf="revocaBancariaDTO.idRevoca!=null && !isConferma">MODIFICA</button>
+        <button mat-raised-button class="button-style-2" (click)="openDialogModifica()">NUOVA</button>
+    </mat-card-actions>
+</mat-card>

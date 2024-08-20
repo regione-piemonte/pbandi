@@ -1,0 +1,119 @@
+<div>
+    <div class="spaceBetween">
+        <h3 *ngIf="isNew" class="bold-text">Nuovo Abbattimento garanzie</h3>
+        <h3 *ngIf="!isNew" class="bold-text">Modifica Abbattimento garanzie</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isConferma">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isImportoControl">
+        <mat-card-content class="messageErrorContent">
+            <p> L'importo deve avere massimo due cifre dopo la virgola</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+    <form>
+        <mat-grid-list cols="8" rowHeight="70px" style="margin-left: 0%;" [gutterSize]="'10px'">
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data Abbatt. garanzie*</mat-label>
+                    <input matInput [matDatepicker]="picker" name="dataAbbattimento" [(ngModel)]="dataAbbattimento"
+                        [formControl]="dataAbbattimentoControl" disabled [max]="today"/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataAbbattimento" (click)="setDataNull()"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                    <mat-error *ngIf="dataAbbattimentoControl.hasError('required') || isConferma">Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Selezionare un tipo di garanzia</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaGaranzie" name="attivitaDTO"
+                        [formControl]="attivitaAbbattimentoControl" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaAbbattimentoGaranzia"
+                            [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="attivitaAbbattimentoControl.hasError('required')">Campo obbligatorio
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo iniziale</mat-label>
+                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        [(ngModel)]="importoInizialeFormatted" name="importoIniziale" (blur)="setImporto(1)"
+                        #numP="ngModel" step="0.01">
+                    <mat-error *ngIf="numP?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error *ngIf="numP?.errors?.error === 'min'">Il valore deve essere maggiore o
+                        uguale a 0</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo liberato</mat-label>
+                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        [(ngModel)]="importoLiberatoFormatted" name="importoLiberato" (blur)="setImporto(2)"
+                        #numP1="ngModel" step="0.01">
+                    <mat-error *ngIf="numP1?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error *ngIf="numP1?.errors?.error === 'min'">Il valore deve essere maggiore o
+                        uguale a 0</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label> Nuovo importo </mat-label>
+                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                        [(ngModel)]="importoNuovoFormatted" name="importoNuovo" (blur)="setImporto(3)" #numP2="ngModel"
+                        step="0.01">
+                    <mat-error *ngIf="numP2?.errors?.pattern">
+                        Valore non valido
+                    </mat-error>
+                    <mat-error *ngIf="numP2?.errors?.error === 'min'">Il valore deve essere maggiore o
+                        uguale a 0</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Note</mat-label>
+                    <input type="text" maxlength="4000" matInput [(ngModel)]="note" name="note" />
+                </mat-form-field>
+            </mat-grid-tile>
+            
+        </mat-grid-list>
+        <!-- <app-gestione-allegati [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="controllaCampi()">CONFERMA</button>
+    </div>
+</div>

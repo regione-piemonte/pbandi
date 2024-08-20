@@ -1,0 +1,60 @@
+<mat-dialog-content class="mat-typography">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Nuovo intervento sostitutivo</h3>
+        <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <form [formGroup]="myForm">
+        <div>Importo totale: <strong>{{importoTotale() | number: '1.2-2' : 'it'}}</strong></div>
+
+        <div>Importo da erogare al beneficiario: <strong>{{importoBeneficiario | number: '1.2-2' : 'it'}}</strong></div>
+
+        <div *ngFor="let element of listaInterventi;">
+            Importo da erogare a {{element.denominazione}}: <strong>{{element.importoDaErogare | number:'1.2-2' :
+                'it'}}</strong>
+        </div>
+
+        <!-- DESTINATARIO -->
+        <div class="fullWidth">
+            <mat-form-field class="fullWidth elem1" appearance="standard">
+                <mat-label>Selezionare un destinatario</mat-label>
+                <input matInput formControlName="destinatario" [matAutocomplete]="auto1">
+                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayDestinatario"
+                    (optionSelected)="popolaIban()">
+                    <mat-option *ngFor="let option of destinatari" [value]="option">
+                        {{option.denominazione}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+
+        <!-- IBAN -->
+        <div class="fullWidth">
+            <mat-form-field class="fullWidth elem1" appearance="standard">
+                <mat-label>Iban destinatario: </mat-label>
+                <input matInput formControlName="iban" readonly="true" value="iban">
+            </mat-form-field>
+        </div>
+
+        <!-- IMPORTO DA EROGARE -->
+        <div class="fullWidth">
+            <mat-form-field class="fullWidth elem1" appearance="standard">
+                <mat-label>Importo da erogare</mat-label>
+                <input matInput type="number" formControlName="importoDaErogare" value=importoDaErogare
+                    (blur)='checkImporto()'>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; justify-content: end;">
+            <button mat-raised-button (click)="annulla()" class="button-style-3">ANNULLA</button>
+            <button mat-raised-button (click)="salva()" [disabled]="!myForm.valid || !importoValido"
+                class="button-style-2">SALVA</button>
+        </div>
+
+
+    </form>
+
+</mat-dialog-content>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbgestfinbo.business.SpringApplicationContextHelper"></bean>
+
+	<!-- bean usati dai servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbgestfinbo.business.impl" />
+	
+	<!-- bean dei servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbgestfinbo.business.service.impl" />
+	
+ 	
+	<bean class="it.csi.pbandi.pbgestfinbo.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbgestfinbo.util.FileSqlUtil"></bean>
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+      	<property name="jndiName" value="jdbc/pbgestfinboDS" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.RevocaBancariaDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.AzioneRecuperoBancaDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.AbbattimentoGaranzieDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.SaldoStralcioDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.PassaggioPerditaDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.MessaMoraDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.SegnalazioneCorteContiDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.ProposteVariazioneStatoCreditoDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.RicercaCampionamentiDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.NuovoCampionamentoDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.RicercaGaranzieDAOImpl" ></bean>
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.DecodificheDAOImpl" />
+	
+	<bean class = "it.csi.pbandi.pbgestfinbo.business.manager.DocumentoManager" ></bean>
+	
+	<bean class = "it.csi.pbandi.pbgestfinbo.business.manager.ActaManager" />
+	
+	<bean class = "it.csi.pbandi.pbgestfinbo.integration.dao.impl.ContestazioniDAOImpl" ></bean>
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbgestfinbo.integration.dao" />
+	
+	
+
+</beans>

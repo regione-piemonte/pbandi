@@ -1,0 +1,188 @@
+.mat-card{
+    padding: 0;
+  }
+  
+  .titleBar{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    padding-right: 1rem;
+  }
+  
+  
+  .page {
+  
+    .content {
+  
+        mat-card-content {
+            padding-left: 10px;
+        }
+  
+        .header {
+            display: flex;
+            align-items: center;
+  
+            h3 {
+                font-size: 18px;
+                font-weight: bold;
+            }
+  
+            .arrow {
+                color: grey;
+            }
+  
+        }
+  
+        mat-divider {
+            margin: 10px 0 20px 0;
+        }
+  
+        .benef {
+            display: flex;
+            align-items: center;
+  
+            p {
+                margin: 0px;
+                font-size: 16px;
+            }
+  
+            span {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        }
+  
+        .row {
+            display: flex;
+  
+            .col {
+                flex-grow: 1;
+                padding-right: 10px;
+            }
+        }
+  
+        table {
+            mat-icon {
+                color: #006CB4;
+            }
+        }
+    }
+  
+    .content-cards {
+        padding: 24px 24px 24px 0;
+  
+        .bandoNotifiche {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 5px;
+  
+            .p-bando {
+                font-size: 18px;
+                margin-left: 8px;
+  
+                span {
+                    font-weight: bold;
+                }
+            }
+  
+            mat-icon {
+                color: #006CB4;
+            }
+        }
+  
+        mat-card {
+            width: 88%;
+            height: 88%;
+  
+            p {
+                font-size: 15px;
+                font-weight: bold;
+                padding-left: 15px;
+            }
+  
+            mat-divider {
+                border-width: 2px;
+                padding-bottom: 10px;
+            }
+  
+            .divAttivita {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 300px;
+  
+                .singolaAttivita {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+  
+                button {
+                    display: flex;
+                    justify-content: flex-start;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #0060C1;
+                }
+            }
+  
+  
+        }
+    }
+  }
+  
+  .reportingContainerUp {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .reportingContainerUpbutton {
+    text-align: right;
+  }
+  
+  .reportingContainerDown {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  
+  .marginRight {
+    margin-right: 15px;
+  }
+  
+  .margin0 {
+    margin: 0px !important;
+  }
+  
+  .marginLeft20 {
+    margin-left: 20px;
+  }
+  
+  .marginRight25 {
+    margin-right: 25px;
+  }
+  
+  mat-option {
+    height: 35px !important;
+    line-height: 35px !important;
+  }
+  
+  ::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+  }
+  
+  .storico{
+    color: #0A9DE5;
+    border-color: white;
+    background-color: white;
+    border-style: none;
+  }
+  

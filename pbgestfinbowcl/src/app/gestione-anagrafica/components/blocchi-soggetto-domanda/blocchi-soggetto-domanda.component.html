@@ -1,0 +1,62 @@
+<!-- <p>blocchi-soggetto-domanda works!</p> -->
+<div>
+   
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveBlocco">
+        <mat-card-content class="messageSuccessContent">
+            <p>SUCCESSO!</p>
+            <p> Salvataggio avvenuto con successo</p>
+        </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="!isBlocchi">
+        <mat-divider [inset]="true" style="margin:10px 0 20px 0;"></mat-divider>
+
+        Nessun blocco presente
+
+        <mat-divider [inset]="true" style="margin:10px 0 20px 0;"></mat-divider>
+        
+    </div>
+
+    <div *ngIf="isBlocchi">
+
+        <table mat-table [dataSource]="listaBlocchi" style="width: 100%;">
+
+            <!-- Data blocco -->
+            <ng-container matColumnDef="dataBlocco">
+                <th mat-header-cell *matHeaderCellDef> <b> Data blocco </b> </th>
+                <td mat-cell *matCellDef="let element"> {{ element.dataInserimentoBlocco|date:"dd/MM/yyyy"}} </td>
+            </ng-container>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <!-- Causale -->
+            <ng-container matColumnDef="causale">
+                <th mat-header-cell *matHeaderCellDef> <b> Causale blocco</b> </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.descCausaleBlocco}}</td>
+            </ng-container>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="azioni">
+                <th mat-header-cell *matHeaderCellDef> <b> </b> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button (click)="modificaBlocco(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsBlocchi"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsBlocchi;"></tr>
+        </table>
+    </div>
+
+
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="openStoricoBlocchi()">STORICO BLOCCO</button>
+        <button *ngIf="!isProgetto" mat-raised-button class="button-style-2" (click)="inserisciBlocco()">INSERISCI BLOCCO</button>
+    </div>
+</div>

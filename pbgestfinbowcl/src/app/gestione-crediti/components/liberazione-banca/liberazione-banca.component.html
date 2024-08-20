@@ -1,0 +1,147 @@
+<mat-card class="pad">
+  <mat-card-header>
+    <mat-card-title>
+      <h3 class="cardtitle">Liberazione banca</h3>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="isShowing == 'main'" class="scroll"> <!--MAIN-->
+
+    <mat-card class="messageSuccess" *ngIf="isSuccVisible">
+      <mat-card-content class="messageSuccessContent">
+          <p>{{succMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <p>
+      Data liberazione banca: <b>{{liberazione[0]?.dataLiberazione === null ? "-" : liberazione[0].dataLiberazione | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Motivazione: <b>{{liberazione[0]?.motivazione === null ? "-" : liberazione[0].motivazione}}</b>
+    </p>
+    <p>
+      Banca liberata: <b>{{liberazione[0]?.bancaLiberata === null ? "-" : liberazione[0].bancaLiberata}}</b>
+    </p>
+    <p>
+      Note: <b>{{liberazione[0]?.note === null ? "-" : liberazione[0].note}}</b>
+    </p>
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'edit'" class="scroll"> <!--EDIT-->
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="myForm">
+
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Data liberazione banca</mat-label>
+          <input matInput formControlName="dataLiberazione" [matDatepicker]="picker1" class="datepicker" [max]="today" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataLiberazione').value" (click)="this.myForm.get('dataLiberazione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </p>
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Selezionare una motivazione</mat-label>
+          <mat-select formControlName="motivazione">
+            <mat-option value="-">-</mat-option>
+            <mat-option *ngFor="let motivazione of motivazioni" [value]="motivazione">
+              {{motivazione}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Banca liberata</mat-label>
+          <input matInput formControlName="bancaLib">
+        </mat-form-field>
+      </p>
+      <p class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </p>
+      <!-- <app-gestione-allegati  [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'history'" class="scroll"> <!--HISTORY-->
+
+
+    <p class="int">
+      <b>Storico liberazione banca</b>
+      <button mat-icon-button (click)="isShowing = 'main'">
+        <mat-icon class="material-icons-outlined">cancel</mat-icon>
+      </button>
+    </p>
+
+
+    <mat-divider [inset]="true"></mat-divider>
+
+    <table mat-table [dataSource]="liberazione" class="table2">
+
+      <!-- Nominativo Column 
+      <ng-container matColumnDef="nominativo">
+        <th mat-header-cell *matHeaderCellDef> Nominativo </th>
+        <td mat-cell *matCellDef="let element"> {{element.nominativo}} </td>
+      </ng-container>-->
+
+      <!-- Data Column -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.storData}} </td>
+      </ng-container>
+
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="istruttore">
+        <th mat-header-cell *matHeaderCellDef> Istruttore </th>
+        <td mat-cell *matCellDef="let element"> {{element.storIstruttore}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: historyDisplayedColumns;"></tr>
+    </table>
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'loading'" class="scroll"> <!--LOADING-->
+    <div style="height: 100%;">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'nodata'" class="scroll"> <!--NO DATA-->
+    <div>
+      <mat-label>Nessuna Liberazione banca presente</mat-label>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'error'" class="scroll"> <!--ERROR-->
+    <div>
+      <mat-error>error: {{errMsg}}</mat-error>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button class="button-style-1" [disabled]="noData" (click)="openHistory()">STORICO</button>
+    <button mat-button class="button-style-1" *ngIf="isShowing == 'edit'" (click)="action('cancel')">ANNULLA</button>
+    <!--<div fxFlex></div>-->
+    <button mat-raised-button class="button-style-2" [disabled]="isShowing == 'history'" *ngIf="isShowing == 'main' || isShowing == 'history'" (click)="isShowing = 'edit'">MODIFICA</button>
+    <button mat-raised-button class="button-style-2" [disabled]="isShowing == 'error' || isShowing == 'loading'" *ngIf="isShowing == 'nodata' || isShowing == 'error' || isShowing == 'loading'" (click)="isShowing = 'edit'">NUOVA LIBERAZIONE BANCA</button>
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 'edit'" (click)="action('save')">CONFERMA</button>
+  </mat-card-actions>
+
+
+
+</mat-card>

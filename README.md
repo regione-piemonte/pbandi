@@ -32,8 +32,8 @@ Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi m
 - [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebfinwcl)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
 - [PBWEBRCE](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrce)  	    Rimodulazione del conto economico
 - [PBWEBRCEWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrcewcl)  	Rimodulazione del conto economico (Front-End in Angular)
-- [PBGESTFINBO](https://github.com/regione-piemonte/pbandi/pbgestfinbo)  	Servizi REST trasversali del BackOffice Gestionale Finanziamenti 
-- [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi/pbgestfinbowcl)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
+- [PBGESTFINBO](https://github.com/regione-piemonte/pbandi/tree/main/pbgestfinbo)  	Servizi REST trasversali del BackOffice Gestionale Finanziamenti 
+- [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbgestfinbowcl)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
 
 una componente trasversale per le componenti Angular
 - [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi/pbcommonwcl)     Componente funzionalità comuni per BPM (Angular)
@@ -44,7 +44,7 @@ tre componenti di esposizione servizi:
 - [PBSERVREST](https://github.com/regione-piemonte/pbandi/pbservrest)  	Servizi esposti verso fruitori esterni 	
 
 una componente trasversale di utility per la gesione dei file da archiviare
-- [FILESTORAGE](https://github.com/regione-piemonte/pbandi/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
+- [FILESTORAGE](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrce/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
 
 due componenti di utilizi per le componenti online e batch
 - [UTILITYBATCH](https://github.com/regione-piemonte/pbandi/utilitybatch)    Package plSql di utility batch 
@@ -65,15 +65,15 @@ sei componenti ORACLE/PLSQL
 # Configurazioni iniziali
 Nei file README.md delle singole componenti verranno elencati i dettagli per la loro configurazione iniziale.
 # Prerequisiti di sistema
-[Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
-[Application Server: WildFly - 17.0](https://www.wildfly.org/)
-[RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
+* [Application Server: WildFly - 17.0](https://www.wildfly.org/)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
 ## Software
-[Java Development Kit (jdk): 8](https://www.oracle.org)
-[Angular CLI: 10.2.0](https://angular.io)
-[Node: 12.20.1](https://nodejs.org)
-[Maven: 3.2.5](https://maven.apache.org)
-[Ant: 1.6.2](https://ant.apache.org/)
+* [Java Development Kit (jdk): 8](https://www.oracle.org)
+* [Angular CLI: 10.2.0](https://angular.io)
+* [Node: 12.20.1](https://nodejs.org)
+* [Maven: 3.2.5](https://maven.apache.org)
+* [Ant: 1.6.2](https://ant.apache.org/)
 # Installazione
 Nei file README.md delle singole componenti verranno elencati i dettagli per la loro installazione.
 # Esecuzione dei test

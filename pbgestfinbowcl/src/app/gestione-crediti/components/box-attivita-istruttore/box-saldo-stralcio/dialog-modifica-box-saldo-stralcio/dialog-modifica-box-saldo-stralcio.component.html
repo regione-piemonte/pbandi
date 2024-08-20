@@ -1,0 +1,182 @@
+<div mat-dialog-title>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Modifica Saldo e Stralcio</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="messageError" *ngIf="isDataVuota">
+        <mat-card-content class="messageErrorContent">
+            <p>Data esito obbligatoria.</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="messageError" *ngIf="isCampiVuoti">
+        <mat-card-content class="messageErrorContent">
+            <p>Almeno un campo deve essere valorizzato.</p>
+        </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="messageError" *ngIf="isImportoControl">
+        <mat-card-content class="messageErrorContent">
+            <p>L'importo deve avere massimo due decimali.</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+
+    <!-- Il vero errore -->
+    <mat-card class="messageError" *ngIf="errorActive">
+        <mat-card-content class="messageErrorContent">
+            <p>{{errorMessage}}</p>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+
+<div mat-dialog-content>
+
+    <form [formGroup]="formSaldoStralcio">
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Data proposta</mat-label>
+                <input matInput formControlName="dataProposta" [max]="today" [matDatepicker]="picker"/>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="formSaldoStralcio.get('dataProposta').invalid">{{boxService.validatorPatternCommonText}}</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="right-form-field-width">
+                <mat-label>Data accettazione</mat-label>
+                <input matInput formControlName="dataAccettazione" [max]="today" [matDatepicker]="picker1"/>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="formSaldoStralcio.get('dataAccettazione').invalid">{{boxService.validatorPatternCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+        <p class="form-flex-row">
+            
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Tipo di saldo e stralcio</mat-label>
+                <mat-select formControlName="tipoSaldoStralcio">
+                    <mat-option>-</mat-option>
+                    <mat-option *ngFor="let element of listaTipiSaldoStralcio" [value]="element">
+                        {{element}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-checkbox class="right-form-field-width" formControlName="flagAgevolazione">Agevolazione</mat-checkbox>
+        </p>
+
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Importo debitore</mat-label>
+                <input matInput formControlName="importoDebitore" (blur)="formatOnBlur('importoDebitore')" required> <!-- type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"  #numP="ngModel" step="0.01" (blur)="setImporto(1)"-->
+                <mat-error *ngIf="formSaldoStralcio.get('importoDebitore').hasError('required')">{{boxService.validatorRequiredCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoDebitore').hasError('pattern')">{{boxService.validatorPatternCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoDebitore').hasError('maxlength')">{{boxService.currencyValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="right-form-field-width">
+                <mat-label>Importo Confidi</mat-label>
+                <input matInput formControlName="importoConfidi" (blur)="formatOnBlur('importoConfidi')">
+                <mat-error *ngIf="formSaldoStralcio.get('importoConfidi').hasError('pattern')">{{boxService.validatorPatternCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoConfidi').hasError('maxlength')">{{boxService.currencyValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+
+            <!-- Da visualizzare solo se l'agevolazione è garanzia (idModalitaAgevolazione = 10) - Una volta inserito non può essere modificato -->
+            <mat-form-field appearance="standard" class="right-form-field-width" [ngClass]="{'displayNone': idModalitaAgevolazione != 10}">
+                <mat-label>Importo disimpegno</mat-label>
+                <input matInput formControlName="importoDisimpegno" (blur)="formatOnBlur('importoDisimpegno')" [disabled]="dialogAction == 2">
+                <mat-error *ngIf="formSaldoStralcio.get('importoDisimpegno').hasError('pattern')">{{boxService.validatorPatternCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoDisimpegno').hasError('maxlength')">{{boxService.currencyValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Esito</mat-label>
+                <mat-select formControlName="esito" required>
+                    <mat-option>-</mat-option>
+                    <mat-option *ngFor="let element of listaEsiti" [value]="element">
+                        {{element}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formSaldoStralcio.get('esito').hasError('required')">{{boxService.validatorRequiredCommonText}}</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="right-form-field-width" >
+                <mat-label>Data esito</mat-label>
+                <input matInput formControlName="dataEsito" [matDatepicker]="picker2" [max]="today" required/>
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="formSaldoStralcio.get('dataEsito').hasError('required')">{{boxService.validatorRequiredCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('dataEsito').invalid">{{boxService.validatorPatternCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Data pagamento debitore</mat-label>
+                <input matInput formControlName="dataPagamentoDebitore" [matDatepicker]="picker3" [max]="today"/>
+                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+                <mat-error *ngIf="formSaldoStralcio.get('dataPagamentoDebitore').invalid">{{boxService.validatorPatternCommonText}}</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="right-form-field-width">
+                <mat-label>Data pagamento Confidi</mat-label>
+                <input matInput formControlName="dataPagamentoConfidi" [matDatepicker]="picker4" [max]="today"/>
+                <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                <mat-datepicker #picker4></mat-datepicker>
+                <mat-error *ngIf="formSaldoStralcio.get('dataPagamentoConfidi').invalid">{{boxService.validatorPatternCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Recupero</mat-label>
+                <mat-select formControlName="recupero">
+                    <mat-option>-</mat-option>
+                    <mat-option *ngFor="let element of listaRecuperi" [value]="element">
+                        {{element}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="standard" class="right-form-field-width">
+                <mat-label>Importo effettivo recuperato</mat-label>
+                <input matInput formControlName="importoEffRecuperato">
+                <mat-error *ngIf="formSaldoStralcio.get('importoEffRecuperato').hasError('pattern')">{{boxService.validatorPatternCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoEffRecuperato').hasError('maxlength')">{{boxService.currencyValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="standard" class="right-form-field-width">
+                <mat-label>Importo da passare a perdita </mat-label>
+                <input matInput formControlName="importoPassPerdita">
+                <mat-error *ngIf="formSaldoStralcio.get('importoPassPerdita').hasError('pattern')">{{boxService.validatorPatternCommonText}}</mat-error>
+                <mat-error *ngIf="formSaldoStralcio.get('importoPassPerdita').hasError('maxlength')">{{boxService.currencyValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+        <p class="form-flex-row">
+            <mat-form-field appearance="standard" class="form-field-width">
+                <mat-label>Note</mat-label>
+                <input matInput formControlName="note" type="text"/>
+                <mat-error *ngIf="formSaldoStralcio.get('note').hasError('maxlength')">{{boxService.noteValidatorMaxlengthCommonText}}</mat-error>
+            </mat-form-field>
+        </p>
+    </form>
+    <br>
+
+</div>
+
+
+<div mat-dialog-actions class="spaceBetween">
+    <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+    <button mat-button class="button-style-2" mat-button (click)="salva()">SALVA</button>
+</div>

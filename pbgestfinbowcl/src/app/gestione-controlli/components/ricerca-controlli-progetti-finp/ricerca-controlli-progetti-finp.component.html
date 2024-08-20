@@ -1,0 +1,244 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+
+    <div class="title">
+        <h2>Ricerca controlli progetti Finpiemonte</h2>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content class="padding-left-10">
+                <div class="header">
+                    <h3 class="search">Criteri di ricerca
+                        <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                            <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                            <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                        </button>
+                    </h3>
+                </div>
+                <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+
+                    <form>
+                        <mat-grid-list cols="8" rowHeight="60px" [gutterSize]="'5px'">
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-form-field class="elem1">
+                                        <mat-label>Selezionare un beneficiario</mat-label>
+                                        <input matInput [matAutocomplete]="auto4" [(ngModel)]="denIns"
+                                            (input)="suggest(1, denIns)" name="denomDTO">
+                                        <mat-autocomplete #auto4="matAutocomplete">
+                                            <mat-option *ngFor="let attivita of listaDenomin"
+                                                [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-form-field class="elem1">
+                                        <mat-label>Selezionare un bando</mat-label>
+                                        <input matInput [matAutocomplete]="auto5" [(ngModel)]="descBanIns"
+                                            (input)="suggest(2, descBanIns)" name="bandoDTO">
+                                        <mat-autocomplete #auto5="matAutocomplete">
+                                            <mat-option *ngFor="let attivita of listaBando"
+                                                [value]="attivita.descAttivita" matTooltip="{{attivita.descAttivita}}"
+                                                matTooltipPosition="above">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile [colspan]="5" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-form-field class="elem1">
+                                        <mat-label>Selezionare un progetto</mat-label>
+                                        <input matInput [matAutocomplete]="auto6" [(ngModel)]="codProIns"
+                                            (input)="suggest(3, codProIns)" name="codProgDTO">
+                                        <mat-autocomplete #auto6="matAutocomplete">
+                                            <mat-option *ngFor="let attivita of listaCodiceProgetto"
+                                                [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile [colspan]="5" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-form-field class="elem1">
+                                        <mat-label>Selezionare uno stato del controllo </mat-label>
+                                        <mat-select [(ngModel)]="idStatoControllo" name="statoControlloTO">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let attivita of listaStatoControllo"
+                                                [value]="attivita.idAttivita">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile [colspan]="7" [rowspan]="1">
+                                <div class="fullWidth">
+                                    <mat-form-field class="elem1">
+                                        <mat-label>N.campionamento</mat-label>
+                                        <input matInput type="text" [(ngModel)]="numCampionamento"
+                                            name="numCampionamento">
+                                    </mat-form-field>
+                                </div>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="elem1" appearance="standard">
+                                    <mat-label>Importo da controllare (da)</mat-label>
+                                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="importoDaControllareDaFormatted" name="importoDaControllareDa"
+                                        (blur)="setImportoDaControllareDa()" #impConDa="ngModel">
+                                    <mat-error *ngIf="impConDa?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="impConDa?.errors?.error === 'min'">Il valore deve essere
+                                        maggiore o uguale a 0</mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="elem1" appearance="standard">
+                                    <mat-label>Importo da controllare(a)</mat-label>
+                                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="importoDaControllareAFormatted" name="importoDaControllareA"
+                                        (blur)="setImportoDaControllareA()" #impConA="ngModel">
+                                    <mat-error *ngIf="impConA?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="impConA?.errors?.error === 'min'">Il valore deve essere
+                                        maggiore o uguale a 0</mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="elem1" appearance="standard">
+                                    <mat-label>Importo irregolare(da)</mat-label>
+                                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="importoIrregolareDaFormatted" name="importoIrregolareDa"
+                                        (blur)="setImportoIrregolareDa()" #impIrregDa="ngModel">
+                                    <mat-error *ngIf="impIrregDa?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="impIrregDa?.errors?.error === 'min'">Il valore deve essere
+                                        maggiore o uguale a 0</mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                <mat-form-field class="elem1" appearance="standard">
+                                    <mat-label>Importo irregolare(a)</mat-label>
+                                    <input type="text" matInput pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        [(ngModel)]="importoIrregolareAFormatted" name="importoIrregolareA"
+                                        (blur)="setImportoIrregolareA()" #impIrregA="ngModel">
+                                    <mat-error *ngIf="impIrregA?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                    <mat-error *ngIf="impIrregA?.errors?.error === 'min'">Il valore deve essere
+                                        maggiore o uguale a 0</mat-error>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <!-- [disabled]="!codFisIns && !idStatoPropos && !codProIns && !desBanIns && !idTipoAgevIns && !denIns && !parIvaIns" -->
+                        <button mat-raised-button (click)="compilaCampiPerRicerca()"
+                         class="button-style-2">CERCA</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+
+    <mat-card [ngClass]="{'displayNone': !isControlli}">
+        <div >
+            <div class="title">
+                <h3>Controlli </h3>
+            </div>
+            <p *ngIf="!isControls"> <b> Non ci sono elementi da visualizzare </b> </p>
+
+            <table mat-table [dataSource]="sortedData" multiTemplateDataRows class="fullWidth" matSort
+                #controlliSort="matSort"  [ngClass]="{'displayNone': !sortedData || !sortedData.data?.length }">
+
+                <!-- bando Column -->
+                <ng-container matColumnDef="descBando">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Bando</th>
+                    <td mat-cell *matCellDef="let element">{{element.descBando}}</td>
+                </ng-container>
+
+                <!-- progetto  Column -->
+                <ng-container matColumnDef="codVisualizzato">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.codVisualizzato}} </td>
+                </ng-container>
+
+                <!-- Forma giuridica Column -->
+                <ng-container matColumnDef="denominazione">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Beneficiario</th>
+                    <td mat-cell *matCellDef="let element"> {{ element?.denominazione}} </td>
+                </ng-container>
+
+                <!-- Codice Fiscale Column -->
+                <ng-container matColumnDef="descTipoControllo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo controllo</th>
+                    <td mat-cell *matCellDef="let element"> {{element?.descTipoControllo}} </td>
+                </ng-container>
+
+                <!-- Comune Column -->
+                <ng-container matColumnDef="descStatoControllo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato controllo </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.descStatoControllo}} </td>
+                </ng-container>
+
+
+                <!--  Column -->
+                <ng-container matColumnDef="importoDaControllare">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Importo da controllare </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.importoDaControllare }} </td>
+                </ng-container>
+
+                <!-- Column -->
+                <ng-container matColumnDef="descAttivita">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Attivita</th>
+                    <td mat-cell *matCellDef="let element"> {{element.descAttivita}} </td>
+                </ng-container>    
+
+                <!-- Column -->
+                <ng-container matColumnDef="settings">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-icon matTooltip="Gestione controlli" (click)="gestioneControlliFinp(element)">
+                            tune
+                        </mat-icon>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-detail-row">
+                </tr>
+            </table>
+
+            <mat-paginator #controlli [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+                [ngClass]="{'displayNone': !sortedData || !sortedData.data?.length }">
+            </mat-paginator>
+
+        </div>
+    </mat-card>
+
+</div>

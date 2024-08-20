@@ -1,0 +1,222 @@
+
+<mat-card class="padding0">
+    <mat-card-header>
+        <mat-card-title>
+            <h3 class="cardtitle">Segnalazione Corte dei Conti </h3>
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="scroll">
+
+        <!--SPINNER-->
+        <div style="height: 100%;" *ngIf="isLoading()">
+            <mat-spinner class="loading"></mat-spinner>
+        </div>
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveSuccess">
+            <mat-card-content class="messageSuccessContent">
+                <p>Salvato</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isSaveError">
+            <mat-card-content class="messageErrorContent">
+                <p>Errore salvataggio</p>
+            </mat-card-content>
+        </mat-card>
+
+        <div *ngIf=isConferma>
+
+            <div *ngIf=!isListaSegnalazioni>
+                Nessuna segnalazione Corte dei Conti presente
+            </div>
+
+            <div *ngIf=isListaSegnalazioni>
+                <table mat-table [dataSource]="listaSegnalazioniCC" multiTemplateDataRows style="width: 100%;">
+
+                    <!-- Data Column -->
+                    <ng-container matColumnDef="dataSegn">
+                        <th mat-header-cell *matHeaderCellDef> <b> Data segnalazione </b> </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.dataSegnalazione|date:"dd/MM/yyyy"}}
+                        </td>
+                    </ng-container>
+
+                              
+                    <!-- Istruttore Column -->
+                    <ng-container matColumnDef="numProtocollo">
+                        <th mat-header-cell *matHeaderCellDef> <b>N. Protocollo segnalazione </b> </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.numProtocolloSegn}} </td>
+                    </ng-container>
+
+                    <!-- Data Column -->
+                    <ng-container matColumnDef="dataArchiviaz">
+                        <th mat-header-cell *matHeaderCellDef> <b>Data archiviazione</b> </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.dataArchiv|date:"dd/MM/yyyy"}}</td>
+                    </ng-container>
+
+          
+
+                    <!-- Istruttore Column -->
+                    <ng-container matColumnDef="utente">
+                        <th mat-header-cell *matHeaderCellDef> <b>Utente Modifica</b> </th>
+                        <td mat-cell *matCellDef="let element"> {{ (element?.cognome === null ? " " : element.cognome) +' '+
+                            (element?.nome === null ? " " : element.nome)}} </td>
+                    </ng-container>
+
+
+                    <!-- Row Options Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> </th>
+                        <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                            <div class="text-right">
+                                <button mat-icon-button (click)="modifica(element.idSegnalazioneCorteConti)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+
+                                <button mat-icon-button
+                                    (click)="expandedElement = expandedElement != element ? element : null">
+                                    <mat-icon aria-hidden="false" aria-label="Example home icon">
+                                        visibility
+                                    </mat-icon>
+                                </button>
+
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- per visualizzare i dettagli del saldo e stralcio: expanded -->
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                            class="detailBoxRow">
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+                               
+                                <mat-grid-list cols="8" rowHeight="40px"
+                                    style="width: 100%; margin-left: 5px; padding: 0;">
+
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="6">
+                                        <div class="text-inside-grid">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="width: 25%;"><b> Credito residuo quota capitale</b> </td>
+                                                    <td> {{element.impCredResCapitale | number: '1.2-2' : 'it'}}</td>
+                                                    <td style="width: 23%;"> <b> Oneri di agevolazione</b></td>
+                                                    <td> {{element.impOneriAgevolaz | number: '1.2-2' : 'it'}} </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <b> Quota importo segnalaz.</b></td>
+                                                    <td> {{element.impQuotaSegnalaz | number: '1.2-2' : 'it'}}</td>
+                                                    <td><b> Importo garanzia</b></td>
+                                                    <td> {{element.impGaranzia | number: '1.2-2' : 'it'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <b> Piano di rientro</b></td>
+                                                    <td>{{element.flagPianoRientro}}</td>
+                                                    <td><b> Data piano di rientro</b></td>
+                                                    <td>{{element.dataPianoRientro|date:"dd/MM/yyyy"}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b> Saldo e stralcio</b></td>
+                                                    <td>{{element.flagSaldoStralcio}}</td>
+                                                    <td><b> Data saldo stralcio</b></td>
+                                                    <td>{{element.dataSaldoStralcio|date:"dd/MM/yyyy"}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <b> Pagamento integrale</b></td>
+                                                    <td> {{element.flagPagamIntegrale}}</td>
+                                                    <td> <b> Data pagamento integrale</b></td>
+                                                    <td> {{element.dataPagamento|date:"dd/MM/yyyy"}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </mat-grid-tile>
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <table style="width: 100%;   position: absolute;
+                                            left: 5px;">
+                                            <tr>
+                                                <td style="width: 25%;"><b> N. protocollo dissegnalazione </b> </td>
+                                                <td>{{element.numProtocolloDiss}}</td>
+                                            </tr>
+                                        </table>
+                                    </mat-grid-tile>
+
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <table style="width: 100%;   position: absolute;
+                                            left: 5px;">
+
+                                            <tr>
+                                                <td style="width: 25%;"><b> Dissegnalazione</b> </td>
+                                                <td style="width: 25%;">{{element.flagDissegnalazione}}</td>
+                                                <td style="width: 23%;"> <b> Data dissegnalazione</b></td>
+                                                <td>{{element.dataDissegnalazione|date:"dd/MM/yyyy"}}</td>
+
+                                            </tr>
+                                        </table>
+                                    </mat-grid-tile>
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <table style="width: 100%;   position: absolute;
+                                        left: 5px;">
+                                            <tr>
+                                                <td style="width: 25%;"><b> N. protocollo archiviazione </b> </td>
+                                                <td>{{element.numProtocolloArchiv}}</td>
+                                            </tr>
+                                        </table>
+                                    </mat-grid-tile>
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="2">
+                                        <table style="width: 100%;   position: absolute;
+                                            left: 5px;">
+
+                                            <tr>
+                                                <td style="width: 25%;"><b> Decreto di archiviazione</b></td>
+                                                <td style="width: 25%;">{{element.flagDecretoArchiv}}</td>
+                                                <td style="width: 23%;"> <b> Data archiviazione</b> </td>
+                                                <td> {{element.dataArchiv|date:"dd/MM/yyyy"}}</td>
+
+                                            </tr>
+                                            <tr>
+                                                <td> <b>Comunicazione a Regione</b> </td>
+                                                <td> {{element.flagComunicazRegione}} </td>
+                                            </tr>
+                                        </table>
+                                    </mat-grid-tile>
+
+                                    <mat-grid-tile [colspan]="8" [rowspan]="2">
+                                        <table style="width: 100%;   position: absolute;
+                                            left: 5px;">
+                                            <tr>
+                                                <td style="width: 25%;"><b> Note </b> </td>
+                                                <td>{{element.note}}</td>
+                                            </tr>
+                                        </table>
+                                    </mat-grid-tile>
+
+                                </mat-grid-list>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+                        [class.example-expanded-row]="expandedElement === element">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+                </table>
+            </div>
+        </div>
+
+
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-button class="button-style-1" [disabled]="disableStorico == true" (click)="openStorico()">STORICO</button>
+        <div fxFlex></div>
+        <button mat-raised-button class="button-style-2" (click)="openDialog()">NUOVA SEGNALAZIONE
+        </button>
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,55 @@
+<div>
+  <div class="spaceBetween">
+    <h3 class="bold-text">Allegati alla controdeduzione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+      <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+          <mat-card-content class="messageSuccessContent">
+              <p [innerHTML]="messageSuccess"></p>
+          </mat-card-content>
+      </mat-card>
+      <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+          <mat-card-content class="messageErrorContent">
+              <p [innerHTML]="messageError"></p>
+          </mat-card-content>
+      </mat-card>
+  </div>
+    <mat-card-title class="alignItemsCenter">
+        <span class="bold-text" style="display: flex;align-items: center;" *ngFor="let lettera of letteraAccompagnatoria">
+          <span  (click)="scaricaFile(lettera.idDocumentoIndex)" class="spanLink"><b>Lettera accompagnatoria :</b> 
+            {{lettera.nomeFile}}
+          </span>
+        <mat-icon
+              [ngClass]="{'visibility-hidden': !isAnteprimaVisible(lettera.nomeFile)}"
+              class="cursor-pointer margin-right-5"
+              (click)="anteprimaAllegato(lettera)">
+        remove_red_eye</mat-icon>
+        </span>
+    </mat-card-title>
+    <mat-card-title class="alignItemsCenter">
+        <span  class="bold-text" style="display: flex;align-items: center;" *ngFor="let lettera of allegatiGenerici">
+          <span  (click)="scaricaFile(lettera.idDocumentoIndex)" class="spanLink"><b>Altri allegati :</b> 
+            {{lettera.nomeFile}}
+          </span>
+        <mat-icon
+            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(lettera.nomeFile)}"
+            class="cursor-pointer margin-right-5"
+            (click)="anteprimaAllegato(lettera)">
+            remove_red_eye</mat-icon>
+        </span>
+    </mat-card-title>
+</div>
+<div style="display: flex;
+justify-content: flex-end;">
+  <button mat-button class="button-style-1" (click)="closeDialog()">CHIUDI</button>
+</div>

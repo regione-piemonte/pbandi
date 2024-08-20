@@ -1,0 +1,271 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla ricerca</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Inserimento altri controlli</h2>
+            </div>
+        </div>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSave">
+        <mat-card-content class="messageSuccessContent">
+            <p>Controllo inserito con successo!</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isSave==false">
+        <mat-card-content class="messageSuccessContent">
+            <p>ATTENZIONE! Errore inserimento!</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p>ATTENZIONE! Compilare tutti i campi obbligatori: <b> Bando,
+                Beneficiario,
+                Progetto,
+                Autorità controllante,
+                Tipo di controllo,
+                Stato del controllo</b></p>
+        </mat-card-content>
+    </mat-card>
+
+
+    <div class="content">
+
+        <mat-card>
+
+            <mat-card-content style="padding-bottom: 25px;">
+
+
+
+                <form #formControl="ngForm">
+                    <mat-grid-list cols="9" rowHeight="70px" [gutterSize]="'5px'">
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <div class="fullWidth">
+                                <mat-form-field class="elem1">
+                                    <mat-label>Selezionare un beneficiario</mat-label>
+                                    <input matInput [matAutocomplete]="auto4" [(ngModel)]="denIns"
+                                        (input)="suggest(1, denIns)" name="denomDTO" [formControl]="beneficiarioControl">
+                                    <mat-autocomplete #auto4="matAutocomplete"  (optionSelected)="getListaBando($event)">
+                                        <mat-option *ngFor="let attivita of listaDenomin"
+                                            [value]="attivita.descAttivita">
+                                            {{attivita.descAttivita}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="beneficiarioControl.hasError('required')">Campo obbligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="elem1">
+                                <mat-label>Selezionare un bando</mat-label>
+                                <mat-select [(ngModel)]="progBandoLinea" name="bando"
+                                    (selectionChange)="getListaProgetto($event)"  [formControl]="bandoControl">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let bando of listaBando" [value]="bando.progBandoLinea">
+                                        {{ bando.descAttivita }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="bandoControl.hasError('required')">Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="6" [rowspan]="1">
+                            <mat-form-field appearance="standard" class="elem1">
+                                <mat-label>Selezionare un progetto</mat-label>
+                                <mat-select [(ngModel)]="idProgetto" name="attivitaDTO" [formControl]="progettoControl">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let attivita of listaCodiceProgetto"
+                                        [value]="attivita.idAttivita">
+                                        {{attivita.descAttivita}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="progettoControl.hasError('required')">Campo obbligatorio</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                 
+                        <mat-grid-tile [colspan]="6" [rowspan]="1">
+                            <mat-form-field appearance="standard" class="elem1">
+                                <mat-label>Selezionare un'autorità controllante</mat-label>
+                                <mat-select [(ngModel)]="idAutoritaControllante" name="attivitaDTO" [formControl]="autoritaControllanteControl" (selectionChange)="changeAutoritaControllante()" >
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let attivita of listaAutoritaControllante"
+                                        [value]="attivita.idAttivita">
+                                        {{attivita.descAttivita}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="autoritaControllanteControl.hasError('required')">Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="6" [rowspan]="1">
+                            <div class="align" class="text-inside-grid">
+                                <mat-label> <b>Tipo di controllo </b></mat-label>
+                                <mat-radio-group [(ngModel)]="tipologiaControllo" name="tipologiaControllo">
+                                    <mat-radio-button value="D" *ngIf="idAutoritaControllante!=4">Documentale
+                                    </mat-radio-button>
+                                    <mat-radio-button value="L" style="margin-left: 10px;">In loco</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error *ngIf="tipologiaControllo==null">Campo obbligatorio</mat-error>
+                            </div>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data inizio controllo </mat-label>
+                                <input matInput [matDatepicker]="picker" name="dataInizioControllo"
+                                    [(ngModel)]="dataInizioControllo" disabled />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataInizioControllo"
+                                    (click)="setDataNull(1)" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data fine controllo </mat-label>
+                                <input matInput [matDatepicker]="picker1" name="dataFineControllo"
+                                    [(ngModel)]="dataFineControllo" [min]="dataInizioControllo" disabled />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataFineControllo"
+                                    (click)="setDataNull(2)" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Importo da controllare</mat-label>
+                                <input type="text" [(ngModel)]="importoDaControllareFormatted" matInput
+                                    name="importoDaControllare" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                    #numP="ngModel" (blur)="setImporto(1)" step="0.01">
+                                <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Importo spesa irregolare</mat-label>
+                                <input type="text" [(ngModel)]="importoIrregolaritaFormatted" matInput
+                                    name="importoIrregolarita" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                    #numP1="ngModel" (blur)="setImporto(2)" step="0.01">
+                                <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Importo agev. irregolare</mat-label>
+                                <input type="text" [(ngModel)]="importoAgevIrregFormatted" matInput
+                                    name="importoAgevIrreg" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel"
+                                    (blur)="setImporto(3)" step="0.01">
+                                <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="5" [rowspan]="1">
+                            <mat-form-field appearance="standard" class="elem1" >
+                                <mat-label>Selezionare stato controllo</mat-label>
+                                <mat-select [(ngModel)]="idStatoControllo" name="attivitaDTO" [formControl]="statoControlloControl">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let attivita of listaStatoControllo"
+                                        [value]="attivita.idAttivita" [disabled]="disableStato(attivita.idAttivita)">
+                                        {{attivita.descAttivita}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="statoControlloControl.hasError('required')">Campo obbligatorio
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="3" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>N. protocollo</mat-label>
+                                <input type="text" maxlength="30" matInput [(ngModel)]="numProtocollo"
+                                    name="numProtocollo" />
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data avvio di controllo </mat-label>
+                                <input matInput [matDatepicker]="picker3" name="dataAvvioControlli"
+                                    [(ngModel)]="dataAvvioControlli" disabled />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataAvvioControlli"
+                                    (click)="setDataNull(3)" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data visita di controllo </mat-label>
+                                <input matInput [matDatepicker]="picker2" name="dataVisitaControllo"
+                                    [(ngModel)]="dataVisitaControllo" disabled />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataVisitaControllo"
+                                    (click)="setDataNull(4)" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+                            <mat-form-field appearance="standard" class="elem1">
+                                <mat-label>Selezionare tipo di visita </mat-label>
+                                <mat-select [(ngModel)]="descTipoVisita" name="attivitaDTO1">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let attivita of lisTipoVisita" [value]="attivita">
+                                        {{attivita}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="6" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Istruttore che ha effettuato la visita</mat-label>
+                                <input type="text" maxlength="4000" matInput [(ngModel)]="istruttoreVisita"
+                                    name="istruttoreVisita" />
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+
+                </form>
+            </mat-card-content>
+
+
+            <!-- <div>
+                <h3>
+                    Allegati
+                </h3>
+                <button mat-raised-button (click)="gestisciAllegati()" class="button-style-1">GESTISCI ALLEGATI</button>
+            </div> -->
+        </mat-card>
+
+    </div>
+
+    <div class="flexEnd">
+        <button mat-raised-button (click)="controllaCampi()" class="button-style-2">CONFERMA</button>
+    </div>
+
+</div>

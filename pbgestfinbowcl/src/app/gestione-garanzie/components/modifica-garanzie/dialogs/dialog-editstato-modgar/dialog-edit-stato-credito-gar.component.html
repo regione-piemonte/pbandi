@@ -1,0 +1,52 @@
+<div mat-dialog-title class="spaceBetween">
+    <h3 class="bold-text">Modifica stato credito</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+
+    <mat-card class="messageError" *ngIf="showError">
+        <mat-card-content class="messageErrorContent">
+            <p>{{errorMsg}}</p>
+        </mat-card-content>
+    </mat-card>
+    
+    <form [formGroup]="formStatocredito">
+        <p>
+            <mat-form-field appearance="standard" class="fullWidth">
+                <mat-label>Selezionare uno stato</mat-label>
+                <mat-select type="text" formControlName="statoCredito">
+                  <mat-option *ngFor="let option of listaStatiCred" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formStatocredito.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="standard" class="fullWidth">
+                <mat-label>Selezionare uno stato</mat-label>
+                <input matInput type="text" formControlName="statoCredito" disabled required>
+                <mat-error *ngIf="formStatocredito.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field> -->
+        </p>
+        <p>
+            <mat-form-field appearance="standard" class="fullWidth">
+                <mat-label>Data ultima modifica</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="dtModifica" class="datepicker"  [max]="today" disabled required>
+                <button mat-button mat-icon-button matSuffix *ngIf="this.formStatocredito.get('dtModifica').value"
+                    (click)="this.formStatocredito.get('dtModifica').setValue(null)" class="icons">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                <mat-error *ngIf="formStatocredito.invalid">Campo obbligatorio</mat-error>
+            </mat-form-field>
+        </p>
+    </form>
+
+</div>
+<div mat-dialog-actions class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="onConfirmClick()" [disabled]="isLoading">CONFERMA</button>
+</div>

@@ -1,0 +1,254 @@
+<!-- Storico Storico stato azienda -->
+<div *ngIf="idComponentToShow == 1">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Storico stato azienda</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <table mat-table [dataSource]="schedaClienteMain.storicoStatoAzienda" class="mat-elevation-z8">
+
+
+      <!-- Stato azienda Column -->
+      <ng-container matColumnDef="statoAzienda">
+        <th mat-header-cell *matHeaderCellDef> Stato azienda </th>
+        <td mat-cell *matCellDef="let element"> {{element.staAz_statoAzienda === null ? "-" : element.staAz_statoAzienda}} </td>
+      </ng-container>
+
+      <!-- Data inizio Column -->
+      <ng-container matColumnDef="dataInizio">
+        <th mat-header-cell *matHeaderCellDef> Data inizio </th>
+        <td mat-cell *matCellDef="let element"> {{element.staAz_dataInizio === null ? "-" : element.staAz_dataInizio | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Data fine Column -->
+      <ng-container matColumnDef="dataFine">
+        <th mat-header-cell *matHeaderCellDef> Data fine </th>
+        <td mat-cell *matCellDef="let element"> {{element.staAz_dataFine === null ? "-" : element.staAz_dataFine | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Utente modifica Column -->
+      <ng-container matColumnDef="utenteModifica">
+        <th mat-header-cell *matHeaderCellDef> Utente modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.staAz_utenteModifica === null || element.staAz_utenteModifica === " " ? "-" : element.staAz_utenteModifica}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="staAzColumns.length" *matNoDataRow>
+        <br>
+        <h2>Nessuno storico presente nella banca dati</h2>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="staAzColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: staAzColumns;"></tr>
+    </table>
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>
+
+<!-- Storico stato credito Finpiemonte -->
+<div *ngIf="idComponentToShow == 2">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Storico stato credito Finpiemonte</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <table mat-table [dataSource]="schedaClienteMain.storicoStatoCreditoFin" class="mat-elevation-z8">
+
+      <!-- Stato credito Column -->
+      <ng-container matColumnDef="statoCredito">
+        <th mat-header-cell *matHeaderCellDef> Stato credito </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_statoCredito === null ? "-" : element.creFin_statoCredito}} </td>
+      </ng-container>
+
+      <!-- Data modifica Column -->
+      <ng-container matColumnDef="dataModifica">
+        <th mat-header-cell *matHeaderCellDef> Data modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_dataModifica === null ? "-" : element.creFin_dataModifica | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Utente modifica Column -->
+      <ng-container matColumnDef="UtenteModifica">
+        <th mat-header-cell *matHeaderCellDef> Utente modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_utenteModifica === null || element.creFin_utenteModifica === " " ? "-" : element.creFin_utenteModifica}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="StaCreFinColumns.length" *matNoDataRow>
+        <br>
+        <h2>Nessuno storico presente nella banca dati</h2>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="StaCreFinColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: StaCreFinColumns;"></tr>
+    </table>
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>
+
+<!-- Storico rating -->
+<div *ngIf="idComponentToShow == 3">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Storico rating</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <table mat-table [dataSource]="schedaClienteMain.storicoRating" class="mat-elevation-z8">
+
+      <!-- Rating Column -->
+      <ng-container matColumnDef="rating">
+        <th mat-header-cell *matHeaderCellDef> Rating </th>
+        <td mat-cell *matCellDef="let element"> {{element.rat_rating === null ? "-" : element.rat_rating}} </td>
+      </ng-container>
+
+      <!-- Provider Column -->
+      <ng-container matColumnDef="provider">
+        <th mat-header-cell *matHeaderCellDef> Provider </th>
+        <td mat-cell *matCellDef="let element"> {{element.rat_provider === null ? "-" : element.rat_provider}} </td>
+      </ng-container>
+
+      <!-- Data Classificazione Column -->
+      <ng-container matColumnDef="dataClass">
+        <th mat-header-cell *matHeaderCellDef> Data Classificazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.rat_dataClass === null ? "-" : element.rat_dataClass | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Utente modifica Column -->
+      <ng-container matColumnDef="utenteModifica">
+        <th mat-header-cell *matHeaderCellDef> Utente modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.rat_utenteModifica === null || element.rat_utenteModifica === " " ? "-" : element.rat_utenteModifica}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="RatColumns.length" *matNoDataRow>
+        <br>
+        <h2>Nessuno storico presente nella banca dati</h2>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="RatColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: RatColumns;"></tr>
+    </table>
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>
+
+<!-- Storico banca del beneficiario -->
+<div *ngIf="idComponentToShow == 4">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Storico banca del beneficiario</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <table mat-table [dataSource]="schedaClienteMain.storicoBancaBeneficiario" class="mat-elevation-z8">
+
+      <!-- Banca Column -->
+      <ng-container matColumnDef="banca">
+        <th mat-header-cell *matHeaderCellDef> Banca </th>
+        <td mat-cell *matCellDef="let element"> {{element.banBen_banca === null ? "-" : element.banBen_banca}} </td>
+      </ng-container>
+
+      <!-- Data modifica Column -->
+      <ng-container matColumnDef="dataModifica">
+        <th mat-header-cell *matHeaderCellDef> Data modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.banBen_dataModifica === null ? "-" : element.banBen_dataModifica | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Motivazione Column -->
+      <ng-container matColumnDef="motivazione">
+        <th mat-header-cell *matHeaderCellDef> Motivazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.banBen_motivazione === null ? "-" : element.banBen_motivazione}} </td>
+      </ng-container>
+
+      <!-- Soggetto terzo Column -->
+      <ng-container matColumnDef="soggettoTerzo">
+        <th mat-header-cell *matHeaderCellDef> Soggetto terzo </th>
+        <td mat-cell *matCellDef="let element"> {{element.banBen_soggettoTerzo === null ? "-" : element.banBen_soggettoTerzo}} </td>
+      </ng-container>
+
+      <!-- Utente Modifica Column -->
+      <ng-container matColumnDef="utenteModifica">
+        <th mat-header-cell *matHeaderCellDef> Utente Modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.banBen_utenteModifica === null || element.banBen_utenteModifica === " " ? "-" : element.banBen_utenteModifica}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="BanBenColumns.length" *matNoDataRow>
+        <br>
+        <h2>Nessuno storico presente nella banca dati</h2>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="BanBenColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: BanBenColumns;"></tr>
+    </table>
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>
+
+<!-- Storico stato credito Finpiemonte -->
+<div *ngIf="idComponentToShow == 5">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Storico escussioni</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+
+    <table mat-table [dataSource]="schedaClienteMain.storicoStatoCreditoFin" class="mat-elevation-z8">
+
+      <!-- Stato credito Column -->
+      <ng-container matColumnDef="statoCredito">
+        <th mat-header-cell *matHeaderCellDef> Stato credito </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_statoCredito === null ? "-" : element.creFin_statoCredito}} </td>
+      </ng-container>
+
+      <!-- Data modifica Column -->
+      <ng-container matColumnDef="dataModifica">
+        <th mat-header-cell *matHeaderCellDef> Data modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_dataModifica === null ? "-" : element.creFin_dataModifica | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Utente modifica Column -->
+      <ng-container matColumnDef="UtenteModifica">
+        <th mat-header-cell *matHeaderCellDef> Utente modifica </th>
+        <td mat-cell *matCellDef="let element"> {{element.creFin_utenteModifica === null || element.creFin_utenteModifica === " " ? "-" : element.creFin_utenteModifica}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="StaCreFinColumns.length" *matNoDataRow>
+        <br>
+        <h2>Nessuno storico presente nella banca dati</h2>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="StaCreFinColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: StaCreFinColumns;"></tr>
+    </table>
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>

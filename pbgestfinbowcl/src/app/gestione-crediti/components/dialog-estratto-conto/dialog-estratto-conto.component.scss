@@ -1,0 +1,167 @@
+
+.loading-container {
+
+    height: 50vh;
+    min-width: 40vw;
+
+    .loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    }
+}
+
+
+.loadingLabel {
+    display: flex;
+    justify-content: center;
+    height: 77%;
+    align-items: flex-end;
+}
+
+
+/*::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}*/
+
+
+
+.loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.tab {
+    overflow-y: hidden;
+
+    th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+        padding: 5px;
+    }
+}
+
+
+.benef-detail {
+    //background-color: #178cd61a;
+    background-color: #f1f3f8;
+    border-radius: 5px;
+    padding-bottom: 14px;
+}
+
+
+.tab {
+
+    //width: 100%;
+
+    /*th.mat-header-cell {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        //width: 3em;
+    }*/
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    ::ng-deep .mat-sort-header-content {
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    th.text-align-left,th.text-align-left .mat-sort-header-button {
+        text-align: left !important;
+    }
+
+    th.align-left .mat-sort-header-container {
+        justify-content: flex-start;
+    }
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+      }
+    
+      ::ng-deep .mat-sort-header-button {
+        text-align: left;
+      }
+    
+      th.text-align-left,
+      th.text-align-left .mat-sort-header-button {
+        text-align: left !important;
+      }
+    
+      th.align-left .mat-sort-header-container {
+        justify-content: flex-start;
+      }
+
+}
+
+th.text-align-left,th.text-align-left .mat-sort-header-button {
+    text-align: left !important;
+}
+
+th.align-left .mat-sort-header-container {
+    justify-content: flex-start;
+}
+
+th.text-align-left,
+th.text-align-left .mat-sort-header-button {
+  text-align: left !important;
+}
+
+th.align-left .mat-sort-header-container {
+  justify-content: flex-start;
+}
+
+
+
+.download-button-component {
+    .download-button-container {
+        display: flex;
+        align-items: center;
+
+        .download-icon {
+            color: white;
+            padding-left: 9px;
+        }
+    }
+    &:hover {
+        .download-button-container {
+            display: flex;
+            align-items: center;
+
+            .download-icon {
+                color: blue;
+                padding-left: 9px;
+            }
+        }
+    }
+    &:disabled {
+        .download-button-container {
+            display: flex;
+            align-items: center;
+
+            .download-icon {
+                color: rgba(0,0,0,.26);
+                padding-left: 9px;
+            }
+        }
+    }
+}

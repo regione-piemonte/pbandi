@@ -1,0 +1,50 @@
+
+    <div class="dialog-header">
+        <h3 class="bold-text">Storico richieste</h3>
+    </div>
+    
+    <p *ngIf="!data.storicoRichiesta || !data.storicoRichiesta.length">Nessun elemento da visualizzare.</p>
+    <table mat-table [dataSource]="data.storicoRichiesta" class="tableDoc"
+        [ngClass]="{'displayNone':!data.storicoRichiesta || !data.storicoRichiesta.length}">
+
+        <ng-container matColumnDef="desc_tipo_comunicazione">
+            <th mat-header-cell *matHeaderCellDef> Tipo comunicazione </th>
+            <td mat-cell *matCellDef="let element"> {{element.desc_tipo_comunicazione}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="destinatario_mittente">
+            <th mat-header-cell *matHeaderCellDef> Destinatario/Mittente </th>
+            <td mat-cell *matCellDef="let element"> {{element.destinatario_mittente}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cognome">
+            <th mat-header-cell *matHeaderCellDef> Operatore </th>
+            <td mat-cell *matCellDef="let element"> {{element.cognome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dt_comunicazione_esterna">
+            <th mat-header-cell *matHeaderCellDef> Data comunicazione </th>
+            <td mat-cell *matCellDef="let element"> {{element.dt_comunicazione_esterna}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="numero_protocollo">
+            <th mat-header-cell *matHeaderCellDef> Numero protocollo </th>
+            <td mat-cell *matCellDef="let element"> {{element.numero_protocollo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivazione">
+            <th mat-header-cell *matHeaderCellDef> Motivazione </th>
+            <td mat-cell *matCellDef="let element"> {{element.motivazione}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="data.colonne"></tr>
+        <tr mat-row *matRowDef="let row; columns: data.colonne;"></tr>
+    </table>
+
+
+
+      <div class="end">
+        <button class="ok-button" type="button" class="button-style-2" mat-button mat-dialog-close>
+        CHIUDI
+        </button>
+      </div>
+    

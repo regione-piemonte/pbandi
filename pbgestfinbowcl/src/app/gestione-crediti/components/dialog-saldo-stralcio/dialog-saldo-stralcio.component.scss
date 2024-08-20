@@ -1,0 +1,98 @@
+.container {
+    border: 1px solid black;
+  }
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: #f5f5f5;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  .text-inside-grid {
+    position: absolute;
+    left: 5px;
+  }
+  
+  .mat-card-header {
+    //background-color: #d7d7d7 !important;
+    background-color: rgb(192 227 251) !important;
+    padding: 0px !important;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+  
+  .padding0 {
+    padding: 0 !important;
+  }
+  
+  .mat-card-content {
+    //padding:5px !important;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 0px;
+  }
+  
+  .cardtitle {
+    margin: 0 0 0px !important;
+  }
+  
+  .mat-card-title {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  
+  .mat-card-actions {
+    padding-bottom: 10px !important;
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+  }
+  
+  .scroll {
+    overflow: auto;
+    height: 332px;
+    border: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #d7d7d7;
+  }
+  .detailBoxRow {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    background-color: #e0e0e0;
+  }
+  
+  .loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  

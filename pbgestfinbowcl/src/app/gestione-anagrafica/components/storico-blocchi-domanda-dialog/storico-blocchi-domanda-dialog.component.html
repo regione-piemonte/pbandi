@@ -1,0 +1,62 @@
+<div class="page">
+  <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+  <div class="title">
+    <div class="reportingContainerUp">
+      <div class="titleBar">
+        <h3 style="font-weight: bold;">Storico blocchi domanda {{numeroDomanda}}</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div mat-dialog-content class="content">
+
+    <div *ngIf="!isBlocchi">
+      <mat-divider [inset]="true"></mat-divider>
+      Nessun blocco storico presente
+      <mat-divider [inset]="true"></mat-divider>
+    </div>
+
+    <div *ngIf="isBlocchi">
+
+      <table mat-table [dataSource]="listaStoricoBlcocchi" style="width: 100%;">
+
+        <!-- Data blocco -->
+        <ng-container matColumnDef="dataBlocco">
+          <th mat-header-cell *matHeaderCellDef> <b> Data blocco </b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.dataInserimentoBlocco|date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+
+        <mat-divider [inset]="true"></mat-divider>
+
+        <!-- Causale -->
+        <ng-container matColumnDef="causale">
+          <th mat-header-cell *matHeaderCellDef> <b> Causale blocco</b> </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.descCausaleBlocco}}</td>
+        </ng-container>
+
+        <mat-divider [inset]="true"></mat-divider>
+
+        <!-- Data sblocco -->
+        <ng-container matColumnDef="dataSblocco">
+          <th mat-header-cell *matHeaderCellDef> <b> Data sblocco </b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.dataInserimentoSblocco|date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+        
+        <!-- istruttore -->
+        <ng-container matColumnDef="istruttore">
+          <th mat-header-cell *matHeaderCellDef> <b> Istruttore</b> </th>
+          <td mat-cell *matCellDef="let element"> {{ element.cognome+ " "+ element.nome}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsBlocchi"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsBlocchi;"></tr>
+      </table>
+    </div>
+  </div>
+  <div>
+    <button mat-button class="button-style-1" mat-dialog-close>CHIUDI</button>
+  </div>
+</div>

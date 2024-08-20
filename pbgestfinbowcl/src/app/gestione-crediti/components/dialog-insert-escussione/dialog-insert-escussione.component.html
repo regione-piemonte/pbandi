@@ -1,0 +1,239 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">{{titolo}}</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <div mat-dialog-content *ngIf="!isLoading">
+        <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <mat-card class="messageError" *ngIf="isTooMuchImporto">
+        <mat-card-content class="messageErrorContent">
+            <p>Attenzione: l'Importo approvato è superiore al massimo escutibile.</p>
+        </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="messageError" *ngIf="impRichiestoError">
+        <mat-card-content class="messageErrorContent">
+            <p>Attenzione: l'Importo richiesto è superiore al massimo escutibile.</p>
+        </mat-card-content>
+    </mat-card>
+
+    <div class="content"*ngIf="errore === true">
+        <mat-card-content class="messageError">
+        <p >ERRORE</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+    
+    <div class="content" *ngIf="errore === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+
+    <form [formGroup]="formEscussione">
+        <table class="fullWidth">
+            <tr>
+                <div class="flecs">
+                    <mat-form-field appearance="standard" class="foofPerc">
+                        <mat-label>Data ricev. rich. escussione</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="dtRichEscussione" class="datepicker" [max]="today" disabled required>
+                        <button mat-button mat-icon-button matSuffix
+                            *ngIf="formEscussione.get('dtRichEscussione').value"
+                            (click)="formEscussione.get('dtRichEscussione').setValue(null)" class="icons">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard" class="foofPerc">
+                        <mat-label>N. protocollo rich.</mat-label>
+                        <input matInput type="text" formControlName="numProtocolloRich">
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div class="flecs">
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Tipo di escussione</mat-label>
+                        <mat-select type="text" formControlName="descTipoEscussione" required>
+                            <mat-option *ngFor="let ele of infoTipiEscussione" [value]="ele">
+                                {{ele}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div class="flecs">
+                    <mat-form-field appearance="standard" class="foofPerc">
+                        <mat-label>Stato escussione</mat-label> 
+                        <mat-select type="text" formControlName="descStatoEscussione" required>
+                            <mat-option  readonly disabled>
+                                Attuale : {{selezionato}} 
+                            </mat-option>
+                            <mat-option *ngFor="let ele of infoStatiEscussione" [value]="ele">
+                                {{ele}} 
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <mat-form-field appearance="standard" class="foofPerc">
+                        <mat-label>Data stato</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="dtInizioValidita" class="datepicker" [max]="today" disabled required>
+                        <button mat-button mat-icon-button matSuffix
+                            *ngIf="formEscussione.get('dtInizioValidita').value"
+                            (click)="formEscussione.get('dtInizioValidita').setValue(null)" class="icons">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div class="flecs">
+                    <mat-form-field *ngIf="stepEscussione == 2 || stepEscussione == 4 || stepEscussione == 1" appearance="standard" class="foofPerc">
+                        <mat-label>Data notifica</mat-label>
+                        <input matInput style="background-color: rgb(238, 238, 238); border-radius: 5px" formControlName="dtNotifica" class="datepicker" [max]="today" readonly>
+                        <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="stepEscussione == 3 || stepEscussione == 5 || stepEscussione == 6" appearance="standard" class="foofPerc">
+                        <mat-label>Data notifica</mat-label>
+                        <input matInput [matDatepicker]="picker3" formControlName="dtNotifica" class="datepicker" [max]="today" disabled>
+                        <button mat-button mat-icon-button matSuffix
+                            *ngIf="formEscussione.get('dtNotifica').value"
+                            (click)="formEscussione.get('dtNotifica').setValue(null)" class="icons">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+
+
+
+
+
+                    <mat-form-field appearance="standard" class="foofPerc">
+                        <mat-label>N. protocollo notif.</mat-label>
+                        <input matInput type="text" formControlName="numProtocolloNotif">
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div class="flecs">
+                    
+                    <mat-form-field appearance="standard" class="foofPerc" *ngIf="titolo == 'Inserisci nuova escussione'">
+                        <mat-label>Importo richiesto</mat-label>
+                        <input matInput type="text" formControlName="impRichiesto">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="standard" class="foofPerc" readonly *ngIf="titolo != 'Inserisci nuova escussione'">
+                        <mat-label>Importo richiesto</mat-label>
+                        <input matInput type="text" formControlName="impRichiesto" style="background-color: rgb(238, 238, 238); border-radius: 5px" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="stepEscussione == 0 || stepEscussione == 1 || stepEscussione == 2 || stepEscussione == 3 || stepEscussione == 4 || stepEscussione == 6"
+                     appearance="standard" class="foofPerc">
+                        <mat-label>Importo approvato</mat-label>
+                        <input matInput style="background-color: rgb(238, 238, 238); border-radius: 5px" type="text"
+                            formControlName="impApprovato" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="stepEscussione == 5" appearance="standard" class="foofPerc">
+                        <mat-label>Importo approvato</mat-label>
+                        <input matInput type="text" formControlName="impApprovato" disabled >
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div>
+                    <mat-form-field *ngIf="stepEscussione == 0 || stepEscussione == 1 || stepEscussione == 2 || stepEscussione == 3 || stepEscussione == 4 || stepEscussione == 6"
+                    appearance="standard" class="fullWidth">
+                        <mat-label>Causale bonifico</mat-label>
+                        <input matInput style="background-color: rgb(238, 238, 238); border-radius: 5px" type="text"
+                            formControlName="causaleBonifico" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="stepEscussione == 5"
+                    appearance="standard" class="fullWidth">
+                        <mat-label>Causale bonifico</mat-label>
+                        <input matInput type="text" formControlName="causaleBonifico">
+                    </mat-form-field>
+                </div>
+            </tr>
+            <tr>
+                <div>
+
+                    <mat-form-field *ngIf="stepEscussione == 0 || stepEscussione == 1 || stepEscussione == 2 || stepEscussione == 3 || stepEscussione == 4 || stepEscussione == 6"
+                    appearance="standard" class="fullWidth">
+                        <mat-label>IBAN banca beneficiaria</mat-label>
+                        <input matInput style="background-color: rgb(238, 238, 238); border-radius: 5px" type="text"
+                            formControlName="ibanBonifico" readonly>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field *ngIf="stepEscussione == 5"
+                    appearance="standard" class="foofPerc">
+                        <mat-label>IBAN banca beneficiaria</mat-label>
+                        <input matInput  type="text" formControlName="ibanBonifico">
+                    </mat-form-field> -->
+
+                    <mat-form-field *ngIf="stepEscussione == 5" appearance="standard" class="fullWidth">
+                        <mat-label>IBAN banca beneficiaria</mat-label>
+                        <input  matInput type="text" formControlName="ibanBonifico" [matAutocomplete]="auto1"
+                          (input)="getBancaSuggestion($event.target.value)" >
+                        <mat-autocomplete  #auto1="matAutocomplete">
+                          <mat-option  *ngFor="let option of listaBanche" [value]="option.iban" matTooltip="selezionare iban" matTooltipPosition="above"
+                          (click)="getBanca(option.banca,option.idBanca)">
+                            {{option?.iban}}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="ibanBonifico?.invalid">Campo obbligatorio</mat-error>
+                    </mat-form-field>
+
+
+
+
+
+                    <mat-form-field *ngIf="stepEscussione == 0 || stepEscussione == 1 || stepEscussione == 2 || stepEscussione == 3 || stepEscussione == 4 || stepEscussione == 6"
+                    appearance="standard" class="fullWidth">
+                        <mat-label>Denominazione banca</mat-label>
+                        <input matInput type="text" style="background-color: rgb(238, 238, 238); border-radius: 5px;"
+                            formControlName="descBanca" readonly>
+                    </mat-form-field>
+
+
+                    <mat-form-field *ngIf="stepEscussione == 5" appearance="standard" class="fullWidth">
+                        <mat-label>Denominazione banca</mat-label>
+                        <input matInput type="text" formControlName="descBanca" readonly>
+                        
+                    </mat-form-field>
+
+                </div>
+            </tr>
+            <tr>
+                <div>
+                    <mat-form-field appearance="standard" class="fullWidth">
+                        <mat-label>Note</mat-label>
+                        <textarea matInput type="text" formControlName="note"></textarea>
+                    </mat-form-field>
+                </div>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="onConfirmClick()" [disabled]="isLoading">CONFERMA</button>
+</div>

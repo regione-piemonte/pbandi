@@ -1,0 +1,79 @@
+/*
+ * Copyright Regione Piemonte - 2024 
+ * SPDX-License-Identifier: EUPL-1.2 
+*/
+
+export interface SoggettoGiuridicoIndipendenteDomanda {
+    cap?: any;
+    capSociale?: any;
+    cfSoggetto?: string;
+    codAteco?: any;
+    codUniIpa?: any;
+    codiceFondo?: any;
+    codiceProgetto?: any;
+    descAteco?: any;
+    descComune?: any;
+    descFormaGiur?: string;
+    descIndirizzo?: any;
+    descNazione?: any;
+    descPec?: any;
+    descProvincia?: any;
+    descProvinciaIscriz?: string;
+    descRegione?: any;
+    descSezioneSpeciale?: any;
+    descStatoAttivita?: any;
+    descStatoDomanda?: any;
+    descTipoAnagrafica?: any;
+    descTipoSoggCorr?: string;
+    descTipoSoggetto?: any;
+    dtCostituzione?: any;
+    dtFineVal?: any;
+    dtIscrizione?: any;
+    dtInizioAttEsito?: any;
+    dtInizioVal?: any;
+    dtInizioValSede?: any;
+    dtUltimoEseChiuso?: any;
+    dtValEsito?: any;
+    flagIscrizione?: any;
+    flagPubblicoPrivato?: number;
+    flagRatingLeg?: any;
+    idAttAteco?: number;
+    idAttIuc?: any;
+    idClassEnte?: any;
+    idComune?: number;
+    idDimensioneImpresa?: any;
+    idEnteGiuridico?: number;
+    idFormaGiuridica?: number;
+    idIndirizzo?: number;
+    idIscrizione?: number;
+    idNazione?: number;
+    idProvincia?: number;
+    idProvinciaIscrizione?: number;
+    idRegione?: number;
+    idSede?: number;
+    idSezioneSpeciale?: number;
+    idSoggetto?: number;
+    idStatoAtt?: number;
+    idTipoIscrizione?: number;
+    idTipoSogg?: any;
+    idTipoSoggCorr?: number;
+    idUtenteAgg?: any;
+    idUtenteIns?: any;
+    numIscrizione?: any;
+    numeroDomanda?: any;
+    pIva?: string;
+    periodoScadEse?: any;
+    quotaPartecipazione?: any;
+    ragSoc?: string;
+    ruolo?: string;
+    statoDomanda?: any;
+    statoProgetto?: any;
+    idEnteSezione?: number;
+    progSoggDomanda?: string;
+    progSoggProgetto?: string;
+    datiAnagrafici?: boolean;
+    sedeLegale?: boolean;
+    attivitaEconomica?: boolean;
+    datiIscrizione?: boolean;
+    sezioneAppartenenza?: boolean;
+}

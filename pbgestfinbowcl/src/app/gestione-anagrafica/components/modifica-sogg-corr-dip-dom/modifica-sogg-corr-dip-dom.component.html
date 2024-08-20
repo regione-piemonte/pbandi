@@ -1,0 +1,527 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <!-- <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi> -->
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goBack()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna ai soggetti correlati</span>
+            </button>
+        </div>
+        <!-- <div class="reportingContainerUp">
+            <div class="spaceBetween">
+                <h2>Anagrafica beneficiario</h2>  
+                <p> <b>NAG:</b> {{idSoggettoCorr}} </p> 
+                <p> <b>Tipo Soggetto:</b> {{tipoSoggettoCorr}} </p>
+            </div>
+        </div> -->
+        <div class="reportingContainerUp">
+            <div class="titleBar">
+              <h2>Anagrafica beneficiario</h2>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <span>
+                        <table class="content-table">
+                            <tr>
+                                <td>NAG: <b>{{idSoggettoCorr}}</b></td>
+                            </tr>
+                            <tr>
+                              <td>Tipo Soggetto: <b>{{tipoSoggettoCorr}}</b></td>
+                          </tr>
+                        </table>
+                    </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<div class="content" *ngIf="isEnteGiuridico">
+    <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+            <mat-divider class="divider" [inset]="true"></mat-divider>
+            <mat-tab-group mat-align-tabs="start">
+                <mat-tab label="DATI GENERALI">
+                    <div class="content" style="margin-top: 2em;">
+                    <div>
+                        <h3>Dati anagrafici</h3>
+                        <div>
+                            <form>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Ragione sociale</mat-label>
+                                        <input type="text" matInput [(ngModel)]="ragSoc" name="ragSociale" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="margin-left: 30px;">
+                                        <mat-label>Forma giuridica</mat-label>
+                                        <input matInput type="text" [(ngModel)]="descFormaGiur" name="formaGiuridica" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-radio-group aria-label="Select an option" [(ngModel)]="flagPubblicoPrivato"
+                                            name="flagPubblicoPrivato">
+                                            <mat-radio-button value="2">Pubblico</mat-radio-button>
+                                            <mat-radio-button value="1">Privato</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <mat-form-field class="col" style="margin-left: 10px;">
+                                        <mat-label>Codice UNI IPA</mat-label>
+                                        <input type="text" matInput [(ngModel)]="codUniIpa" name="codUniIpa" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="margin-left: 10px;">
+                                        <mat-label>Ruolo</mat-label>
+                                        <input matInput type="text" [(ngModel)]="ruoloEG" name="descTipoAnagrafica" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Codice Fiscale</mat-label>
+                                        <input type="text" matInput [(ngModel)]="cfSoggetto" name="codFisc" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="margin-left: 10px;">
+                                        <mat-label>Data costituzione</mat-label>
+                                        <input type="text" matInput [(ngModel)]="dtCostituzione"
+                                            name="dataCostituzone" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="margin-left: 10px;">
+                                        <mat-label>Pec</mat-label>
+                                        <input type="text" matInput [(ngModel)]="pec" name="pec" />
+                                    </mat-form-field>
+                                </div>
+
+                                <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                <h3>Sede legale</h3>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Indirizzo</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descIndirizzo" name="indirizzoSede" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="margin-left: 30px;">
+                                        <mat-label>Partita IVA</mat-label>
+                                        <input type="text" matInput [(ngModel)]="pIva" name="piva" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Comune</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descComune" name="comune" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Provincia</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descProvincia" name="prov" />
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col">
+                                        <mat-label> Provincia </mat-label>
+                                        <input matInput type="text" [matAutocomplete]="auto6" [(ngModel)]="provinciaPF"
+                                          (input)="suggestPF(6)" name="provinciaPF">
+                                        <mat-autocomplete #auto6="matAutocomplete">
+                                          <mat-option *ngFor="let attivita of provincieResPF" [value]="attivita.descAttivita">
+                                            {{attivita.descAttivita}}
+                                          </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="">Raggiunto il
+                                          limite massimo di caratteri</mat-error>
+                                    </mat-form-field>
+                                    
+                                    <mat-form-field class="col">
+                                        <mat-label>CAP</mat-label>
+                                        <input type="text" matInput [(ngModel)]="cap" name="cap" />
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="col">
+                                        <mat-label>Regione</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descRegione" name="regione" />
+                                    </mat-form-field> -->
+                                    <mat-form-field class="col">
+                                        <mat-label>Regione</mat-label>
+                                        <mat-select matInput formControlName="idRegione">
+                                            <mat-option *ngFor="let regione of regioni" [value]="regione.idRegione">
+                                                {{regione.descRegione}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="col">
+                                        <mat-label>Nazione</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descNazione" name="nazione" />
+                                    </mat-form-field> -->
+                                    <mat-form-field class="col">
+                                        <mat-label>Nazione</mat-label>
+                                        <mat-select matInput  [(ngModel)]="idNazione" name="nazione">
+                                            <mat-option *ngFor="let nazione of nazioni" [value]="nazione.idNazione">
+                                                {{nazione.descNazione}}
+                                            </mat-option>
+                                        </mat-select>
+                                     </mat-form-field>
+                                </div>
+
+                                <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                <h3>Attività economica</h3>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Codice Ateco</mat-label>
+                                        <input type="text" matInput [(ngModel)]="codAteco" name="codAteco" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col" style="width: 400px;">
+                                        <mat-label>Descrizione Attività</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descAteco" name="descAteco" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-label>Rating di legalità</mat-label>
+                                        <mat-radio-group aria-label="Select an option" [(ngModel)]="flagRatingLeg"
+                                            name="flagRatingLeg">
+                                            <mat-radio-button value="S">Si</mat-radio-button>
+                                            <mat-radio-button value="N" style="margin-left: 10px;">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Stato attività</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descStatoAttivita"
+                                            name="descStatoAttivita" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Data inizio attività</mat-label>
+                                        <input type="text" matInput [(ngModel)]="dtInizioAttEsito"
+                                            name="dtinizioAttivita" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Periodo chiusura esercizio</mat-label>
+                                        <input type="text" matInput [(ngModel)]="periodoScadEse" name="period" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Data ultimo esercizio chiuso</mat-label>
+                                        <input type="text" matInput [(ngModel)]="dtUltimoEseChiuso" name="dtultimo" />
+                                    </mat-form-field>
+                                </div>
+
+                                <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                <h3>Dati iscrizione</h3>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Numero REA</mat-label>
+                                        <input type="text" matInput [(ngModel)]="numIscrizione" name="numIscrizione" />
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Data iscrizione</mat-label>
+                                        <input matInput [matDatepicker]="picker2" [(ngModel)]="dtIiscrizione"
+                                            name="dtIscrizione" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                    <mat-form-field class="col">
+                                        <mat-label>Provincia iscrizione</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descProvinciaIscriz"
+                                            name="descProvinciaIscriz" />
+                                    </mat-form-field>
+                                </div>
+
+                                <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                <h3>Sezione di appartenenza</h3>
+
+                                <div class="row">
+                                    <mat-form-field class="col">
+                                        <mat-label>Sezione speciale</mat-label>
+                                        <input type="text" matInput [(ngModel)]="descSezioneSpeciale"
+                                            name="descSezioneSpeciale" />
+                                    </mat-form-field>
+                                </div>
+                            </form>
+                        </div>
+                        <mat-divider class="divider" [inset]="true"></mat-divider>
+                    </div>
+
+                    <div class="spaceBetween">
+                        <button mat-raised-button class="button-style-1" (click)="goBack()">
+                            ANNULA
+                        </button>
+                        <button class="button-style-2" mat-button (click)="salvaModifiche()">
+                            SALVA
+                        </button>
+                    </div>
+                  </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+</div>
+<!--                                                ANAGRAFICA PERSONA FISICA                                           -->
+<div *ngIf="!isEnteGiuridico">
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="savePF">
+                    <mat-card-content class="messageSuccessContent">
+                        <p>Salvataggio avvenuto con successo!</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="DATI GENERALI">
+                        <div class="content" style="margin-top: 2em;">
+                        <div>
+                            <div class="titleBar">
+                                <h3>Dati anagrafici</h3>
+                            </div>
+                            <div>
+                                <form>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Cognome</mat-label>
+                                            <input type="text" matInput [(ngModel)]="cognome" name="cognome" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col" style="margin-left: auto;">
+                                            <mat-label>Nome</mat-label>
+                                            <input matInput type="text" [(ngModel)]="nome" name="nome" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field class="col" appearance="standard">
+                                            <mat-label>Ruolo</mat-label>
+                                            <mat-select [(ngModel)]="idRuoloPF" name="ruoloDTO"
+                                                [formControl]="ruoloPFControl" required>
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let attivita of listaRuoli"
+                                                    [value]="attivita.idAttivita">
+                                                    {{attivita.descAttivita}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="ruoloPFControl.hasError('required')">Dati formalmente errati o non congrui
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Ruolo</mat-label>
+                                            <input type="text" matInput [(ngModel)]="ruoloPF" name="tipoSoggettoPF" />
+                                        </mat-form-field> -->
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput [(ngModel)]="codiceFiscale"
+                                                name="codiceFiscale"  maxlength="16" pattern="^[a-zA-Z0-9_.-]*$"/>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Data di nascita</mat-label>
+                                            <input matInput [matDatepicker]="picker" [(ngModel)]="dataDiNascita"
+                                                name="dataDiNascita" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+
+
+
+                                    <div class="row">
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Comune di nascita</mat-label>
+                                            <input type="text" matInput [(ngModel)]="comuneDiNascita"
+                                                name="comuneDiNascita" />
+                                        </mat-form-field> -->
+
+
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune di nascita </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto1" [(ngModel)]="comuneDiNascita"
+                                              (input)="suggestPF(1)" name="idComuneNascitaPF">
+                                            <mat-autocomplete #auto1="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of comuniNascPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Provincia di nascita</mat-label>
+                                            <input type="text" matInput [(ngModel)]="provinciaDiNascita"
+                                                name="provinciaDiNascita" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Provincia di nascita </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto2" [(ngModel)]="provinciaDiNascita"
+                                              (input)="suggestPF(2)" name="idComuneNascitaPF">
+                                            <mat-autocomplete #auto2="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of listaProvinceNascitaPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+
+
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Regione di nascita</mat-label>
+                                            <input type="text" matInput [(ngModel)]="regioneDiNascita"
+                                                name="regioneDiNascita" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Regione di nascita </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto3" [(ngModel)]="regioneDiNascita"
+                                              (input)="suggestPF(3)" name="regioneNascitaPF">
+                                            <mat-autocomplete #auto3="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of regioniNascitaPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Nazione di nascita</mat-label>
+                                            <input type="text" matInput [(ngModel)]="nazioneDiNascita"
+                                                name="nazioneDiNascita" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Nazione di nascita </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto4" [(ngModel)]="nazioneDiNascita"
+                                              (input)="suggestPF(4)" name="nazNascitaPF">
+                                            <mat-autocomplete #auto4="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of nazioniNascitaPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                              
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Residenza</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col" style="width: 400px;">
+                                            <mat-label>Indirizzo</mat-label>
+                                            <input type="text" matInput [(ngModel)]="indirizzoPF" name="indirizzoPF" />
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field class="col" style="margin-left: 50px;">
+                                            <mat-label>Comune</mat-label>
+                                            <input type="text" matInput [(ngModel)]="comunePF" name="comunePF" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Comune  </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto5" [(ngModel)]="comunePF"
+                                              (input)="suggestPF(5)" name="comuneResPF">
+                                            <mat-autocomplete #auto5="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of comuniResPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Provincia</mat-label>
+                                            <input type="text" matInput [(ngModel)]="provinciaPF" name="provinciaPF" />
+                                        </mat-form-field> -->
+                                        <mat-form-field class="col">
+                                            <mat-label> Provincia </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto6" [(ngModel)]="provinciaPF"
+                                              (input)="suggestPF(6)" name="provinciaPF">
+                                            <mat-autocomplete #auto6="matAutocomplete">
+                                              <mat-option *ngFor="let attivita of provincieResPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP</mat-label>
+                                            <input type="text" matInput [(ngModel)]="capPF" name="capPF" />
+                                        </mat-form-field>
+
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Regione</mat-label>
+                                            <input type="text" matInput [(ngModel)]="regionePF" name="regionePF" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Regione  </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto7" [(ngModel)]="regionePF"
+                                              (input)="suggestPF(7)" name="regionePF">
+                                            <mat-autocomplete #auto7="matAutocomplete">
+                                              <mat-option *ngFor="let attivita regioniResPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field class="col">
+                                            <mat-label>Nazione</mat-label>
+                                            <input type="text" matInput [(ngModel)]="nazionePF" name="nazionePF" />
+                                        </mat-form-field> -->
+
+                                        <mat-form-field class="col">
+                                            <mat-label> Nazione  </mat-label>
+                                            <input matInput type="text" [matAutocomplete]="auto8" [(ngModel)]="nazionePF"
+                                              (input)="suggestPF(8)" name="nazionePF">
+                                            <mat-autocomplete #auto8="matAutocomplete">
+                                              <mat-option *ngFor="let attivita nazioniResPF" [value]="attivita.descAttivita">
+                                                {{attivita.descAttivita}}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="">Raggiunto il
+                                              limite massimo di caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="spaceBetween">
+
+                                <button mat-raised-button class="button-style-1" (click)="goBack()">
+                                    ANNULA
+                                </button>
+                                <button mat-raised-button class="button-style-2" (click)="salvaModifichePF()">
+                                    SALVA
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

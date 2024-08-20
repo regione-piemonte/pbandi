@@ -1,0 +1,314 @@
+<mat-spinner-pbandi class="page" *ngIf="spinner"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+  <form [formGroup]="myForm">
+    <div class="title">
+      <div class="backContainer">
+        <button (click)="goBack()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna indietro</span>
+        </button>
+      </div>
+
+      <h2>Dettaglio distinta</h2>
+
+      <div [hidden]="!error">
+        <div  class="content width-100-perc margin-0 max-width-89-perc">
+          <mat-card  class="mat-card mat-focus-indicator messageError"
+            >
+            <mat-card-content  class="mat-card-content messageWarningContent"
+              >
+              <h3  class="bold-text margin-bottom-5">
+                ATTENZIONE!
+              </h3>
+              <p  id="ellipsisP"
+                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                {{messaggioErrore}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <div [hidden]="!success">
+        <div  class="content width-100-perc margin-0 max-width-89-perc">
+          <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+            >
+            <mat-card-content  class="mat-card-content messageWarningContent"
+              >
+              <h3  class="bold-text margin-bottom-5">
+                SUCCESSO!
+              </h3>
+              <p  id="ellipsisP"
+                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                {{messaggioSuccesso}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content">
+
+      <!-- TESTATA INFORMATIVA -->
+      <mat-card class="mat-elevation-z2 marginTop20">
+        <mat-card-content class="d-flex fullWidth">
+
+          <div class="fullWidth margin-top-15">
+            Bando: <b>{{titoloBando}}</b>
+          </div>
+          <div class="fullWidth marginTop20">
+            Agevolazione: <b>{{descModalitaAgevolazione}}</b>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="elem1 fullWidth" appearance="standard">
+              <mat-label>Descrizione</mat-label>
+              <input matInput type="text" formControlName="descrizione">
+              <!--<mat-error *ngIf="hasError('codiceFiscale', 'maxlength')">Raggiunto il limite massimo di caratteri</mat-error>-->
+            </mat-form-field>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+
+
+      <!-- BANCA TESORIERA -->
+      <mat-card class="mat-elevation-z2 marginTop20">
+        <mat-card-content>
+
+          <!--
+          <div>
+            <mat-form-field class="elem1" appearance="standard">
+              <mat-label>Banca tesoriera</mat-label>
+              <input matInput hidden="true" formControlName="bancaTesoriera" style="font-weight: normal;">
+              {{this.bancaTesoriera}}
+            </mat-form-field>
+          </div>
+          -->
+
+          <div class="fullWidth d-flex">
+            <mat-form-field class="elem1" appearance="standard" style="width: 50%;">
+              <mat-label>Banca tesoriera</mat-label>
+              <mat-select matInput formControlName="bancaTesoriera" [compareWith]="compareEstremiBancari">
+                <mat-option *ngFor="let element of listaBancaTesoriera" [value]="element">
+                  {{element.iban}}
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ALLEGATI -->
+      <mat-card class="mat-elevation-z2 marginTop20">
+        <mat-card-content>
+          <div class="fullWidth d-flex">
+            <h3>Allegati</h3>
+          </div>
+
+          <div class="d-grid-2-col" *ngFor="let element of progettoAllegatoVOList">
+            <div class="fullWidth">
+              <h4>Codice progetto: {{element.codiceVisualizzatoProgetto}}</h4>
+
+              <div class="row" *ngIf="!(element.letteraAccompagnatoria || !isBozza)">
+                  <div class="col">
+                      <button [disabled]="!myForm.enabled" mat-button class="button-style-1" (click)="uploadFile.click()">AGGIUNGI LETTERA ACCOMPAGNATORIA</button>
+                      <input type="file" [hidden]="true" #uploadFile id="uploadFile" name="uploadFile" [formControlName]="'letteraAccompagnatoria'+element.codiceVisualizzatoProgetto"
+                          (change)="handleFileLetteraAccompagnatoria(element.codiceVisualizzatoProgetto, $event.target.files)" />
+                  </div>
+              </div>
+              <div>
+                  <ul>
+      
+                      <li [hidden]="!element.letteraAccompagnatoria">
+                          <div>
+                              <p><span>Lettera accompagnatoria: 
+                                <span class="bold-text">{{element.letteraAccompagnatoria?.name}}</span>
+                                <span *ngIf="element.letteraAccompagnatoria?.size">- {{element.letteraAccompagnatoria?.size}} bytes</span> 
+                              </span></p>
+                              <p><span>Flag visibilità: <input [checked]="element.visibilitaLettera" [disabled]="!myForm.enabled" type="checkbox" (click)="toggleVisibilita(element, 1)"></span>
+                              <button [hidden]="!isBozza" [disabled]="!myForm.enabled" mat-icon-button class="red-color" matTooltip="Elimina"
+                                  (click)="eliminaLetteraAccompagnatoria(element.codiceVisualizzatoProgetto, uploadFile)">
+                                  <mat-icon>delete</mat-icon>
+                              </button></p>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+
+              <div class="row" *ngIf="!(element.reportValidazione || !isBozza)">
+                  <div class="col">
+                      <button [disabled]="!myForm.enabled" mat-button class="button-style-1" (click)="uploadFile3.click()">AGGIUNGI REPORT VALIDAZIONE</button>
+                      <input type="file" [hidden]="true" #uploadFile3 id="uploadFile3" name="uploadFile3" [formControlName]="'reportValidazione'+element.codiceVisualizzatoProgetto"
+                          (change)="handleFileReportValidazione(element.codiceVisualizzatoProgetto, $event.target.files)" />
+                  </div>
+              </div>
+              <div>
+                  <ul>
+      
+                      <li [hidden]="!element.reportValidazione">
+                          <div>
+                              <p><span>Report validazione: 
+                                <span class="bold-text">{{element.reportValidazione?.name}}</span> 
+                                <span *ngIf="element.reportValidazione?.size">- {{element.reportValidazione?.size}} bytes</span>
+                              </span></p>
+                              <span>Flag visibilità: <input [checked]="element.visibilitaReport" [disabled]="!myForm.enabled" type="checkbox" (click)="toggleVisibilita(element, 2)"></span>
+                              <p><button [hidden]="!isBozza" [disabled]="!myForm.enabled" mat-icon-button class="red-color" matTooltip="Elimina"
+                                  (click)="eliminaReportValidazione(element.codiceVisualizzatoProgetto, uploadFile3)">
+                                  <mat-icon>delete</mat-icon>
+                              </button></p>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+
+              <div class="row" *ngIf="!(element.checklistInterna || !isBozza)">
+                  <div class="col">
+                      <button [disabled]="!myForm.enabled" mat-button class="button-style-1" (click)="uploadFile2.click()">AGGIUNGI CHECKLIST INTERNA</button>
+                      <input type="file" [hidden]="true" #uploadFile2 id="uploadFile2" name="uploadFile2" [formControlName]="'checklistInterna'+element.codiceVisualizzatoProgetto"
+                          (change)="handleFileChecklistInterna(element.codiceVisualizzatoProgetto, $event.target.files)" />
+                  </div>
+              </div>
+              <div>
+                  <ul>
+      
+                      <li [hidden]="!element.checklistInterna">
+                          <div>
+                              <p><span>Checklist interna: 
+                                <span class="bold-text">{{element.checklistInterna?.name}}</span>
+                                <span *ngIf="element.checklistInterna?.size">- {{element.checklistInterna?.size}} bytes</span>
+                              </span></p>
+                              <p><span>Flag visibilità: <input [checked]="element.visibilitaChecklist" [disabled]="!myForm.enabled" type="checkbox" (click)="toggleVisibilita(element, 3)"></span>
+                              <button [hidden]="!isBozza" [disabled]="!myForm.enabled" mat-icon-button class="red-color" matTooltip="Elimina"
+                                  (click)="eliminaChecklistInterna(element.codiceVisualizzatoProgetto, uploadFile2)">
+                                  <mat-icon>delete</mat-icon>
+                              </button></p>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+
+
+      <!-- ELENCO PROPOSTE DI EROGAZIONE -->
+      <mat-card class="mat-elevation-z2 marginTop20">
+        <mat-card-content class="d-flex">
+          <h3>Selezione creazione distinta (pratiche)</h3>
+          <p *ngIf="!listaOggetti || !listaOggetti.length">Non ci sono elementi da visualizzare.</p>
+
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="tab"
+            [ngClass]="{'displayNone': !listaOggetti || !listaOggetti.length }" matSort>
+
+
+            <!-- Progetto Column -->
+            <ng-container matColumnDef="progetto">
+              <th mat-header-cell *matHeaderCellDef>Progetto</th>
+              <td mat-cell *matCellDef="let element">
+                <div matTooltip="Visualizza controlli pre-erogazione" matTooltipPosition="left">
+                  <button (click)="goToElencoDistinte(element)" mat-button style="padding: 0 0px; line-height: 20px"
+                    color="primary" [disabled]="element.verificaPosizione">{{element.codiceVisualizzato
+                    === null ? "-" : element.codiceVisualizzato}}</button>
+                </div>
+
+              </td>
+            </ng-container>
+
+            <!-- Denominazione Column -->
+            <ng-container matColumnDef="denominazione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Denominazione</th>
+              <td mat-cell *matCellDef="let element"> {{element.denominazione === null ? "-" : element.denominazione}}
+              </td>
+            </ng-container>
+
+            <!-- Beneficiario Column -->
+            <ng-container matColumnDef="beneficiario">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Beneficiario</th>
+              <td mat-cell *matCellDef="let element"> {{element.codiceFiscaleSoggetto === null ? "-" :
+                element.codiceFiscaleSoggetto}}
+              </td>
+            </ng-container>
+
+            <!-- Importo lordo Column -->
+            <ng-container matColumnDef="importoLordo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo lordo</th>
+              <td mat-cell *matCellDef="let element"> {{element.importoLordo === null ? "-" : element.importoLordo}}
+              </td>
+            </ng-container>
+
+            <!-- importoIRES Column -->
+            <ng-container matColumnDef="importoIres">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo IRES</th>
+              <td mat-cell *matCellDef="let element"> {{element.importoIres === null ? "-" : element.importoIres}} </td>
+            </ng-container>
+
+            <!-- importoNetto Column -->
+            <ng-container matColumnDef="importoNetto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Importo netto</th>
+              <td mat-cell *matCellDef="let element"> {{element.importoNetto === null ? "-" : element.importoNetto}}
+              </td>
+            </ng-container>
+
+            <!-- Data concessione Column -->
+            <ng-container matColumnDef="dataConcessione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data concessione</th>
+              <td mat-cell *matCellDef="let element"> {{element.dataConcessione === null ? "-" :
+                element.dataConcessione |
+                date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <!-- Data esito DS Column -->
+            <ng-container matColumnDef="dataEsitoDS">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data esito DS</th>
+              <td mat-cell *matCellDef="let element"> {{element.dataEsitoDS === null ? "-" :
+                element.dataEsitoDS |
+                date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <!-- Verifica posizione Column -->
+            <ng-container matColumnDef="verificaPosizione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Verifica posizione</th>
+              <td mat-cell *matCellDef="let element">
+                <mat-icon class="icon_red" *ngIf="element?.verificaPosizione == false">highlight_off</mat-icon>
+                <mat-icon class="icon_green" *ngIf="element.verificaPosizione">check_circle_outline</mat-icon>
+              </td>
+            </ng-container>
+
+            <!-- Flag Finistr Column -->
+            <ng-container matColumnDef="flagFinistr">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Finistr</th>
+              <td mat-cell *matCellDef="let element">
+                {{element.flagFinistr}}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+            [ngClass]="{'displayNone': !listaOggetti || !listaOggetti.length }">
+          </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+  </form>
+  <div class="content" *ngIf="isBozza">
+    <div class="flexEnd">
+      <button mat-raised-button (click)="modifica()" class="button-style-2" style="margin-right: 10px;"
+        *ngIf="!myForm.enabled">MODIFICA</button>
+      <button mat-raised-button (click)="salva()" class="button-style-2" *ngIf="myForm.enabled">SALVA</button>
+      <button mat-raised-button (click)="avviaIter()" class="button-style-2" *ngIf="!myForm.enabled"
+        [disabled]="!verificaPosizioneAll">AVVIA ITER</button>
+    </div>
+  </div>
+
+</div>

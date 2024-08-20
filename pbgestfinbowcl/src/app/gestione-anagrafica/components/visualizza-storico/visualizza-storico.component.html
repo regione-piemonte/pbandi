@@ -1,0 +1,660 @@
+<!-- <mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+ -->
+<div class="page">
+  <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+  <div class="title">
+    <app-torna-indietro [backText]="setBackText"></app-torna-indietro>
+    <!-- <div class="reportingContainerUp">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="titleBar">
+          <h2>Dettaglio storico beneficiario</h2>
+          <p><b>Tipologia soggetto:</b> {{tipoSoggetto}}</p>
+          <p><b>NDG:</b> {{ndg}}</p>
+          <span><b>Identificativo versione:</b> {{idVersione}}</span>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="reportingContainerUp">
+      <div class="titleBar">
+        <h2>Dettaglio storico beneficiario</h2>
+      </div>
+  </div>
+  <div class="content">
+      <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+          <mat-card-content class="padding-left-10">
+              <span>
+                  <table class="content-table">
+                      <tr>
+                          <td>Tipologia soggetto: <b>{{tipoSoggetto}}</b></td>
+                      </tr>
+                      <tr>
+                          <td>NDG: <b>{{ndg}}</b></td>
+                      </tr>
+                      <tr>
+                        <td>Identificativo versione:<b>{{idVersione}}</b></td>
+                    </tr>
+                  </table>
+              </span>
+          </mat-card-content>
+      </mat-card>
+  </div>
+
+    <!-- <div class="reportingContainerUp">
+      <div class="spaceBetween">
+        <h2>Anagrafica beneficiario</h2>
+        <p> <b>NDG:</b> {{ndg}} </p>
+        <p> <b>Identificativo versione:</b> {{idVersione}} </p>
+      </div>
+    </div> -->
+  </div>
+  <!-- <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <mat-divider class="divider" [inset]="true"></mat-divider>
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="DATI GENERALI">
+            <div>
+              <h3>Dati anagrafici</h3>
+              <div>
+                <form [formGroup]="myForm">
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Ragione Sociale</mat-label>
+                      <input type="text" matInput formControlName="ragioneSoc" disabled />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Forma Giuridica</mat-label>
+                      <input matInput type="text" formControlName="formaGiuridica" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-radio-group>
+                      <mat-radio-button [disabled]="true" value="1" class="radio" [checked]="true">Privato
+                      </mat-radio-button>
+                      <mat-radio-button [disabled]="true" value="2" class="radio">Pubblico
+                      </mat-radio-button>
+                    </mat-radio-group>
+                    <mat-form-field class="col">
+                      <mat-label>Codice UNI IPA</mat-label>
+                      <input type="text" matInput formControlName="codiceUniIpa" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Codice Fiscale</mat-label>
+                      <input type="text" matInput formControlName="codiceFiscale" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Ruolo</mat-label>
+                      <input type="text" matInput formControlName="ruolo" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>PEC</mat-label>
+                      <input type="text" matInput formControlName="pec" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="width-data">
+                      <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker"
+                        placeholder="Data costituzione" formControlName="dataCostituzione" [disabled]="true" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                  <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                  <h3>Sede legale</h3>
+
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Indirizzo</mat-label>
+                      <input type="text" matInput formControlName="indirizzo" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Partita IVA</mat-label>
+                      <input type="text" matInput formControlName="partitaIva" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Comune</mat-label>
+                      <input type="text" matInput formControlName="comune" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Provincia</mat-label>
+                      <input type="text" matInput formControlName="provincia" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>CAP</mat-label>
+                      <input type="text" matInput formControlName="cap" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Regione</mat-label>
+                      <input type="text" matInput formControlName="regione" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Nazione</mat-label>
+                      <input type="text" matInput formControlName="nazione" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+
+                  <h3>Attività economica</h3>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Codice ATECO prevalente</mat-label>
+                      <input type="text" matInput formControlName="codiceAteco" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Descrizione attività prevalente</mat-label>
+                      <input type="text" matInput formControlName="descAttivitaPrevalente" [disabled]="true" />
+                    </mat-form-field>
+                    <div class="col">
+                      <mat-label class="radio">Rating di legalità</mat-label>
+                      <mat-radio-group>
+                        <mat-radio-button [disabled]="true" value="1" class="radio" [checked]="true">SI
+                        </mat-radio-button>
+                        <mat-radio-button [disabled]="true" value="2" class="radio">NO
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Stato Attività</mat-label>
+                      <input type="text" matInput formControlName="statoAttivita" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Periodo chiusura esercizio</mat-label>
+                      <input type="text" matInput formControlName="periodoChiusuraEsercizio" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="width-data">
+                      <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker2"
+                        placeholder="Data inizio attività" formControlName="dataInizioAttivita" [disabled]="true" />
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="width-data">
+                      <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker3"
+                        placeholder="Data chiusura esercizio" formControlName="dataChiusuraEsercizio"
+                        [disabled]="true" />
+                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                      <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <h3>Dati iscrizione</h3>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Numero REA</mat-label>
+                      <input type="text" matInput formControlName="numeroRea" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="col">
+                      <mat-label>Provincia iscrizione</mat-label>
+                      <input type="text" matInput formControlName="provinciaIscrizione" [disabled]="true" />
+                    </mat-form-field>
+                    <mat-form-field class="width-data">
+                      <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker4"
+                        placeholder="Data iscrizione" formControlName="dataIscrizione" [disabled]="true" />
+                      <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                      <mat-datepicker #picker4></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                  <h3>Sezione di appartenenza</h3>
+                  <div class="row">
+                    <mat-form-field class="col">
+                      <mat-label>Sezione di appartenenza</mat-label>
+                      <input type="text" matInput formControlName="sezioneDiAppartenenza" [disabled]="true" />
+                    </mat-form-field>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <mat-divider class="divider" [inset]="true"></mat-divider>
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="DATI GENERALI">
+
+            <div class="content">
+              <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                  <mat-divider class="divider" [inset]="true"></mat-divider>
+
+
+                  <form [formGroup]="formSoggetto">
+
+                    <div id="container-form">
+                      <section formGroupName="dati-anagrafici">
+                        <h3>Dati anagrafici</h3>
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <mat-form-field>
+                              <mat-label>Ragione sociale *</mat-label>
+                              <input type="text" matInput formControlName="ragioneSociale" />
+                              <mat-error
+                                *ngIf="formSoggetto.get('dati-anagrafici.ragioneSociale')?.hasError('required')">
+                                Campo obbligatorio
+                              </mat-error>
+                              <mat-error
+                                *ngIf="formSoggetto.get('dati-anagrafici.ragioneSociale')?.hasError('minlength')">
+                                Lunghezza minima 2 caratteri
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col">
+                            <mat-form-field>
+                              <mat-label>Forma giuridica</mat-label>
+                              <mat-select formControlName="formaGiuridica">
+                                <mat-option *ngFor="let elem of formaGiuridicaData" [value]="elem">
+                                  {{ elem.descFormaGiuridica }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col align-self-center">
+                            <div class="d-flex justify-content-baseline">
+                              <div class="cell cell-margin align-self-center">
+                                <mat-radio-group aria-label="Select an option" class="d-flex"
+                                  formControlName="pubblicoPrivatoRadio">
+                                  <mat-radio-button [value]="2">Pubblico</mat-radio-button>
+                                  <mat-radio-button [value]="1">Privato</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error class="font-size-10-5"
+                                  *ngIf="formSoggetto.get('dati-anagrafici.pubblicoPrivatoRadio')?.hasError('required')">
+                                  Campo obbligatorio</mat-error>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field
+                                  *ngIf="formSoggetto.get('dati-anagrafici.pubblicoPrivatoRadio')?.value===2">
+                                  <mat-label>Codice UNI IPA *</mat-label>
+                                  <input type="text" matInput formControlName="codiceUniIpa"
+                                    (keyup)="resetError('dati-anagrafici','codiceUniIpa')" />
+                                  <mat-error
+                                    *ngIf="formSoggetto.get('dati-anagrafici.codiceUniIpa')?.hasError('required')">
+                                    Campo obbligatorio
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                          </div>
+                          <!-- <div class="col">
+                        <mat-form-field>
+                          <mat-label>Ruolo *</mat-label>
+                          <mat-select formControlName="ruolo">
+                            <mat-option *ngFor="let elem of ruoloData" [value]="elem">
+                              {{ elem.descTipoSoggCorr }}
+                            </mat-option>
+                            <mat-error *ngIf="formSoggetto.get('dati-anagrafici.ruolo')?.hasError('required')">
+                              Campo obbligatorio
+                            </mat-error>
+                          </mat-select>
+                        </mat-form-field>
+                      </div> -->
+                        </div>
+
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell cell-margin">
+                                <mat-form-field>
+                                  <mat-label>Codice Fiscale *</mat-label>
+                                  <input type="text" matInput formControlName="codiceFiscale" />
+                                </mat-form-field>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field>
+                                  <input #datePicker matInput [matDatepicker]="myDatepicker"
+                                    formControlName="dtCostituzione" placeholder="Data costituzione">
+                                  <mat-datepicker-toggle matSuffix [for]="myDatepicker">
+                                  </mat-datepicker-toggle>
+                                  <mat-datepicker #myDatepicker></mat-datepicker>
+                                  <mat-error
+                                    *ngIf="formSoggetto.get('dati-anagrafici.dtCostituzione')?.hasError('maggioreToday')">
+                                    La data non deve essere futura
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col">
+                            <mat-form-field>
+                              <mat-label>PEC</mat-label>
+                              <input type="text" matInput formControlName="pec"
+                                matTooltip="Tipo: mionome@pecazienda.it" />
+                              <mat-error *ngIf="formSoggetto.get('dati-anagrafici.pec')?.hasError('notValid')">
+                                Formato non valido
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section formGroupName="sede-legale">
+                        <h3>Sede legale</h3>
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <mat-form-field>
+                              <mat-label>Indirizzo</mat-label>
+                              <input type="text" matInput formControlName="indirizzo" />
+                              <mat-error *ngIf="formSoggetto.get('sede-legale.indirizzo')?.hasError('minlength')">
+                                Lunghezza minima 4 caratteri
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col">
+                            <mat-form-field>
+                              <mat-label>Partita IVA</mat-label>
+                              <input type="text" matInput formControlName="partitaIva" matTooltip="Tipo: 86334519757"
+                                maxlength="11" />
+                              <mat-error *ngIf="formSoggetto.get('sede-legale.partitaIva')?.hasError('minlength')">
+                                Lunghezza richiesta 11 caratteri
+                              </mat-error>
+                              <mat-error *ngIf="formSoggetto.get('sede-legale.partitaIva')?.hasError('onlyNumbers')">
+                                Formato non valido
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell cell-margin">
+                                <mat-form-field>
+                                  <input type="text" wai-aria="Selezionare una nazione" placeholder="Nazione"
+                                    aria-label="Number" matInput formControlName="nazione"
+                                    [matAutocomplete]="autoNazioni" (blur)="check('N')">
+                                  <mat-autocomplete autoActiveFirstOption #autoNazioni="matAutocomplete"
+                                    [displayWith]="displayFnNazioni" (optionSelected)="click($event,'N')">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                      #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsNazioni | async)?.length>4,
+                                      'viewport-1': (filteredOptionsNazioni | async)?.length==1,
+                                      'viewport-2': (filteredOptionsNazioni | async)?.length==2,
+                                      'viewport-3': (filteredOptionsNazioni | async)?.length==3,
+                                      'viewport-4': (filteredOptionsNazioni | async)?.length==4 }">
+                                      <mat-option class="viewport-item"
+                                        *cdkVirtualFor="let option of filteredOptionsNazioni | async" [value]="option">
+                                        {{ option.descNazione }}
+                                      </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                  </mat-autocomplete>
+                                </mat-form-field>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field>
+                                  <input type="text" wai-aria="Selezionare una regione" placeholder="Regione"
+                                    aria-label="Number" matInput formControlName="regione"
+                                    [matAutocomplete]="autoRegioni" (blur)="check('R')">
+                                  <mat-autocomplete autoActiveFirstOption #autoRegioni="matAutocomplete"
+                                    [displayWith]="displayFnRegioni" (optionSelected)="click($event,'R')">
+                                    <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                      #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsRegioni | async)?.length>4,
+                                    'viewport-1': (filteredOptionsRegioni | async)?.length==1,
+                                    'viewport-2': (filteredOptionsRegioni | async)?.length==2,
+                                    'viewport-3': (filteredOptionsRegioni | async)?.length==3,
+                                    'viewport-4': (filteredOptionsRegioni | async)?.length==4 }">
+                                      <mat-option class="viewport-item"
+                                        *cdkVirtualFor="let option of filteredOptionsRegioni | async" [value]="option">
+                                        {{ option.descRegione }}
+                                      </mat-option>
+                                    </cdk-virtual-scroll-viewport>
+                                  </mat-autocomplete>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell-75 cell-margin d-flex justify-content-between">
+                                <div class="cell2">
+                                  <mat-form-field>
+                                    <input type="text" wai-aria="Selezionare una provincia" placeholder="Provincia"
+                                      aria-label="Number" matInput formControlName="provincia"
+                                      [matAutocomplete]="autoProvincia" (blur)="check('P')">
+                                    <mat-autocomplete autoActiveFirstOption #autoProvincia="matAutocomplete"
+                                      [displayWith]="displayFnProvince" (optionSelected)="click($event,'P')">
+                                      <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsProvince | async)?.length>4,
+                                    'viewport-1': (filteredOptionsProvince | async)?.length==1,
+                                    'viewport-2': (filteredOptionsProvince | async)?.length==2,
+                                    'viewport-3': (filteredOptionsProvince | async)?.length==3,
+                                    'viewport-4': (filteredOptionsProvince | async)?.length==4 }">
+                                        <mat-option class="viewport-item"
+                                          *cdkVirtualFor="let option of filteredOptionsProvince | async"
+                                          [value]="option">
+                                          {{ option.siglaProvincia }}
+                                        </mat-option>
+                                      </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                  </mat-form-field>
+                                </div>
+                                <div class="cell2b">
+                                  <mat-form-field>
+                                    <input type="text" wai-aria="Selezionare un comune" placeholder="Comune"
+                                      aria-label="Number" matInput formControlName="comune"
+                                      [matAutocomplete]="autoComune" (blur)="check('C')">
+                                    <mat-autocomplete autoActiveFirstOption #autoComune="matAutocomplete"
+                                      [displayWith]="displayFnComuni" (optionSelected)="click($event,'C')">
+                                      <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                        #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsComuni | async)?.length>4,
+                                    'viewport-1': (filteredOptionsComuni | async)?.length==1,
+                                    'viewport-2': (filteredOptionsComuni | async)?.length==2,
+                                    'viewport-3': (filteredOptionsComuni | async)?.length==3,
+                                    'viewport-4': (filteredOptionsComuni | async)?.length==4 }">
+                                        <mat-option class="viewport-item"
+                                          *cdkVirtualFor="let option of filteredOptionsComuni | async" [value]="option">
+                                          {{ option.descComune }}
+                                        </mat-option>
+                                      </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="cell-20">
+                                <mat-form-field>
+                                  <mat-label>CAP</mat-label>
+                                  <input type="text" matInput formControlName="cap" />
+                                  <mat-error *ngIf="formSoggetto.get('sede-legale.cap')?.hasError('onlyNumbers')">
+                                    Formato non valido
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section formGroupName="attivita-economica">
+                        <h3>Attività economica</h3>
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+
+                            <mat-form-field>
+                              <mat-label>Codice ATECO Prevalente</mat-label>
+                              <input matInput [matAutocomplete]="auto6"
+                                (input)="getElencoCodiceAteco(formSoggetto.get('attivita-economica.codiceAteco').value)"
+                                formControlName="codiceAteco" (blur)="check('A')">
+                              <mat-autocomplete #auto6="matAutocomplete" [displayWith]="displayFnAteco"
+                                (optionSelected)="click($event,'A')">
+                                <mat-option *ngFor="let ateco of codiceAtecoData" [value]="ateco">
+                                  {{ateco.codAteco}}
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                          </div>
+                          <div class="col3">
+                            <mat-form-field>
+                              <mat-label>Descrizione Attività Prevalente</mat-label>
+                              <input matInput formControlName="descrizioneAttivita" />
+                            </mat-form-field>
+                          </div>
+                          <div class="col align-self-center">
+                            <div class="d-flex justify-content-baseline">
+                              <span>Rating di legalità</span>
+                              <mat-radio-group aria-label="Select an option" class="d-flex"
+                                formControlName="ratingLegalita">
+                                <mat-radio-button value="S">Sì</mat-radio-button>
+                                <mat-radio-button value="N">No</mat-radio-button>
+                              </mat-radio-group>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell cell-margin">
+                                <mat-form-field>
+                                  <mat-label>Stato attività</mat-label>
+                                  <mat-select formControlName="statoAttivita">
+                                    <mat-option *ngFor="let elem of statoAttivitaData" [value]="elem">
+                                      {{ elem.descAttivita }}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field>
+                                  <input #datePicker2 matInput [matDatepicker]="myDatepicker2"
+                                    formControlName="dtInizioAttivita" placeholder="Data inizio attività">
+                                  <mat-datepicker-toggle matSuffix [for]="myDatepicker2">
+                                  </mat-datepicker-toggle>
+                                  <mat-datepicker #myDatepicker2></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                          </div>
+                        </div>
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell cell-margin">
+                                <mat-form-field>
+                                  <mat-label>Periodo chiusura esercizio</mat-label>
+                                  <input #datePicker5 matInput [matDatepicker]="myDatepicker5"
+                                    formControlName="periodoChiusuraEsercizio" />
+                                  <mat-datepicker-toggle matSuffix [for]="myDatepicker5">
+                                  </mat-datepicker-toggle>
+                                  <mat-datepicker #myDatepicker5></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field>
+                                  <input #datePicker3 matInput [matDatepicker]="myDatepicker3"
+                                    formControlName="dtChiusuraEsercizio" placeholder="Data chiusura esercizio">
+                                  <mat-datepicker-toggle matSuffix [for]="myDatepicker3">
+                                  </mat-datepicker-toggle>
+                                  <mat-datepicker #myDatepicker3></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+
+                          </div>
+                        </div>
+
+                        <!-- <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell cell-margin">
+                            <mat-form-field>
+                              <mat-label>Quota di partecipazione</mat-label>
+                              <input type="text" matInput formControlName="quotaPartecipazione" />
+                            </mat-form-field>
+                          </div>
+                          <div class="cell">
+  
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+  
+                      </div>
+                    </div> -->
+                      </section>
+
+                      <section formGroupName="dati-iscrizione">
+                        <h3>Dati iscrizione</h3>
+                        <div class="row d-flex justify-content-baseline">
+                          <div class="col">
+                            <div class="d-flex">
+                              <div class="cell cell-margin">
+                                <mat-form-field>
+                                  <mat-label>Numero REA</mat-label>
+                                  <input type="text" matInput formControlName="numeroRea" />
+                                </mat-form-field>
+                              </div>
+                              <div class="cell">
+                                <mat-form-field>
+                                  <input #datePicker4 matInput [matDatepicker]="myDatepicker4"
+                                    formControlName="dtIscrizione" placeholder="Data iscrizione">
+                                  <mat-datepicker-toggle matSuffix [for]="myDatepicker4">
+                                  </mat-datepicker-toggle>
+                                  <mat-datepicker #myDatepicker4></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="cell cell-margin">
+                              <mat-form-field>
+                                <mat-label>Provincia iscrizione</mat-label>
+                                <mat-select formControlName="provinciaIscrizione">
+                                  <mat-option *ngFor="let elem of provinciaIscrizioneData" [value]="elem">
+                                    {{ elem.descProvincia }}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section formGroupName="sezione-appartenenza">
+                        <h3>Sezione di appartenenza</h3>
+                        <div class="row">
+                          <div class="col">
+                            <div class="cell">
+                              <mat-form-field>
+                                <mat-label>Sezione di appartenenza</mat-label>
+                                <mat-select formControlName="sezioneAppartenenza">
+                                  <mat-option *ngFor="let elem of sezioneAppartenanzaData" [value]="elem">
+                                    {{ elem.descSezioneSpeciale }}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

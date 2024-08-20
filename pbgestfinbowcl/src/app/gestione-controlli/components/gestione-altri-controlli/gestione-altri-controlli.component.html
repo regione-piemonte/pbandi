@@ -1,0 +1,416 @@
+<!-- visualizza  dettaglio controllo -->
+<div *ngIf="isDettaglio ==1">
+  <mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+  <div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+      <div class="backContainer">
+        <button (click)="goBack()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alla ricerca</span>
+        </button>
+      </div>
+      <div class="reportingContainerUp">
+        <div>
+          <h2>Dettaglio altri controlli </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-grid-list cols="6" rowHeight="30px" [gutterSize]="'10px'">
+        <mat-grid-tile [colspan]="4">
+          <div class="text-inside-grid">
+            Bando: <b>{{controllo.descBando}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="3">
+          <div class="text-inside-grid">
+            Beneficiario: <b>{{controllo.denominazione}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="3">
+          <div class="text-inside-grid">
+            Progetto: <b> {{controllo.codVisualizzato}} </b>
+          </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="4">
+          <div class="text-inside-grid">
+            Tipo di controllo : <b>{{controllo.descTipoControllo}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="4">
+          <div class="text-inside-grid">
+            Autorita controllante: <b>{{controllo.descAutoritaControllante}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="3">
+          <div class="text-inside-grid">
+            Data inizio controllo: <b>{{controllo.dataInizioControlli | date: "dd/MM/yyyy"}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="3">
+          <div class="text-inside-grid">
+            Data fine controllo: <b>{{controllo.dataFineControlli | date: "dd/MM/yyyy"}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2">
+          <div class="text-inside-grid">
+            Importo da controllare: <b>{{controllo.importoDaControllare}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2">
+          <div class="text-inside-grid">
+            Importo spesa irregolare: <b>{{controllo.importoIrregolarita}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2">
+          <div class="text-inside-grid">
+            Importo agevolaz. irregolare: <b>{{controllo.importoAgevIrreg}}</b>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="4">
+          <div class="text-inside-grid">
+            Stato del controllo: <b>{{controllo.descStatoControllo}}</b>
+          </div>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+    </mat-card-content>
+
+  </mat-card>
+
+</div>
+<!-- gestione controllo  -->
+<div *ngIf="isDettaglio==2">
+
+  <mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+  <div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+      <div class="backContainer">
+        <button (click)="goBack()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alla ricerca</span>
+        </button>
+      </div>
+      <div class="reportingContainerUp">
+        <div>
+          <h2>Gestione altri controlli </h2>
+        </div>
+      </div>
+    </div>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveIntegrazione">
+      <mat-card-content class="messageSuccessContent">
+        <p>Richiesta integrazione salvata con successo!</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isSaveIntegrazione==false">
+      <mat-card-content class="messageSuccessContent">
+        <p>Errore Salvataggio richiesta integrazione!</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+
+    <div style="padding-bottom: 25px;">
+      <mat-card style="width: 50%;" [ngClass]="{'displayNone': !isRichiesta}">
+        <mat-card-content>
+          <div class="row">
+            <h3>
+              Gestione richiesta integrazione
+            </h3>
+            <button mat-raised-button (click)="gestisciProroga()"
+              [disabled]="idStatoRichiesta==5 || idStatoRichiesta==3 || !isEnableProroga" class="button-style-1">RICHIESTA PROROGA</button>
+
+            <span class="material-icons" color="primary" matBadge="1" matBadgeColor="accent"
+              *ngIf="toggleBadgeVisibility()">
+              notifications
+            </span>
+          </div>
+
+          <div>
+            <form>
+              <mat-grid-list cols="6" rowHeight="55px" [gutterSize]="'10px'">
+                <mat-grid-tile [colspan]="3">
+                  <div class="text-inside-grid">
+                    Autorizzata il <b>{{dataAutorizzata | date: "dd/MM/yyyy"}}</b>
+                  </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="3">
+                  <div class="text-inside-grid">
+                    stato: <b> {{richiestaIntegrVO.descStatoRichiesta}} </b>
+                    <!-- <b>{{dataAutorizzata | date: "dd/MM/yyyy"}}</b> -->
+                  </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                  <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data notifica </mat-label>
+                    <input matInput [matDatepicker]="pickerN" name="dataNotifica" [(ngModel)]="dataNotifica" disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataNotifica && !isDataNotifica" (click)="setDataNull(4)"
+                      class="icons">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="pickerN" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerN disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                  <button mat-raised-button (click)="salvaDataNotifica()"
+                    [disabled]="idStatoRichiesta==5 || idStatoRichiesta==3 || isDataNotifica" class="button-style-1">SALVA</button>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="3">
+                  <div class="text-inside-grid">
+                    Data scadenza: <b>{{dataScadenza|date: "dd/MM/yyyy"}} </b>
+                    <!-- <b>{{dataAutorizzata | date: "dd/MM/yyyy"}}</b> -->
+                  </div>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </form>
+
+            <div>
+              <button mat-raised-button [disabled]="idStatoRichiesta==5 || idStatoRichiesta==3"
+                (click)="annullaRichiestaIntegrazione()" class="button-style-2">ANNULLA
+                INTEGRAZIONE</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card>
+      <mat-card-content>
+        <form>
+          <mat-grid-list cols="9" rowHeight="55px" style="margin-left: 0%;" [gutterSize]="'10px'">
+
+            <mat-grid-tile [colspan]="4">
+              <div class="text-inside-grid">
+                Bando: <b>{{descBando}}
+                </b>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4">
+              <div class="text-inside-grid">
+                Beneficiario: <b>{{denominazione}}
+                </b>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1" *ngIf="idAutoritaControllante!=4">
+              <div class="align" class="text-inside-grid">
+                <mat-label> <b>Tipo di controllo </b></mat-label>
+                <mat-radio-group [(ngModel)]="tipologiaControllo" name="tipologiaControllo">
+                  <mat-radio-button value="D" *ngIf="idAutoritaControllante!=4">Documentale
+                  </mat-radio-button>
+                  <mat-radio-button value="L" style="margin-left: 10px;">In loco</mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="tipologiaControllo==null">Campo obbligatorio</mat-error>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <div class="text-inside-grid">
+                Tipo di controllo : <b>{{descTipoControllo}}
+                </b>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <div class="text-inside-grid">
+                Attivita: <b>{{descAttivitaControllo}}
+                </b>
+              </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idStatoChecklist!=0">
+              <div class="text-inside-grid">
+                Descrizione stato checklist: <b>{{descStatoChecklist}}
+                </b>
+              </div>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante!=4">
+              <mat-form-field appearance="standard" class="elem1">
+                <mat-label>Selezionare un'autorità controllante</mat-label>
+                <mat-select [(ngModel)]="idAutoritaControllante" name="attivitaDTO">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let attivita of listaAutoritaControllante" [value]="attivita.idAttivita">
+                    {{attivita.descAttivita}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="6" [rowspan]="1">
+              <mat-form-field appearance="standard" class="elem1">
+                <mat-label>Selezionare stato controllo</mat-label>
+                <mat-select [(ngModel)]="idStatoControllo" name="attivitaDTO">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let attivita of listaStatoControllo" [value]="attivita.idAttivita" [disabled]="disableStato(attivita.idAttivita)">
+                    {{attivita.descAttivita}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Data inizio controllo </mat-label>
+                <input matInput [matDatepicker]="picker" name="dataInizioControllo" [(ngModel)]="dataInizioControllo"
+                  disabled />
+                <button mat-button mat-icon-button matSuffix *ngIf="dataInizioControllo" (click)="setDataNull(1)"
+                  class="icons">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                <mat-datepicker #picker disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Data fine controllo </mat-label>
+                <input matInput [matDatepicker]="picker1" name="dataFineControllo" [(ngModel)]="dataFineControllo"
+                  disabled [min]="dataInizioControllo" />
+                <button mat-button mat-icon-button matSuffix *ngIf="dataFineControllo" (click)="setDataNull(2)"
+                  class="icons">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Importo da controllare</mat-label>
+                <input type="text" [(ngModel)]="importoDaControllareFormatted" matInput name="importoDaControllare"
+                  pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP="ngModel" (blur)="setImporto(1)" step="0.01">
+                <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Importo spesa irregolare</mat-label>
+                <input type="text" [(ngModel)]="importoIrregolaritaFormatted" matInput name="importoIrregolarita"
+                  pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP1="ngModel" (blur)="setImporto(2)" step="0.01">
+                <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Importo agev. irregolare</mat-label>
+                <input type="text" [(ngModel)]="importoAgevIrregFormatted" matInput name="importoAgevIrreg"
+                  pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel" (blur)="setImporto(3)" step="0.01">
+                <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>N. protocollo</mat-label>
+                <input type="text" maxlength="30" matInput [(ngModel)]="numProtocollo" name="numProtocollo" />
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Data avvio di controllo </mat-label>
+                <input matInput [matDatepicker]="picker3" name="dataAvvioControlli" [(ngModel)]="dataAvvioControlli"
+                  disabled />
+                <!-- <button mat-button mat-icon-button matSuffix *ngIf="dataVisitaControllo" (click)="setDataNull(3)"
+                          class="icons">
+                          <mat-icon>close</mat-icon>
+                        </button> -->
+                <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                <mat-datepicker #picker3 [disabled]="idAttivitaControllo!=2"></mat-datepicker>
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Data visita di controllo </mat-label>
+                <input matInput [matDatepicker]="picker2" name="dataVisitaControllo" [(ngModel)]="dataVisitaControllo"
+                  disabled />
+                <button mat-button mat-icon-button matSuffix *ngIf="dataVisitaControllo" (click)="setDataNull(3)"
+                  class="icons">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <mat-form-field appearance="standard" class="elem1">
+                <mat-label>Selezionare tipo di visita </mat-label>
+                <mat-select [(ngModel)]="descTipoVisita" name="attivitaDTO1">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let attivita of lisTipoVisita" [value]="attivita">
+                    {{attivita}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="6" [rowspan]="1" *ngIf="idAutoritaControllante==4">
+              <mat-form-field class="elem1" appearance="standard">
+                <mat-label>Istruttore che ha effettuato la visita</mat-label>
+                <input type="text" maxlength="4000" matInput [(ngModel)]="istruttoreVisita" name="istruttoreVisita" />
+              </mat-form-field>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </form>
+      </mat-card-content>
+
+      <div>
+        <h3>
+          Allegati
+        </h3>
+        <button mat-button (click)="gestisciAllegati()" class="button-style-1">GESTISCI ALLEGATI</button>
+      </div>
+    </mat-card>
+
+    <br>
+
+    <div *ngIf="idAutoritaControllante==4" class="flexEnd">
+
+      <div *ngIf="idAttivitaControllo==0 || idAttivitaControllo==3" style="padding-left: 8px;">
+        <button mat-raised-button (click)="avviaControlloInLoco()" class="button-style-2">AVVIA CONTROLLO IN
+          LOCO</button>
+      </div>
+
+      <div *ngIf="isDataAvvioControlli" style="padding-left: 8px;">
+        <button mat-raised-button (click)="gestioneCheckList()" class="button-style-2">GESTIONE
+          CHECKLIST IN LOCO</button>
+      </div>
+      <div *ngIf="isDataAvvioControlli" style="padding-left: 8px;">
+        <button mat-raised-button (click)="richiestaIntegrazione()" class="button-style-2"
+          *ngIf="isRichiestaIntegr()">RICHIESTA DI INTEGRAZIONE</button>
+      </div>
+      <div style="padding-left: 8px;">
+        <button mat-raised-button (click)="controlloAllegati()" class="button-style-2">CONFERMA</button>
+      </div>
+    </div>
+
+    <div class="flexEnd" *ngIf="idAutoritaControllante!=4" style="padding-left: 8px;">
+      <button mat-raised-button (click)="controlloAllegati()" class="button-style-2">CONFERMA</button>
+    </div>
+
+  </div>
+
+
+</div>

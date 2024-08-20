@@ -1,0 +1,171 @@
+<mat-card class="pad">
+  <mat-card-header>
+    <mat-card-title>
+      <h3 class="cardtitle">Escussione Confidi</h3>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="isShowing == 'main'" class="scroll"> <!-- MAIN -->
+
+    <mat-card class="messageSuccess" *ngIf="isSuccVisible">
+      <mat-card-content class="messageSuccessContent">
+          <p>{{succMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <p>
+      Nominativo Confidi: <b style="padding-left: 3px;">{{escussione[0]?.nominativo === null ? "-" : escussione[0].nominativo}}</b>
+    </p>
+    <p>
+      Data escussione Confidi: <b style="padding-left: 3px;">{{escussione[0]?.dataEscussione === null ? "-" : escussione[0].dataEscussione | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Data pagamento Confidi: <b style="padding-left: 3px;">{{escussione[0]?.dataPagamento === null ? "-" : escussione[0].dataPagamento | date:'dd/MM/yyyy'}}</b>
+    </p>
+    <p>
+      Garanzia: <b style="padding-left: 3px;">{{escussione[0]?.garanzia === null ? "-" : escussione[0].garanzia}}</b>
+    </p>
+    <p>
+      Percentuale garanzia: <b style="padding-left: 3px;">{{escussione[0]?.percGaranzia === null ? "-" : escussione[0].percGaranzia+"%"}}</b>
+    </p>
+    <p>
+      Note: <b style="padding-left: 3px;">{{escussione[0]?.note === null ? "-" : escussione[0].note}}</b>
+    </p>
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'edit'" class="scroll"> <!-- EDIT -->
+
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="myForm" style="padding-top: 5px;">
+
+      <div class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Nominativo Confidi</mat-label>
+          <input matInput formControlName="nominativo">
+        </mat-form-field>
+      </div>
+
+      <div class="fullFlex">
+        <mat-form-field appearance="standard" class="widCom">
+          <mat-label>Data escussione Confidi</mat-label>
+          <input matInput formControlName="dataEscussione" [matDatepicker]="picker1" [max]="today" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataEscussione').value" (click)="this.myForm.get('dataEscussione').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      
+        <mat-form-field appearance="standard" class="widCom">
+          <mat-label>Data pagamento Confidi</mat-label>
+          <input matInput formControlName="dataPagamento" [matDatepicker]="picker2" [max]="today" class="datepicker" disabled>
+          <button mat-button mat-icon-button matSuffix *ngIf="this.myForm.get('dataPagamento').value" (click)="this.myForm.get('dataPagamento').setValue(null)" class="icons">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="fullFlex">
+        <mat-form-field appearance="standard" class="widCom">
+          <mat-label>Selezionare una garanzia</mat-label>
+          <mat-select formControlName="garanzia">
+            <mat-option value="-">-</mat-option>
+            <mat-option *ngFor="let garanzia of garanzie" [value]="garanzia">
+              {{garanzia}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="standard" class="widCom">
+          <mat-label>Percentuale garanzia</mat-label>
+          <input matInput type="number" step=".10" formControlName="percGaranzia">
+          <span matSuffix>%</span>
+        </mat-form-field>
+      </div>
+
+      <div class="fullP">
+        <mat-form-field appearance="standard" class="fullP">
+          <mat-label>Note</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </div>
+      <!-- <app-gestione-allegati  [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'history'" class="scroll"> <!-- STORICO -->
+
+    <p class="int">
+      <b>Storico escussione Confidi</b>
+      <button mat-icon-button (click)="isShowing = 'main'"><mat-icon class="material-icons-outlined">cancel</mat-icon></button>
+    </p>
+
+    <mat-divider [inset]="true"></mat-divider>
+
+    <table mat-table [dataSource]="escussione" class="table2">
+
+      <!-- Nominativo Column -->
+      <ng-container matColumnDef="nominativo">
+        <th mat-header-cell *matHeaderCellDef> Nominativo </th>
+        <td mat-cell *matCellDef="let element"> {{element.nominativo}} </td>
+      </ng-container>
+
+      <!-- Data Column -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataInserimento | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Istruttore Column -->
+      <ng-container matColumnDef="istruttore">
+        <th mat-header-cell *matHeaderCellDef> Istruttore </th>
+        <td mat-cell *matCellDef="let element"> {{element.istruttore}} </td>
+      </ng-container>
+
+      <!-- NO DATA FOUND ROW -->
+      <td [colSpan]="historyDisplayedColumns.length" *matNoDataRow>
+        <br>
+        <h1>Nessuno storico</h1>
+      </td>
+
+      <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: historyDisplayedColumns;"></tr>
+    </table>
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'loading'" class="scroll"> <!--LOADING-->
+    <div style="height: 100%;">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'nodata'" class="scroll"> <!--NO DATA-->
+    <div>
+      <mat-label>Nessuna Escussione presente</mat-label>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isShowing == 'error'" class="scroll"> <!--ERROR-->
+    <div>
+      <mat-error>error: {{errMsg}}</mat-error>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button class="button-style-1" [disabled]="noData" (click)="openHistory()">STORICO</button>
+    <button mat-button class="button-style-1" *ngIf="isShowing == 'edit'" (click)="action('cancel')">ANNULLA</button>
+    <!--<div fxFlex></div>-->
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 'main' || isShowing == 'history'" (click)="isShowing = 'edit'">MODIFICA</button>
+    <button mat-raised-button class="button-style-2" *ngIf="isShowing == 'edit'" (click)="action('save')">CONFERMA</button>
+    <button mat-raised-button class="button-style-2" [disabled]="isShowing == 'error'" *ngIf="isShowing == 'nodata' || isShowing == 'error'" (click)="isShowing = 'edit'">NUOVA</button>
+  </mat-card-actions>
+
+</mat-card> <!--TAmLiMan-->

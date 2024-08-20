@@ -1,0 +1,273 @@
+<div>
+    <div class="spaceBetween">
+        <h3 *ngIf="isNew" class="bold-text">Nuova segnalazione alla Corte dei Conti</h3>
+        <h3 *ngIf="!isNew" class="bold-text">Modifica segnalazione alla Corte dei Conti</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isControllaCampi">
+        <mat-card-content class="messageErrorContent">
+            <p> Gli importi devono avere massimo due cifre dopo la virgola</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiVuoti">
+        <mat-card-content class="messageErrorContent">
+            <p> Almeno un campo deve essere valorizzato</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+
+    <form>
+        <mat-grid-list cols="9" rowHeight="55px" style="margin-left: 0%;" [gutterSize]="'10px'">
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data segnalazione </mat-label>
+                    <input matInput [matDatepicker]="picker" name="dataSegn" [(ngModel)]="dataSegn" [max]="today" disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataSegn" (click)="setDataNull(1)"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>N. protocollo segnalazione</mat-label>
+                    <input type="text" [(ngModel)]="numProtocolloSegn" matInput name="numProtocolloSegn"
+                        maxlength="30" />
+                    <!-- <mat-error *ngIf="numP6?.errors?.pattern">Valore non valido</mat-error> -->
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label> Cred. residuo quota capitale</mat-label>
+                    <input type="text" [(ngModel)]="impCredResCapitaleFormatted" matInput name="impCredResCapitale"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP1="ngModel" (blur)="setImporto(1)" step="0.01">
+                    <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label> Oneri di agevolazione</mat-label>
+                    <input type="text" [(ngModel)]="impOneriAgevolazFormatted" matInput name="impOneriAgevolaz"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel" (blur)="setImporto(2)" step="0.01">
+                    <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label> Quota importo segnalazione</mat-label>
+                    <input type="text" [(ngModel)]="impQuotaSegnalazFormatted" matInput name="impQuotaSegnalaz"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP3="ngModel" (blur)="setImporto(3)" step="0.01">
+                    <mat-error *ngIf="numP3?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo garanzia</mat-label>
+                    <input type="text" [(ngModel)]="impGaranziaFormatted" matInput name="impGaranzia"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP4="ngModel" (blur)="setImporto(4)" step="0.01">
+                    <mat-error *ngIf="numP4?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Piano di rientro</b></mat-label>
+                    <mat-radio-group [(ngModel)]="flagPianoRientro" name="flagPianoRientro">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data piano di rientro </mat-label>
+                    <input matInput [matDatepicker]="picker1" name="dataPianoRientro" [(ngModel)]="dataPianoRientro"
+                      [max]="today"   disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataPianoRientro" (click)="setDataNull(2)"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Saldo e stralcio</b></mat-label>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagSaldoStralcio" matInput
+                        name="flagSaldoStralcio">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data saldo e stralcio</mat-label>
+                    <input matInput [matDatepicker]="picker2" name="dataSaldoStralcio" [(ngModel)]="dataSaldoStralcio"
+                        [max]="today" disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataSaldoStralcio" (click)="setDataNull(3)"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Pagamento integrale</b></mat-label>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagPagamIntegrale" matInput
+                        name="flagPagamIntegrale">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data pagamento</mat-label>
+                    <input matInput [matDatepicker]="picker3" name="dataPagamento" [(ngModel)]="dataPagamento"
+                        [max]="today"  disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataPagamento" (click)="setDataNull(4)"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Dissegnalazione</b></mat-label>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagDissegnalazione" matInput
+                        name="flagDissegnalazione">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data dissegnalazione</mat-label>
+                    <input matInput [matDatepicker]="picker4" name="dataDissegnalazione"
+                        [(ngModel)]="dataDissegnalazione" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataDissegnalazione" (click)="setDataNull(5)"
+                        class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker4"  class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>N. protocollo dissegnalazione</mat-label>
+                    <input type="text" [(ngModel)]="numProtocolloDiss" matInput name="numProtocolloDiss"
+                        #numP7="ngModel" maxlength="30" />
+                    <!-- <mat-error *ngIf="numP7?.errors?.pattern">Valore non valido</mat-error> -->
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Decreto di archiviazione</b></mat-label>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagDecretoArchiv" matInput
+                        name="flagDecretoArchiv">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data archiviazione</mat-label>
+                    <input matInput [matDatepicker]="picker5" name="dataArchiv" [(ngModel)]="dataArchiv" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataArchiv" (click)="setDataNull(6)"
+                    class="icons">
+                    <mat-icon>close</mat-icon>
+                </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker5" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker5 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>N. protocollo archiviazione</mat-label>
+                    <input type="text" [(ngModel)]="numProtocolloArchiv" matInput name="numProtocolloArchiv"
+                        #numP8="ngModel" maxlength="30" />
+                    <!-- <mat-error *ngIf="numP8?.errors?.pattern">Valore non valido</mat-error> -->
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="align">
+                    <mat-label> <b>Comunicazione a Regione</b></mat-label>
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="flagComunicazRegione" matInput
+                        name="flagComunicazRegione">
+                        <mat-radio-button value="SI">Sì</mat-radio-button>
+                        <mat-radio-button value="NO">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="9" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Note</mat-label>
+                    <input type="text" maxlength="4000" matInput [(ngModel)]="note" name="note" />
+                </mat-form-field>
+            </mat-grid-tile>
+
+        </mat-grid-list>
+ <!-- <app-gestione-allegati [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="controllaCampi()">CONFERMA</button>
+    </div>
+</div>

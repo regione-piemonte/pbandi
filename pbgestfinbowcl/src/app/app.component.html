@@ -1,0 +1,37 @@
+<div class="fullscreen" id="app">
+  <header>
+    <div class="header-content">
+      <h1>Gestionale Finanziamenti</h1>
+
+      <div class="icons">
+        <button mat-icon-button (click)="openContatti()" title="Contatti">
+          <mat-icon role="presentation">contact_mail</mat-icon>
+        </button>
+        <button mat-mini-fab class="user" [matMenuTriggerFor]="menuProfilo" #t="matMenuTrigger" title="Profilo utente">
+          {{user?.nome.substr(0,1)}}{{user?.cognome.substr(0,1)}}
+        </button>
+      </div>
+      <mat-menu #menuProfilo="matMenu">
+        <div class="cont-textMenuUser">
+          <div class="textMenuUser">{{user?.nome}} {{user?.cognome}}</div>
+          <div class="textMenuUser"> {{user?.codFisc}}</div>
+          <div class="textMenuUser" *ngIf="user && user.ruolo">{{user?.ruolo}}</div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-button class="menu-button profilo" disabled>
+          <mat-icon>person</mat-icon>
+          <span>Cambia profilo</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-button class="menu-button exit" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Esci</span>
+        </button>
+
+      </mat-menu>
+    </div>
+  </header>
+  <div class="page-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

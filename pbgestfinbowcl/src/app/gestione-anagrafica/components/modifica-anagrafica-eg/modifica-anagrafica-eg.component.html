@@ -1,0 +1,279 @@
+<div class="page">
+    <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+    <div class="title">
+        <!-- <div class="reportingContainerUp">
+            <div class="titleBar">
+                <h2>Anagrafica beneficiario</h2>
+                <p><b>NAG:</b> {{idSoggetto}}</p>
+                <span><b>Stato ultima domanda: </b> <span>{{statoUltimaDomanda ?
+                        statoUltimaDomanda.statoDomanda :
+                        null}}</span></span>
+            </div>
+        </div> -->
+        <div class="reportingContainerUp">
+            <div class="titleBar">
+              <h2>Anagrafica beneficiario</h2>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <span>
+                        <table class="content-table">
+                            <tr>
+                                <td>NAG: <b>{{idSoggetto}}</b></td>
+                            </tr>
+                            <tr>
+                              <td>Stato ultima domanda: <b>{{statoUltimaDomanda ? statoUltimaDomanda.statoDomanda : null}}</b></td>
+                          </tr>
+                        </table>
+                    </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-divider class="divider" [inset]="true"></mat-divider>
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="DATI GENERALI">
+                        <div class="content" style="margin-top: 2em;">
+                        <div>
+                            <h3>Dati anagrafici</h3>
+                            <div>
+                                <form [formGroup]="myForm">
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Ragione sociale</mat-label>
+                                            <input type="text" matInput formControlName="ragSociale" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('ragSociale', 'required')">Impossibile andare avanti
+                                                senza Rag. Sociale
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('ragSociale', 'maxlength')">Hai usato più di 20
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Forma giuridica</mat-label>
+                                            <input matInput type="text" formControlName="formaGiuridica"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Partita IVA</mat-label>
+                                            <input type="text" matInput formControlName="iva"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('iva', 'required')">Impossibile andare
+                                                avanti
+                                                senza P. Iva
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('iva', 'maxlength')">Hai usato più di 11
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Tipo soggetto</mat-label>
+                                            <input type="text" matInput formControlName="descTipoSoggetto"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput formControlName="codiceFiscale" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('codiceFiscale', 'required')">Impossibile andare avanti
+                                                senza Codice Fiscale
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('codiceFiscale', 'maxlength')">Hai usato più di 16
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Data costituzione</mat-label>
+
+                                            <input type="text" matInput formControlName="dataCostituzione" [disabled]="false" />
+
+                                            <!-- <input matInput [matDatepicker]="picker" formControlName="dataCostituzione"
+                                                [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker> -->
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Pec</mat-label>
+                                            <input type="text" matInput formControlName="pec" [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Sede legale</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo</mat-label>
+                                            <input type="text" matInput formControlName="indirizzoSede"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('indirizzoSede', 'required')">Impossibile andare
+                                                avanti
+                                                senza indirizzo
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Partita IVA</mat-label>
+                                            <input type="text" matInput formControlName="ivaSede"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('ivaSede', 'required')">Impossibile andare
+                                                avanti
+                                                senza P. Iva
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('ivaSede', 'maxlength')">Hai usato più di 11
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune</mat-label>
+                                            <input type="text" matInput formControlName="descComuneSede"
+                                                [matAutocomplete]="auto">
+                                            <mat-error *ngIf="hasError('descComuneSede', 'required')">Impossibile andare avanti
+                                                senza Comune
+                                            </mat-error>
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredOptions | async"
+                                                    [value]="option">
+                                                    {{option}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia</mat-label>
+                                            <mat-select matInput formControlName="idProvinciaSede"
+                                                (selectionChange)="getComuni(provincia)" #provincia>
+                                                <mat-option *ngFor="let provincia of provincie"
+                                                    [value]="provincia.idProvincia">
+                                                    {{provincia.descProvincia}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione</mat-label>
+                                            <mat-select matInput formControlName="idRegioneSede">
+                                                <mat-option *ngFor="let regione of regioni" [value]="regione.idRegione">
+                                                    {{regione.descRegione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione</mat-label>
+                                            <mat-select matInput formControlName="idNazioneSede">
+                                                <mat-option *ngFor="let nazione of nazioni" [value]="nazione.idNazione">
+                                                    {{nazione.descNazione}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP</mat-label>
+                                            <input type="text" matInput formControlName="capSede" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('capSede', 'required')">Impossibile andare avanti
+                                                senza CAP
+                                            </mat-error>
+                                            <mat-error *ngIf="hasError('capSede', 'maxlength')">Hai usato più di 6
+                                                caratteri</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Ateco</mat-label>
+                                            <input type="text" matInput formControlName="ateco" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('ateco', 'required')">Impossibile andare avanti
+                                                senza Ateco
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Descrizione Attività</mat-label>
+                                            <input type="text" matInput formControlName="descAttivita"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('descAttivita', 'required')">Impossibile andare
+                                                avanti
+                                                senza Desc. Attivita
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Dati iscrizione</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Numero REA</mat-label>
+                                            <input type="text" matInput formControlName="numIscrizione" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('numIscrizione', 'required')">Impossibile andare avanti
+                                                senza Rea
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Data iscrizione</mat-label>
+                                            <input matInput [matDatepicker]="picker2" formControlName="dataIscrizione"
+                                                [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia iscrizione</mat-label>
+
+                                            <input type="text" matInput formControlName="descProvinciaIscrizione" [disabled]="true" />
+
+                                            <!-- <mat-select matInput formControlName="idProvinciaIscrizione">
+                                                <mat-option *ngFor="let provincia of provincie"
+                                                    [value]="provincia.idProvincia">
+                                                    {{provincia.descProvincia}}
+                                                </mat-option>
+                                            </mat-select> -->
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Attività</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Stato</mat-label>
+                                            <input type="text" matInput formControlName="stato" [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Data cessazione</mat-label>
+                                            <input type="text" matInput formControlName="dataCessazione"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Causale cessazione</mat-label>
+                                            <input type="text" matInput formControlName="causaleCessazione"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+                            </div>
+                            <mat-divider class="divider" [inset]="true"></mat-divider>
+                        </div>
+                        <!-- [disabled]="!myForm.valid" da aggiungere poi per la validazione -->
+                        <button class="save-button" mat-raised-button 
+                            (click)="salvaModifiche()">
+                            SALVA
+                        </button>
+                    </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

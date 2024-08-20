@@ -1,0 +1,75 @@
+<div>
+    <div class="spaceBetween">
+        <h3 *ngIf="isNew" class="bold-text">Nuova azione recupero banca</h3>
+        <h3 *ngIf="!isNew" class="bold-text">Modifica azione recupero banca</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isSaveError">
+        <mat-card-content class="messageErrorContent">
+            <p>{{messageError}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+    <form>
+        <mat-grid-list cols="8" rowHeight="70px" style="margin-left: 0%;">
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data azione*</mat-label>
+                    <input matInput [matDatepicker]="picker" name="dataAzione" [(ngModel)]="dataAzione" [max]="today"
+                        [formControl]="dataAzioneControl"  disabled/>
+                        <button mat-button mat-icon-button matSuffix *ngIf="dataAzione" (click)="setDataNull()" class="icons">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                    <mat-error *ngIf="dataAzioneControl.hasError('required')">Campo obbligatorio</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Selezionare un'azione</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaAzione" name="attivitaDTO" [formControl]="attivitaAzioneControl"
+                        required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaAzioneBanca" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="attivitaAzioneControl.hasError('required')">Campo obbligatorio</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Numero protocollo</mat-label>
+                    <input type="text"  maxlength="30" matInput [(ngModel)]="numProtocollo" name="numProtocollo" />
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Note</mat-label>
+                    <input type="text" maxlength="400" matInput [(ngModel)]="note" name="note" />
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+       <!--  <app-gestione-allegati *ngIf="ambito != 'escussioni'" [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="controllaCampi()">CONFERMA</button>
+    </div>
+
+</div>

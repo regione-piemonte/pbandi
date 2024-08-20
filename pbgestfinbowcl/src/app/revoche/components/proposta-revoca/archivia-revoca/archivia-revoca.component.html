@@ -1,0 +1,45 @@
+<div class="dialog-header">
+    <h3 class="bold-text">Archivia proposta di revoca</h3>
+   <!--  <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button> -->
+  </div>
+  
+  
+  
+  <div class="content"*ngIf="errore === true">
+    <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{message}}</span>
+    </mat-card-content>
+</div>
+
+<div class="content" *ngIf="errore === false">
+    <mat-card-content class="messageSuccess">
+      <p >SUCCESSO</p>
+      <span>{{message}}</span>
+    </mat-card-content>
+</div>
+  
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()" *ngIf="errore == null">
+    <div class="group-gap">
+      
+      <mat-form-field class="nota-lunghezza">
+        <textarea formControlName="noteRevoca" matInput placeholder="Motivazione"></textarea>
+      </mat-form-field>
+      <div class="d-block my-3">
+      </div>
+  
+      <div *ngIf="errore == null || errore == true" class="dialog-footer-buttons">
+        <button type="button" mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+        <button type="submit" *ngIf="myForm.invalid" mat-raised-button class="button-style-2"
+          (click)="controllaForm()">CONFERMA</button>
+        <button type="submit" *ngIf="myForm.valid" mat-raised-button class="button-style-2">CONFERMA</button>
+      </div>
+    </div>
+  </form>
+  <div class="ok-button-container" *ngIf="errore == false">
+    <button class="ok-button" type="button" class="button-style-1" mat-button mat-dialog-close>
+      CHIUDI
+    </button>
+  </div>

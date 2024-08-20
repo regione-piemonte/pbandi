@@ -1,0 +1,209 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div>
+        <div class="title">
+            <h2>Ricerca campionamenti</h2>
+        </div>
+
+        <div class="content">
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+                <mat-card-content class="messageErrorContent">
+                    <p [innerHTML]="messageError"></p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="content">
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content class="padding-left-10">
+                    <div class="header">
+                        <h3 class="search">Criteri di ricerca
+                            <button mat-icon-button (click)="criteriRicercaOpenClose()">
+                                <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+                                <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+                            </button>
+                        </h3>
+                    </div>
+                    <div [ngClass]="{'displayNone': !criteriRicercaOpened}">
+
+                        <form>
+
+                            <mat-grid-list cols="8" rowHeight="60px">
+
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth">
+                                        <mat-form-field class="elem1">
+                                            <mat-label>Descrizione</mat-label>
+                                            <input matInput type="text" [(ngModel)]="descrizione" name="descrizione">
+                                            <!-- <mat-error *ngIf="">Raggiunto il limite massimo di caratteri</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="elem1" appearance="standard">
+                                        <mat-label>Data campionamento(da)</mat-label>
+                                        <input matInput [matDatepicker]="picker" name="dataInizio"
+                                            [(ngModel)]="dataInizio" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="elem1" appearance="standard">
+                                        <mat-label>Data campionamento (a)</mat-label>
+                                        <input matInput [matDatepicker]="picker1" name="dataFine"
+                                            [(ngModel)]="dataFine" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <!-- <mat-form-field class="elem1" appearance="standard">
+                                        <mat-label>Utente campionamento</mat-label>
+                                        <input type="text" [(ngModel)]="idUtenteCampionamento" matInput
+                                            name="idUtenteCampionamento" #numP="ngModel">
+                                    </mat-form-field> -->
+
+                                    <div class="fullWidth">
+                                        <mat-form-field class="elem1">
+                                          <mat-label>Utente campionamento</mat-label>
+                                          <input matInput [matAutocomplete]="auto4" [(ngModel)]="denIns" (input)="suggest(denIns)"
+                                            name="denomDTO">
+                                          <mat-autocomplete #auto4="matAutocomplete">
+                                            <mat-option *ngFor="let attivita of listaUtenti" [value]="attivita.descAttivita">
+                                              {{attivita.descAttivita}}
+                                            </mat-option>
+                                          </mat-autocomplete>
+                                        </mat-form-field>
+                                      </div>
+
+                                </mat-grid-tile>
+                                
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <mat-form-field appearance="standard" class="elem1">
+                                        <mat-label>Selezionare uno stato </mat-label>
+                                        <mat-select [(ngModel)]="idStatoCampionamento" name="stato">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let attivita of listStati"
+                                                [value]="attivita.idAttivita">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <mat-form-field appearance="standard" class="elem1">
+                                        <mat-label>Selezionare una tipologia di selezione</mat-label>
+                                        <mat-select [(ngModel)]="idTipologiaSelezione" name="tipologia">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let attivita of listTipologie"
+                                                [value]="attivita.idAttivita">
+                                                {{attivita.descAttivita}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+
+                            </mat-grid-list>
+
+                            <button mat-raised-button (click)="search()" class="button-style-2" [disabled]="!idTipologiaSelezione && !idStatoCampionamento
+                             && !denIns && !dataFine && !dataInizio && !descrizione">CERCA</button>
+                        </form>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="content" [ngClass]="{'displayNone': !results }">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-content>
+                    <h3>Campionamenti</h3>
+                    <p *ngIf="!isStorico">Non ci sono elementi da visualizzare.</p>
+
+
+                    <div *ngIf="isStorico">
+                        <table mat-table [dataSource]="sortedData" multiTemplateDataRows class="fullWidth" id="excel" matSort 
+                        (matSortChange)="sortData($event)">
+
+                            <!-- N.Campione Column -->
+                            <ng-container matColumnDef="idCampione">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. campione </th>
+                                <td mat-cell *matCellDef="let element">{{element.idCampione}}</td>
+                            </ng-container>
+
+                            <!-- Descrizione  Column -->
+                            <ng-container matColumnDef="descrizione">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Descrizione </th>
+                                <td mat-cell *matCellDef="let element"> {{element.descrizione}} </td>
+                            </ng-container>
+
+                            <!-- Tipologia Column -->
+                            <ng-container matColumnDef="tipologia">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia di selezione </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.descTipologiaCamp}} </td>
+                            </ng-container>
+
+                            <!-- Progetti selezionati Column -->
+                            <ng-container matColumnDef="progetti">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetti selezionati</th>
+                                <td mat-cell *matCellDef="let element"> {{element.numProgettiSelezionati}} </td>
+                            </ng-container>
+
+                            <!-- importo validato Column -->
+                            <ng-container matColumnDef="impValidato">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Imp. validato selezionato </th>
+                                <td mat-cell *matCellDef="let element"> {{element.impValidato}} </td>
+                            </ng-container>
+
+
+                            <!--perc  Column -->
+                            <ng-container matColumnDef="percentuale">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Percentuale estratta </th>
+                                <td mat-cell *matCellDef="let element"> {{element.percEstratta + '%' +
+                                    '(' +element.impValPercEstratta+')'}} </td>
+                            </ng-container>
+
+                            <!--Data camp  Column -->
+                            <ng-container matColumnDef="dataCampionamento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data campionamento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.dataCampionamento|date:"dd/MM/yyyy"}} </td>
+                            </ng-container>
+
+                            <!-- utente Column -->
+                            <ng-container matColumnDef="utente">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Utente campionamento </th>
+                                <td mat-cell *matCellDef="let element"> {{ ((element.nome!=null) ? element.nome : '') +
+                                    ' ' +
+                                    element.cognome}} </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-detail-row">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !listCampionamenti || !listCampionamenti.length }"> </mat-paginator>
+                </mat-card-content>
+            </mat-card>
+
+            <div class="spaceBetween">
+                <button class="button-style-1" mat-button (click)="download()">
+                    <mat-icon class="padding-right-5">cloud_download</mat-icon>
+                    SCARICA EXCEL
+                </button>
+                <button mat-button class="button-style-1">NUOVO CAMPIONAMENTO</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>

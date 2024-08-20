@@ -1,0 +1,251 @@
+<pbandi-master-spinner *ngIf="spinner"></pbandi-master-spinner>
+<div class="page" [ngClass]="{'displayNone': spinner}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca dei beneficiari</span>
+      </button>
+    </div>
+    <h2>Attività Istruttore</h2>
+  </div>
+
+  <!-- Testata -->
+  <div class="content">
+    <mat-card>
+      <p>Bando: <b>{{schedaClienteMain[0]?.bando === null ? "-" : schedaClienteMain[0].bando}}</b></p>
+      <p>Codice progetto: <b>{{schedaClienteMain[0]?.progetto === null ? "-" : schedaClienteMain[0].progetto}}</b>
+        <button class="button-style-1" mat-button (click)="openDialogDatiProgettoAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+        <button class="button-style-1" mat-button (click)="openDialogContoEconomico()">CONTO ECONOMICO</button>
+      </p>
+    </mat-card>
+  </div>
+
+  <!-- Dati anagrafici -->
+  <div class="content">
+    <mat-card>
+      <mat-card-title>
+        <h3>Dati anagrafici</h3>
+      </mat-card-title>
+
+      <mat-card-content>  
+        <p>Beneficiario: <b>{{beneficiario}}</b></p>
+        <p>Codice fiscale: <b>{{schedaClienteMain[0]?.codiceFiscale === null ? "-" : schedaClienteMain[0].codiceFiscale}}</b></p>
+        <p>Partita IVA: <b>{{schedaClienteMain[0]?.partitaIva === null ? "-" : schedaClienteMain[0]?.partitaIva}}</b></p>
+
+        <!--
+          <td>Forma giuridica: <b>{{schedaClienteMain[0]?.formaGiuridica === null ? "-" : schedaClienteMain[0].formaGiuridica}}</b></td>
+          <td>Tipo anagrafica: <b>{{schedaClienteMain[0]?.tipoSoggetto === null ? "-" : schedaClienteMain[0].tipoSoggetto}}</b></td>
+        -->
+
+        <!-- Vecchia visualizzazione -->
+        <!--<div style="display: flex; justify-content: space-between;">
+          <div>Beneficiario: <b>{{beneficiario}}</b></div>
+          <div>Codice fiscale: <b>{{schedaClienteMain[0]?.codiceFiscale === null ? "-" : schedaClienteMain[0].codiceFiscale}}</b></div>
+          <div>Partita IVA: <b>{{schedaClienteMain[0]?.partitaIva === null ? "-" : schedaClienteMain[0]?.partitaIva}}</b></div>
+        </div>-->
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Dettaglio erogato -->
+  <div class="content">
+    <mat-card>
+      <mat-card-title>
+        <h3>Dettaglio erogato</h3>
+      </mat-card-title>
+
+      <mat-card-content>
+        <table class="dettaglio-table">
+          <tbody>
+            <tr *ngFor="let element of schedaClienteMain[0]?.dettaglioErogato" class="fullWidth">
+              <td>Tipo agevolazione: <b matTooltip="{{element.descTipoAgevolazione}}" matTooltipPosition="right"><!--{{agevService.valorizzaAgevolazione(element?.idAgevolazioneRif, element?.dispTipoAgevolazione)}}-->
+                {{element?.dispTipoAgevolazione == null ? '-' : element.dispTipoAgevolazione}}
+              </b></td>
+              <td>{{element?.dispLabelCausale}}: <b>{{element?.descCausale === null ? "-" : element.descCausale}}</b></td>
+              <td>Data erogazione: <b>{{element?.dataErogazione === null ? "-" : element.dataErogazione | date:'dd/MM/yyyy'}}</b></td>
+              <td>Importo erogato Finpiemonte: <b>{{element?.totFin === null ? "-" : element.totFin  | number: '1.2-2' : 'it'}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Deliberato -->
+  <div class="content">
+    <mat-card>
+      <mat-card-title>
+        <h3>Deliberato</h3>
+      </mat-card-title>
+
+      <mat-card-content>
+        <p>Banca del beneficiario: <b>{{schedaClienteMain[0]?.deliberatoBanca === null ? "-" : schedaClienteMain[0].deliberatoBanca}}</b></p>
+        <p>Confidi: <b>{{((idModalitaAgevolazione == '5' || idModalitaAgevolazione == '9') && schedaClienteMain[0]?.confidi != null) ? schedaClienteMain[0].confidi : "-"}}</b></p>
+        <p>Altre Garanzie: <b>{{schedaClienteMain[0]?.altreGaranzie === null ? "-" : schedaClienteMain[0].altreGaranzie}}</b></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <div class="content">
+    <mat-card class="card-attivita-istruttore">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" [selectedIndex]="0" dynamicHeight>
+    
+        <mat-tab label="Attività istruttore">
+          <ng-template matTabContent>
+        
+            <!-- Dettaglio lavorato -->
+            <mat-card style="background-color: #e7f3fb; margin-left: 5px; margin-right: 6px;">
+              <mat-card-title>
+                <h3>Dettaglio lavorato</h3>
+              </mat-card-title>
+              <mat-card-content>
+                <table class="dettaglio-table" *ngIf="listaBoxLavorati && listaBoxLavorati.length > 0; else noWorkedBoxes">
+                  <tbody>
+                    <tr *ngFor="let element of listaBoxLavorati">
+                      <td>Attività: <b>{{element.nomeAttivita == null ? "-" : element.nomeAttivita}}</b></td>
+                      <td>Data inizio: <b>{{element.dataInizio == null ? "-" : element.dataInizio | date:'dd/MM/yyyy'}}</b></td>
+                      <td>Data ultima modifica: <b>{{element.dataUltimaModifica == null ? "-" : element.dataUltimaModifica | date:'dd/MM/yyyy'}}</b></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ng-template #noWorkedBoxes>
+                  <p>Nessuna lavorazione.</p>
+                </ng-template>
+              </mat-card-content>
+            </mat-card>
+
+            <br>
+        
+            <app-attivita-istruttore-area-crediti [item]="idProgetto"
+              [idModalitaAgevolazione]="idModalitaAgevolazione"></app-attivita-istruttore-area-crediti>
+          </ng-template>
+        </mat-tab>
+    
+
+        <mat-tab label="Stato azienda e Rating">
+          
+          <mat-card class="messageSuccess" *ngIf="showSucc">
+            <mat-card-content class="messageSuccessContent">
+              <p>{{succMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+          
+          <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+              <p>{{errorMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+
+          <h3>Azienda</h3>
+          
+          <p class="w-btn">
+            <span>
+              Stato azienda: <b>{{schedaClienteMain[0]?.statoAzienda === null ? "-" : schedaClienteMain[0].statoAzienda}}</b>
+            </span>
+          
+            <span>
+              <button mat-raised-button (click)="openEditDialog(1)" class="button-style-2">MODIFICA</button>
+              <button mat-button (click)="openHistoryDialog(1)" class="button-style-1">STORICO</button>
+            </span>
+          </p>
+
+          <br>
+
+          <h3>Procedura concorsuale</h3>
+          <p>
+            Data procedura concorsuale: <b>{{dataProceduraConsersuale != null ? (dataProceduraConsersuale | date:'dd/MM/yyyy') : " - "}}</b>
+          </p>
+
+          <br>
+
+          <h3>Rating</h3>
+
+          <p class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+            <span>
+              <table class="content-table">
+                <tr>
+                  <td>Rating: <b>{{schedaClienteMain[0]?.rating}}</b></td>
+                  <td>Provider: <b>{{schedaClienteMain[0]?.provider === null ? "-" : schedaClienteMain[0].provider}}</b>
+                  </td>
+                  <td>Data di classificazione: <b>{{schedaClienteMain[0]?.dataClassRating === null ? "-" :
+                      schedaClienteMain[0].dataClassRating | date:'dd/MM/yyyy'}}</b></td>
+                </tr>
+                <tr>
+                  <td>Classe di rischio: <b>{{schedaClienteMain[0]?.classeRischio}}</b></td>
+                  <td>Data di classificazione: <b>{{schedaClienteMain[0]?.dataClassRischio === null ? "-" :
+                      schedaClienteMain[0].dataClassRischio | date:'dd/MM/yyyy'}}</b></td>
+                  <td></td>
+                </tr>
+              </table>
+            </span>
+
+            <span>
+              <button mat-raised-button (click)="openEditDialog(3)" class="button-style-2">MODIFICA</button>
+              <button mat-button (click)="openHistoryDialog(3)" class="button-style-1">STORICO</button>
+            </span>
+          </p>
+        </mat-tab>
+    
+
+        <mat-tab label="Stato credito e Banca">
+
+          <mat-card class="messageSuccess" *ngIf="showSucc">
+            <mat-card-content class="messageSuccessContent">
+              <p>{{succMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+        
+          <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+              <p>{{errorMsg}}</p>
+            </mat-card-content>
+          </mat-card>
+        
+          <h3>Credito</h3>
+    
+          <p class="w-btn">
+            <span>
+              Stato credito Finpiemonte: <b>{{schedaClienteMain[0]?.statoCredito === null ? "-" : schedaClienteMain[0].statoCredito}}</b>
+            </span>
+          
+            <span>
+              <button mat-raised-button (click)="openEditDialog(2)" class="button-style-2">MODIFICA</button>
+              <button mat-button (click)="openHistoryDialog(2)" class="button-style-1">STORICO</button>
+            </span>
+          </p>
+          
+          <br>
+
+          <h3>Banca</h3>
+
+          <p class="w-btn">
+            <span>
+              Banca del beneficiario: <b>{{schedaClienteMain[0]?.banca === null ? "-" : schedaClienteMain[0].banca}}</b>
+            </span>
+          
+            <span>
+              <button mat-raised-button (click)="openEditDialog(4)" class="button-style-2">MODIFICA</button>
+              <button mat-button (click)="openHistoryDialog(4)" class="button-style-1">STORICO</button>
+            </span>
+          </p>
+        </mat-tab>
+    
+      </mat-tab-group>
+    </mat-card>
+  </div>
+  
+  <br>
+
+  <div class="backContainer">
+    <button (click)="goBack()" mat-button>
+      <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+      <span class="backText">Torna alla ricerca dei beneficiari</span>
+    </button>
+  </div>
+
+  <p></p>
+  
+
+</div>

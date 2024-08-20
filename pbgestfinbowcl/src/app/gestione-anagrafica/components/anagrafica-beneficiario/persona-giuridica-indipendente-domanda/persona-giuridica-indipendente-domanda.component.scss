@@ -1,0 +1,139 @@
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+.header-container {
+    width: 70vw;
+
+    p {
+        margin-left: 3rem;
+    }
+}
+
+#container-form {
+    section {
+        margin-bottom: 1rem;
+
+        /* h3 {
+            margin-bottom: 0;
+        } */
+    }
+
+    .row {
+        mat-form-field {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .col {
+            flex: 1;
+            margin-right: 20px;
+
+            span {
+                margin-right: 10px;
+            }
+
+            .cell-margin {
+                margin-right: 20px;
+            }
+
+            .cell {
+                width: 50%;
+
+                .cell2 {
+                    width: calc(50% - 20px);
+                }
+
+                .cell2b {
+                    width: 50%;
+                }
+
+            }
+
+            .cell-75 {
+                width: 75%;
+
+                .cell2 {
+                    width: calc(30% - 20px);
+                }
+
+                .cell2b {
+                    width: 70%;
+                }
+            }
+
+            .cell-20 {
+                width: 20%;
+            }
+        }
+
+        .col3 {
+            flex: 3;
+            margin-right: 20px;
+
+            .cell {
+                width: 50%;
+
+            }
+        }
+    }
+}
+
+#button-footer-container {
+    button {
+        margin-left: 20px;
+    }
+}
+
+mat-error {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#formato-field {
+    mat-icon {
+        margin-left: 5px;
+        cursor: pointer;
+    }
+}
+
+.font-size-10-5 {
+    font-size: 10.5px;
+}
+
+
+.viewport {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.viewport-full {
+    height: 200px;
+}
+
+.viewport-1 {
+    height: 40px;
+}
+
+.viewport-2 {
+    height: 80px;
+}
+
+.viewport-3 {
+    height: 120px;
+}
+
+.viewport-4 {
+    height: 160px;
+}
+
+.viewport-item {
+    height: 40px;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100% !important;
+}

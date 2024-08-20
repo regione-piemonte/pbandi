@@ -1,0 +1,152 @@
+<!-- <mat-spinner class="page" *ngIf="isLoading()"></mat-spinner>
+<div class="page" [ngClass]="{'displayNone': isLoading()}"> -->
+
+<div>
+    <mat-card class="padding0">
+        <mat-card-header>
+            <mat-card-title>
+                <h3 class="cardtitle">Passaggio a perdita</h3>
+            </mat-card-title>
+        </mat-card-header>
+
+
+        <mat-card-content class="scroll">
+
+            <!--SPINNER-->
+            <div style="height: 100%;" *ngIf="isLoading()">
+                <mat-spinner class="loading"></mat-spinner>
+            </div>
+
+            <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveSuccess">
+                <mat-card-content class="messageSuccessContent">
+                    <p>{{messageSuccess}}</p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiControl">
+                <mat-card-content class="messageErrorContent">
+                    <p> L'importo deve avere massimo due cifre dopo la virgola</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiVuoti">
+                <mat-card-content class="messageErrorContent">
+                    <p> Almeno un campo deve essere valorizzato</p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+                <mat-card-content class="messageErrorContent">
+                    <p> Modificare almeno un campo</p>
+                </mat-card-content>
+            </mat-card>
+
+            <div *ngIf=isConferma>
+                <form style="margin-left: 0%;">
+                    <mat-grid-list cols="8" rowHeight="50px" [gutterSize]="'15px'">
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Data passaggio a perdita</mat-label>
+                                <input matInput [matDatepicker]="picker" name="dataPassaggioPerdita"
+                                    [(ngModel)]="dataPassaggioPerdita" [max]="today" disabled />
+                                <button mat-button mat-icon-button matSuffix *ngIf="dataPassaggioPerdita"
+                                    (click)="setDataNull()" class="icons">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Perdita capitale</mat-label>
+                                <input type="text" [(ngModel)]="impPerditaCapitaleFormatted" matInput
+                                    name="impPerditaCapitale" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP="ngModel"
+                                    step="0.01" (blur)="setImporto(1)">
+                                <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Perdita interessi</mat-label>
+                                <input type="text" [(ngModel)]="impPerditaInterressiFormatted" matInput
+                                    name="impPerditaInterressi" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                    #numP1="ngModel" step="0.01" (blur)="setImporto(2)">
+                                <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Perdita agevolazione</mat-label>
+                                <input type="text" [(ngModel)]="impPerditaAgevolazFormatted" matInput
+                                    name="impPerditaAgevolaz" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel"
+                                    step="0.01" (blur)="setImporto(3)">
+                                <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="4" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Perdita mora</mat-label>
+                                <input type="text" [(ngModel)]="impPerditaMoraFormatted" matInput name="impPerditaMora"
+                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP3="ngModel" step="0.01"
+                                    (blur)="setImporto(4)">
+                                <mat-error *ngIf="numP3?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Totale perdita complessiva</mat-label>
+                                <input type="text" [(ngModel)]="impPerditaComplessivaFormatted" matInput
+                                    name="impPerditaComplessiva" #numP4="ngModel"
+                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImporto(5)" step="0.01" />
+                                <mat-error *ngIf="numP4?.errors?.pattern">Valore non valido</mat-error>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                        <mat-grid-tile [colspan]="8" [rowspan]="1">
+                            <mat-form-field class="elem1" appearance="standard">
+                                <mat-label>Note</mat-label>
+                                <input type="text" matInput [(ngModel)]="note" name="note" />
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                    <!-- <app-gestione-allegati  [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+                </form>
+
+            </div>
+
+
+            <!--  -->
+
+            <div *ngIf=isPP>
+
+                <p>Data passaggio a perdita: <b>{{dataPassaggioPerdita |date: "dd/MM/yyyy"}}</b></p>
+                <p>Perdita capitale: <b>{{impPerditaCapitale | number: '1.2-2' : 'it'}} </b></p>
+                <p>Perdita interessi: <b>{{impPerditaInterressi | number: '1.2-2' : 'it'}}</b></p>
+                <p>Perdita agevolazione:<b> {{impPerditaAgevolaz | number: '1.2-2' : 'it'}}</b></p>
+                <p>Perdita mora: <b>{{ impPerditaMora | number: '1.2-2' : 'it'}}</b></p>
+                <p>Totale perdita complessiva:<b> {{impPerditaComplessiva | number: '1.2-2' : 'it'}}</b></p>
+                <p>Note: <b>{{note}}</b></p>
+
+            </div>
+
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            <button mat-button class="button-style-1" (click)="openStorico()"
+                [disabled]="disableStorico == true">STORICO</button>
+            <button mat-button class="button-style-1" (click)="onAnnulla()" *ngIf=isConferma>ANNULLA</button>
+            <!-- <div fxFlex></div> -->
+            <button mat-raised-button class="button-style-2" (click)="controllaCampi()"
+                *ngIf=isConferma>CONFERMA</button>
+            <button mat-raised-button class="button-style-2" (click)="onModifica()" *ngIf=isPP>MODIFICA</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

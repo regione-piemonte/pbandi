@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 
+	// OracleLobHandler, the Oracle-specific implementation of Spring's LobHandler interface,
+	// requires a NativeJdbcExtractor for obtaining the native OracleConnection: 
+	// it is an interface for extracting native JDBC objects from wrapped objects coming from connection pools.
+	-->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" >
+		<property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	</bean>
+	
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" />
+
+
+	<!-- bean pbservizit.pbandiutil  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.BeanUtil" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.LoggerUtil" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.TimerUtil"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.business.impl.ProfilazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.UserInfoHelper" />
+	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.business.impl.EsecuzioneAttivitaBusinessImpl"/>
+	
+	<!-- bean pbservizit.pbandisrv.integration  -->
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.dao.GenericDAO"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDatiGeneraliDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiProfilazioneDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDAO"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.util.BeanMapper" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDichiarazioneDiSpesaDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiGestioneProgettoDAOImpl"/>
+ 	
+ 	<!-- bean pbservizit.pbandisrv.business  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.neoflux.NeofluxBusinessImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DecodificheManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SequenceManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RegolaManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ProgettoManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.TimerManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ConfigurationManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ContoEconomicoManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SoggettoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SedeManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RevocaRecuperoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.CertificazioneManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DocumentoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.IndicatoriManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RappresentanteLegaleManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.CheckListManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.richiestaerogazione.RichiestaErogazioneBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionedatigenerali.GestioneDatiGeneraliBusinessImpl" /> 
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionedatididominio.GestioneDatiDiDominioBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.profilazione.ProfilazioneBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.tracciamento.TracciamentoBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ComuniManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.BilancioManager" />
+	
+ 	
+ 	<!-- bean pbservizit.pbandisrv.dto  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.dto.manager.ConfigurationDTO" />
+	
+	<!-- bean di pbservizit.business -->
+	<bean class="it.csi.pbandi.pbservizit.business.impl.GestioneProfilazioneBusinessImpl" /> 
+	<bean class="it.csi.pbandi.pbservizit.business.impl.ContoeconomicoBusinessImpl" /> 
+	<bean class="it.csi.pbandi.pbservizit.business.CustomSecurityHelper" />
+	
+	<!-- bean di pbservizit.integration -->
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ProfilazioneDAOImpl"></bean>
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.TracciamentoDAOImpl"></bean>
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.HomeDAOImpl"></bean>
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.AttivitaDAOImpl"></bean>
+ 	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.GestioneFileDAOImpl" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.IndicatoriDAOImpl" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.CronoProgrammaDAOImpl" />
+ 	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ContoEconomicoDAOImpl" /> 	
+ 	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.CronoProgrammaFasiDAOImpl" />
+ 	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.HelpDAOImpl" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ChecklistCommonDAOImpl" />
+	<!-- bean di pbservizit.util -->
+	<bean class="it.csi.pbandi.pbservizit.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbservizit.util.FileSqlUtil"></bean>
+	
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionebackoffice.GestioneBackofficeBusinessImpl" ></bean>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiBackOfficeDAOImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.services.mail.MailDAO"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.VoceDiSpesaManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.TemplateDbManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DynamicTemplateManager"/>
+	
+	<bean class="it.csi.pbandi.pbservizit.business.manager.DocumentiFSManager"/>
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.DecodificheDAOImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ReportManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.checklisthtml.ChecklistHtmlBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.checklist.CheckListBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiChecklistDAOImpl"/>
+	
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ArchivioFileDAOImpl" />	
+  	<bean class="it.csi.pbandi.pbservizit.business.manager.DocumentoManager"/>
+  	<bean class="it.csi.pbandi.pbservizit.util.FileUtil"/>
+  	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.archivio.ArchivioBusinessImpl"/>
+  	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiArchivioFileDAOImpl"/>
+	
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DichiarazioneDiSpesaManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DocumentoDiSpesaManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.TipoAllegatiManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.dichiarazionedispesa.DichiarazioneDiSpesaCulturaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDocumentiDiSpesaDAOImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.EnteManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.PopolaTemplateManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionecronoprogramma.GestioneCronoprogrammaBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.dichiarazionedispesa.DichiarazioneDiSpesaBusinessImpl"/>
+	
+	<context:component-scan base-package="it.csi.pbandi.pbservizit.business.api.impl" />
+
+</beans>

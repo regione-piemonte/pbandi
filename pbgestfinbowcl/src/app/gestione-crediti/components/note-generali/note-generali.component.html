@@ -1,0 +1,159 @@
+<mat-spinner-pbandi class="page" *ngIf="masterSpinner"></mat-spinner-pbandi>
+<!--<div class="page" [ngClass]="{'displayNone': isLoading()}">-->
+<mat-card class="pad">
+
+    <mat-card-header>
+        <mat-card-title>
+            <h3 class="cardtitle">Note generali</h3>
+        </mat-card-title>
+    </mat-card-header>
+    
+    <!--SPINNER-->
+    <mat-card-content *ngIf="isLoading()" class="scroll"> 
+        <div style="height: 100%;">
+            <mat-spinner class="loading"></mat-spinner>
+        </div>
+    </mat-card-content>
+    
+    <!--NESSUNA NOTA-->
+    <mat-card-content *ngIf="noNoteGenerali && !isLoading()" class="scroll">
+
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+
+        <div>
+            <mat-label>Nessuna nota generale presente</mat-label>
+        </div>
+    </mat-card-content>
+
+    <!--PRINCIPALE-->
+    <mat-card-content *ngIf="!(noNoteGenerali || isLoading())" class="scroll"> 
+
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveSuccess">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{succMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+
+
+        <table mat-table [dataSource]="noteGenerali" multiTemplateDataRows style="width: 100%;">
+        
+            <!-- Nota -->
+            <ng-container matColumnDef="txtNota">
+                <th mat-header-cell *matHeaderCellDef><b>Nota</b></th>
+                <td mat-cell *matCellDef="let element">
+                    <div [matTooltip]="element.note" class="note-cell">
+                        {{element.note != null ? element.note : "-"}}
+                    </div>
+                </td>
+            </ng-container>
+        
+            <!-- Data Inserimento -->
+            <ng-container matColumnDef="dataInserimento">
+                <th mat-header-cell *matHeaderCellDef><b>Data inserimento</b></th>
+                <td mat-cell *matCellDef="let element"> {{element.dataInserimento != null ? (element.dataInserimento | date:"dd/MM/yyyy") : "-"}}</td>
+            </ng-container>
+        
+            <!-- Data Modifica -->
+            <ng-container matColumnDef="dataModifica">
+                <th mat-header-cell *matHeaderCellDef><b>Data modifica</b></th>
+                <td mat-cell *matCellDef="let element"> {{element.dataAggiornamento != null ? (element.dataAggiornamento | date:"dd/MM/yyyy") : "-"}} </td>
+            </ng-container>
+        
+            <!-- Utente Modifica -->
+            <ng-container matColumnDef="utenteModifica">
+                <th mat-header-cell *matHeaderCellDef><b>Utente modifica</b></th>
+                <td mat-cell *matCellDef="let element">  {{(element?.cognomeUtenteAgg == null ? element.cognomeUtente : element.cognomeUtenteAgg) +' '+ (element?.nomeUtenteAgg == null ? element.nomeUtente : element.nomeUtenteAgg)}} </td>
+            </ng-container>
+        
+            <!-- Options -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                    <div class="text-right">
+
+                        <button mat-icon-button (click)="eliminaNota(element.idAnnotazione)" [disabled]="user.idUtente != element.idUtenteIns" class="delete-button">
+                            <mat-icon matTooltip="Elimina Nota" matTooltipPosition="above" [matTooltipDisabled]="user.idUtente != element.idUtenteIns" class="delete-icon">delete</mat-icon>
+                        </button>
+
+                        <button mat-icon-button (click)="modificaNota(element)">
+                            <mat-icon matTooltip="Modifica Nota" matTooltipPosition="above">edit</mat-icon>
+                        </button>
+        
+                        <button mat-icon-button (click)="expandedElement = expandedElement != element ? element : null">
+                            <mat-icon  matTooltip="Visualizza allegati Nota" matTooltipPosition="above">
+                                attachment<!--attach_file-->
+                            </mat-icon>
+                        </button>
+        
+                    </div>
+                </td>
+            </ng-container>
+        
+            <!-- tabella interna -->
+            <!-- <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="detailBoxRow">
+                    <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        
+                        <b>Allegati</b>
+                        <br>
+                        <ul *ngIf="element.allegati.length > 0; else templateName">
+                            <li *ngFor="let file of element.allegati; let x = index">
+                                <div class="alignItemsCenter">
+                                   
+                                </div>
+                            </li>
+                        </ul>
+                        <ng-template #templateName>Nessun allegato caricato</ng-template>
+                    </div>
+                </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                    class="detailBoxRow">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <b>Allegati</b>
+                        <br>
+                        <div *ngFor="let file of element.allegatiPresenti" class="row">
+                            <div style="width: 100%;">
+                                <div  class="spaceBetween bold-text" style="width: 90%;color: rgb(86, 120, 233);">
+                                    {{file.nomeFile}}
+                                    <mat-icon style="width: 10%;" class="cursor-pointer" (click)="downloadAllegato(file)">download</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="element.allegatiPresenti == null">Nessun allegato caricato</div>
+                    </div>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        
+        </table>
+
+        <br>
+       
+    </mat-card-content>
+
+
+
+    <mat-card-actions align="end">
+        <button mat-button class="button-style-1" (click)="openNoteMonitoraggio()" [disabled]="noNoteMonitoraggio || isLoading()">NOTE MONITORAGGIO</button>
+        <button mat-raised-button class="button-style-2" (click)="nuovaNota()" [disabled]="isLoading()">NUOVA NOTA</button>
+    </mat-card-actions>
+</mat-card>

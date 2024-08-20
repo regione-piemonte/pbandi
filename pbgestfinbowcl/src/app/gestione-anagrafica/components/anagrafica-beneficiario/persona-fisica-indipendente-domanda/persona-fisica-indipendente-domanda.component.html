@@ -1,0 +1,391 @@
+<mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+<div class="page">
+  <div class="title">
+    <app-torna-indietro [backText]="setBackText"></app-torna-indietro>
+    <!-- <div class="header-container d-flex justify-content-baseline align-items-baseline">
+      <h2>Anagrafica beneficiari</h2>
+      <p>Tipologia soggetto: <strong>{{tipologiaSoggettoCorrelato}}</strong></p>
+      <p>NDG: <strong>{{ndg}}</strong></p>
+
+    </div> -->
+    <div class="reportingContainerUp">
+      <div class="titleBar">
+        <h2>Anagrafica beneficiari</h2>
+      </div>
+    </div>
+    <div class="content">
+      <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+          <mat-card-content class="padding-left-10">
+              <span>
+                  <table class="content-table">
+                      <tr>
+                          <td>Tipologia soggetto: <b>{{tipologiaSoggettoCorrelato}}</b></td>
+                      </tr>
+                      <tr>
+                          <td>NDG: <b>{{ndg}}</b></td>
+                      </tr>
+                  </table>
+              </span>
+          </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="DATI GENERALI">
+            <div class="content" style="margin-top: 2em;">
+            <mat-card class="mat-elevation-z2 messageError" *ngIf="errorModifica">
+              <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+              </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSave">
+              <mat-card-content class="messageSuccessContent">
+                <p>Salvataggio avvenuto con successo!</p>
+              </mat-card-content>
+            </mat-card>
+            <div>
+              <div class="titleBar">
+                <h3>Dati anagrafici</h3>
+              </div>
+
+
+              <form [formGroup]="formSoggettoCorrelato">
+                <div id="container-form">
+
+                  <section formGroupName="dati-anagrafici">
+
+                    <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell cell-margin">
+                            <mat-form-field>
+                              <mat-label>Cognome</mat-label>
+                              <input type="text" matInput formControlName="cognome" />
+                            </mat-form-field>
+                          </div>
+                          <div class="cell">
+                            <mat-form-field>
+                              <mat-label>Nome</mat-label>
+                              <input type="text" matInput formControlName="nome" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+
+                      </div>
+                    </div>
+                    <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+
+                          <mat-form-field>
+                            <mat-label>Ruolo *</mat-label>
+                            <mat-select formControlName="ruolo">
+                              <mat-option *ngFor="let elem of ruoloData" [value]="elem">
+                                {{ elem.descTipoSoggCorr }}
+                              </mat-option>
+                              <mat-error
+                                *ngIf="formSoggettoCorrelato.get('dati-anagrafici.ruolo')?.hasError('required')">
+                                Campo obbligatorio
+                              </mat-error>
+                            </mat-select>
+                          </mat-form-field>
+                          <div class="cell">
+                            <mat-form-field>
+                              <mat-label>Codice Fiscale</mat-label>
+                              <input type="text" matInput formControlName="codiceFiscale" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="cell cell-margin">
+                          <mat-form-field>
+                            <input #datePicker matInput [matDatepicker]="myDatepicker" formControlName="dtNascita"
+                              placeholder="Data di nascita">
+                            <mat-datepicker-toggle matSuffix [for]="myDatepicker">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #myDatepicker></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell cell-margin">
+                            <mat-form-field>
+                              <input type="text" wai-aria="Selezionare una nazione" placeholder="Nazione"
+                                aria-label="Number" matInput formControlName="nazione"
+                                [matAutocomplete]="autoNazioniNascita" (blur)="checkNascita('N')">
+                              <mat-autocomplete autoActiveFirstOption #autoNazioniNascita="matAutocomplete"
+                                [displayWith]="displayFnNazioni" (optionSelected)="clickNascita($event,'N')">
+                                <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                  class="viewport"
+                                  [ngClass]="{'viewport-full': (filteredOptionsNazioniNascita | async)?.length>4,
+                                                      'viewport-1': (filteredOptionsNazioniNascita | async)?.length==1,
+                                                      'viewport-2': (filteredOptionsNazioniNascita | async)?.length==2,
+                                                      'viewport-3': (filteredOptionsNazioniNascita | async)?.length==3,
+                                                      'viewport-4': (filteredOptionsNazioniNascita | async)?.length==4 }">
+                                  <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsNazioniNascita | async"
+                                    [value]="option">
+                                    {{ option.descNazione }}
+                                  </mat-option>
+                                </cdk-virtual-scroll-viewport>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                          </div>
+                          <div class="cell">
+                            <mat-form-field>
+                              <input type="text" wai-aria="Selezionare una regione" placeholder="Regione"
+                                aria-label="Number" matInput formControlName="regione"
+                                [matAutocomplete]="autoRegioniNascita" (blur)="checkNascita('R')">
+                              <mat-autocomplete autoActiveFirstOption #autoRegioniNascita="matAutocomplete"
+                                [displayWith]="displayFnRegioni" (optionSelected)="clickNascita($event,'R')">
+                                <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                  class="viewport"
+                                  [ngClass]="{'viewport-full': (filteredOptionsRegioniNascita | async)?.length>4,
+                                                    'viewport-1': (filteredOptionsRegioniNascita | async)?.length==1,
+                                                    'viewport-2': (filteredOptionsRegioniNascita | async)?.length==2,
+                                                    'viewport-3': (filteredOptionsRegioniNascita | async)?.length==3,
+                                                    'viewport-4': (filteredOptionsRegioniNascita | async)?.length==4 }">
+                                  <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsRegioniNascita | async"
+                                    [value]="option">
+                                    {{ option.descRegione }}
+                                  </mat-option>
+                                </cdk-virtual-scroll-viewport>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell-75 cell-margin d-flex justify-content-between">
+                            <div class="cell2">
+                              <mat-form-field>
+                                <input type="text" wai-aria="Selezionare una provincia" placeholder="Provincia"
+                                  aria-label="Number" matInput formControlName="provincia"
+                                  [matAutocomplete]="autoProvinciaNascita" (blur)="checkNascita('P')">
+                                <mat-autocomplete autoActiveFirstOption #autoProvinciaNascita="matAutocomplete"
+                                  [displayWith]="displayFnProvinceNascita" (optionSelected)="clickNascita($event,'P')">
+                                  <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                    #viewport class="viewport"
+                                    [ngClass]="{'viewport-full': (filteredOptionsProvinceNascita | async)?.length>4,
+                                                    'viewport-1': (filteredOptionsProvinceNascita | async)?.length==1,
+                                                    'viewport-2': (filteredOptionsProvinceNascita | async)?.length==2,
+                                                    'viewport-3': (filteredOptionsProvinceNascita | async)?.length==3,
+                                                    'viewport-4': (filteredOptionsProvinceNascita | async)?.length==4 }">
+                                    <mat-option class="viewport-item"
+                                      *cdkVirtualFor="let option of filteredOptionsProvinceNascita | async"
+                                      [value]="option">
+                                      {{ option.descProvincia }}
+                                    </mat-option>
+                                  </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                            </div>
+                            <div class="cell2b">
+                              <mat-form-field>
+                                <input type="text" wai-aria="Selezionare un comune" placeholder="Comune"
+                                  aria-label="Number" matInput formControlName="comune"
+                                  [matAutocomplete]="autoComuneNascita" (blur)="checkNascita('C')">
+                                <mat-autocomplete autoActiveFirstOption #autoComuneNascita="matAutocomplete"
+                                  [displayWith]="displayFnComuni" (optionSelected)="clickNascita($event,'C')">
+                                  <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                    #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsComuniNascita | async)?.length>4,
+                                                    'viewport-1': (filteredOptionsComuniNascita | async)?.length==1,
+                                                    'viewport-2': (filteredOptionsComuniNascita | async)?.length==2,
+                                                    'viewport-3': (filteredOptionsComuniNascita | async)?.length==3,
+                                                    'viewport-4': (filteredOptionsComuniNascita | async)?.length==4 }">
+                                    <mat-option class="viewport-item"
+                                      *cdkVirtualFor="let option of filteredOptionsComuniNascita | async"
+                                      [value]="option">
+                                      {{ option.descComune }}
+                                    </mat-option>
+                                  </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section formGroupName="residenza">
+                    <h3>Residenza</h3>
+
+                    <div>
+                      <div class="col">
+                        <div class="cell">
+                          <mat-form-field style="width: 400px ;">
+                            <mat-label>Indirizzo</mat-label>
+                            <input type="text" matInput formControlName="indirizzo" />
+                            <mat-error
+                              *ngIf="formSoggettoCorrelato.get('residenza').get('indirizzo').errors?.error==='required'">
+                              Campo obbligatorio
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col">
+                      </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell cell-margin">
+                            <mat-form-field>
+                              <input type="text" wai-aria="Selezionare una nazione" placeholder="Nazione"
+                                aria-label="Number" matInput formControlName="nazioneResidenza"
+                                [matAutocomplete]="autoNazioni" (blur)="check('N')">
+                              <mat-autocomplete autoActiveFirstOption #autoNazioni="matAutocomplete"
+                                [displayWith]="displayFnNazioni" (optionSelected)="click($event,'N')">
+                                <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                  class="viewport" [ngClass]="{'viewport-full': (filteredOptionsNazioni | async)?.length>4,
+                                                    'viewport-1': (filteredOptionsNazioni | async)?.length==1,
+                                                    'viewport-2': (filteredOptionsNazioni | async)?.length==2,
+                                                    'viewport-3': (filteredOptionsNazioni | async)?.length==3,
+                                                    'viewport-4': (filteredOptionsNazioni | async)?.length==4 }">
+                                  <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsNazioni | async" [value]="option">
+                                    {{ option.descNazione }}
+                                  </mat-option>
+                                </cdk-virtual-scroll-viewport>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                          </div>
+                          <div class="cell">
+                            <mat-form-field>
+                              <input type="text" wai-aria="Selezionare una regione" placeholder="Regione"
+                                aria-label="Number" matInput formControlName="regioneResidenza"
+                                [matAutocomplete]="autoRegioni" (blur)="check('R')">
+                              <mat-autocomplete autoActiveFirstOption #autoRegioni="matAutocomplete"
+                                [displayWith]="displayFnRegioni" (optionSelected)="click($event,'R')">
+                                <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400" #viewport
+                                  class="viewport" [ngClass]="{'viewport-full': (filteredOptionsRegioni | async)?.length>4,
+                                                  'viewport-1': (filteredOptionsRegioni | async)?.length==1,
+                                                  'viewport-2': (filteredOptionsRegioni | async)?.length==2,
+                                                  'viewport-3': (filteredOptionsRegioni | async)?.length==3,
+                                                  'viewport-4': (filteredOptionsRegioni | async)?.length==4 }">
+                                  <mat-option class="viewport-item"
+                                    *cdkVirtualFor="let option of filteredOptionsRegioni | async" [value]="option">
+                                    {{ option.descRegione }}
+                                  </mat-option>
+                                </cdk-virtual-scroll-viewport>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell-75 cell-margin d-flex justify-content-between">
+                            <div class="cell2">
+                              <mat-form-field>
+                                <input type="text" wai-aria="Selezionare una provincia" placeholder="Provincia"
+                                  aria-label="Number" matInput formControlName="provinciaResidenza"
+                                  [matAutocomplete]="autoProvincia" (blur)="check('P')">
+                                <mat-autocomplete autoActiveFirstOption #autoProvincia="matAutocomplete"
+                                  [displayWith]="displayFnProvince" (optionSelected)="click($event,'P')">
+                                  <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                    #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsProvince | async)?.length>4,
+                                                  'viewport-1': (filteredOptionsProvince | async)?.length==1,
+                                                  'viewport-2': (filteredOptionsProvince | async)?.length==2,
+                                                  'viewport-3': (filteredOptionsProvince | async)?.length==3,
+                                                  'viewport-4': (filteredOptionsProvince | async)?.length==4 }">
+                                    <mat-option class="viewport-item"
+                                      *cdkVirtualFor="let option of filteredOptionsProvince | async" [value]="option">
+                                      {{ option.siglaProvincia }}
+                                    </mat-option>
+                                  </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                            </div>
+                            <div class="cell2b">
+                              <mat-form-field>
+                                <input type="text" wai-aria="Selezionare un comune" placeholder="Comune"
+                                  aria-label="Number" matInput formControlName="comuneResidenza"
+                                  [matAutocomplete]="autoComune" (blur)="check('C')">
+                                <mat-autocomplete autoActiveFirstOption #autoComune="matAutocomplete"
+                                  [displayWith]="displayFnComuni" (optionSelected)="click($event,'C')">
+                                  <cdk-virtual-scroll-viewport itemSize="40" minBufferPx="200" maxBufferPx="400"
+                                    #viewport class="viewport" [ngClass]="{'viewport-full': (filteredOptionsComuni | async)?.length>4,
+                                                  'viewport-1': (filteredOptionsComuni | async)?.length==1,
+                                                  'viewport-2': (filteredOptionsComuni | async)?.length==2,
+                                                  'viewport-3': (filteredOptionsComuni | async)?.length==3,
+                                                  'viewport-4': (filteredOptionsComuni | async)?.length==4 }">
+                                    <mat-option class="viewport-item"
+                                      *cdkVirtualFor="let option of filteredOptionsComuni | async" [value]="option">
+                                      {{ option.descComune }}
+                                    </mat-option>
+                                  </cdk-virtual-scroll-viewport>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="cell-20">
+                            <mat-form-field>
+                              <mat-label>CAP</mat-label>
+                              <input type="text" matInput formControlName="cap" />
+                              <mat-error *ngIf="formSoggettoCorrelato.get('sede-legale.cap')?.hasError('onlyNumbers')">
+                                Formato non valido
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section formGroupName="quota-partecipazione">
+                    <h3>Quota partecipazione</h3>
+                    <div class="row d-flex justify-content-baseline">
+                      <div class="col">
+                        <div class="d-flex">
+                          <div class="cell cell-margin">
+                            <mat-form-field>
+                              <mat-label>Quota partecipazione</mat-label>
+                              <input type="text" matInput formControlName="quotaPartecipazione" />
+                            </mat-form-field>
+                          </div>
+                          <div class="cell">
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                </div>
+              </form>
+              <div *ngIf="!editForm" style="text-align: right;">
+                <button mat-raised-button class="button-style-2" (click)="editSoggetto()">
+                  MODIFICA
+                </button>
+              </div>
+              <div *ngIf="editForm" id="button-footer-container" class="d-flex justify-content-end">
+                <button mat-raised-button class="button-style-1" (click)="isNotEditSoggetto()">
+                  ANNULLA
+                </button>
+                <button type="submit" mat-raised-button class="button-style-2" (click)="salvaModifiche()">
+                  SALVA
+                </button>
+              </div>
+            </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,439 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div>
+    <div class="title">
+      <h2>Proposte variazione Stato Credito</h2>
+    </div>
+
+    <div class="content">
+      <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+          <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+      </mat-card>
+    
+      <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isModificatoSuccess">
+        <mat-card-content class="messageSuccessContent">
+          <p>{{messageSuccess}}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="mat-elevation-z2 messageError" *ngIf="isModificatoError">
+        <mat-card-content class="messageErrorContent">
+          <p>{{messageError}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+    <div class="content">
+      <mat-expansion-panel [expanded]="criteriRicercaState" (opened)="criteriRicercaState = true" (closed)="criteriRicercaState = false" hideToggle>
+          <mat-expansion-panel-header style="padding-top: 10px; padding-bottom: 10px;">
+              <div class="header" >
+                  <h3 class="search" style="display: flex; align-items: center;">Criteri di ricerca
+                    <mat-icon class="arrow" style="padding-left: 7px;" *ngIf="criteriRicercaState">arrow_drop_up</mat-icon>
+                    <mat-icon class="arrow" style="padding-left: 7px;" *ngIf="!criteriRicercaState">arrow_drop_down</mat-icon>
+                  </h3>
+              </div>
+          </mat-expansion-panel-header>
+          <div>
+            <form>
+
+              <mat-grid-list cols="8" rowHeight="60px">
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Codice Fiscale</mat-label>
+                      <input matInput type="text" [matAutocomplete]="auto1" [(ngModel)]="codFisIns"
+                        (input)="suggest(1, codFisIns)" name="codeiFiscAttDTO">
+                      <mat-autocomplete #auto1="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaCF" [value]="attivita.descAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="">Raggiunto il
+                        limite massimo di caratteri</mat-error>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Partita IVA</mat-label>
+                      <input matInput [matAutocomplete]="auto3" [(ngModel)]="parIvaIns" (input)="suggest(2, parIvaIns)"
+                        name="partitaIVADTO">
+                      <mat-autocomplete #auto3="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaPartiaIVA" [value]="attivita.descAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Denominazione / Cognome e Nome</mat-label>
+                      <input matInput [matAutocomplete]="auto4" [(ngModel)]="denIns" (input)="suggest(3, denIns)"
+                        name="denomDTO">
+                      <mat-autocomplete #auto4="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaDenomin" [value]="attivita.descAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Selezionare un tipo di agevolazione </mat-label>
+                      <mat-select [(ngModel)]="idTipoAgevIns" name="agevDTO">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaTipoAgev" [value]="attivita.idAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Descrizione Bando</mat-label>
+                      <input matInput [matAutocomplete]="auto5" [(ngModel)]="desBanIns" (input)="suggest(4, desBanIns)"
+                        name="bandoDTO">
+                      <mat-autocomplete #auto5="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaBando" [value]="attivita.descAttivita" matTooltip="{{attivita.descAttivita}}" matTooltipPosition="above">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Codice progetto</mat-label>
+                      <input matInput [matAutocomplete]="auto6" [(ngModel)]="codProIns" (input)="suggest(5, codProIns)"
+                        name="codProgDTO">
+                      <mat-autocomplete #auto6="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaCodiceProgetto" [value]="attivita.descAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Selezionare uno stato della proposta </mat-label>
+                      <mat-select [(ngModel)]="idStatoPropos" name="idStatoPropos">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaStatoProposta" [value]="attivita.idAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+              
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Stato credito attuale </mat-label>
+                      <mat-select [(ngModel)]="idStatoAttuale" name="idStatoAttuale">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaStatiCredito" [value]="attivita.idStatoCredito">
+                          {{attivita.descStatoCredito}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Stato credito proposto </mat-label>
+                      <mat-select [(ngModel)]="idStatoCreditoProposto" name="idStatoCreditoProposto">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaStatiCredito" [value]="attivita.idStatoCredito">
+                          {{attivita.descStatoCredito}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+                <!-- NEW -->
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>Codice Fondo Finpis</mat-label>
+                      <input matInput type="text" [matAutocomplete]="auto9" [(ngModel)]="codiceFinpis"
+                        (input)="suggest(9, codiceFinpis)" name="codiceFinpis">
+                      <mat-autocomplete #auto9="matAutocomplete">
+                        <mat-option *ngFor="let attivita of listaCodiceFondoFinpis" [value]="attivita.descAttivita">
+                          {{attivita.descAttivita}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>% sconfino da</mat-label>
+                      <input matInput [matAutocomplete]="auto6" type="number" min="0" max="100"  [(ngModel)]="percSconfinamentoDa" name="percSconfinamentoDa" onkeyup="if (this.value>100) {this.value='100';}else if (this.value<0) {this.value='0';}">
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+                
+
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                  <div class="fullWidth">
+                    <mat-form-field class="elem1">
+                      <mat-label>% sconfino a</mat-label>
+                      <input matInput [matAutocomplete]="auto6" type="number" min="0" max="100" [(ngModel)]="percSconfinamentoA" name="percSconfinamentoA" onkeyup="if (this.value>100) {this.value='100';}else if (this.value<0) {this.value='0';}">
+                    </mat-form-field>
+                  </div>
+                </mat-grid-tile>
+
+
+              </mat-grid-list>
+
+              <br>
+
+              <!--<div style="display: flex; justify-content: end;"></div>-->
+              <button mat-raised-button class="button-style-2" (click)="search()" [disabled]="!codFisIns && !idStatoPropos && !codProIns && !desBanIns && !idTipoAgevIns && !denIns && !parIvaIns && !idStatoPropos && !idStatoAttuale && !idStatoCreditoProposto && !percSconfinamentoDa && !codiceFinpis">CERCA</button>
+              <button mat-button type="button" class="button-style-1" (click)="resetCriteriRicerca()" style="margin-left: 10px;">RESET</button>
+            </form>
+          </div>
+      </mat-expansion-panel>
+    </div>
+
+    <div class="proposte-container" [ngClass]="{'displayNone': !results }">
+      <mat-card class="mat-elevation-z4 marty-card">
+        <mat-card-title>
+          <h3>Proposte di variazione Stato Credito</h3>
+        
+          <div class="content" *ngIf="errore === true" style="min-width: 100%;">
+            <mat-card-content class="messageError">
+              <span>{{message}}</span>
+            </mat-card-content>
+          </div>
+
+          <div class="content" *ngIf="errore === false" style="min-width: 100%;">
+            <mat-card-content class="messageSuccess">
+              <span>{{message}}</span>
+            </mat-card-content>
+          </div>
+        </mat-card-title>
+
+        <mat-card-content>
+        
+          <span *ngIf="isStorico && numeroSelezionati > 0" style="display: flex; align-items: baseline;">
+            <p [ngPlural]="numeroSelezionati"><b>{{numeroSelezionati}}</b>
+              <ng-template ngPluralCase="=1"> elemento selezionato</ng-template>
+              <ng-template ngPluralCase="other"> elementi selezionati</ng-template>
+            </p>
+
+            <button mat-button class="button-style-2 button-margin" (click)="respingiSelezionati()">
+              <span [ngPlural]="numeroSelezionati">
+                <ng-template ngPluralCase="=1">RIFIUTA VARIAZIONE</ng-template>
+                <ng-template ngPluralCase="other">RIFIUTA VARIAZIONI</ng-template>
+              </span>
+            </button>
+    
+            <button mat-button class="button-style-2 button-margin" (click)="autorizzaSelezionati()">
+              <span [ngPlural]="numeroSelezionati">
+                <ng-template ngPluralCase="=1">ACCETTA VARIAZIONE</ng-template>
+                <ng-template ngPluralCase="other">ACCETTA VARIAZIONI</ng-template>
+              </span>
+            </button>
+          </span>
+          
+        
+
+          <p *ngIf="!isStorico">
+            <br>
+            <b>Non ci sono elementi da visualizzare.</b>
+            <br>
+          </p>
+
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="tab" [ngClass]="{'displayNone': !dataSource || !dataSource.data?.length }" matSort #proposteSort="matSort" id="excel">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox (click)="$event.stopPropagation()" [disabled]="element.confirmable == false" (change)="$event ? selection.toggle(element) : null" [checked]="selection.isSelected(element)" [aria-label]="checkboxLabel(element)"></mat-checkbox>
+              </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="nag">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+              <td mat-cell *matCellDef="let element">{{(element.nag!=null)? element.nag :'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="titoloBando">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Bando </th>
+              <td mat-cell *matCellDef="let element">{{(element.titoloBando!=null)? element.titoloBando :'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="denominazione">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
+              <td mat-cell *matCellDef="let element">{{(element.denominazione!=null)? element.denominazione :'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="partitaIva">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Partita IVA </th>
+              <td mat-cell *matCellDef="let element"> {{(element.partitaIva!=null)? element.partitaIva :'-'}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="codiceFiscale">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale </th>
+              <td mat-cell *matCellDef="let element">{{(element.codiceFiscale!=null)? element.codiceFiscale :'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="descModalitaAgevolaz">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo agevolazione </th>
+              <td mat-cell *matCellDef="let element">{{ (element.descModalitaAgevolaz!=null)? element.descModalitaAgevolaz:'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="descStatoProposta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato proposta </th>
+              <td mat-cell *matCellDef="let element">{{ (element.descStatoProposta!=null)? element.descStatoProposta:'-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="flagAccettatoRifiutato">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Azione Effettuata </th>
+              <td mat-cell *matCellDef="let element">{{ (element.flagAccettatoRifiutato!=null)? element.flagAccettatoRifiutato:'-'}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="dataProposta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Data proposta </th>
+              <td mat-cell *matCellDef="let element"> {{element.dataProposta|date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+          
+          
+            <!-- <ng-container matColumnDef="descStatoCredFin">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato credito Finpiemonte </th>
+              <td mat-cell *matCellDef="let element">{{ (element.descStatoCredFin!=null)? element.descStatoCredFin:'-'}}</td>
+            </ng-container>
+                              
+            <ng-container matColumnDef="descNuovoStatoCred">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nuovo stato credito Finpiemonte </th>
+              <td mat-cell *matCellDef="let element">{{ (element.descNuovoStatoCred!=null)? element.descNuovoStatoCred:'-'}}</td>
+            </ng-container> -->
+          
+            <ng-container matColumnDef="statoCreditoAttuale">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato credito attuale </th>
+              <td mat-cell *matCellDef="let element">{{ (element.statoCreditoAttuale!=null)? element.statoCreditoAttuale:'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="statoCreditoProposto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato credito proposto </th>
+              <td mat-cell *matCellDef="let element">{{ (element.statoCreditoProposto!=null)? element.statoCreditoProposto:'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="descStatAzienda">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato azienda </th>
+              <td mat-cell *matCellDef="let element">{{ (element.descStatAzienda!=null)? element.descStatAzienda:'-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="percSconf">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Percentuale sconfinamento </th>
+              <td mat-cell *matCellDef="let element"> {{element.percSconf != null ? (element.percSconf | number: '1.2-2' : 'it')+'%' : '-'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="impSconfCapitale">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sconfinamento capitale </th>
+              <td mat-cell *matCellDef="let element"> {{element.impSconfCapitale | number: '1.2-2' : 'it' }} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="impSconfInteressi">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sconfinamento interessi </th>
+              <td mat-cell *matCellDef="let element">{{element.impSconfInteressi | number: '1.2-2' : 'it'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="impSconfAgev">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sconfinamento agevolazione </th>
+              <td mat-cell *matCellDef="let element"> {{element.impSconfAgev | number: '1.2-2' : 'it'}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="giorniSconf">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Giorni sconfinamento </th>
+              <td mat-cell *matCellDef="let element">{{(element.giorniSconf!=null)? element.giorniSconf:'-'}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+
+                <div class="options">
+                  <button mat-icon-button *ngIf="element.confirmable == true" (click)="openDialog(element, true)"><mat-icon matTooltip="Autorizza" matTooltipPosition="above">thumb_up_off_alt</mat-icon></button>
+                  <button mat-icon-button *ngIf="element.confirmable == true" (click)="openDialog(element, false)"><mat-icon matTooltip="Respingi" matTooltipPosition="above">thumb_down_off_alt</mat-icon></button>
+          
+                  <!--<mat-icon  class="blue-color" style="cursor: pointer" ></mat-icon>-->
+                  <!--*ngIf="element.abilitaGestioneIter === true"-->
+                  <!--<mat-icon class="blue-color" style="cursor: pointer"></mat-icon>-->
+                </div>
+                <div class="options">
+                  <!-- Viene sempre aperto, nessuna logica -->
+                  <button mat-icon-button (click)="apriPianoAmmortamento(element)"> <!-- *ngIf="element.idModalitaAgevolazioneRif == '5' || element.idModalitaAgevolazioneRif == '10'"-->
+                    <mat-icon matTooltip="Apri Piano di Ammortamento" matTooltipPosition="above">pending</mat-icon>
+                  </button>
+                  <!-- Viene sempre aperto, nessuna logica -->
+                  <button mat-icon-button (click)="apriEstrattoConto(element)">
+                    <mat-icon matTooltip="Apri Estratto Conto" matTooltipPosition="above">receipt</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"></tr>
+          
+          </table>
+          <div class="bottom-options"  [ngClass]="{'displayNone': !isStorico }">
+            <button class="button-style-2 download-button-component" mat-button (click)="scaricaExcel()"><span class="download-button-container">SCARICA EXCEL<mat-icon class="download-icon">save_alt</mat-icon></span></button>
+            
+            <div class="right-options">
+              <!--<button mat-button class="button-style-2" (click)="respingiSelezionati()">RIFIUTA VARIAZIONE</button>
+    
+              <button mat-button class="button-style-2 button-margin" (click)="autorizzaSelezionati()">ACCETTA VARIAZIONE</button>-->
+            
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true" [ngClass]="{'displayNone': !dataSource || !dataSource.data?.length}" #propostePaginator></mat-paginator>
+            </div>
+          </div>
+          
+        </mat-card-content>
+      </mat-card>
+      <br>
+    </div>
+
+  </div>
+</div>

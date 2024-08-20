@@ -1,0 +1,583 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca</span>
+      </button>
+    </div>
+    <h2>Modifica provvedimento di revoca</h2>
+
+    <div *ngIf="mostraErrori">
+      <div [hidden]="!error">
+        <div _ngcontent-nxr-c293="" class="content width-100-perc margin-0 max-width-89-perc">
+          <mat-card _ngcontent-nxr-c293="" class="mat-card mat-focus-indicator messageError"
+            ng-reflect-ng-class="[object Object]">
+            <mat-card-content _ngcontent-nxr-c293="" class="mat-card-content messageWarningContent"
+              ng-reflect-ng-class="[object Object]">
+              <p _ngcontent-nxr-c293="" id="ellipsisP"
+                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                {{messageError}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div [hidden]="!success">
+        <div _ngcontent-nxr-c293="" class="content width-100-perc margin-0 max-width-89-perc">
+          <mat-card _ngcontent-nxr-c293="" class="mat-card mat-focus-indicator messageSuccess"
+            ng-reflect-ng-class="[object Object]">
+            <mat-card-content _ngcontent-nxr-c293="" class="mat-card-content messageWarningContent"
+              ng-reflect-ng-class="[object Object]">
+              <p _ngcontent-nxr-c293="" id="ellipsisP"
+                class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+                {{messageSuccess}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+  </div>
+    <!-- MAT CARD 1 -->
+    <div class="content">
+      <mat-card class="mat-elevation-z4 marginTop20">
+        <mat-card-content class="mat-card-content">
+          <div>
+            Beneficiario:
+            <strong>{{provvedimentoRevoca?.denominazioneBeneficiario}}</strong>
+          </div>
+          <div class="mv-2">Bando:
+            <strong>{{provvedimentoRevoca?.nomeBandoLinea}}</strong>
+          </div>
+          <div>Codice Progetto:
+            <strong>{{provvedimentoRevoca?.codiceVisualizzatoProgetto}}</strong>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- INIZIO FORM -->
+    <form [formGroup]="myForm">
+
+      <!-- MAT CARD 2 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+
+            <div class="fullWidth">
+              Numero provvedimento di revoca: <strong>{{provvedimentoRevoca?.numeroProvvedimentoRevoca}}</strong>
+            </div>
+
+            <div class="fullWidth mv-2 spaceBetween">
+              <div style="width: 50%;">Numero di protocollo: <strong>{{provvedimentoRevoca?.numeroProtocollo}}</strong>
+              </div>
+
+              <mat-form-field appearance="standard" style="width: 50%;">
+                <mat-label>COVAR</mat-label>
+                <input type="number" matInput formControlName="numeroCovar" >
+              </mat-form-field>
+
+            </div>
+            <div class="fullWidth mv-2">
+              <div>Data emissione provvedimento di revoca: <strong>{{provvedimentoRevoca?.dataAvvioProvvedimentoRevoca ?
+                  (provvedimentoRevoca.dataAvvioProvvedimentoRevoca|date:"dd/MM/yyyy") : "-"}}</strong>
+              </div>
+            </div>
+
+
+            <div class="d-flex fullWidth">
+              <div style="width: 50%;">
+                <div>Causa provvedimento di revoca: <strong>{{provvedimentoRevoca?.descCausaleBlocco}}</strong></div>
+              </div>
+              <div style="width: 50%;">
+                <div>Autorità controllante: <strong>{{provvedimentoRevoca?.descAutoritaControllante != null ?
+                    provvedimentoRevoca.descAutoritaControllante : "-"}}</strong></div>
+              </div>
+            </div>
+
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 3 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+            <div>Stato provvedimento di revoca: <strong>{{provvedimentoRevoca?.descStatoRevoca ?
+                provvedimentoRevoca.descStatoRevoca : "ND"}}</strong></div>
+            <div class="mv-2">Data stato di provvedimento revoca: <strong>{{provvedimentoRevoca?.dataStatoRevoca ?
+                (provvedimentoRevoca.dataStatoRevoca|date:"dd/MM/yyyy") : "ND"}}</strong>
+            </div>
+            <div class="mv-2">Attività: <strong>{{provvedimentoRevoca?.descAttivitaRevoca ?
+                provvedimentoRevoca.descAttivitaRevoca : "-"}}</strong></div>
+            <div>Data attività: <strong>{{provvedimentoRevoca?.dataAttivitaRevoca ?
+                (provvedimentoRevoca.dataAttivitaRevoca|date:"dd/MM/yyyy") : "ND"}}</strong></div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+
+      <!-- MAT CARD 4 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+            <div class="fullWidth">
+              <div>
+                <strong>Gestione scadenze</strong>
+              </div>
+              <div class="d-grid-2 fullWidth mv-2">
+                <div class="fullWidth">
+                  <mat-form-field class="elem1" appearance="standard" class="w-90">
+                    <mat-label>Data notifica</mat-label>
+                    <input matInput [matDatepicker]="picker2" placeholder="DD/MM/YYY" formControlName="dataNotifica" />
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="fullWidth">
+                  <mat-form-field class="elem1" appearance="standard" class="w-90">
+                    <mat-label>Giorni scadenza</mat-label>
+                    <input matInput type="number" formControlName="giorniScadenza">
+                    <mat-error *ngIf="myForm.get('giorniScadenza')?.errors?.required">
+                      È obbligatorio specificare il numero di giorni
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>Data scadenza: <strong>{{provvedimentoRevoca?.dataScadenza ?
+                  (provvedimentoRevoca.dataScadenza|date:"dd/MM/yyyy") : "ND"}}</strong></div>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 5 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+            <div class="d-grid-3 fullWidth">
+
+              <div class="fullWidth w-90">
+                <mat-label class="bold">Determina: </mat-label>
+                <mat-radio-group aria-label="Select an option" formControlName="determina">
+                  <mat-radio-button (click)="setRequiredDetermina(true)" style="margin-left: 6%;" value="S">Sì</mat-radio-button>
+                  <mat-radio-button (click)="setRequiredDetermina(false)" style="margin-left: 6%;" value="N">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              <div class="fullWidth">
+                <mat-form-field class="elem1 w-90" appearance="standard">
+                  <mat-label>Data determina</mat-label>
+                  <input matInput [matDatepicker]="picker3" placeholder="DD/MM/YYY" formControlName="dataDetermina" />
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="fullWidth">
+                <mat-form-field class="elem1 w-90" appearance="standard">
+                  <mat-label>Estremi determina</mat-label>
+                  <input matInput formControlName="estremiDetermina">
+                  <mat-error *ngIf="myForm.get('estremiDetermina')?.errors?.required">
+                    È obbligatorio specificare gli estremi determina
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="d-grid-2 fullWidth mv-2">
+              <div class="fullWidth">
+                <div>
+                  <mat-label class="bold">Revoca: </mat-label>
+                  <mat-radio-group aria-label="Select an option" formControlName="revoca">
+                    <mat-radio-button style="margin-left: 6%;" value="S">Con recupero</mat-radio-button>
+                    <mat-radio-button style="margin-left: 6%;" value="N">Senza recupero</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div></div>
+              </div>
+            </div>
+
+            <div class="w-70 mv-2">
+              <div class="fullWidth">
+                <mat-form-field class="elem1" appearance="standard" class="fullWidth" class="w-90">
+                  <mat-label>Selezionare una modalità di recupero</mat-label>
+                  <mat-select matInput formControlName="modalitaRecupero">
+                    <mat-option *ngFor="let element of listaModalitaRecupero" [value]="element.id">
+                      {{element.desc}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="w-70">
+              <div class="fullWidth">
+                <mat-form-field class="elem1" appearance="standard" class="fullWidth" class="w-90">
+                  <mat-label>Selezionare un motivo del provvedimento di revoca</mat-label>
+                  <mat-select matInput formControlName="motivoProvvedimentoRevoca">
+                    <mat-option *ngFor="let element of listaMotivi" [value]="element.id">
+                      {{element.desc}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 6 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content fullWidth">
+            <div class="d-flex fullWidth">
+              <i>*Selezionare solo per FESR e FSE</i>
+            </div>
+
+            <!-- contributo -->
+            <div class="d-flex fullWidth mv-2" *ngIf="provvedimentoRevoca?.importoConcessoContributo">
+
+              <mat-label class="bold">{{provvedimentoRevoca?.modAgevContrib}}: </mat-label>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="contributoRevoca" (change)="changeCheckbox('contributoRevoca', $event)">
+                  Revoca
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="contributoMinorSpese"
+                  (change)="changeCheckbox('contributoMinorSpese', $event)">
+                  Minori spese realizzare
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="contributoDecurtazioni"
+                  (change)="changeCheckbox('contributoDecurtazioni', $event)">
+                  Decurtazione in sede di notifica definitiva
+                </mat-checkbox>
+              </div>
+
+            </div>
+
+            <!-- finanziamento -->
+            <div class="d-flex fullWidth mv-2" *ngIf="provvedimentoRevoca?.importoConcessoFinanziamento">
+              <mat-label class="bold">{{provvedimentoRevoca?.modAgevFinanz}}: </mat-label>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="finanziamentoRevoca"
+                  (change)="changeCheckbox('finanziamentoRevoca', $event)">
+                  Revoca
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="finanziamentoMinorSpese"
+                  (change)="changeCheckbox('finanziamentoMinorSpese', $event)">
+                  Minori spese realizzare
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="finanziamentoDecurtazioni"
+                  (change)="changeCheckbox('finanziamentoDecurtazioni', $event)">
+                  Decurtazione in sede di notifica definitiva
+                </mat-checkbox>
+              </div>
+
+            </div>
+
+            <!-- garanzia -->
+            <div class="d-flex fullWidth mv-2" *ngIf="provvedimentoRevoca?.importoConcessoGaranzia">
+              <mat-label class="bold">{{provvedimentoRevoca?.modAgevGaranz}}: </mat-label>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="garanziaRevoca" (change)="changeCheckbox('garanziaRevoca', $event)">
+                  Revoca
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="garanziaMinorSpese"
+                  (change)="changeCheckbox('garanziaMinorSpese', $event)">
+                  Minori spese realizzare
+                </mat-checkbox>
+              </div>
+
+              <div style="margin-left: 6%;">
+                <mat-checkbox formControlName="garanziaDecurtazioni"
+                  (change)="changeCheckbox('garanziaDecurtazioni', $event)">
+                  Decurtazione in sede di notifica definitiva
+                </mat-checkbox>
+              </div>
+
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 7: TABELLA -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <table mat-table [dataSource]="dataSource" class="tab mt3" multiTemplateDataRows>
+
+            <ng-container matColumnDef="modalita">
+              <th mat-header-cell *matHeaderCellDef> Modalità di agevolazione </th>
+              <td mat-cell *matCellDef="let element"> {{element.modalita}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="impAmmesso">
+              <th mat-header-cell *matHeaderCellDef> Importo ammesso iniziale </th>
+              <td mat-cell *matCellDef="let element"> {{element?.importoAmmessoIniziale ? (element?.importoAmmessoIniziale | number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="impConcesso">
+              <th mat-header-cell *matHeaderCellDef> Importo concesso </th>
+              <td mat-cell *matCellDef="let element"> {{element?.importoConcesso ? (element?.importoConcesso | number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="impRevocato">
+              <th mat-header-cell *matHeaderCellDef> Importo già revocato </th>
+              <td mat-cell *matCellDef="let element"> {{element.importoRevocato ? (element?.importoRevocato | number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="impErogato">
+              <th mat-header-cell *matHeaderCellDef> Importo erogato </th>
+              <td mat-cell *matCellDef="let element"> {{element.importoErogato ? (element?.importoErogato| number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="impRecuperato">
+              <th mat-header-cell *matHeaderCellDef> Importo recuperato </th>
+              <td mat-cell *matCellDef="let element"> {{element.importoRecuperato ? (element?.importoRecuperato| number:
+                '1.2-2' : 'it') : "-"}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="impRimborsato">
+              <th mat-header-cell *matHeaderCellDef> Importo rimborsato </th>
+              <td mat-cell *matCellDef="let element"> {{element.importoRimborsato ? (element?.importoRimborsato| number:
+                '1.2-2' : 'it') : "-"}}
+              </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="impConcessoAlRevocato">
+              <th mat-header-cell *matHeaderCellDef> Importo concesso al netto del revocato </th>
+              <td mat-cell *matCellDef="let element"> {{element.impConcAlNettoRevocato ? (element?.impConcAlNettoRevocato|
+                number:
+                '1.2-2' : 'it') :
+                "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="impErogatoAlRecuperato">
+              <th mat-header-cell *matHeaderCellDef> Importo erogato al netto del recuperato e rimborsato</th>
+              <td mat-cell *matCellDef="let element"> {{element.impErogAlNettoRecuERimb ?
+                (element?.impErogAlNettoRecuERimb| number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ImpTotRevoca">
+              <th mat-header-cell *matHeaderCellDef> Importo totale revoca </th>
+              <td mat-cell *matCellDef="let element"> {{element.importoTotaleRevoca ?
+                (element?.importoTotaleRevoca| number:
+                '1.2-2' : 'it') : "-"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="revocaSenzaRec">
+              <th mat-header-cell *matHeaderCellDef> Revoca senza recupero </th>
+              <td mat-cell *matCellDef="let element ; index as i">
+                <div *ngIf="element.idModalitaRif == 1">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoSenzaRecuperoContributo" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoSenzaRecuperoContributo', this.myForm.get('importoSenzaRecuperoContributo').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 5">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoSenzaRecuperoFinanziamento" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoSenzaRecuperoFinanziamento', this.myForm.get('importoSenzaRecuperoFinanziamento').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 10">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoSenzaRecuperoGaranzia" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoSenzaRecuperoGaranzia', this.myForm.get('importoSenzaRecuperoGaranzia').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <!-- <input class="importo" matInput formControlName="importoSenzaRecupero"> -->
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="revocaConRec">
+              <th mat-header-cell *matHeaderCellDef> Revoca con recupero </th>
+              <td mat-cell *matCellDef="let element ; index as i">
+                <div *ngIf="element.idModalitaRif == 1">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoConRecuperoContributo" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoConRecuperoContributo', this.myForm.get('importoConRecuperoContributo').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 5">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoConRecuperoFinanziamento" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoConRecuperoFinanziamento', this.myForm.get('importoConRecuperoFinanziamento').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 10">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoConRecuperoGaranzia" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoConRecuperoGaranzia', this.myForm.get('importoConRecuperoGaranzia').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <!-- <input class="importo" matInput formControlName="importoConRecupero"> -->
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="revocaPreRec">
+              <th mat-header-cell *matHeaderCellDef> Importo prerecupero </th>
+              <td mat-cell *matCellDef="let element ; index as i">
+                <div *ngIf="element.idModalitaRif == 1">-
+                </div>
+                <div *ngIf="element.idModalitaRif == 5">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoPreRecuperoFinanziamento" placeholder="0,00"
+                    (blur)="setImporto('importoPreRecuperoFinanziamento', this.myForm.get('importoPreRecuperoFinanziamento').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 10">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="importoPreRecuperoGaranzia" placeholder="0,00" max="element?.impConcAlNettoRevocato"
+                    (blur)="setImporto('importoPreRecuperoGaranzia', this.myForm.get('importoPreRecuperoGaranzia').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <!-- <input class="importo" matInput formControlName="importoConRecupero"> -->
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="interessi">
+              <th mat-header-cell *matHeaderCellDef> Interessi </th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngIf="element.idModalitaRif == 1">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="interessiContributo" max="element?.impConcAlNettoRevocato"
+                    placeholder="0,00" (blur)="setImporto('interessiContributo', this.myForm.get('interessiContributo').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 5">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="interessiFinanziamento" max="element?.impConcAlNettoRevocato"
+                    placeholder="0,00" (blur)="setImporto('interessiFinanziamento', this.myForm.get('interessiFinanziamento').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <div *ngIf="element.idModalitaRif == 10">
+                  <input type="text" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" class="noBold" matInput formControlName="interessiGaranzia" max="element?.impConcAlNettoRevocato"
+                    placeholder="0,00" (blur)="setImporto('interessiGaranzia', this.myForm.get('interessiGaranzia').value, element?.impConcAlNettoRevocato)"/>
+                </div>
+                <!-- <input class="importo" matInput formControlName="interessi"> -->
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+
+                <div class="d-flex">
+                  <button *ngIf="element.idModalitaRif == 5 || element.idModalitaRif == 10" mat-icon-button (click)="getPianoAmmortamento(element)">
+                    <mat-icon class="mat-icon" matTooltip="Apri Piano di Ammortamento">pending</mat-icon>
+                  </button>
+                  <button *ngIf="element.idModalitaRif == 1 || element.idModalitaRif == 5" mat-icon-button (click)="getEstrattoConto(element)">
+                    <mat-icon class="mat-icon" matTooltip="Apri Estratto Conto">receipt</mat-icon>
+                  </button>
+                </div>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 6 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+            <mat-label>Allegati:</mat-label>
+            <div *ngIf="listaDocumenti?.length == 0" class="fullWidth mv-2">Nessun allegato presente</div>
+            <div *ngIf="listaDocumenti?.length > 0" class="fullWidth mv-2">
+              <div class="d-flex" *ngFor="let element of listaDocumenti">
+                <div>
+                  <a class="blue-color bold-text" matTooltip="Download allegato"
+                    (click)="downloadAllegato(element.idDocumento)">{{element.nomeFile}}</a>
+                </div>
+                <div [hidden]="
+                  ((provvedimentoRevoca.idStatoRevoca != 10) && (element.idTipoDocumento == 55 || element.idTipoDocumento == 49)) ||
+                  ((provvedimentoRevoca.idStatoRevoca != 9) && (element.idTipoDocumento == 54 || element.idTipoDocumento == 48)) ||
+                  ((provvedimentoRevoca.idStatoRevoca == 5) && (element.idTipoDocumento == 53 || element.idTipoDocumento == 47))
+                ">
+                  <p>: {{element?.originiDocumento}} il {{element?.dataDocumento == null ? "-" :
+                    element?.dataDocumento | date:'dd/MM/yyyy'}}</p>
+                </div>
+
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 7 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4 marginTop20">
+          <mat-card-content class="mat-card-content">
+            <mat-form-field appearance="standard" class="fullWidth">
+              <mat-label>Note:</mat-label>
+              <!--
+              <textarea *ngIf="noteBackend" matInput type="text" matInput [readonly]="notaSolaLettura"
+                formControlName="note">{{ele?.note}}</textarea>
+              <textarea *ngIf="!noteBackend" matInput type="text" matInput formControlName="note"></textarea>
+              -->
+              <textarea matInput type="text" matInput formControlName="note"></textarea>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- MAT CARD 8 -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4">
+          <mat-card-content class="mat-card-content">
+            Istruttore che ha avvitato l'istruttoria: <strong>{{provvedimentoRevoca?.denominazioneIstruttore}}</strong>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- BUTTON FINALE -->
+      <div class="content">
+        <mat-card class="mat-elevation-z4">
+          <mat-card-content class="mat-card-content">
+            <div class="display-flex">
+              <div class="display-flex-content-right">
+                <div *ngIf="soloLettura" class="ml-5">
+                  <button mat-raised-button (click)="modifica()" class="button-style-2">MODIFICA</button>
+                </div>
+                <div *ngIf="!soloLettura" class="ml-5">
+                  <button mat-raised-button (click)="salva()" class="button-style-2">SALVA</button>
+                </div>
+                <div *ngIf="showEmettiProvvedimentoRevoca" class="ml-5">
+                  <button mat-raised-button (click)="emettiProvvedimentoRevoca()" class="button-style-2">EMETTI PROVVEDIMENTO DI REVOCA</button>
+                </div>
+                <div *ngIf="showRitiraInAutolettura" class="ml-5">
+                  <button mat-raised-button (click)="ritiroInAutolettura()" class="button-style-2">RITIRO IN AUTOTUTELA</button>
+                </div>
+                <div *ngIf="showConfermaProvvedimento" class="ml-5">
+                  <button mat-raised-button (click)="provvedimentoConfermato()" class="button-style-2">PROVVEDIMENTO CONFERMATO</button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </form>
+</div>

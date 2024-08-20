@@ -1,0 +1,57 @@
+<div>
+    <div class="spaceBetween">
+        <h3 class="bold-text">Revoca bancaria</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+        <mat-card class="messageError" *ngIf="showError">
+            <mat-card-content class="messageErrorContent">
+                <p>{{errorMsg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <mat-grid-list cols="8" rowHeight="40px">
+        <mat-grid-tile [colspan]="4">
+            <div class="text-inside-grid">
+                Data ricezione comunicazione: <b>{{dataRicezComunicazioneRevoca |date: "dd/MM/yyyy"}}
+                </b>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="4" [rowspan]="1">
+            <div class="text-inside-grid">
+                Data revoca: <b>{{dataRevoca |date: "dd/MM/yyyy"}} </b>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="4" [rowspan]="1">
+            <div class="text-inside-grid">
+                Debito residuo banca: <b>{{impDebitoResiduoBanca | number: '1.2-2' : 'it'}}</b>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="4" [rowspan]="1">
+            <div class="text-inside-grid">
+                Debito residuo Finpiemonte:<b> {{impDebitoResiduoFinpiemonte | number: '1.2-2' : 'it'}}</b>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="8" [rowspan]="1">
+            <div class="text-inside-grid">
+                Percentuale cofinanziamento Finpiemonte: <b>{{ perCofinanziamentoFinpiemonte }}%
+                </b>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="8" [rowspan]="1">
+            <div class="text-inside-grid">
+                Numero protocollo:<b> {{numeroProtocollo}}</b>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <table>
+        <td>
+            Note: <b>{{note}}</b>
+        </td>
+    </table>
+    <!-- <span>
+        Data ricezione comunicazione: <b>{{dataRicezComunicazioneRevoca |date: "dd/MM/yyyy"}}</b>
+    </span> -->
+</div>

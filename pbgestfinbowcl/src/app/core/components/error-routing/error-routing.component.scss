@@ -1,0 +1,39 @@
+.page {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    mat-card {
+        min-width: 50%;
+
+        mat-card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h2 {
+            font-weight: bold;
+            margin-left: 20px;
+            margin-bottom: 0px;
+        }
+
+        button {
+            background-color: #0060c1;
+            border: 2px solid #0060c1;
+            color: #ffffff;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        button:disabled {
+            background-color: grey;
+        }
+
+        button:hover:enabled {
+            background-color: #ffffff;
+            color: #0060c1;
+        }
+    }
+}

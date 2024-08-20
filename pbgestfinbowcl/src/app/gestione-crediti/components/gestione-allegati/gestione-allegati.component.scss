@@ -1,0 +1,36 @@
+.allegati-button-component {
+    .allegati-button-container {
+        display: flex;
+        align-items: center;
+
+        .allegati-icon {
+            color: white;
+            padding-right: 9px;
+            margin-left: -9px;
+        }
+    }
+    &:hover {
+        .allegati-button-container {
+            display: flex;
+            align-items: center;
+
+            .allegati-icon {
+                color: blue;
+                padding-right: 9px;
+                margin-left: -9px;
+            }
+        }
+    }
+    &:disabled {
+        .allegati-button-container {
+            display: flex;
+            align-items: center;
+
+            .allegati-icon {
+                color: rgba(0,0,0,.26);
+                padding-right: 9px;
+                margin-left: -9px;
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+<mat-dialog-content class="mat-typography">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Controllo non applicabile</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="myForm">
+    <div class="fullWidth">
+      <mat-form-field class="elem1" appearance="standard" class="fullWidth">
+        <mat-label>Motivazione *</mat-label>
+        <input matInput type="text" formControlName="motivazione">
+        <mat-error *ngIf="myForm?.get('motivazione')?.errors?.required">Campo obbligatorio</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div class="flexEnd margin-top-15">
+    <button mat-button class="button-style-1" mat-dialog-close>ANNULLA</button>
+    <button mat-raised-button class="button-style-2" (click)="conferma()">CONFERMA</button>
+  </div>
+
+</mat-dialog-content>

@@ -1,0 +1,249 @@
+<div class="page">
+    <div class="title">
+        <!-- <div class="reportingContainerUp">
+            <div class="titleBar">
+                <h2>Dati dipendenti dalla domanda</h2>
+                <p><b>Tipo Soggetto:</b> {{verificaTipoSoggetto}}</p>
+                <p><b>NAG:</b> {{idSoggetto}}</p>
+            </div>
+        </div> -->
+        <div class="reportingContainerUp">
+            <div class="titleBar">
+              <h2>Dati dipendenti dalla domanda</h2>
+            </div>
+        </div>
+        <div class="content">
+            <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+                <mat-card-content class="padding-left-10">
+                    <span>
+                        <table class="content-table">
+                            <tr>
+                                <td>Tipo Soggetto: <b>{{verificaTipoSoggetto}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>NAG: <b>{{idSoggetto}}</b></td>
+                            </tr>
+                        </table>
+                    </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-divider class="divider" [inset]="true"></mat-divider>
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="Dati beneficiario domanda">
+                        <div class="content" style="margin-top: 2em;">
+                        <h3>Dati riepilogo domanda</h3>
+                        <div class="titleBar">
+                            <p><b>Numero Domanda:</b> {{numeroDomanda}}</p>
+                            <p><b>Stato Domanda:</b> {{statoDomanda}}</p>
+                            <p><b>Data presentazione domanda:</b> {{dataPresentazioneDomanda}}</p>
+                        </div>
+                        <div>
+                            <div>
+                                <form [formGroup]="myForm">
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Documento Identità</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Documento Identità</mat-label>
+                                            <input type="text" matInput formControlName="documentoIdentita"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('documentoIdentita', 'required')">Impossibile
+                                                andare avanti
+                                                senza Documento Identità
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Ente rilascio</mat-label>
+                                            <input type="text" matInput formControlName="enteRilascio"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('enteRilascio', 'required')">Impossibile andare
+                                                avanti
+                                                senza Ente rilascio
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Numero documento</mat-label>
+                                            <input type="text" matInput formControlName="numeroDocumento"
+                                                [disabled]="false" />
+                                            <mat-error *ngIf="hasError('numeroDocumento', 'required')">Impossibile
+                                                andare avanti
+                                                senza Numero documento
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Scadenza documento</mat-label>
+                                            <input type="text" matInput formControlName="scadenzaDocumento"
+                                                [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field>
+                                            <mat-label>Data rilascio</mat-label>
+                                            <input matInput [matDatepicker]="picker2" formControlName="dataRilascio"
+                                                [disabled]="false" />
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Recapiti</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Telefono</mat-label>
+                                            <input type="text" matInput formControlName="telefono" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('telefono', 'required')">Impossibile andare
+                                                avanti
+                                                senza Telefono
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>FAX</mat-label>
+                                            <input type="text" matInput formControlName="fax" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Email</mat-label>
+                                            <input type="text" matInput formControlName="email" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('email', 'required')">Impossibile andare avanti
+                                                senza Email
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>PEC</mat-label>
+                                            <input type="text" matInput formControlName="pec" [disabled]="false" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Conto Corrente</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Banca</mat-label>
+                                            <input type="text" matInput formControlName="banca" [disabled]="false" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>IBAN</mat-label>
+                                            <input type="text" matInput formControlName="iban" [disabled]="false" />
+                                            <mat-error *ngIf="hasError('iban', 'required')">Impossibile andare avanti
+                                                senza IBAN
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <!-- <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Consulenti</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Denominazione</mat-label>
+                                            <input type="text" matInput formControlName="denominazione"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice Fiscale</mat-label>
+                                            <input type="text" matInput formControlName="codiceFiscale"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Ruolo soggetto correlato</mat-label>
+                                            <input type="text" matInput formControlName="ruoloSoggettoCorrelato"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Tipo soggetto</mat-label>
+                                            <input type="text" matInput formControlName="tipoSoggetto"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div> -->
+
+                                    <!-- <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                                    <h3>Sede Legale</h3>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Indirizzo</mat-label>
+                                            <input type="text" matInput formControlName="indirizzo" [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Partita IVA</mat-label>
+                                            <input type="text" matInput formControlName="partitaIva"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>CAP sede legale</mat-label>
+                                            <input type="text" matInput formControlName="capSedeLegale"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Nazione sede legale</mat-label>
+                                            <input type="text" matInput formControlName="nazioneSedeLegale"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Codice ATECO prevalente</mat-label>
+                                            <input type="text" matInput formControlName="codiceAteco"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Descrizione ATECO</mat-label>
+                                            <input type="text" matInput formControlName="descrizioneAteco"
+                                                [disabled]="true" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="row">
+                                        <mat-form-field class="col">
+                                            <mat-label>Comune</mat-label>
+                                            <input type="text" matInput formControlName="comune" [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Provincia</mat-label>
+                                            <input type="text" matInput formControlName="provincia" [disabled]="true" />
+                                        </mat-form-field>
+                                        <mat-form-field class="col">
+                                            <mat-label>Regione</mat-label>
+                                            <input type="text" matInput formControlName="regione" [disabled]="true" />
+                                        </mat-form-field>
+                                    </div> -->
+                                </form>
+                            </div>
+                        </div>
+                        <!-- [disabled]="!myForm.valid" da aggiungere poi per la validazione -->
+                        <button class="save-button" mat-raised-button (click)="salvaModifiche()">
+                            SALVA
+                        </button>
+                        <button mat-raised-button (click)="annullaModifiche()">
+                            ANNULLA
+                        </button>
+                    </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

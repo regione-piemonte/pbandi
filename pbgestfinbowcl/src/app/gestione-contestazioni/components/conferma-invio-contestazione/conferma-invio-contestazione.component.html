@@ -1,0 +1,47 @@
+<div >
+    <div class="spaceBetween">
+      <h3 class="bold-text">Riepilogo contestazione</h3>
+      <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content *ngIf="!isLoading">
+      <mat-card class="messageError" *ngIf="showError">
+        <mat-card-content class="messageErrorContent">
+          <p>{{errorMsg}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div>
+        <mat-card-content>
+        <div style="display: flex;flex-direction: column;">
+          <div >
+             <span>  Provvedimento di revoca n. {{data.numeroRevoca}}</span>
+          </div>
+          <div >
+              <span>  Numero di protocollo n. {{data.numeroProtocollo}}</span>
+          </div>
+        </div>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-title>
+            <span *ngFor="let lettera of letteraAccompagnatoria">
+            <h3> <b>Lettera accompagnatoria :</b>  {{lettera.nomeFile}}</h3>
+            </span>
+        </mat-card-title>
+        <mat-card-title>
+            <span *ngFor="let lettera of allegatiGenerici">
+            <h3> <b>Altri allegati :</b>  {{lettera.nomeFile}}</h3>
+            </span>
+        </mat-card-title>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <span style="color: red;"> <b>Attenzione ! L'operazione completerà l'invio della contestazione, continuare?</b></span>
+        </mat-card-content>
+    </div>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" [disabled]="isLoading" (click)="invia()">CONFERMA</button>
+  </div>
+  

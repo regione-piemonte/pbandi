@@ -1,0 +1,160 @@
+.mat-elevation-z8 {
+    width: 100%;
+    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%);
+}
+
+table {
+    width: 100%;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+
+
+mat-option {
+    height: 35px !important;
+    line-height: 35px !important;
+}
+
+.padding-left-10 {
+    padding-left: 10px;
+}
+
+.elem1 {
+    width: 98%;
+}
+
+.mat-elevation-z8 {
+    //width: 98%;
+    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%);
+    font-size: 10px !important;
+}
+
+.mat-grid-tile .mat-figure {
+    display: block !important;
+}
+
+.mat-form-field-appearance-standard .mat-form-field-flex {
+    padding-top: 0 !important;
+}
+
+tr.example-detail-row {
+    height: 0;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.detalBoxRow {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    background-color: #178cd61a;
+}
+
+
+
+/*.cdk-overlay-pane {
+    width: 60% !important;
+}*/
+
+/*mat-header-cell, mat-cell {
+    justify-content: left;
+}*/
+
+/*div.th.mat-sort-header-container.mat-sort-header-content {
+    text-align: left;
+}*/
+
+.tab {
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    ::ng-deep .mat-sort-header-button {
+        text-align: left;
+    }
+
+    th.text-align-left,th.text-align-left .mat-sort-header-button {
+        text-align: left !important;
+    }
+
+    th.align-left .mat-sort-header-container {
+        justify-content: flex-start;
+    }
+
+}
+
+th.text-align-left,th.text-align-left .mat-sort-header-button {
+    text-align: left !important;
+}
+
+th.align-left .mat-sort-header-container {
+    justify-content: flex-start;
+}
+
+.case-sensitive-tab {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.content-table {
+    td {
+        padding: 0 20px 7px 0;
+    }
+}
+
+.tableDoc {
+    th,
+    td {
+        width: 25%;
+        color: #000;
+        padding: 1em;
+    }
+
+    th {
+        font-weight: bold;
+        color: #000;
+    }
+}
+
+.end{
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 3em;
+  }
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.loading {
+    width: 100px;
+    height: 100px;    
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}

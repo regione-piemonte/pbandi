@@ -11,12 +11,12 @@ Questa componente si occupa della certificazione dei finanziamenti pubblici erog
 Questa componente deve essere installata dopo la componente PBANDIWORKSPACE.
 
 ## Prerequisiti di sistema
-[Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
-[Application Server: WildFly - 17.0](https://www.wildfly.org/)
-[RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
+* [Application Server: WildFly - 17.0](https://www.wildfly.org/)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
 ## Software
-[Java Development Kit (jdk): 8](https://www.oracle.org)
-[Maven: 3.2.5](https://maven.apache.org)
+* [Java Development Kit (jdk): 8](https://www.oracle.org)
+* [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbwebfin\pbwebfin-tar\src\pbwebfin-ds.xml:

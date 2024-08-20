@@ -1,0 +1,347 @@
+<div class="page">
+  <mat-spinner-pbandi [hidden]="!spinner"></mat-spinner-pbandi>
+  <div class="title">
+    <!-- <app-torna-indietro [backText]="setBackText"></app-torna-indietro> -->
+    <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna ai dati generali del beneficiario </span>
+      </button>
+    </div>
+
+    <div class="title">
+      <!-- <h2>Dati dipendenti dalla domanda</h2>
+        <p><b>NDG:</b> {{ ndg }}</p>
+        <p><b>Tipologia soggetto:</b> Persona giuridica</p> -->
+      <div class="reportingContainerUp">
+        <div class="titleBar">
+          <h2>Dati dipendenti dalla domanda</h2>
+        </div>
+      </div>
+      <div class="content">
+        <mat-card class="mat-elevation-z2" class="w-btn" style="align-content: flex-end; align-items: flex-end;">
+          <mat-card-content class="padding-left-10">
+            <span>
+              <table class="content-table">
+                <tr>
+                  <td>Ragione sociale: <b>{{denominazione}}</b></td>
+                </tr>
+                <tr>
+                  <td>NDG: <b>{{ndg}}</b></td>
+                </tr>
+                <tr>
+                  <td>partita IVA: <b>{{partitaIva}}</b></td>
+                </tr>
+                <tr>
+                  <td>Tipologia soggetto: <b>Persona giuridica</b></td>
+                </tr>
+              </table>
+            </span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+  <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+    <mat-card-content class="messageSuccessContent">
+      <p [innerHTML]="messageSuccess"></p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+      <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+  </mat-card>
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <mat-divider class="divider" [inset]="true"></mat-divider>
+        <mat-tab-group mat-align-tabs="start" #tabs>
+
+          <mat-tab label="DATI BENEFICIARIO DOMANDA">
+            <div class="content" style="margin-top: 2em;">
+              <div>
+                <div>
+                  <form [formGroup]="myForm">
+                    <h3>Dati riepilogo domanda</h3>
+
+                    <div class="row">
+                      <mat-form-field class="col">
+                        <mat-label>Numero Domanda</mat-label>
+                        <input type="text" matInput formControlName="numeroDomanda" />
+                      </mat-form-field>
+                      <mat-form-field class="col">
+                        <mat-label>Stato Domanda</mat-label>
+                        <input matInput type="text" formControlName="statoDomanda" />
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-label>Data presentazione domanda</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="dataPresentazioneDomanda" />
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+
+                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                    <h3>Conto Corrente</h3>
+
+                    <div class="row">
+                      <mat-form-field class="col">
+                        <mat-label>IBAN</mat-label>
+                        <input type="text" matInput formControlName="iban" />
+                      </mat-form-field>
+                      <mat-form-field class="col">
+                        <mat-label>Banca</mat-label>
+                        <input type="text" matInput formControlName="banca" />
+                      </mat-form-field>
+                    </div>
+
+
+                    <mat-divider class="divider" [inset]="true"></mat-divider>
+
+                    <h3>Altre sedi</h3>
+
+                    <p *ngIf="!altreSediEG || !altreSediEG.length">
+                      Nessune
+                    </p>
+                    
+                    <table mat-table [dataSource]="altreSediEG" multiTemplateDataRows class="fullWidth" id="excel" matSort
+                      (matSortChange)="sortData($event)" *ngIf="altreSediEG && altreSediEG.length > 0">
+                    
+                      <!-- Tipo sede Column -->
+                      <ng-container matColumnDef="tipoSede">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo sede </th>
+                        <td mat-cell *matCellDef="let element">{{element.flagSedeAmm == 'S' ? 'Sede intervento/Sede amministrativa' : 'Sede intervento'}}</td>
+                      </ng-container>
+                    
+                      <!-- Indirizzo  Column -->
+                      <ng-container matColumnDef="indirizzo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Indirizzo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descIndirizzo != null ? element.descIndirizzo : '-'}} </td>
+                      </ng-container>
+                    
+                      <!-- Comune sede Column -->
+                      <ng-container matColumnDef="comuneSede">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descComune != null ? element.descComune : '-'}}</td>
+                      </ng-container>
+                    
+                      <!--Action  Column -->
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right;">
+                          <button mat-icon-button (click)="openDialogAltreSedi(element)" matTooltip="Visualizza dettaglio">
+                            <mat-icon> info </mat-icon>
+                          </button>
+                    
+                          <!-- <button mat-icon-button (click)="modificaSoggCorr(element)">
+                                          <mat-icon>edit</mat-icon>
+                                        </button> </td> -->
+                      </ng-container>
+                    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsAltreSedi"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsAltreSedi;"></tr>
+                    </table>
+
+                  </form>
+
+                  <div *ngIf="isPresentata" class="d-flex justify-content-end">
+                    <div *ngIf="!editForm">
+                      <button mat-raised-button class="button-style-2" (click)="editDatiDomanda()">
+                        MODIFICA
+                      </button>
+                    </div>
+                    <div *ngIf="editForm" id="button-footer-container" class="d-flex justify-content-end">
+                      <button mat-raised-button class="button-style-1" (click)="isNotEditDatiDomanda()">
+                        ANNULLA
+                      </button>
+                      <button type="submit" mat-raised-button class="button-style-2" (click)="setDatiDomanda()">
+                        SALVA
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="SOGGETTI CORRELATI">
+            <div class="content" style="margin-top: 2em;">
+              <h3> Soggetti Correlati</h3>
+              <div *ngIf="!isSoggettiCorr">
+                <mat-divider [inset]="true"></mat-divider>
+                Il soggetto beneficiario non ha soggetti correlati
+                <mat-divider [inset]="true"></mat-divider>
+              </div>
+
+              <div *ngIf="isSoggettiCorr">
+
+                <table mat-table [dataSource]="sortedData" multiTemplateDataRows class="fullWidth" id="excel" matSort
+                  (matSortChange)="sortData($event)">
+                  <!-- 'tipologia','nag', 'denom', 'codiceFisc', 'ruolo', 'action' -->
+
+                  <!-- Tipologia Column -->
+                  <ng-container matColumnDef="tipologia">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+                    <td mat-cell *matCellDef="let element">{{element.tipologia}}</td>
+                  </ng-container>
+
+                  <!-- nag  Column -->
+                  <ng-container matColumnDef="nag">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> NDG </th>
+                    <td mat-cell *matCellDef="let element"> {{element.ndg}} </td>
+                  </ng-container>
+
+                  <!-- denom Column -->
+                  <ng-container matColumnDef="denom">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Denominazione/Cognome e Nome</th>
+                    <td mat-cell *matCellDef="let element"> {{
+                      element.cognome + ' ' + ((element.nome!=null) ? element.nome : '')}} </td>
+                  </ng-container>
+
+                  <!-- codiceFisc Column -->
+                  <ng-container matColumnDef="codiceFisc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale </th>
+                    <td mat-cell *matCellDef="let element"> {{ element.codiceFiscale}} </td>
+                  </ng-container>
+
+                  <!-- ruolo Column -->
+                  <ng-container matColumnDef="ruolo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ruolo</th>
+                    <td mat-cell *matCellDef="let element"> {{element.ruolo}} </td>
+                  </ng-container>
+
+                  <!--Action  Column -->
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: right;">
+                      <button mat-icon-button (click)="visualizzaSoggettoCorr(element)"
+                        matTooltip="Visualizza dettaglio">
+                        <mat-icon> info </mat-icon>
+                      </button>
+
+                      <!-- <button mat-icon-button (click)="modificaSoggCorr(element)">
+                      <mat-icon>edit</mat-icon>
+                    </button> </td> -->
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsSogg"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsSogg;"></tr>
+                </table>
+
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="BLOCCHI">
+            <div class="content" style="margin-top: 2em;">
+              <h3> Elenco blocchi attivi</h3>
+              <app-blocchi-soggetto-domanda>
+              </app-blocchi-soggetto-domanda>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="ALTRI DATI">
+            <div class="content" style="margin-top: 2em;">
+              <div style="margin-bottom: 40px;">
+                <app-dimensione-impresa-domanda></app-dimensione-impresa-domanda>
+              </div>
+              <div style="margin-bottom: 40px;">
+                <app-dsan-domanda></app-dsan-domanda>
+              </div>
+
+              
+
+              <h3 class="bold-text">Istruttoria BDNA</h3>
+              <p *ngIf="!isBdnaTable">
+                Istruttoria BDNA non ancora disponibile per questa domanda.</p>
+
+              <div *ngIf="isBdnaTable">
+
+
+                <table mat-table [dataSource]="dataSourceAltriDati_Bdna">
+                  <ng-container matColumnDef="dataRicezione">
+                    <th mat-header-cell *matHeaderCellDef> <b>Data ricezione</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.bdna_dataRic | date:'dd/MM/yyyy'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="numProto">
+                    <th mat-header-cell *matHeaderCellDef> <b>Numero Protocollo</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.bdna_numProto}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="numeroDomanda">
+                    <th mat-header-cell *matHeaderCellDef> <b>Numero Domanda</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.bdna_numDomanda}} </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="columnsAltriDatiBdna"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnsAltriDatiBdna;"></tr>
+                </table>
+              </div>
+              <br>
+              
+
+              <h3 class="bold-text">Liberatoria Antimafia</h3>
+
+              <p *ngIf="!idAntimafiaTable">
+                Liberatoria antimafia non ancora disponibile per questa domanda.</p>
+
+              <div *ngIf="idAntimafiaTable">
+
+                <table mat-table [dataSource]="dataSourceAltriDati_AntiMafia">
+                  <ng-container matColumnDef="dataEmissione">
+                    <th mat-header-cell *matHeaderCellDef> <b>Data Emissione</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.anti_dataEmiss | date:'dd/MM/yyyy'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dataScadenza">
+                    <th mat-header-cell *matHeaderCellDef> <b>Data Scadenza</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.anti_dataScad | date:'dd/MM/yyyy'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="numeroDomanda">
+                    <th mat-header-cell *matHeaderCellDef> <b>Numero Domanda</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.anti_numDom}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="numProto">
+                    <th mat-header-cell *matHeaderCellDef> <b>Numero Protocollo</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.anti_numProto}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="esito">
+                    <th mat-header-cell *matHeaderCellDef> <b>Esito</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{row.anti_esito}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nomeDocumento">
+                    <th mat-header-cell *matHeaderCellDef> <b>Nome documento</b> </th>
+                    <td mat-cell *matCellDef="let row"> {{(row.nomeDocumento!=null)?row.nomeDocumento:"-"}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> <b> </b> </th>
+                    <td mat-cell *matCellDef="let row"> 
+                      <!-- <button mat-icon-button (click)="downloadAllegato(element.nomeDocumento, element.idDocumentoIndex)">  </button> -->
+                      <mat-icon *ngIf="row.idDocumentoIndex!=null" matTooltip="scarica"  (click)="downloadAllegato(row.nomeDocumento, row.idDocumentoIndex)">download</mat-icon>
+                     </td>
+                  </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef="columnsAltriDatiAntiMafia"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnsAltriDatiAntiMafia;"></tr>
+                </table>
+
+
+              </div>
+
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

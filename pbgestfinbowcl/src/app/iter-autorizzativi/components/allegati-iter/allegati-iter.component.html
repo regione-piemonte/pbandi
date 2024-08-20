@@ -1,0 +1,127 @@
+<!-- <div class="dialog-header">
+    <h3 class="bold-text">Allegati all'iter autorizzativo</h3>
+</div>
+<mat-divider></mat-divider>
+
+
+    <div class="content"*ngIf="errore === true">
+        <mat-card-content class="messageError">
+        <p >ERRORE</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+
+    <div class="content" *ngIf="errore === false">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{message}}</span>
+        </mat-card-content>
+    </div>
+
+
+    <div class="content">
+        <mat-card-content class="mat-card-content">
+          <div><a href="">allegato prova 1</a> </div>
+          <div><a href="">allegato prova 2</a></div>
+        </mat-card-content>
+    </div>
+    <div class="end">
+      <button class="ok-button" type="button" class="button-style-2" mat-button mat-dialog-close>
+      CHIUDI
+      </button>
+    </div> -->
+
+
+<div>
+  <div class="spaceBetween">
+    <h3 class="bold-text">Allegati all'iter autorizzativo</h3>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+    <mat-card class="messageError" *ngIf="showError">
+      <mat-card-content class="messageErrorContent">
+        <p>{{errorMsg}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p [innerHTML]="messageSuccess"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="allegatiDisponibili === true">
+
+    <mat-card-title class="alignItemsCenter acapo">
+      <span class="bold-text" style="display: flex;align-items: center;" *ngFor="let lettera of letteraAccompagnatoria">
+
+        <span *ngIf="distinta === false || dichiarazioneDispesa === false"
+          (click)="scaricaFile(lettera.idDocumentoIndex)" class="spanLink">Lettera accompagnatoria : -
+          {{lettera.nomeFile}} </span>
+
+        <span *ngIf="distinta === true" (click)="scaricaFileExcelDistinta(lettera)" class="spanLink">Lettera
+          accompagnatoria : - {{lettera.nomeFile}} (anteprima non disponibile)</span>
+        <span *ngIf="dichiarazioneDispesa === true" (click)="anteprimaReportDettaglio(lettera)" class="spanLink">Lettera
+          accompagnatoria : - {{lettera.nomeFile}} </span>
+
+        <mat-icon [ngClass]="{'visibility-hidden': !isAnteprimaVisible(lettera.nomeFile)}"
+          class="cursor-pointer margin-left" (click)="anteprimaAllegato(lettera)">
+          remove_red_eye</mat-icon>
+      </span>
+    </mat-card-title>
+
+    <mat-card-title class="alignItemsCenter acapo">
+      <span class="bold-text" style="display: flex;align-items: center;" *ngFor="let lettera of allegatiGenerici">
+
+        <span *ngIf="distinta === false && dichiarazioneDispesa === false"
+          (click)="scaricaFile(lettera.idDocumentoIndex)" class="spanLink">{{lettera.nomeFile}} </span>
+
+        <span *ngIf="distinta === true" (click)="scaricaFileExcelDistinta(lettera)"
+          class="spanLink">{{lettera.nomeFile}} (anteprima non disponibile)</span>
+
+        <span *ngIf="dichiarazioneDispesa === true" (click)="anteprimaReportDettaglio(lettera)"
+          class="spanLink">{{lettera.nomeFile}} </span>
+        <mat-icon [ngClass]="{'visibility-hidden': !isAnteprimaVisible(lettera.nomeFile)}"
+          class="cursor-pointer margin-left" (click)="anteprimaAllegato(lettera)">
+          remove_red_eye
+        </mat-icon>
+      </span>
+    </mat-card-title>
+    
+    <mat-card-title>
+      <div class="margin-top" *ngFor="let progetto of allegatiDistinta">
+
+        {{progetto.codiceVisualizzato}}:
+
+        <span class="bold-text margin-left" style="display: flex; align-items: center;" *ngFor="let allegato of progetto.listaAllegati">
+
+          <span (click)="scaricaFile(allegato.idDocumentoIndex)" class="spanLink">
+            {{allegato.nomeFile}}
+          </span>
+  
+          <mat-icon [ngClass]="{'visibility-hidden': !isAnteprimaVisible(allegato.nomeFile)}"
+            class="cursor-pointer margin-left" (click)="anteprimaAllegato(allegato)">
+            remove_red_eye
+          </mat-icon>
+
+        </span>
+        
+      </div>
+    </mat-card-title>
+  </div>
+
+  <div *ngIf="allegatiDisponibili === false">
+    <p>Nessun allegato disponibile </p>
+  </div>
+</div>
+<div class="end">
+  <button class="ok-button" type="button" class="button-style-2" mat-button mat-dialog-close>
+    CHIUDI
+  </button>
+</div>

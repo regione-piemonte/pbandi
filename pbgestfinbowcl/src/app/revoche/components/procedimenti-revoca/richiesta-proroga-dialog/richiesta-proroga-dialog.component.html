@@ -1,0 +1,87 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Richiesta proroga del {{data.richiestaProroga.dtRichiestaProroga | date:'dd/MM/yyyy'}}</h3>
+  <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+
+<!-- ERROR o SUCCESS -->
+<div [hidden]="!error">
+  <div  class="content width-100-perc margin-0 max-width-89-perc">
+    <mat-card  class="mat-card mat-focus-indicator messageError"
+      >
+      <mat-card-content  class="mat-card-content messageWarningContent"
+        >
+        <p  id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+          {{messageError}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div [hidden]="!success">
+  <div  class="content width-100-perc margin-0 max-width-89-perc">
+    <mat-card  class="mat-card mat-focus-indicator messageSuccess"
+      >
+      <mat-card-content  class="mat-card-content messageWarningContent"
+        >
+        <p  id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+          {{messageSuccess}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+
+<div class="fullWidth">
+  <form [formGroup]="myForm">
+
+    <div class="fullWidth">
+      Motivazione:
+      <b>{{data.richiestaProroga.motivazioneProroga}}</b>
+    </div>
+
+
+    <div class="fullWidth marginTop20">
+      <b>Numero giorni di proroga</b>
+    </div>
+
+
+    <div class="fullWidth">
+      <div class="grid-2">
+        <div class="vertical-center">
+          Richiesti: <b>{{data.richiestaProroga.numGiorniRichiestiProroga}}</b>
+        </div>
+
+        <!-- <div>
+          <mat-form-field class="w-75" appearance="standard">
+            <mat-label>Approvati</mat-label>
+            <input matInput type="number" formControlName="giorniApprovati">
+          </mat-form-field>
+        </div> -->
+
+        <div style="display: flex; justify-content: space-between;" class="font" style="width: 20em;">
+          <mat-form-field class="example-full-width" appearance="standard">
+            <mat-label>Approvati</mat-label>
+            <input  type="number" min="0" matInput placeholder="" value=""
+              formControlName="giorniApprovati" #giorni>
+          </mat-form-field>
+      </div>
+
+      </div>
+
+    </div>
+
+  </form>
+</div>
+
+<div class="flexEnd textAlignRight marginTop20">
+  <button class="button-style-1" mat-button (click)="respingi()" [disabled]="myForm.disabled">
+    RESPINGI
+  </button>
+  <button class="button-style-2" mat-button (click)="approva()" [disabled]="myForm.disabled">
+    APPROVA
+  </button>
+</div>

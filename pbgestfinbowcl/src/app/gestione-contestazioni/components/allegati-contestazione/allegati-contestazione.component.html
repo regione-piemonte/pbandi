@@ -1,0 +1,131 @@
+
+<div class="box">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Allegati alla contestazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div class="content"*ngIf="messaggioLettera === true">
+    <mat-card-content class="messageError">
+    <p >ATTENZIONE</p>
+    <span>E' necessario inserire la lettera accompagnatoria prima di procedere con la conferma</span>
+    </mat-card-content>
+  </div>
+  <div mat-dialog-content *ngIf="!isLoading">
+    <div class="content"*ngIf="showError">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{messageError}}</span>
+      </mat-card-content>
+    </div>
+    <div class="content" *ngIf="showSucc">
+        <mat-card-content class="messageSuccess">
+        <p >SUCCESSO</p>
+        <span>{{messageSuccess}}</span>
+        </mat-card-content>
+    </div>
+  </div>
+  <mat-card-title>
+    <span>
+      <h3 >Lettera accompagnatoria alla contestazione</h3>
+    </span>
+  </mat-card-title>
+  <mat-card-content>
+    <div class="row">
+      <div class="col">
+          <button *ngIf="allegatoDaSalvare?.length===0" mat-button class="button-style-1 paddingLeft20" type='button' (click)="aggiungiAllegato()">AGGIUNGI
+            ALLEGATI</button>
+      </div>
+    </div>
+    <div>
+      <ul>
+        <li *ngFor="let file of allegatoDaSalvare; let i = index">
+          <div class="alignItemsCenter">
+            <span class="bold-text">{{file.nome}}</span>
+            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="rimuoviAllegatoDaSalvare(file.idDocumentoIndex)">
+              <mat-icon>link_off</mat-icon>
+            </button>
+            <button mat-icon-button class="red-color" matTooltip="Anteprima" (click)="anteprimaFile(file)"
+            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(file.nome)}">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <ul>
+        <li *ngFor="let files of letteraAccompagnatoria; let y = index">
+          <div class="alignItemsCenter">
+            <span  (click)="scaricaFile(files.idDocumentoIndex)" class="spanLink"><b>Lettera accompagnatoria :</b> 
+              {{files.nomeFile}}
+            </span>
+            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="deleteAllegato(files.idFileEntita)">
+              <mat-icon>link_off</mat-icon>
+            </button>
+            <button mat-icon-button class="red-color" matTooltip="Anteprima" (click)="anteprimaFileMetod(files)"
+            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(files.nomeFile)}">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-title>
+    <span>
+      <h3 style="margin-top: 1em;">Altri allegati alla contestazione</h3>
+    </span>
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      <ul>
+        <li *ngFor="let files of allegatiDaSalvare; let y = index">
+          <div class="alignItemsCenter">
+            <span class="bold-text">{{files.nome}}</span>
+            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="rimuoviAllegatiDaSalvare(files.idDocumentoIndex)">
+              <mat-icon>link_off</mat-icon>
+            </button>
+            <button mat-icon-button class="red-color" matTooltip="Anteprima" (click)="anteprimaFile(files)"
+            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(files.nome)}">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <ul>
+        <li *ngFor="let files of allegatiGenerici; let y = index">
+          <div class="alignItemsCenter">
+            <span  (click)="scaricaFile(files.idDocumentoIndex)" class="spanLink"><b>Lettera accompagnatoria :</b> 
+              {{files.nomeFile}}
+            </span>
+            <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="deleteAllegato(files.idFileEntita)">
+              <mat-icon>link_off</mat-icon>
+            </button>
+            <button mat-icon-button class="red-color" matTooltip="Anteprima" (click)="anteprimaFileMetod(files)"
+            [ngClass]="{'visibility-hidden': !isAnteprimaVisible(files.nomeFile)}">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="col">
+          <button mat-button class="button-style-1 paddingLeft20" type='button' (click)="aggiungiAllegati()">AGGIUNGI
+            ALLEGATI</button>
+      </div>
+    </div>
+  </mat-card-content>
+</div>
+<div class="spaceBetween">
+  <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+  <button mat-button class="button-style-2" [disabled]="isLoading" (click)="confermaAllegati()">CONFERMA</button>
+</div>

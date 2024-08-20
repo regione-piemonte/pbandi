@@ -1,0 +1,202 @@
+<div mat-dialog-title>
+    <div class="spaceBetween">
+        <h3 *ngIf="isNew" class="bold-text">Nuovo Saldo e Stralcio</h3>
+        <h3 *ngIf="!isNew" class="bold-text">Modifica Saldo e Stralcio</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+</div>
+
+<mat-dialog-content>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isDataVuota">
+        <mat-card-content class="messageErrorContent">
+            <p>Data esito obbligatoria.</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isCampiVuoti">
+        <mat-card-content class="messageErrorContent">
+            <p>Almeno un campo deve essere valorizzato.</p>
+        </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isImportoControl">
+        <mat-card-content class="messageErrorContent">
+            <p>L'importo deve avere massimo due decimali.</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isModifica">
+        <mat-card-content class="messageErrorContent">
+            <p> Modificare almeno un campo</p>
+        </mat-card-content>
+    </mat-card>
+
+    <form>
+        <mat-grid-list cols="8" rowHeight="55px" style="margin-left: 0%;" [gutterSize]="'10px'">
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data proposta</mat-label>
+                    <input matInput [matDatepicker]="picker" name="dataProposta" [max]="today" [(ngModel)]="dataProposta" disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataProposta" (click)="setDataNull(1)" class="icons">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data accettazione</mat-label>
+                    <input matInput [matDatepicker]="picker1" name="dataAccettazione" [(ngModel)]="dataAccettazione" [max]="today" disabled />
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataAccettazione" (click)="setDataNull(2)" class="icons">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker1" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled="false" ></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field appearance="standard" class="elem1">
+                    <mat-label>Tipo di saldo e stralcio</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaSaldoStralcio" name="attivitaDTO">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaSaldoStralcio" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo debitore</mat-label>
+                    <input type="text" [(ngModel)]="importoDebitoreFormatted" matInput name="importoDebitore"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP="ngModel" step="0.01"  (blur)="setImporto(1)">
+                    <mat-error *ngIf="numP?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo Confidi</mat-label>
+                    <input type="text" [(ngModel)]="importoConfidiFormatted" matInput name="importoConfidi"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP1="ngModel" step="0.01"  (blur)="setImporto(2)">
+                    <mat-error *ngIf="numP1?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field appearance="standard" class="elem1">
+                    <mat-label>Esito</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaEsito" name="attivitaDTO1">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaEsito" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data esito</mat-label>
+                    <input matInput [matDatepicker]="picker2" name="dataEsito" [(ngModel)]="dataEsito" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataEsito" (click)="setDataNull(3)" class="icons">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker2" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <!--Da visualizzare solo se l'agevolazione è garanzia (idModalitaAgevolazione = 10)-->
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard" [ngClass]="{'displayNone': idModalitaAgevolazione != 10}">
+                    <mat-label>Importo disimpegno</mat-label>
+                    <input type="text" [(ngModel)]="importoDisimpegnoFormatted" matInput name="importoDisimpegno" [disabled]="!isNew"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP5="ngModel" step="0.01" (blur)="setImporto(5)"> <!--[disabled]="idModalitaAgevolazione != 10"-->
+                    <mat-error *ngIf="numP5?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                  <mat-checkbox [(ngModel)]="flagAgevolazione" name="flagAgevolazione">Agevolazione</mat-checkbox>  
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data pagamento debitore</mat-label>
+                    <input matInput [matDatepicker]="picker3" name="dataPagamDebitore"
+                        [(ngModel)]="dataPagamDebitore" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataPagamDebitore" (click)="setDataNull(4)" class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker3" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Data pagamento Confidi</mat-label>
+                    <input matInput [matDatepicker]="picker4" name="dataPagamConfidi" [(ngModel)]="dataPagamConfidi" [max]="today" disabled/>
+                    <button mat-button mat-icon-button matSuffix *ngIf="dataPagamConfidi" (click)="setDataNull(5)" class="icons">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-datepicker-toggle matSuffix [for]="picker4" class="icons"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4 disabled="false"></mat-datepicker>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field appearance="standard" class="elem1">
+                    <mat-label>Recupero</mat-label>
+                    <mat-select [(ngModel)]="idAttivitaRecupero" name="attivitaDTO2">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let attivita of listaAttivitaRecupero" [value]="attivita.idAttivita">
+                            {{attivita.descAttivita}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo effettivo recuperato</mat-label>
+                    <input type="text" [(ngModel)]="importoRecuperatoFormatted" matInput name="importoRecuperato"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP2="ngModel" step="0.01" (blur)="setImporto(3)">
+                    <mat-error *ngIf="numP2?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Importo da passare a perdita </mat-label>
+                    <input type="text" [(ngModel)]="importoPerditaFormatted" matInput name="importoPerdita"
+                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" #numP3="ngModel" step="0.01" (blur)="setImporto(4)">
+                    <mat-error *ngIf="numP3?.errors?.pattern">Valore non valido</mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="elem1" appearance="standard">
+                    <mat-label>Note</mat-label>
+                    <input type="text" maxlength="4000" matInput [(ngModel)]="note" name="note" />
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+      <!--   <app-gestione-allegati *ngIf="ambito != 'escussioni'" [nomeBox]="nomeBox" (newItemEvent)="recuperaFile($event)"></app-gestione-allegati> -->
+    </form>
+    <br>
+</mat-dialog-content>
+
+<mat-dialog-actions class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" (click)="controllaCampi()">CONFERMA</button>
+</mat-dialog-actions>

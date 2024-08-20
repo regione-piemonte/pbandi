@@ -1,0 +1,51 @@
+.row {
+    display: flex;
+
+    .col {
+        flex-grow: 1;
+        padding-right: 10px;
+    }
+}
+
+.reportingContainerUp {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reportingContainerUpbutton {
+    text-align: right;
+}
+
+.reportingContainerDown {
+    display: flex;
+    justify-content: flex-end;
+}
+
+table {
+    width: 100%;
+}
+
+.marginRight {
+    margin-right: 15px;
+}
+
+.margin0 {
+    margin: 0px !important;
+}
+
+.marginLeft20 {
+    margin-left: 20px;
+}
+
+.marginRight25 {
+    margin-right: 25px;
+}
+
+mat-option {
+    height: 35px !important;
+    line-height: 35px !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}

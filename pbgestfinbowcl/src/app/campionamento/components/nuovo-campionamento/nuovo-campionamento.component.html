@@ -1,0 +1,489 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div>
+        <div class="title">
+            <h2>Nuovo campionamento</h2>
+        </div>
+    </div>
+
+
+    <mat-horizontal-stepper>
+
+        <mat-step label="Elaborazione">
+            <div>
+                <h2> <b> Elaborazione progetti</b></h2>
+            </div>
+            <form>
+                <mat-card style="margin-bottom: 10px;">
+                    Numero campionamento:
+                    <mat-form-field class="elem1" appearance="standard">
+                        <mat-label>Descrizione</mat-label>
+                        <input type="text" maxlength="4000" matInput [(ngModel)]="descCampionamento"
+                            name="descrizione" />
+                    </mat-form-field>
+
+                    <div class="align">
+                        <mat-label> <b>Tipologia di selezione </b></mat-label>
+                        <mat-radio-group [(ngModel)]="tipologiaSelezione" name="tipologiaSelezione">
+                            <mat-radio-button value="1">Numero aziende</mat-radio-button>
+                            <mat-radio-button value="2" style="margin-left: 10px;">Importo validato
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="tipologiaSelezione==null">Campo obbligatorio</mat-error>
+                    </div>
+                </mat-card>
+
+                <!-- BANDI -->
+
+                <mat-card style="margin-bottom: 10px;">
+                    <h3>Bandi</h3>
+                    <p> Selezionare i bandi che si vogliono utilizzare </p>
+                    <div *ngIf=!isBandi>
+                        Nessun bando presente
+                    </div>
+                    <div *ngIf=isBandi>
+
+                        <div>
+                            <ol>
+                                <li *ngFor="let bando of listaBandi" class="spaceBetween">
+                                    <td>
+                                        {{bando.descAttivita}}
+                                    </td>
+                                    <td>
+                                        <button type="button" mat-icon-button class="blue-color"
+                                            (click)="deleteBando(bando.idAttivita)">
+                                            <mat-icon>delete_outline</mat-icon>
+                                        </button>
+                                    </td>
+                                </li>
+                            </ol>
+
+                        </div>
+
+                        <button mat-button class="button-style-1" (click)="deleteAllBandi()">RIMUOVI
+                            TUTTI I BANDI</button>
+                    </div>
+                    <button mat-button class="button-style-1" (click)="openDialog()">AGGIUNGI BANDI</button>
+                </mat-card>
+
+
+                <!-- STATI DI AGEVOLAZIONE -->
+                <mat-card style="margin-bottom: 10px;">
+                    <h3>Stati di agevolazione</h3>
+                    <p> Selezionare gli stati di agevolazione che si vogliono utilizzare </p>
+                    <div *ngIf=!isStatoAgev>
+                        Nessuno stato di agevolazione presente
+                    </div>
+
+                    <div *ngIf=isStatoAgev>
+                    </div>
+
+                    <button mat-button class="button-style-1" (click)="openDialogStatoAgev()">AGGIUNGI STATO DI
+                        AGEVOLAZIONE</button>
+                </mat-card>
+
+
+                <!-- DICHIARAZIONE DI SPESA -->
+                <mat-card style="margin-bottom: 10px;">
+                    <h3>Dichiarazioni di spesa</h3>
+                    <p> Selezionare le dichiarazioni di spesa che si vogliono utilizzare </p>
+                    <div *ngIf=!isDichSpesa>
+                        Nessuna dichiarazione di spesa presente
+                    </div>
+                    <div *ngIf=isDichSpesa>
+                        <div>
+                            <ol>
+                                <li *ngFor="let tipo of dichiarazioneSpesaVO.tipoDichiarazione" class="spaceBetween">
+                                    <td>
+                                        {{tipo.descAttivita}}
+                                    </td>
+                                    <td>
+                                        <button type="button" mat-icon-button class="blue-color"
+                                            (click)="deleteTipoDichiarazSpesa(tipo.idAttivita)">
+                                            <mat-icon>delete_outline</mat-icon>
+                                        </button>
+                                    </td>
+                                </li>
+                            </ol>
+
+                        </div>
+
+                        <button mat-button class="button-style-1" (click)="deleteAllDichiarazSpesa()">RIMUOVI
+                            TUTTE LE DICHIARAZIONI DI SPESA </button>
+                    </div>
+
+                    <button mat-button class="button-style-1" (click)="openDialogSpesa()">AGGIUNGI DICHIARAZIONI DI
+                        SPESA</button>
+                </mat-card>
+
+
+                <div style="text-align: right;">
+                    <button mat-button class="button-style-2" [disabled]="!tipologiaSelezione"
+                        (click)="elaboraCampionamento() " matStepperNext>ELABORA</button>
+                </div>
+
+            </form>
+
+
+        </mat-step>
+
+        <mat-step label="Estrazione">
+
+            <div [ngClass]="{'displayNone': !isEstratti}">
+                <div class="title">
+                    <h3>Progetti elaborati </h3>
+                </div>
+
+                <div #TABLE>
+
+                    <table mat-table [dataSource]="sortedData" multiTemplateDataRows class="fullWidth" id="excel"
+                        matSort #elaboratiSort="matSort">
+
+                        <!-- bando Column -->
+                        <ng-container matColumnDef="descBando">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Bando</th>
+                            <td mat-cell *matCellDef="let element">{{element.descBando}}</td>
+                        </ng-container>
+
+                        <!-- progetto  Column -->
+                        <ng-container matColumnDef="idProgetto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.codVisualizzato}} </td>
+                        </ng-container>
+
+                        <!-- Forma giuridica Column -->
+                        <ng-container matColumnDef="descFormaGiuridica">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Forma Giuridica </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.descFormaGiuridica}} </td>
+                        </ng-container>
+
+                        <!-- Codice Fiscale Column -->
+                        <ng-container matColumnDef="codFisc">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale</th>
+                            <td mat-cell *matCellDef="let element"> {{element.codiceFiscaleSoggetto}} </td>
+                        </ng-container>
+
+                        <!-- Comune Column -->
+                        <ng-container matColumnDef="comuneSedeLegale">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede legale </th>
+                            <td mat-cell *matCellDef="let element"> {{element.comuneSedeLegale}} </td>
+                        </ng-container>
+
+
+                        <!--  Column -->
+                        <ng-container matColumnDef="provSedeLegale">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede legale </th>
+                            <td mat-cell *matCellDef="let element"> {{element.provSedeLegale }} </td>
+                        </ng-container>
+
+                        <!-- Column -->
+                        <ng-container matColumnDef="comuneSedeIntervento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede interv.</th>
+                            <td mat-cell *matCellDef="let element"> {{element.comuneSedeIntervento}} </td>
+                        </ng-container>
+
+                        <!--  Column -->
+                        <ng-container matColumnDef="provSedeIntervento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede interv. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.provSedeIntervento}} </td>
+                        </ng-container>
+
+                        <!-- date Column -->
+                        <ng-container matColumnDef="dataUltimoControllo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data ulimo controllo</th>
+                            <td mat-cell *matCellDef="let element"> {{element.dataUltimoControllo|date:"dd/MM/yyyy"}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="rimuovi">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-icon matTooltip="Escludi" (click)="escludiProgetto(element.idProgetto)">
+                                    remove_circle
+                                </mat-icon>
+                            </td>
+
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-detail-row">
+                        </tr>
+                    </table>
+
+                    <mat-paginator #elaborati [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                        [showFirstLastButtons]="true"
+                        [ngClass]="{'displayNone': !sortedData || !sortedData.data?.length }">
+                    </mat-paginator>
+
+                </div>
+                <div class="spaceBetween" style="margin-bottom: 15px;">
+                    <button class="button-style-1" mat-button (click)="download(1)">
+                        <mat-icon class="padding-right-5">cloud_download</mat-icon>
+                        SCARICA EXCEL
+                    </button>
+                    <button mat-button matStepperNext class="button-style-2" (click)="estrazioneProgetti()">ESTRAZIONE
+                        PROGETTI</button>
+                </div>
+            </div>
+
+            <!-- Progetti esclusi -->
+
+            <div [ngClass]="{'displayNone': !isEsclusi}">
+                <div class="title">
+                    <h3>Progetti esclusi </h3>
+                </div>
+
+                <table mat-table [dataSource]="progettiEsclusi" multiTemplateDataRows class="fullWidth" id="excel"
+                    matSort #esclusiSort="matSort">
+
+                    <!-- bando Column -->
+                    <ng-container matColumnDef="descBando">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Bando</th>
+                        <td mat-cell *matCellDef="let element">{{element.descBando}}</td>
+                    </ng-container>
+
+                    <!-- progetto  Column -->
+                    <ng-container matColumnDef="idProgetto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                        <td mat-cell *matCellDef="let element"> {{element.codVisualizzato}} </td>
+                    </ng-container>
+
+                    <!-- Forma giuridica Column -->
+                    <ng-container matColumnDef="descFormaGiuridica">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Forma Giuridica </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.descFormaGiuridica}} </td>
+                    </ng-container>
+
+                    <!-- Codice Fiscale Column -->
+                    <ng-container matColumnDef="codFisc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale</th>
+                        <td mat-cell *matCellDef="let element"> {{element.codiceFiscaleSoggetto}} </td>
+                    </ng-container>
+
+                    <!-- Comune Column -->
+                    <ng-container matColumnDef="comuneSedeLegale">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede legale </th>
+                        <td mat-cell *matCellDef="let element"> {{element.comuneSedeLegale}} </td>
+                    </ng-container>
+
+
+                    <!--  Column -->
+                    <ng-container matColumnDef="provSedeLegale">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede legale </th>
+                        <td mat-cell *matCellDef="let element"> {{element.provSedeLegale }} </td>
+                    </ng-container>
+
+                    <!-- Column -->
+                    <ng-container matColumnDef="comuneSedeIntervento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede interv.</th>
+                        <td mat-cell *matCellDef="let element"> {{element.comuneSedeIntervento}} </td>
+                    </ng-container>
+
+                    <!--  Column -->
+                    <ng-container matColumnDef="provSedeIntervento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede interv. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.provSedeIntervento}} </td>
+                    </ng-container>
+
+                    <!-- date Column -->
+                    <ng-container matColumnDef="dataUltimoControllo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data ulimo controllo</th>
+                        <td mat-cell *matCellDef="let element"> {{element.dataUltimoControllo|date:"dd/MM/yyyy"}} </td>
+                    </ng-container>
+
+                    <!-- date Column -->
+                    <ng-container matColumnDef="motivazione">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivazione</th>
+                        <td mat-cell *matCellDef="let element" [matTooltip]="element.motivazione">
+                            <mat-grid-list cols="1" rowHeight="30">
+                                <mat-grid-tile [colspan]="1" [rowspan]="1">
+
+                                    <div style="width: 99%; display: flex; justify-content: flex-start;">
+                                        <a class="blue-color text-overflow-ellipsis overflow-hidden white-space-nowrap">
+                                            {{element.motivazione}}
+                                        </a>
+                                    </div>
+
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="riametti">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-icon matTooltip="Riametti" (click)="riamettiProgetto(element.idProgetto)">add_circle
+                            </mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns2;" class="example-detail-row">
+                    </tr>
+                </table>
+                <mat-paginator #esclusi [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                    [showFirstLastButtons]="true"
+                    [ngClass]="{'displayNone': !progettiEsclusi || !progettiEsclusi.data?.length }"> </mat-paginator>
+
+
+                <button mat-button class="button-style-2" (click)="riammettiTutti()" style="float: right;">RIAMMETTI
+                    TUTTI</button>
+            </div>
+        </mat-step>
+
+        <mat-step label="Campionamento">
+
+            <div class="title">
+                <h3>Dati campione </h3>
+            </div>
+
+            <mat-card style=" max-width: 600px;">
+
+                <mat-grid-list cols="8" rowHeight="40px">
+
+                    <mat-grid-tile [colspan]="8">
+                        <div class="text-inside-grid">
+                            Numero campionamento: <b>{{numeroCampionamento}} </b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Descrizione: <b> {{ descCampionamento}}</b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Tipologia selezione: <b>{{ descTipoSelezione}}</b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Numero progetti: <b> {{ (tipologiaSelezione==1)?sortedData.data.length:"N.D"}}</b>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Importo validato: <b> {{(tipologiaSelezione==2)? importoTotaleFormatted :"N.D"}}</b>    
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="5" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            <mat-form-field>
+                                <input type="number" matInput [(ngModel)]="percentuale" placeholder="Perc. estrazione">
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                        <div class="text-inside-grid">
+                            Data e ora campionamento: <b> </b>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-card>
+            <button mat-button class="button-style-2" (click)="campiona()" style="float: right;">CAMPIONA</button>
+
+            <div [ngClass]="{'displayNone': !isCampionati}">
+                <div class="title">
+                    <h3>Progetti campionamenti </h3>
+                </div>
+                <div #TABLE2>
+
+                    <table mat-table [dataSource]="progettiCampionati" multiTemplateDataRows class="fullWidth" id="excel"
+                        matSort #campionatiSort="matSort">
+
+                        <!-- bando Column -->
+                        <ng-container matColumnDef="descBando">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Bando</th>
+                            <td mat-cell *matCellDef="let element">{{element.descBando}}</td>
+                        </ng-container>
+
+                        <!-- progetto  Column -->
+                        <ng-container matColumnDef="idProgetto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Progetto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.codVisualizzato}} </td>
+                        </ng-container>
+
+                        <!-- Forma giuridica Column -->
+                        <ng-container matColumnDef="descFormaGiuridica">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Forma Giuridica </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.descFormaGiuridica}} </td>
+                        </ng-container>
+
+                        <!-- Codice Fiscale Column -->
+                        <ng-container matColumnDef="codFisc">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Fiscale</th>
+                            <td mat-cell *matCellDef="let element"> {{element.codiceFiscaleSoggetto}} </td>
+                        </ng-container>
+
+                        <!-- Comune Column -->
+                        <ng-container matColumnDef="comuneSedeLegale">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede legale </th>
+                            <td mat-cell *matCellDef="let element"> {{element.comuneSedeLegale}} </td>
+                        </ng-container>
+
+
+                        <!--  Column -->
+                        <ng-container matColumnDef="provSedeLegale">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede legale </th>
+                            <td mat-cell *matCellDef="let element"> {{element.provSedeLegale }} </td>
+                        </ng-container>
+
+                        <!-- Column -->
+                        <ng-container matColumnDef="comuneSedeIntervento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune sede interv.</th>
+                            <td mat-cell *matCellDef="let element"> {{element.comuneSedeIntervento}} </td>
+                        </ng-container>
+
+                        <!--  Column -->
+                        <ng-container matColumnDef="provSedeIntervento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia sede interv. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.provSedeIntervento}} </td>
+                        </ng-container>
+
+                        <!-- date Column -->
+                        <ng-container matColumnDef="dataUltimoControllo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data ulimo controllo</th>
+                            <td mat-cell *matCellDef="let element"> {{element.dataUltimoControllo|date:"dd/MM/yyyy"}}
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns3;" class="example-detail-row">
+                        </tr>
+                    </table>
+
+                    <mat-paginator #campionati [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                        [showFirstLastButtons]="true"
+                        [ngClass]="{'displayNone': !progettiCampionati || !progettiCampionati.data?.length }">
+                    </mat-paginator>
+
+                </div>
+
+
+                <div class="spaceBetween">
+                    <div  style="float: right;">
+                        <button mat-button class="button-style-1" (click)="download(2)" >SCARICA EXCEL</button>
+                        <button mat-button class="button-style-1" (click)="downloadPdf()" >SCARICA PDF</button>
+                    </div>
+                    <div  style="float: left;">
+                        <button mat-button class="button-style-1" (click)="annullaCampionamento()">ANNULLA CAMPIONAMENTO</button>
+                        <button mat-button class="button-style-2" (click)="creaControlli()">CREA CONTROLLI</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </mat-step>
+
+        <!-- Icon overrides. -->
+        <!-- <ng-template matStepperIcon="phone">
+            <mat-icon>call_end</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="chat">
+            <mat-icon>forum</mat-icon>
+        </ng-template> -->
+
+    </mat-horizontal-stepper>
+
+</div>

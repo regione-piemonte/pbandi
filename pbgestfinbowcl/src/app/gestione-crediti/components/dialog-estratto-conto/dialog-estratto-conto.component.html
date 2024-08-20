@@ -1,0 +1,157 @@
+<div mat-dialog-title>
+  <div class="spaceBetween">
+    <h3 class="bold-text">Estratto conto</h3>
+    <button type="button" mat-icon-button class="blue-color" mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <!-- Non usata
+  <mat-card class="messageSuccess" *ngIf="showSucc">
+    <mat-card-content class="messageSuccessContent">
+      <p>{{succMsg}}</p>
+    </mat-card-content>
+  </mat-card>-->
+  
+  <!-- Messaggio d'errore della pagina originaria, potrebbe servire, non si sa mai
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+  </div>-->
+
+  <mat-card class="messageError" *ngIf="showError">
+    <mat-card-content class="messageErrorContent">
+      <p>{{errorMsg}}</p>
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+<mat-dialog-content>
+
+  <!--<mat-spinner-pbandi class="page" *ngIf="isSpinnerSpinning"></mat-spinner-pbandi>-->
+
+  <!--  IMPORTANTE!!
+
+    Se dentro un tag avete un mat-table sortabile e quel tag può essere nascosto, usare la direttiva [ngClass] invece dell'*ngIf
+    altrimenti il sorting non funziona. Deve essere nel DOM per tutto il ciclo di vita.
+
+    - Il vostro caro Ame che ha perso mezza giornata e lanciato tante bestemmie cercando di capire perché non funzionasse -
+  -->
+  
+  <div [ngClass]="{'displayNone': !isLoading }">
+    <div class="loading-container">
+      <mat-spinner class="loading"></mat-spinner>
+    </div>    
+  </div>
+
+  <div class="content" [ngClass]="{'displayNone': isLoading }">
+  
+    <mat-card class="benef-detail">
+
+        <p>Bando: <b>{{dispBando ? dispBando : '-'}}</b></p>
+
+        <p>Identificativo progetto: <b>{{dispCodProg ? dispCodProg : '-'}}</b></p>
+
+        <p>Beneficiario: <b>{{dispBenef ? dispBenef : '-'}}</b></p>
+
+        <p>Debito residuo iniziale: <b>{{dispDebitoResInit !== null ? (dispDebitoResInit | number: '1.2-2' : 'it') : '-'}}</b></p>
+
+        <p>Debito residuo: <b>{{dispDebitoResAllaData !== null ? (dispDebitoResAllaData | number: '1.2-2' : 'it') : '-'}}</b></p>
+
+    </mat-card>
+    
+    <br>
+
+    <p *ngIf="noData"><br><b>Non ci sono elementi da visualizzare.</b></p>
+    
+    <table mat-table [dataSource]="dataSource" class="tab" [ngClass]="{'displayNone': noData }" matSort>
+    
+      <!-- Data contabile Column -->
+      <ng-container matColumnDef="dataContabile">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data contabile </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataContabile ? (element.dataContabile | date:'dd/MM/yyyy') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Data valuta Column -->
+      <ng-container matColumnDef="dataValuta">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data valuta </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataValuta ? (element.dataValuta | date:'dd/MM/yyyy') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Data scadenza Column -->
+      <ng-container matColumnDef="dataScadenza">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data scadenza </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataScadenza ? (element.dataScadenza | date:'dd/MM/yyyy') : '-'}} </td>
+      </ng-container>
+    
+      <!-- N. rata Column -->
+      <ng-container matColumnDef="numRata">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Numero rata </th>
+        <td mat-cell *matCellDef="let element"> {{element.numRata != null ? element.numRata : '-'}} </td>
+      </ng-container>
+    
+      <!-- Causale Column -->
+      <ng-container matColumnDef="desCausale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Causale </th>
+        <td mat-cell *matCellDef="let element"> {{element.desCausale ? element.desCausale : '-'}} </td>
+      </ng-container>
+    
+      <!-- Totale pagato Column -->
+      <ng-container matColumnDef="importoTotale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Totale pagato </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoTotale ? (element.importoTotale | number: '1.2-2' : 'it') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Capitale pagato Column -->
+      <ng-container matColumnDef="importoCapitale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Capitale pagato </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoCapitale ? (element.importoCapitale | number: '1.2-2' : 'it') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Interessi pagati Column -->
+      <ng-container matColumnDef="importoInteressi">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Interessi pagati </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoInteressi ? (element.importoInteressi | number: '1.2-2' : 'it') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Interessi mora Column -->
+      <ng-container matColumnDef="importoMora">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Interessi mora </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoMora ? (element.importoMora | number: '1.2-2' : 'it') : '-'}} </td>
+      </ng-container>
+    
+      <!-- Oneri agevolazione Column -->
+      <ng-container matColumnDef="importoOneri">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Oneri agevolazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.importoOneri ? (element.importoOneri) : '-'}} </td>
+      </ng-container>
+    
+      <!-- Tipo agevolazione Column -->
+      <ng-container matColumnDef="dispAgevolazione">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo agevolazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.dispAgevolazione ? element.dispAgevolazione : '-'}} </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [showFirstLastButtons]="true"
+      [ngClass]="{'displayNone': !dataSource || !dataSource.data?.length}" #estrattoContoPaginator>
+    </mat-paginator>-->
+    
+  </div>
+
+  <br>
+  
+</mat-dialog-content>
+
+<mat-dialog-actions class="spaceBetween">
+  <button mat-button class="button-style-1" mat-dialog-close [disabled]="isLoading">CHIUDI</button>
+
+  <button mat-button class="button-style-2 download-button-component" [disabled]="noData || isLoading" (click)="download()"><span class="download-button-container">SCARICA EXCEL<mat-icon class="download-icon">save_alt</mat-icon></span></button>
+</mat-dialog-actions>

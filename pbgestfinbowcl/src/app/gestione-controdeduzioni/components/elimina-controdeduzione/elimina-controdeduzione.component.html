@@ -1,0 +1,52 @@
+<div >
+    <div class="spaceBetween">
+      <h3 class="bold-text">Richiesta eliminazione controdeduzione</h3>
+      <button type="button" mat-icon-button class="blue-color" (click)="closeDialog()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <div class="content" *ngIf="errore === false">
+      <mat-card-content class="messageSuccess">
+      <p >SUCCESSO</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+    <div class="content"*ngIf="errore === true">
+      <mat-card-content class="messageError">
+      <p >ERRORE</p>
+      <span>{{message}}</span>
+      </mat-card-content>
+  </div>
+    <div >
+        <mat-card-content>
+          <div style="display: flex;flex-direction: column;">
+            <div >
+               <span>  Procedimento di revoca n. {{data.dataKey.numeroRevoca}}</span>
+            </div>
+            <div >
+                <span>  Numero di protocollo n. {{data.dataKey.numeroProtocollo}}</span>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+            <mat-card-title>
+              <span *ngFor="let lettera of letteraAccompagnatoria">
+              <h3> <b>Lettera accompagnatoria :</b>  {{lettera.nomeFile}}</h3>
+              </span>
+           </mat-card-title>
+            <mat-card-title>
+                <span *ngFor="let lettera of allegatiGenerici">
+                <h3> <b>Altri allegati :</b>  {{lettera.nomeFile}}</h3>
+                </span>
+            </mat-card-title>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <span style="color: red;"> <b>Attenzione ! L'operazione completerà l'eliminazione della contestazione selezionata, continuare?</b></span>
+        </mat-card-content>
+    </div>
+  </div>
+  <div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="closeDialog()">ANNULLA</button>
+    <button mat-button class="button-style-2" [disabled]="isLoading" (click)="elimina()">CONFERMA</button>
+  </div>
+  

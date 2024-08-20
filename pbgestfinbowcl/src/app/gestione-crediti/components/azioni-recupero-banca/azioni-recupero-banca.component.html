@@ -1,0 +1,116 @@
+<!-- <mat-spinner class="page" *ngIf="isLoading()"></mat-spinner>
+<div class="page" [ngClass]="{'displayNone': isLoading()}"> -->
+<mat-card class="padding0">
+    <mat-card-header>
+        <mat-card-title>
+            <h3 class="cardtitle">Azioni recupero banca</h3>
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="scroll">
+
+
+        <!--SPINNER-->
+        <div style="height: 100%;" *ngIf="isLoading()">
+            <mat-spinner class="loading"></mat-spinner>
+        </div>
+
+
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isSaveSuccess">
+            <mat-card-content class="messageSuccessContent">
+                <p>Salvato</p>
+            </mat-card-content>
+        </mat-card>
+
+        <div *ngIf=isAttiva>
+
+            <div *ngIf=!isStorico>
+                Nessuna azione presente
+            </div>
+
+            <div *ngIf=isStorico>
+
+
+                <table mat-table [dataSource]="storicoAzioniRecupBanca" multiTemplateDataRows style="width: 100%;">
+
+                    <!-- Descrizione azione -->
+                    <ng-container matColumnDef="azione">
+                        <th mat-header-cell *matHeaderCellDef> <b>Azione</b> </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.descrizioneAttivita}} </td>
+                    </ng-container>
+
+                    <!-- Data Column -->
+                    <ng-container matColumnDef="dataAzione">
+                        <th mat-header-cell *matHeaderCellDef> <b>Data azione</b> </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.dataAzione|date:"dd/MM/yyyy"}}</td>
+                    </ng-container>
+
+                    <!-- Istruttore Column -->
+                    <ng-container matColumnDef="utente">
+                        <th mat-header-cell *matHeaderCellDef> <b>Utente modifica</b> </th>
+                        <td mat-cell *matCellDef="let element"> {{ (element?.cognome === null ? " " : element.cognome) +' '+
+                            (element?.nome === null ? " " : element.nome)}} </td>
+                    </ng-container>
+
+                    <!-- Row Options Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" layout="row" style="white-space: nowrap;">
+                            <div class="text-right">
+                                <button mat-icon-button (click)="modifica(element.idAzioneRecuperoBanca)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+
+                                <button mat-icon-button
+                                    (click)="expandedElement = expandedElement != element ? element : null">
+                                    <mat-icon> visibility </mat-icon>
+                                </button>
+
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- per visualizzare i dettagli dell'azione: expanded -->
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                            class="detailBoxRow">
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                <table>
+                                    <tr>
+                                        <td><b>N. protocollo </b></td>
+                                        <td>{{element.numProtocollo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Note </b></td>
+                                        <td>{{element.note}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+                        [class.example-expanded-row]="expandedElement === element"
+                        [hidden]="element.fineValidita != null">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+                </table>
+            </div>
+          
+        </div>
+
+    </mat-card-content>
+
+    <!-- *ngIf="user.codiceRuolo === 'ISTR-CREDITI'" -->
+
+    <mat-card-actions align="end">
+        <button mat-button class="button-style-1" (click)="openStorico()" [disabled]="disableStorico == true" >STORICO</button>
+        <div fxFlex></div>
+        <button mat-raised-button class="button-style-2" (click)="openDialog()">NUOVA AZIONE</button>
+    </mat-card-actions>
+</mat-card>
+<!-- </div> -->

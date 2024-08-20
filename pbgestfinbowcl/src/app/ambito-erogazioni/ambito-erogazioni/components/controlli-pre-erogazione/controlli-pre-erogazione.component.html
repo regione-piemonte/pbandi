@@ -1,0 +1,466 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goBack()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca proposte di erogazione</span>
+      </button>
+    </div>
+    <h2>Controlli pre-erogazione</h2>
+    <div [hidden]="!error">
+      <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageError">
+          <mat-card-content class="mat-card-content messageWarningContent">
+            <h3 class="bold-text margin-bottom-5">
+              ATTENZIONE!
+            </h3>
+            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+              {{messaggioErrore}}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div [hidden]="!success">
+      <div class="content width-100-perc margin-0 max-width-89-perc">
+        <mat-card class="mat-card mat-focus-indicator messageSuccess">
+          <mat-card-content class="mat-card-content messageWarningContent">
+            <h3 class="bold-text margin-bottom-5">
+              SUCCESSO!
+            </h3>
+            <p id="ellipsisP" class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+              Salvataggio terminato con successo!
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CARD 0: CARATTERISTICHE GENERALI -->
+    <mat-card class="mat-elevation-z2 marginTop20">
+      <mat-card-content class="d-flex">
+
+        <div class="fullWidth margin-top-15">
+          Bando: <b>{{titoloBando}}</b>
+        </div>
+        <div class="fullWidth margin-top-15">
+          Agevolazione: <b>{{descrizioneModalitaAgevolazione}}</b>
+        </div>
+        <div class="fullWidth margin-top-15">
+          Beneficiario: <b>{{beneficiario}}</b>
+        </div>
+        <div class="fullWidth margin-top-15">
+          Codice progetto: <b>{{codiceProgetto}}</b>
+          <button class="button-style-1" mat-button (click)="openDialogDatiProgettoAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+          <button class="button-style-1" mat-button (click)="openDialogContoEconomico()">CONTO ECONOMICO</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+
+    <!-- CARD 1: CONTROLLI -->
+    <mat-card class="mat-elevation-z2 marginTop20">
+      <mat-card-content>
+        <h4>Controlli</h4>
+        <div class="fullWidth">
+          Data controlli: <b>{{dataControlli === null ? "N.D." : dataControlli | date:'dd/MM/yyyy'}}</b>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CARD 2: ANAGRAFICA SOGGETTO E DOMANDA -->
+    <mat-card class="mat-elevation-z2 marginTop20">
+      <mat-card-content class="d-grid">
+
+        <!-- blocco SOGGETTO dati -->
+        <div>
+          <div class="fullWidth d-flex">
+            <h4>Blocchi anagrafica Soggetto</h4>
+          </div>
+
+          <div *ngIf="listaBloccoSoggeto.length == 0">
+            <div class="d-flex">
+              <div>Non sono presenti blocchi del soggetto</div>
+              <mat-icon class="icon_green">check_circle_outline</mat-icon>
+            </div>
+          </div>
+          <div *ngFor="let element of listaBloccoSoggeto">
+            <div class="spaceBetween fullWidth">
+              <div>Data blocco: <b>{{element.dataInserimentoBlocco == null ? "N.D." :
+                  element.dataInserimentoBlocco | date:'dd/MM/yyyy'}}</b></div>
+              <div>Data sblocco: <b>{{element.dataInserimentoSblocco == null ? "N.D." :
+                  element.dataInserimentoSblocco | date:'dd/MM/yyyy'}}</b></div>
+              <mat-icon class="icon_green" *ngIf="element.dataInserimentoSblocco != null">check_circle_outline
+              </mat-icon>
+              <mat-icon class="icon_red" *ngIf="element.dataInserimentoSblocco == null">highlight_off</mat-icon>
+            </div>
+            <div class="spaceBetween fullWidth">
+              <div>Causale blocco: <b>{{element.descCausaleBlocco == null ? "N.D." :
+                  element.descCausaleBlocco}}</b></div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- blocco DOMANDA dati -->
+        <div>
+          <div class="fullWidth d-flex">
+            <h4>Blocchi anagrafica Domanda</h4>
+          </div>
+
+          <!-- riga -->
+          <div *ngIf="listaBloccoDomanda.length == 0">
+            <div class="d-flex">
+              <div>Non sono presenti blocchi della domanda</div>
+              <mat-icon class="icon_green">check_circle_outline</mat-icon>
+            </div>
+          </div>
+          <div *ngFor="let element of listaBloccoDomanda">
+            <div class="spaceBetween fullWidth">
+              <div>Data blocco: <b>{{element.dataInserimentoBlocco == null ? "N.D." :
+                  element.dataInserimentoBlocco | date:'dd/MM/yyyy'}}</b></div>
+              <div>Data sblocco: <b>{{element.dataInserimentoSblocco == null ? "N.D." :
+                  element.dataInserimentoSblocco | date:'dd/MM/yyyy'}}</b></div>
+              <mat-icon class="icon_green" *ngIf="element.dataInserimentoSblocco != null">check_circle_outline
+              </mat-icon>
+              <mat-icon class="icon_red" *ngIf="element.dataInserimentoSblocco == null">highlight_off</mat-icon>
+            </div>
+            <div class="spaceBetween fullWidth">
+              <div>Causale blocco: <b>{{element.descCausaleBlocco == null ? "N.D." :
+                  element.descCausaleBlocco}}</b></div>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+
+    <!-- Messaggi di risposta ANTIMAFIA -->
+    <mat-card class="mat-elevation-z2 messageError marginTop20" *ngIf="inviaRichiestaAntimafiaResponse1">
+      <mat-card-content class="messageErrorContent">
+        <p> ATTENZIONE!</p>
+        <p> Esiste già una richiesta aspetta che venga elaborata!</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess marginTop20" *ngIf="inviaRichiestaAntimafiaResponse2">
+      <mat-card-content class="messageSuccessContent">
+        <p>SUCCESSO!</p>
+        <p> Abbiamo inserito la tua richiesta aspetta che venga elaborata.</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess marginTop20" *ngIf="inviaRichiestaAntimafiaResponse3">
+      <mat-card-content class="messageSuccessContent">
+        <p> SUCCESSO!</p>
+        <p> È stata correttamente inserita una richiesta urgente.</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess marginTop20" *ngIf="inviaRichiestaAntimafiaResponse4">
+      <mat-card-content class="messageSuccessContent">
+        <p> ATTENZIONE!</p>
+        <p> La richiesta è già stata correttamente eleborata.</p>
+      </mat-card-content>
+    </mat-card>
+
+
+    <!-- CARD 3: ANTIMAFIA -->
+    <mat-card class="mat-elevation-z2 marginTop20" *ngIf="(verificaAntimafia)">
+      <mat-card-content class="d-flex">
+
+        <div>
+          <div class="fullWidth d-flex">
+            <h4>Antimafia</h4>
+            <mat-icon class="icon_green" *ngIf="(successoAntimafia)">check_circle_outline</mat-icon>
+            <mat-icon class="icon_red" *ngIf="(!successoAntimafia)">highlight_off</mat-icon>
+          </div>
+
+          <div class="d-grid-3">
+            <div>Data emissione: <b>{{esitoAntimafia.dataEmissioneAntimafia == null ? "N.D." :
+                esitoAntimafia.dataEmissioneAntimafia | date:'dd/MM/yyyy'}}</b></div>
+            <div>Data scadenza: <b>{{esitoAntimafia.dataScadenzaAntimafia == null ? "N.D." :
+                esitoAntimafia.dataScadenzaAntimafia | date:'dd/MM/yyyy'}}</b></div>
+            <div></div>
+            <div>Esito antimafia: <b>{{esitoAntimafia.descEsitoAntimafia == null ? "N.D." :
+                esitoAntimafia.descEsitoAntimafia}}</b></div>
+            <div>Data invio BDNA: <b>{{esitoAntimafia.dataInvioBDNA == null ? "N.D." :
+                esitoAntimafia.dataInvioBDNA | date:'dd/MM/yyyy'}}</b></div>
+            <div></div>
+            <div>Stato richiesta: <b>{{esitoAntimafia.descStatoRichiestaAntimafia == null ? "N.D." :
+                esitoAntimafia.descStatoRichiestaAntimafia}}</b></div>
+            <div></div>
+            <div></div>
+            <div>
+              <mat-checkbox class="example-margin" labelPosition="before"
+                (change)="forzaControllo($event, motivazioneAntimafia, 3)"
+                [checked]="motivazioneAntimafia != null && motivazioneAntimafia != ''"
+                [disabled]="(successoAntimafia && (motivazioneAntimafia == null || motivazioneAntimafia == '')) || (esitoAntimafia.descStatoRichiestaAntimafia != 'ANNULLATA' && esitoAntimafia.descStatoRichiestaAntimafia != null) || (!successoAntimafia && bloccoAntimafia) ">
+                Controllo non applicabile:
+              </mat-checkbox>
+            </div>
+            <div></div>
+            <div></div>
+
+            <div style="grid-column: 1 / 3;">
+              <div *ngIf="motivazioneAntimafia != null && motivazioneAntimafia != '' "
+                class="d-flex align-items-center">
+                <div>Motivazione: <b>{{motivazioneAntimafia}}</b></div>
+                <button mat-button (click)="modificaMotivazione(motivazioneAntimafia, 3)">
+                  <mat-icon matTooltip="Modifica motivazione">edit</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="motivazioneAntimafia == null"></div>
+            </div>
+
+            <button mat-raised-button (click)="inviaRichiestaAntimafia()" class="button-style-3"
+              [disabled]="bloccoAntimafia || (esitoAntimafia.descStatoRichiestaAntimafia != 'ANNULLATA' && esitoAntimafia.descStatoRichiestaAntimafia != null) || (motivazioneAntimafia != null && motivazioneAntimafia != '')">
+              INVIA RICHIESTA
+            </button>
+
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+
+    <!-- Messaggi di risposta DURC -->
+    <mat-card class="mat-elevation-z2 messageSuccess marginTop20" *ngIf="inviaRichiestaDurcResponse1">
+      <mat-card-content class="messageSuccessContent">
+        <!-- Abbiamo inserito la tua richiesta aspetta che venga lavorata -->
+        <p>SUCCESSO!</p>
+        <p> Abbiamo inserito la tua richiesta aspetta che venga elaborata.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageError marginTop20" *ngIf="inviaRichiestaDurcResponse2">
+      <mat-card-content class="messageErrorContent">
+        <!-- Esiste già una richiesta aspetta che venga elaborata -->
+        <p> ATTENZIONE!</p>
+        <p> Esiste già una richiesta aspetta che venga elaborata!</p>
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z2 messageSuccess marginTop20" *ngIf="inviaRichiestaDurcResponse3">
+      <mat-card-content class="messageSuccessContent">
+        <p> ATTENZIONE!</p>
+        <p> La richiesta è già stata correttamente eleborata.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CARD 4: DURC -->
+    <mat-card class="mat-elevation-z2 marginTop20">
+      <mat-card-content class="d-flex">
+
+        <div>
+          <div class="fullWidth d-flex">
+            <div *ngIf="esitoDurc?.descEsitoDurc != 'DSAN'">
+              <h4>DURC</h4>
+            </div>
+            <div *ngIf="esitoDurc?.descEsitoDurc == 'DSAN'">
+              <h4>DSAN</h4>
+            </div>
+            <mat-icon class="icon_green" *ngIf="(successoDurc)">check_circle_outline</mat-icon>
+            <mat-icon class="icon_red" *ngIf="(!successoDurc)">highlight_off</mat-icon>
+          </div>
+
+          <div class="d-grid-3">
+            <div>Data emissione: <b>{{esitoDurc.dataEmissioneDurc == null ? "N.D." :
+                esitoDurc.dataEmissioneDurc | date:'dd/MM/yyyy'}}</b></div>
+            <div>Data scadenza: <b>{{esitoDurc.dataScadenzaDurc == null ? "N.D." :
+                esitoDurc.dataScadenzaDurc | date:'dd/MM/yyyy'}}</b></div>
+            <div></div>
+            <div *ngIf="esitoDurc?.descEsitoDurc != 'DSAN'">
+              <div>
+                Esito durc: <b>{{esitoDurc.descEsitoDurc == null ? "N.D." :
+                  esitoDurc.descEsitoDurc}}</b>
+              </div>
+            </div>
+            <div>Stato richiesta: <b>{{esitoDurc.descStatoRichiestaDurc == null ? "N.D." :
+                esitoDurc.descStatoRichiestaDurc}}</b></div>
+            <div></div>
+            <div *ngIf="esitoDurc?.descEsitoDurc == 'DSAN'"></div>
+            <mat-checkbox class="example-margin" labelPosition="before"
+              (change)="forzaControllo($event, motivazioneDurc, 1)"
+              [checked]="motivazioneDurc != null && motivazioneDurc != '' "
+              [disabled]="(successoDurc && (motivazioneDurc == null || motivazioneDurc == '')) || (esitoDurc.descStatoRichiestaDurc != 'ANNULLATA' && esitoDurc.descStatoRichiestaDurc != null) || (!successoDurc && bloccoDurc)">
+              Controllo non applicabile:
+            </mat-checkbox>
+
+            <div></div>
+            <div></div>
+
+            <div style="grid-column: 1 / 3;">
+              <div *ngIf="motivazioneDurc != null && motivazioneDurc != ''" class="d-flex align-items-center">
+                <div>Motivazione: <b>{{motivazioneDurc}}</b></div>
+                <button mat-button (click)="modificaMotivazione(motivazioneDurc, 1)">
+                  <mat-icon matTooltip="Modifica motivazione">edit</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="motivazioneDurc == null"></div>
+            </div>
+
+            <button mat-raised-button (click)="inviaRichiestaDURC()" class="button-style-3"
+              [disabled]="bloccoDurc || (esitoDurc.descStatoRichiestaDurc != 'ANNULLATA' && esitoDurc.descStatoRichiestaDurc != null) || (motivazioneDurc != null && motivazioneDurc != '')">INVIA RICHIESTA</button>
+
+
+            <div class="d-flex align-items-center" *ngIf="interventoSostitutivo">
+              <div>Interventi sostitutivi ({{listaInterventi.length}})</div>
+              <button mat-button (click)="dettaglioInterventiSostitutivi()" [disabled]="listaInterventi.length == 0">
+                <mat-icon matTooltip="Visualizza interventi sostitutivi">info</mat-icon>
+              </button>
+            </div>
+
+            <div></div>
+
+            <button *ngIf="interventoSostitutivo" mat-raised-button (click)="nuovoInterventoSostitutivo()" class="button-style-3" [disabled]="distintaCreata">
+              Nuovo intervento sostitutivo
+            </button>
+
+            <div></div>
+            <div></div>
+            
+            <button *ngIf="interventoSostitutivo" mat-raised-button (click)="creaDistintaErogazione()" class="button-style-3" [disabled]="listaInterventi.length == 0 || distintaCreata">
+              Crea distinta di erogazione
+            </button>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CARD 3/4 BIS: AVVIA ITER COMMUNICAZIONE INTERVENTO SOSTITUTIVO -->
+    <mat-card class="mat-elevation-z2 marginTop20" *ngIf="avviaIterCommunicazioneIntervento">
+      <mat-card-content class="d-flex">
+
+        <div class="d-grid-3">
+          <div style="grid-column: 3 / 3;">
+            <button mat-raised-button (click)="avviaIterCommunicazioneInterventoSostitutivo()" class="button-style-3"
+              [disabled]="this.iterCommunicazioneInCorso">Avvia iter communicazione intervento sostitutivo</button>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CARD 5: DEGGENDORF -->
+    <!-- se il soggetto è pubblico (=2) alla la sezione Deggendorg non è visibile -->
+    <mat-card class="mat-elevation-z2 marginTop20" *ngIf="flagPubblicoPrivato == '1'">
+      <mat-card-content class="d-flex">
+
+        <div>
+          <div class="fullWidth d-flex">
+            <h4>DEGGENDORF</h4>
+            <mat-icon class="icon_green"
+              *ngIf="successoDeggendorf">check_circle_outline</mat-icon>
+            <mat-icon class="icon_red" *ngIf="(!successoDeggendorf)">highlight_off</mat-icon>
+          </div>
+
+          <div class="d-grid-3">
+            <div>Data emissione: <b>{{esitoDeggendorf.dataEmissione == null ? "N.D." :
+                esitoDeggendorf.dataEmissione | date:'dd/MM/yyyy'}}</b></div>
+            <div>Data scadenza: <b>{{esitoDeggendorf.dataScadenza == null ? "N.D." :
+                esitoDeggendorf.dataScadenza | date:'dd/MM/yyyy'}}</b></div>
+            <div></div>
+            <div style="grid-column: 1 / 3;">
+              <div class="d-flex">
+                <div>Esito deggendorf:</div>
+                <mat-radio-group aria-label="Select an option" class="marginLeft20" [value]="esitoRichiestaDeggendorf"
+                  (change)="changeEsitoRichiesta($event)">
+                  <mat-radio-button class="marginLeft20" value="true"
+                    [checked]="esitoRichiestaDeggendorf && !(motivazioneDeggendorf != null && motivazioneDeggendorf != '')">Positivo</mat-radio-button>
+                  <mat-radio-button class="marginLeft20" value="false"
+                    [checked]="!esitoRichiestaDeggendorf && !(motivazioneDeggendorf != null && motivazioneDeggendorf != '')" [disabled] = "esitoRichiestaDeggendorf">Negativo</mat-radio-button>
+                  <mat-radio-button class="marginLeft20" value="-"
+                    [checked]="motivazioneDeggendorf != null && motivazioneDeggendorf != ''" [disabled] = "true">Controllo non applicabile</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+
+            <form style="grid-column: 1 / 3;" [formGroup]="myForm">
+              <div class="d-flex">
+                <mat-form-field appearance="standard">
+                  <mat-label>Vercor: </mat-label>
+                  <input matInput formControlName="vercor">
+                  <mat-error *ngIf="myForm.get('vercor')?.errors?.required">
+                    È obbligatorio specificare il vercor
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </form>
+
+            <div></div>
+            <mat-checkbox class="example-margin" labelPosition="before"
+              (change)="forzaControllo($event, motivazioneDeggendorf, 4);"
+              [checked]="motivazioneDeggendorf != null && motivazioneDeggendorf != ''"
+              [disabled]="successoDeggendorf && (motivazioneDeggendorf == null || motivazioneDeggendorf == '')">
+              Controllo non applicabile
+            </mat-checkbox>
+
+            <div style="grid-column: 1 / 3;">
+              <div *ngIf="motivazioneDeggendorf != null && motivazioneDeggendorf != ''"
+                class="d-flex align-items-center">
+                <div>Motivazione: <b>{{motivazioneDeggendorf}}</b></div>
+                <button mat-button (click)="modificaMotivazione(motivazioneDeggendorf, 4)">
+                  <mat-icon matTooltip="Modifica motivazione">edit</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="motivazioneDeggendorf == null"></div>
+            </div>
+
+            <button mat-raised-button (click)="salva()" class="button-style-2"
+                [disabled]="abilitaButtonSalva()">SALVA</button>
+
+          </div>
+        </div>
+      </mat-card-content>
+
+    </mat-card>
+
+    <!-- CARD 3/4 BIS: AVVIA ITER ESITO VALIDAZIONE CON EROGAZIONE SOSPESA -->
+    <mat-card class="mat-elevation-z2 marginTop20" *ngIf="avviaIterEsitoValidazione">
+      <mat-card-content class="d-flex">
+
+        <div class="d-grid-3">
+          <div style="grid-column: 3 / 3;">
+            <button mat-raised-button (click)="avviaIterEsitoValidazioneErogazioneSospesa()" class="button-style-3"
+              [disabled]="this.iterEsitoValidazioneInCorso">Avvia iter esito validazione</button>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CARD 6: IMPORTO DA EROGARE -->
+    <mat-card class="mat-elevation-z2 marginTop20">
+      <mat-card-content class="d-flex">
+
+        <div class="d-grid-3">
+          <form style="grid-column: 1 / 3;" [formGroup]="myForm">
+            <h4>Importo da erogare lordo</h4>
+            <div class="d-flex">
+              <mat-form-field appearance="standard">
+                <input matInput formControlName="importoDaErogare"
+                (blur)="setImporto('importoDaErogare', this.myForm.get('importoDaErogare').value, null)">
+                <mat-error *ngIf="myForm.get('importoDaErogare')?.errors?.required">
+                  È obbligatorio specificare l'importo da erogare
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+          <div *ngIf="this.flagFinistr" style="grid-column: 3 / 3; margin-top: 1em;">
+            <button mat-raised-button (click)="salvaImportoDaErogare()" class="button-style-3">Salva importo</button>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
