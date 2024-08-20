@@ -1,0 +1,225 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="page">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAllaRicercaImpegni()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla ricerca impegni</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Dettaglio impegno</h2>
+            </div>
+        </div>
+        <div class="benef">
+            <p>Anno esercizio: <span>{{annoEsercizio}}</span></p>
+            <p class="marginLeft25">Anno impegno: <span>{{annoImpegno}}</span></p>
+            <p class="marginLeft25">Numero impegno: <span>{{numeroImpegno}}</span></p>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Impegno</h3>
+                </div>
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Descrizione</b>
+                        </div>
+                        <div class="col-10Custom">
+                            {{descrizioneImpegno}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Stato</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{stato}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Importo iniziale</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{importoIniziale | number: '1.2-2' : 'it'}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Importo attuale</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{importoAttuale | number: '1.2-2' : 'it'}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Totale liquidato</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{totaleLiquidato | number: '1.2-2' : 'it'}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Disponibilità a liquidare</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{disponibilitaLiquidare | number: '1.2-2' : 'it'}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Totale quietanziato</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{totaleQuietanziato | number: '1.2-2' : 'it'}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Data di inserimento</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{dataInserimento}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Data ultima modifica</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{dataUltimaModifica}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>CUP</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{cup}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>CIG</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{cig}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>N. capitolo origine</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{nCapitoloOrigine}}
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Provvedimento</h3>
+                </div>
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Direzione</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{direzioneProvvedimento}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Anno</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{annoProvvedimento}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Tipo</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{tipo}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Numero</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{numeroProvvedimento}}
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Capitolo di spesa</h3>
+                </div>
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Descrizione</b>
+                        </div>
+                        <div class="col-10Custom">
+                            {{descrizioneCapitoloSpesa}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Tipo fondo</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{tipoFondo}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Numero</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{numeroCapitoloSpesa}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Numero articolo</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{numeroArticolo}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Direzione</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{direzioneCapitoloSpesa}}
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="header">
+                    <h3>Reimputato</h3>
+                </div>
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-015Custom textAlignRight">
+                            <b>Anno</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{annoReimputato}}
+                        </div>
+                        <div class="col-015Custom textAlignRight">
+                            <b>Numero</b>
+                        </div>
+                        <div class="col-015Custom">
+                            {{numero}}
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

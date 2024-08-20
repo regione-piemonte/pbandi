@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xmlns="http://java.sun.com/xml/ns/j2ee" 
+			xmlns:application="http://xmlns.jcp.org/xml/ns/javaee" 
+			xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_5.xsd" 
+			version="1.5">
+  <display-name>pbwebfin</display-name>
+  <module>
+    <web>
+      <web-uri>pbwebfin-web.war</web-uri>
+	  <context-root>${CONTEXT.ROOT}</context-root>
+    </web>
+  </module>
+  <library-directory>lib</library-directory>
+</application>

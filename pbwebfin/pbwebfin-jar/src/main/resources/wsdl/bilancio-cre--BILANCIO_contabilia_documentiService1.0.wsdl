@@ -1,0 +1,238 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://siac.csi.it/documenti/svc/1.0" name="DocumentiService" targetNamespace="http://siac.csi.it/documenti/svc/1.0">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://siac.csi.it/integ/data/1.0" targetNamespace="http://siac.csi.it/integ/data/1.0" version="1.0">
+
+  <xs:complexType abstract="true" name="baseRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="annoBilancio" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="codiceEnte" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="codiceFruitore" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="baseResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ente" type="tns:ente"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="errori" nillable="true" type="tns:errore"></xs:element>
+      <xs:element minOccurs="0" name="esito" type="tns:esito"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="messaggi" nillable="true" type="tns:messaggio"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ente">
+    <xs:complexContent>
+      <xs:extension base="tns:entitaCodificataBase">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="entitaCodificataBase">
+    <xs:complexContent>
+      <xs:extension base="tns:entitaBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="descrizione" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="entitaBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codice" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="stato" type="tns:stato"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="stato">
+    <xs:complexContent>
+      <xs:extension base="tns:entitaCodificataBase">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="errore">
+    <xs:complexContent>
+      <xs:extension base="tns:messaggioBase">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="messaggioBase">
+    <xs:complexContent>
+      <xs:extension base="tns:entitaCodificataBase">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="messaggio">
+    <xs:complexContent>
+      <xs:extension base="tns:messaggioBase">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="baseAsyncResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:baseResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="idOperazioneAsincrona" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="esito">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESSO"></xs:enumeration>
+      <xs:enumeration value="FALLIMENTO"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://siac.csi.it/integ/data/1.0" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://siac.csi.it/documenti/svc/1.0">
+  <xs:import namespace="http://siac.csi.it/integ/data/1.0"></xs:import>
+  <xs:complexType name="elaboraDocumento">
+    <xs:complexContent>
+      <xs:extension base="ns1:baseRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codiceTipoDocumento" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="contenutoDocumento" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="elaboraDocumentoResponse">
+    <xs:complexContent>
+      <xs:extension base="ns1:baseResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="responseElaborazione" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="elaboraDocumentoAsyncResponse">
+    <xs:complexContent>
+      <xs:extension base="ns1:baseAsyncResponse">
+        <xs:sequence></xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="leggiStatoElaborazioneDocumento">
+    <xs:complexContent>
+      <xs:extension base="ns1:baseRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="idOperazioneAsincrona" type="xs:int"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="leggiStatoElaborazioneDocumentoResponse">
+    <xs:complexContent>
+      <xs:extension base="ns1:baseResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="responseElaborazione" type="xs:string"></xs:element>
+          <xs:element minOccurs="0" name="statoElaborazione" type="tns:statoElaborazione"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="statoElaborazione">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AVVIATA"></xs:enumeration>
+      <xs:enumeration value="CONCLUSA"></xs:enumeration>
+      <xs:enumeration value="ERRORE"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="elaboraDocumento" nillable="true" type="tns:elaboraDocumento"></xs:element>
+  <xs:element name="elaboraDocumentoResponse" nillable="true" type="tns:elaboraDocumentoResponse"></xs:element>
+  <xs:element name="elaboraDocumentoAsync" nillable="true" type="tns:elaboraDocumento"></xs:element>
+  <xs:element name="elaboraDocumentoAsyncResponse" nillable="true" type="tns:elaboraDocumentoAsyncResponse"></xs:element>
+  <xs:element name="leggiStatoElaborazioneDocumento" nillable="true" type="tns:leggiStatoElaborazioneDocumento"></xs:element>
+  <xs:element name="leggiStatoElaborazioneDocumentoResponse" nillable="true" type="tns:leggiStatoElaborazioneDocumentoResponse"></xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="elaboraDocumento">
+    <wsdl:part name="elaboraDocumento" element="tns:elaboraDocumento">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="elaboraDocumentoResponse">
+    <wsdl:part name="elaboraDocumentoResponse" element="tns:elaboraDocumentoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="leggiStatoElaborazioneDocumento">
+    <wsdl:part name="leggiStatoElaborazioneDocumento" element="tns:leggiStatoElaborazioneDocumento">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="elaboraDocumentoAsync">
+    <wsdl:part name="elaboraDocumentoAsync" element="tns:elaboraDocumentoAsync">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="leggiStatoElaborazioneDocumentoResponse">
+    <wsdl:part name="leggiStatoElaborazioneDocumentoResponse" element="tns:leggiStatoElaborazioneDocumentoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="elaboraDocumentoAsyncResponse">
+    <wsdl:part name="elaboraDocumentoAsyncResponse" element="tns:elaboraDocumentoAsyncResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DocumentiService">
+    <wsdl:operation name="elaboraDocumento">
+      <wsdl:input name="elaboraDocumento" message="tns:elaboraDocumento">
+    </wsdl:input>
+      <wsdl:output name="elaboraDocumentoResponse" message="tns:elaboraDocumentoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="elaboraDocumentoAsync">
+      <wsdl:input name="elaboraDocumentoAsync" message="tns:elaboraDocumentoAsync">
+    </wsdl:input>
+      <wsdl:output name="elaboraDocumentoAsyncResponse" message="tns:elaboraDocumentoAsyncResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="leggiStatoElaborazioneDocumento">
+      <wsdl:input name="leggiStatoElaborazioneDocumento" message="tns:leggiStatoElaborazioneDocumento">
+    </wsdl:input>
+      <wsdl:output name="leggiStatoElaborazioneDocumentoResponse" message="tns:leggiStatoElaborazioneDocumentoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DocumentiServiceSoapBinding" type="tns:DocumentiService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="elaboraDocumento">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="elaboraDocumento">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="elaboraDocumentoResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="elaboraDocumentoAsync">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="elaboraDocumentoAsync">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="elaboraDocumentoAsyncResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="leggiStatoElaborazioneDocumento">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="leggiStatoElaborazioneDocumento">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="leggiStatoElaborazioneDocumentoResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DocumentiService">
+    <wsdl:port name="DocumentiServicePort" binding="tns:DocumentiServiceSoapBinding">
+      <soap:address location="http://tst-<VH_API_MANAGER>/api/BILANCIO_contabilia_documentiService/1.0"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

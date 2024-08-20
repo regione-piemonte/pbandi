@@ -1,0 +1,43 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="spaceBetween">
+    <h3 class="bold-text">Importazione impegno</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content class="mat-typography">
+    <form #datiForm="ngForm">
+        <mat-grid-list cols="8" rowHeight="80px">
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginLeft30 marginRight30">
+                    <mat-label>Selezionare anno di esercizio *</mat-label>
+                    <mat-select [(ngModel)]="annoEsercizioSelected" name="annoEsercizio"
+                        [ngModelOptions]="{standalone: true}">
+                        <mat-option *ngFor="let annoEsercizio of anniEsercizio" [value]="annoEsercizio">
+                            {{ annoEsercizio }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list cols="8" rowHeight="80px" class="marginLeft30 marginRight30">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginRight15">
+                    <input type="text" placeholder="Anno impegno" [(ngModel)]="annoImpegno" name="annoImpegno" matInput>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field class="col fullWidth marginLeft15">
+                    <input type="text" placeholder="N. impegno" [(ngModel)]="nImpegno" name="nImpegno" matInput>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="annulla()" class="button-style-1">ANNULLA</button>
+    <div matTooltip="Selezionare i campi obbligatori" [matTooltipDisabled]="annoEsercizioSelected">
+        <button mat-button class="button-style-1" (click)="importa()"
+            [disabled]="!annoEsercizioSelected">IMPORTA</button>
+    </div>
+</mat-dialog-actions>

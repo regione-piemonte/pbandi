@@ -1,0 +1,1241 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="page" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAlleAttivitaDaSvolg()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Liquidazione</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="isMessageWarningVisible">
+        <mat-card class="mat-elevation-z2 messageWarning">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="isMessageErrorVisible">
+        <mat-card class="mat-elevation-z2 messageError">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-tab-group [selectedIndex]="tabIndex">
+                    <mat-tab [disabled]='!showTabLiquidazione'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_one</mat-icon>
+                            Liquidazione
+                        </ng-template>
+                        <mat-accordion>
+                            <div class="styleLabel">
+                                <h3>Liquidazione</h3>
+                            </div>
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                                togglePosition="before">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Dati di riepilogo
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <b>Spesa del progetto </b>
+                                <div class="containerCustom">
+                                    <div class="rowCustom marginTop20">
+                                        <div class="col-3Custom textAlignRight">
+                                            Tipo operazione:
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{tipoOperazione}}</b>
+                                        </div>
+                                        <div class="col-3Custom textAlignRight">
+                                            Totale spesa ammessa (€):
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{totaleSpesaAmmessa | number: '1.2-2' : 'it'}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="rowCustom marginTop20">
+                                        <div class="col-3Custom textAlignRight">
+                                            Totale della spesa sostenuta e dichiarata (quietanzata) (€):
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{totSpesaSostDich | number: '1.2-2' : 'it'}}</b>
+                                        </div>
+                                        <div class="col-3Custom textAlignRight">
+                                            Avanzamento della spesa sostenuta e dichiarata (%):
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{avanzamentoSpesaSostDich | number: '1.2-2' : 'it'}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="rowCustom marginTop20">
+                                        <div class="col-3Custom textAlignRight">
+                                            Totale della spesa validata (€):
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{totSpesaValidata | number: '1.2-2' : 'it'}}</b>
+                                        </div>
+                                        <div class="col-3Custom textAlignRight">
+                                            Avanzamento della spesa validata(%):
+                                        </div>
+                                        <div class="col-3Custom">
+                                            <b>{{avanzamentoSpesaValidata | number: '1.2-2' : 'it'}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="marginBottom20">
+                                    <b>Fideiussione bancaria del progetto</b>
+                                </div>
+
+                                <div
+                                    *ngIf="dataSourceFideusBancProg.data == null ? false : (!(dataSourceFideusBancProg.data.length == 0))">
+                                    <table mat-table [dataSource]="dataSourceFideusBancProg" class="mat-elevation-z8">
+
+                                        <ng-container matColumnDef="numero">
+                                            <th mat-header-cell *matHeaderCellDef> Numero </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="data">
+                                            <th mat-header-cell *matHeaderCellDef> Data </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{convertDate(element.dataDecorrenza)}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="importo">
+                                            <th mat-header-cell *matHeaderCellDef> Importo </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.importo | number: '1.2-2'
+                                                : 'it'}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="dataScadenza">
+                                            <th mat-header-cell *matHeaderCellDef> Data scadenza </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{convertDate(element.dataScadenza)}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsFideusBancProg"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsFideusBancProg;"></tr>
+                                    </table>
+                                </div>
+                                <div class="content align-items-center fullWidth"
+                                    *ngIf="dataSourceFideusBancProg.data == null ? true : (dataSourceFideusBancProg.data.length == 0)">
+                                    <mat-card class="mat-elevation-z4 fullWidth">
+                                        <mat-card-content>
+                                            Non ci sono elementi da visualizzare.
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+
+                                <div class="marginBottom20 marginTop20">
+                                    <b>Richieste di liquidazione del progetto</b>
+                                </div>
+
+
+                                <div *ngIf="!(dataSourceRichLiquidProg.data.length == 0)">
+                                    <table mat-table [dataSource]="dataSourceRichLiquidProg" class="mat-elevation-z8">
+
+                                        <ng-container matColumnDef="causaleLiquidazione">
+                                            <th mat-header-cell *matHeaderCellDef> Causale liquidazione </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.descCausaleErogazione}}
+                                            </td>
+                                            <td mat-footer-cell *matFooterCellDef> <b>Importo totale richiesto</b> </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="numero">
+                                            <th mat-header-cell *matHeaderCellDef> Numero </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.numeroRichiestaErogazione}} </td>
+                                            <td mat-footer-cell *matFooterCellDef> </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="data">
+                                            <th mat-header-cell *matHeaderCellDef> Data </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{convertDate(element.dataRichiestaErogazione)}} </td>
+                                            <td mat-footer-cell *matFooterCellDef> </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="importoRichiesto">
+                                            <th mat-header-cell *matHeaderCellDef> Importo richiesto</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.importoRichiestaErogazione
+                                                |
+                                                number: '1.2-2' : 'it'}} </td>
+                                            <td mat-footer-cell *matFooterCellDef> {{calcolaTotaleRichLiquidProg() |
+                                                number:
+                                                '1.2-2' : 'it'}}</td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsRichLiquidProg"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsRichLiquidProg;"></tr>
+                                        <tr mat-footer-row *matFooterRowDef="displayedColumnsRichLiquidProg"></tr>
+                                    </table>
+                                </div>
+                                <div class="content align-items-center fullWidth"
+                                    *ngIf="dataSourceRichLiquidProg.data.length == 0">
+                                    <mat-card class="mat-elevation-z4 fullWidth">
+                                        <mat-card-content>
+                                            Non ci sono elementi da visualizzare.
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+
+                                <div class="marginTop20">
+                                    <b>Quote liquidate</b>
+                                </div>
+
+                                <div class="rowCustom marginTop20">
+                                    <div class="col-2Custom textAlignRight">
+                                        Modalità di agevolazione:
+                                    </div>
+                                    <div class="col-2Custom">
+                                        <b>{{modalitaAgevolazioneQuoteLiquid}}</b>
+                                    </div>
+                                    <div class="col-2Custom textAlignRight">
+                                        Ultimo importo agevolato (€):
+                                    </div>
+                                    <div class="col-2Custom">
+                                        <b>{{ultimoImportoAgevolato | number: '1.2-2' : 'it'}}</b>
+                                    </div>
+                                    <div class="col-2Custom textAlignRight">
+                                        Importo liquidato (€):
+                                    </div>
+                                    <div class="col-2Custom">
+                                        <b>{{importoLiquidato | number: '1.2-2' : 'it'}}</b>
+                                    </div>
+                                    <div class="col-2Custom textAlignRight">
+                                        Importo residuo da liquidare (€):
+                                    </div>
+                                    <div class="col-2Custom">
+                                        <b>{{importoResiduoDaLiquidare | number: '1.2-2' : 'it'}}</b>
+                                    </div>
+                                </div>
+                                <div *ngIf="dataSourceQuotLiquid?.data?.length">
+                                    <table mat-table [dataSource]="dataSourceQuotLiquid" class="mat-elevation-z8">
+
+                                        <ng-container matColumnDef="desc">
+                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.descCausale}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="dataAtto">
+                                            <th mat-header-cell *matHeaderCellDef> Data atto </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{convertDate(element.dtEmissioneAtto)}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="numeroAtto">
+                                            <th mat-header-cell *matHeaderCellDef> Numero atto </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.numeroAtto}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="importoAtto">
+                                            <th mat-header-cell *matHeaderCellDef> Importo atto</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.importoLiquidatoAtto |
+                                                number:
+                                                '1.2-2' : 'it'}} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumnsQuotLiquid"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumnsQuotLiquid;"></tr>
+                                    </table>
+                                </div>
+                                <div class="content align-items-center fullWidth"
+                                    *ngIf="!dataSourceQuotLiquid || !dataSourceQuotLiquid.data  || !dataSourceQuotLiquid.data.length">
+                                    <mat-card class="mat-elevation-z4 fullWidth">
+                                        <mat-card-content>
+                                            Non ci sono elementi da visualizzare.
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </mat-expansion-panel>
+                            <div class="styleLabel">
+                                <h3>Liquidazione contributo in corso</h3>
+                            </div>
+                            <form #liquidazioneForm="ngForm">
+                                <mat-grid-list cols="8" rowHeight="65px">
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        Stato liquidazione:&nbsp;<b>{{statoLiquidazione}}</b>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        <mat-form-field class="marginRight10 fullWidth">
+                                            <mat-label>Selezionare una causale di liquidazione</mat-label>
+                                            <mat-select (selectionChange)="changeModalitaLiquidazione()"
+                                                [(ngModel)]="causaleLiquidazioneSelected" name="causaliLiquidazione"
+                                                #causLiq="ngModel" required>
+                                                <mat-option></mat-option>
+                                                <mat-option *ngFor="let causaleLiquidazione of causaliLiquidazione"
+                                                    [value]="causaleLiquidazione">
+                                                    {{ causaleLiquidazione.descrizione }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="causLiq?.errors?.required">
+                                                Campo obbligatorio
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        Percentuale di liquidazione da iter finanziario
+                                        (%):&nbsp;<b>{{percLiquidIterFinanziario
+                                            |
+                                            number: '1.2-2' : 'it'}}</b>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        <mat-form-field class="marginRight10 fullWidth">
+                                            <input [disabled]="disableFieldsLiquidContrInCorso" type="text"
+                                                placeholder="Percentuale di liquidazione effettiva (%)"
+                                                [(ngModel)]="percLiquidEffetFormatted" matInput name="percLiquidEffet"
+                                                #percLiqEff="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                                (blur)="setPercLiquidEff()" required>
+                                            <mat-error *ngIf="percLiqEff?.errors?.pattern">
+                                                Valore non valido
+                                            </mat-error>
+                                            <mat-error *ngIf="percLiqEff?.errors?.required">
+                                                Campo obbligatorio
+                                            </mat-error>
+                                            <mat-error *ngIf="percLiqEff?.errors?.error==='notPositive'">
+                                                Il valore deve essere maggiore di 0
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        Importo da liquidare da iter
+                                        finanziario:&nbsp;<b>{{importoDaLiquidareIterFinanziario |
+                                            number:
+                                            '1.2-2' : 'it'}}</b>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                        <mat-form-field class="marginRight10 fullWidth">
+                                            <input [disabled]="disableFieldsLiquidContrInCorso" type="text"
+                                                placeholder="Importo della liquidazione effettiva"
+                                                [(ngModel)]="impLiquidEffetFormatted" matInput name="impLiquidEffet"
+                                                #impLiqEff="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                                (blur)="setImpLiquidEff()" required>
+                                            <mat-error *ngIf="impLiqEff?.errors?.pattern">
+                                                Valore non valido
+                                            </mat-error>
+                                            <mat-error *ngIf="impLiqEff?.errors?.required">
+                                                Campo obbligatorio
+                                            </mat-error>
+                                            <mat-error *ngIf="impLiqEff?.errors?.error==='notPositive'">
+                                                Il valore deve essere maggiore di 0
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </form>
+                            <div>
+                                <mat-grid-list cols="8" rowHeight="50px">
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <div class="fullWidth textAlignRight paddingRight15">
+                                            <button class="button-style-1 marginLeft20" mat-button
+                                                (click)="avantiLiquid()">AVANTI</button>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                        </mat-accordion>
+                    </mat-tab>
+
+                    <mat-tab [disabled]='!showTabRiepilogoFondi'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_two</mat-icon>
+                            Riepilogo fondi
+                        </ng-template>
+                        <div class="styleLabel">
+                            <h3>Ripartizione fonti finanziarie</h3>
+                        </div>
+
+                        <div class="marginRight20 marginLeft20" *ngIf="!(dataSourceRipFontiFinanz.data.length == 0)">
+                            <table mat-table [dataSource]="dataSourceRipFontiFinanz" class="mat-elevation-z8">
+                                <ng-container matColumnDef="fonteFinanziaria">
+                                    <th mat-header-cell *matHeaderCellDef> Fonte finanziaria </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.descFonteFinanziaria}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> <b>Totale</b> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="perc">
+                                    <th mat-header-cell *matHeaderCellDef class="text-right"> Percentuale (%) </th>
+                                    <td mat-cell *matCellDef="let element" class="text-right">
+                                        {{element.percentualeRispTotale |
+                                        number: '1.2-2' :
+                                        'it'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="importo">
+                                    <th mat-header-cell *matHeaderCellDef class="text-right"> Importo </th>
+                                    <td mat-cell *matCellDef="let element" class="text-right">
+                                        {{element.importoRispTotale |
+                                        number: '1.2-2' :
+                                        'it'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef class="text-right">
+                                        {{calcolaTotaleRipFontiFinanz() |
+                                        number: '1.2-2' :
+                                        'it'}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsRipFontiFinanz"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsRipFontiFinanz;"></tr>
+                                <tr mat-footer-row *matFooterRowDef="displayedColumnsRipFontiFinanz"></tr>
+                            </table>
+                        </div>
+                        <div class="content align-items-center fullWidth"
+                            *ngIf="dataSourceRipFontiFinanz.data.length == 0">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="styleLabel">
+                            <h3>Ripartizione impegni/liquidazioni</h3> <br>
+                        </div>
+                        <div class="styleLabel">
+                            CUP del progetto: <b>{{cupProgetto}}</b>
+                        </div>
+                        <form #riepFondiForm="ngForm">
+                            <div class="marginRight20 marginLeft20"
+                                *ngIf="!(dataSourceRipartizImpLiqui.data.length == 0)">
+                                <table mat-table [dataSource]="dataSourceRipartizImpLiqui" class="mat-elevation-z8">
+                                    <ng-container matColumnDef="fonteFinanziaria">
+                                        <th mat-header-cell *matHeaderCellDef> Fonte finanziaria </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.descFonteFinanziaria}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> <b>Totale</b> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="annoEsercizio">
+                                        <th mat-header-cell *matHeaderCellDef> Anno esercizio </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.annoEsercizio}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="capNum">
+                                        <th mat-header-cell *matHeaderCellDef> Capitolo numero </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.capitoloNumero}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="impAnnNum">
+                                        <th mat-header-cell *matHeaderCellDef> Impegno anno/numero </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.impegnoAnnoNumero}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="impReimpAnnNum">
+                                        <th mat-header-cell *matHeaderCellDef> Impegno reimputato anno/numero </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.impegnoPerenteAnnoNumero}}
+                                        </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="importoImpegno">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Importo impegno </th>
+                                        <td mat-cell *matCellDef="let element" class="text-right">
+                                            {{element.importoImpegno
+                                            |
+                                            number: '1.2-2' : 'it'}}
+                                        </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="dispResid">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Disponibilità residua
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="text-right">
+                                            {{element.disponibilitaResidua |
+                                            number: '1.2-2' :
+                                            'it'}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="impDaliquidSuImp">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Importo da liquidare
+                                            sull'impegno
+                                        </th>
+                                        <td mat-cell *matCellDef="let element; let i=index">
+                                            <mat-form-field class="marginRight10 fullWidth">
+                                                <input type="text" class="text-right"
+                                                    [(ngModel)]="element.importoDaLiquidareFormatted" matInput
+                                                    name="impDaliquidSuImp{{i}}" #impDaliquidSuImp="ngModel"
+                                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                                    (blur)="setImpDaliquidSuImp(element)">
+                                                <mat-error *ngIf="impDaliquidSuImp?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                                <mat-error *ngIf="impDaliquidSuImp?.errors?.error==='notPositive'">
+                                                    Il valore deve essere maggiore di 0
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </td>
+                                        <td mat-footer-cell *matFooterCellDef> </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="CUPimP">
+                                        <th mat-header-cell *matHeaderCellDef> CUP impegno </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.cup}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> {{totaleRipImpLiquid | number: '1.2-2' :
+                                            'it'}}</td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRipartizImpLiqui"></tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: displayedColumnsRipartizImpLiqui; let i=index">
+                                    </tr>
+                                    <tr mat-footer-row *matFooterRowDef="displayedColumnsRipartizImpLiqui"></tr>
+                                </table>
+                                <mat-grid-list cols="8" rowHeight="50px">
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <div class="fullWidth textAlignRight paddingRight15">
+                                            <button class="button-style-1 marginLeft20" mat-button
+                                                (click)="calcolaTotaleRiepFondi()">CALCOLA TOTALE</button>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                        </form>
+                        <div class="content align-items-center fullWidth"
+                            *ngIf="dataSourceRipartizImpLiqui.data.length == 0">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="indietroRiepFondi()">INDIETRO</button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15">
+                                        <button [disabled]="!showAvantiRiepFondiButton"
+                                            class="button-style-1 marginLeft20" mat-button
+                                            (click)="avantiRiepFondi()">AVANTI</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab [disabled]='!showTabBeneficiario'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_3</mat-icon>
+                            Beneficiario
+                        </ng-template>
+                        <div class="styleLabel">
+                            <h3>Beneficiario della liquidazione</h3>
+                        </div>
+
+                        <div class="marginRight20 marginLeft20"
+                            *ngIf="!(dataSourceBeneficiarioLiquidazione.data.length == 0)">
+                            <table mat-table [dataSource]="dataSourceBeneficiarioLiquidazione" multiTemplateDataRows
+                                class="mat-elevation-z8">
+                                <ng-container matColumnDef="codiceBilancio">
+                                    <th mat-header-cell *matHeaderCellDef> Codice bilancio</th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.codiceBeneficiarioBilancio == null ? "00000" :
+                                        element.codiceBeneficiarioBilancio}}-{{element.codModPagBilancio}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="codFisc">
+                                    <th mat-header-cell *matHeaderCellDef> Codice fiscale </th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.codiceFiscaleBen}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="pIVA">
+                                    <th mat-header-cell *matHeaderCellDef> Partita IVA </th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.partitaIva}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nominativo">
+                                    <th mat-header-cell *matHeaderCellDef> Nominativo </th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.ragioneSociale}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sede">
+                                    <th mat-header-cell *matHeaderCellDef> Sede </th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.sede}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="IBAN">
+                                    <th mat-header-cell *matHeaderCellDef> IBAN / Conto Corrente</th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        <span>{{element.iban ? element.iban : 'n.d.'}}</span>
+                                        &nbsp;/&nbsp;
+                                        <span>{{element.numeroConto ? element.numeroConto : 'n.d.'}}</span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="modPag">
+                                    <th mat-header-cell *matHeaderCellDef> Modalità pagamento</th>
+                                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();">
+                                        {{element.modalitaPagamento}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsBeneficiarioLiquidazione"></tr>
+                                <tr mat-row
+                                    *matRowDef="let element; columns: displayedColumnsBeneficiarioLiquidazione;">
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="content align-items-center fullWidth"
+                            *ngIf="dataSourceBeneficiarioLiquidazione.data.length == 0">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="associaAltroBeneficiario()">ASSOCIA ALTRO BENEFICIARIO</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                        <div [hidden]="!showBeneficiariBilancio">
+                            <mat-card class="mat-elevation-z2">
+                                <mat-card-content>
+                                    <mat-grid-list cols="8" rowHeight="60px">
+                                        <mat-grid-tile [colspan]="7" [rowspan]="1">
+                                            <div class="textAlignLeft fullWidth">
+                                                <h3>Beneficiari del bilancio</h3>
+                                            </div>
+                                        </mat-grid-tile>
+                                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                                            <div class="textAlignRight fullWidth">
+                                                <button (click)="closeBeneficiariBilancio()" type="button"
+                                                    mat-icon-button>
+                                                    <mat-icon>highlight_off</mat-icon>
+                                                </button>
+                                            </div>
+                                        </mat-grid-tile>
+                                    </mat-grid-list>
+
+                                    <div *ngIf="!(dataSourceBeneficiarioBilancio.data.length == 0)">
+                                        <table mat-table [dataSource]="dataSourceBeneficiarioBilancio"
+                                            multiTemplateDataRows class="mat-elevation-z8">
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                                        (change)="$event ? changeSingleRowBeneficiariBilancio(row) : null"
+                                                        [checked]="selectionBeneficiariBilancio.isSelected(row)"
+                                                        [aria-label]="checkboxLabelBeneficiariBilancio(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="codiceBilancio">
+                                                <th mat-header-cell *matHeaderCellDef> Codice bilancio</th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.codiceBeneficiarioBilancio}}-{{element.codModPagBilancio}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="codFisc">
+                                                <th mat-header-cell *matHeaderCellDef> Codice fiscale </th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.codiceFiscaleBen}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="pIVA">
+                                                <th mat-header-cell *matHeaderCellDef> Partita IVA </th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.partitaIva}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="nominativo">
+                                                <th mat-header-cell *matHeaderCellDef> Nominativo </th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.ragioneSociale}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="sede">
+                                                <th mat-header-cell *matHeaderCellDef> Sede </th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.sede}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="IBAN">
+                                                <th mat-header-cell *matHeaderCellDef> IBAN / Conto Corrente</th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    <span>{{element.iban ? element.iban : 'n.d.'}}</span>
+                                                    &nbsp;/&nbsp;
+                                                    <span>{{element.numeroConto ? element.numeroConto : 'n.d.'}}</span>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="modPag">
+                                                <th mat-header-cell *matHeaderCellDef> Modalità pagamento</th>
+                                                <td mat-cell *matCellDef="let element"
+                                                    (click)="$event.stopPropagation();">
+                                                    {{element.modalitaPagamento}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumnsBeneficiarioBilancio">
+                                            </tr>
+                                            <tr mat-row
+                                                *matRowDef="let element; columns: displayedColumnsBeneficiarioBilancio;">
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                    <div class="content align-items-center fullWidth"
+                                        *ngIf="dataSourceBeneficiarioBilancio.data.length == 0">
+                                        <mat-card class="mat-elevation-z4 fullWidth">
+                                            <mat-card-content>
+                                                Non ci sono elementi da visualizzare.
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </div>
+                                    <div>
+                                        <mat-grid-list cols="8" rowHeight="50px">
+                                            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                                <div class="fullWidth textAlignRight paddingRight15">
+                                                    <button [class.customButton]="!showButtonAssociaBeneficiariBilancio"
+                                                        class="button-style-1 marginLeft20" mat-button
+                                                        (click)="associaBeneficiariBilancio()"
+                                                        [disabled]='!showButtonAssociaBeneficiariBilancio'>ASSOCIA</button>
+                                                </div>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="indietroBeneficiario()">INDIETRO</button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15">
+                                        <button [disabled]='!showAvantiBenefButton' class="button-style-1 marginLeft20"
+                                            mat-button (click)="avantiBeneficiario()">AVANTI</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </mat-tab>
+                    <mat-tab [disabled]='!showTabDatiIntegrativi'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_4</mat-icon>
+                            Dati integrativi
+                        </ng-template>
+                        <div class="styleLabel">
+                            <h3>Dati integrativi</h3>
+                        </div>
+
+                        <div class="marginRight20 marginLeft20">
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <mat-label>Selezionare un Ente di competenza*</mat-label>
+                                        <mat-select (selectionChange)="changeEnte()"
+                                            [(ngModel)]="enteCompetenzaSelected" name="enteCompetenza"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-option *ngFor="let enteCompetenza of entiCompetenza"
+                                                [value]="enteCompetenza">
+                                                {{ enteCompetenza.descEnte }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <mat-label>Selezionare un Settore di competenza *</mat-label>
+                                        <mat-select [(ngModel)]="settoreCompetenzaSelected" name="settoreCompetenza"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <mat-option *ngFor="let settoreCompetenza of settoriCompetenza"
+                                                [value]="settoreCompetenza">
+                                                {{ settoreCompetenza.descSettore }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-form-field class="marginRight10 fullWidth">
+                                <textarea type="text" rows="4" placeholder="Causale di pagamento *"
+                                    [(ngModel)]="causalePagamento" matInput name="causalePagamento"
+                                    [ngModelOptions]="{standalone: true}"></textarea>
+                            </mat-form-field>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input type="text" placeholder="Note dell'atto di liquidazione"
+                                            [(ngModel)]="noteAttoLiquid" matInput name="noteAttoLiquid"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <mat-label>Data di scadenza</mat-label>
+                                        <input matInput [matDatepicker]="pickerDataScadenza"
+                                            [formControl]="dataScadenza">
+                                        <mat-datepicker-toggle matSuffix [for]="pickerDataScadenza">
+                                            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #pickerDataScadenza></mat-datepicker>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="6" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input type="text" placeholder="Funzionario liquidatore *"
+                                            [(ngModel)]="funzionarioLiquidatore" matInput name="funzionarioLiquidatore"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input type="number" placeholder="N. telefono *" [(ngModel)]="nTelefono"
+                                            matInput name="nTelefono" [ngModelOptions]="{standalone: true}">
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="6" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input type="text" placeholder="Direttore o Dirigente responsabile *"
+                                            [(ngModel)]="diretDirigResponsabile" matInput name="diretDirigResponsabile"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="indietroDatiIntegr()">INDIETRO</button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15"
+                                        matTooltip="Selezionare i campi obbligatori"
+                                        [matTooltipDisabled]="enteCompetenzaSelected && settoreCompetenzaSelected && (causalePagamento != '') && (causalePagamento != undefined) && (funzionarioLiquidatore != '') && (funzionarioLiquidatore != undefined) 
+                                && (nTelefono != '') && (nTelefono != undefined) && (diretDirigResponsabile != '') && (diretDirigResponsabile != undefined)">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="avantiDatiIntegr()"
+                                            [disabled]="!enteCompetenzaSelected || !settoreCompetenzaSelected || !causalePagamento || !funzionarioLiquidatore || !nTelefono || !diretDirigResponsabile">AVANTI</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab [disabled]='!showTabRitenute'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_5</mat-icon>
+                            Ritenute
+                        </ng-template>
+                        <div class="styleLabel">
+                            <h3>Ritenute</h3>
+                        </div>
+
+                        <div class="marginRight20 marginLeft20">
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <mat-label>Selezionare Natura onere e Codice tributo</mat-label>
+                                        <mat-select (selectionChange)="changeNaturaOnereCodiceTributo()"
+                                            [(ngModel)]="naturaOnereCodiceTributoSelected"
+                                            name="naturaOnereCodiceTributo" [ngModelOptions]="{standalone: true}">
+                                            <mat-option></mat-option>
+                                            <mat-option
+                                                *ngFor="let naturaOnereCodiceTributo of natureOnereCodiceTributo"
+                                                [value]="naturaOnereCodiceTributo">
+                                                {{ naturaOnereCodiceTributo }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    Natura onere e Codice tributo presenti in domanda:
+                                    <b>&nbsp;{{naturaOnereCodiceTributo}}</b>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input [disabled]="!showFieldsRitenute" type="text" placeholder="Imponibile"
+                                            [(ngModel)]="imponibileFormatted" matInput name="imponibile"
+                                            #impon="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            (blur)="setImponibile()" required>
+                                        <mat-error *ngIf="impon?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                        <mat-error *ngIf="impon?.errors?.required">
+                                            Campo obbligatorio
+                                        </mat-error>
+                                        <mat-error *ngIf="impon?.errors?.error==='notPositive'">
+                                            Il valore deve essere maggiore di 0
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input [disabled]="!showFieldsRitenute" type="text"
+                                            placeholder="Somma non soggetta" [(ngModel)]="sommaNonSoggettaFormatted"
+                                            matInput name="sommaNonSoggetta" #somma="ngModel"
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setSommaNonSoggetta()">
+                                        <mat-error *ngIf="somma?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input [disabled]="true" type="text" placeholder="Perc. carico Ente"
+                                            [(ngModel)]="percCaricoEnteFormatted" matInput name="percCaricoEnte"
+                                            #percCE="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            (blur)="setPercCaricoEnte()">
+                                        <mat-error *ngIf="percCE?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="8" rowHeight="60px">
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input type="text" [disabled]="true" placeholder="Perc. carico soggetto"
+                                            [(ngModel)]="percCaricoSoggettoFormatted" matInput name="percCaricoSoggetto"
+                                            #percCS="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            (blur)="setPercCaricoSoggetto()">
+                                        <mat-error *ngIf="percCS?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input [disabled]="true" type="text" placeholder="Importo a carico dell'Ente"
+                                            [(ngModel)]="importoCaricoEnteFormatted" matInput name="importoCaricoEnte"
+                                            #impCE="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                            (blur)="setImpCaricoEnte()">
+                                        <mat-error *ngIf="impCE?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <mat-form-field class="marginRight10 fullWidth">
+                                        <input [disabled]="true" type="text" placeholder="Importo a carico del soggetto"
+                                            [(ngModel)]="importoCaricoSoggettoFormatted" matInput
+                                            name="importoCaricoSoggetto" #impCS="ngModel"
+                                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImpCaricoSoggetto()">
+                                        <mat-error *ngIf="impCS?.errors?.pattern">
+                                            Valore non valido
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="indietroRitenute()">INDIETRO</button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15">
+                                        <button class="button-style-1 marginLeft20" mat-button
+                                            (click)="avantiRitenute()">AVANTI</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab [disabled]='!showTabCreazioneAtto'>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">looks_6</mat-icon>
+                            Creazione atto
+                        </ng-template>
+                        <div class="styleLabel">
+                            <h3>Riepilogo atto di liquidazione</h3>
+                        </div>
+
+                        <div class="containerCustom">
+                            <div class="rowCustom marginTop20">
+                                <div class="col-3Custom textAlignRight">
+                                    Importo atto liquidazione (€):
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{importoAttoLiquidazione}}</b>
+                                </div>
+                                <div class="col-3Custom textAlignRight">
+                                    Direzione:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{direzione}}</b>
+                                </div>
+                            </div>
+                            <div class="rowCustom marginTop20">
+                                <div class="col-3Custom textAlignRight">
+                                    Settore:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{settore}}</b>
+                                </div>
+                                <div class="col-3Custom textAlignRight">
+                                    Codice progetto:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{codiceProgettoCreazioneAtto}}</b>
+                                </div>
+                            </div>
+                            <div class="rowCustom marginTop20">
+                                <div class="col-3Custom textAlignRight">
+                                    Beneficiario:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{beneficiarioCreazioneAtto}}</b>
+                                </div>
+                                <div class="col-3Custom textAlignRight">
+                                    Causale:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{causale}}</b>
+                                </div>
+                            </div>
+                            <div class="rowCustom marginTop20">
+                                <div class="col-3Custom textAlignRight">
+                                    Note:
+                                </div>
+                                <div class="col-3Custom">
+                                    <b>{{note}}</b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="styleLabel">
+                            <h3>Ripartizione impegni/liquidazioni</h3>
+                        </div>
+                        <div class="styleLabel">
+                            CUP del progetto:<b>{{cupProgettoCreazioneAtto}}</b>
+                        </div>
+
+                        <div class="marginRight20 marginLeft20" *ngIf="!(dataSourceRipartizImpLiqui.data.length == 0)">
+                            <table mat-table [dataSource]="dataSourceRipartizImpLiqui" class="mat-elevation-z8">
+                                <ng-container matColumnDef="fonteFinanziaria">
+                                    <th mat-header-cell *matHeaderCellDef> Fonte finanziaria </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.descFonteFinanziaria}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> <b>Totale</b> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="annoEsercizio">
+                                    <th mat-header-cell *matHeaderCellDef> Anno esercizio </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.annoEsercizio}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="capNum">
+                                    <th mat-header-cell *matHeaderCellDef> Capitolo numero </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.capitoloNumero}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="impAnnNum">
+                                    <th mat-header-cell *matHeaderCellDef> Impegno anno/numero </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.impegnoAnnoNumero}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="impReimpAnnNum">
+                                    <th mat-header-cell *matHeaderCellDef> Impegno reimputato anno/numero </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.impegnoPerenteAnnoNumero}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="importoImpegno">
+                                    <th mat-header-cell *matHeaderCellDef class="text-right">Importo impegno </th>
+                                    <td mat-cell *matCellDef="let element" class="text-right"> {{element.importoImpegno
+                                        | number: '1.2-2' :
+                                        'it'}}
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dispResid">
+                                    <th mat-header-cell *matHeaderCellDef class="text-right"> Disponibilità residua
+                                    </th>
+                                    <td mat-cell *matCellDef="let element" class="text-right">
+                                        {{element.disponibilitaResidua | number:
+                                        '1.2-2' : 'it'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="impDaliquidSuImp">
+                                    <th mat-header-cell *matHeaderCellDef class="text-right"> Importo da liquidare
+                                        sull'impegno </th>
+                                    <td mat-cell *matCellDef="let element" class="text-right">
+                                        {{element.importoDaLiquidare | number:
+                                        '1.2-2' : 'it'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="CUPimP">
+                                    <th mat-header-cell *matHeaderCellDef> CUP impegno </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.cup}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> {{calcolaTotaleRipImpLiquid() | number:
+                                        '1.2-2' : 'it'}}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsRipartizImpLiqui"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsRipartizImpLiqui;"></tr>
+                                <tr mat-footer-row *matFooterRowDef="displayedColumnsRipartizImpLiqui"></tr>
+                            </table>
+                        </div>
+                        <div class="content align-items-center fullWidth"
+                            *ngIf="dataSourceRipartizImpLiqui.data.length == 0">
+                            <mat-card class="mat-elevation-z4 fullWidth">
+                                <mat-card-content>
+                                    Non ci sono elementi da visualizzare.
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div>
+                            <mat-grid-list cols="8" rowHeight="50px">
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth paddingRight15">
+                                        <button [disabled]="!showIndietroCreaAttoButton"
+                                            class="button-style-1 marginLeft20" mat-button
+                                            (click)="indietroCreaAtto()">INDIETRO</button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                                    <div class="fullWidth textAlignRight paddingRight15">
+                                        <button [disabled]="!showCreaAttoButton" class="button-style-1 marginLeft20"
+                                            mat-button (click)="creaAtto()">CREA
+                                            ATTO</button>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                        <div [hidden]="!showEsitoAttoLiquidazione">
+                            <div class="styleLabel">
+                                <b>Esito atto di liquidazione</b>
+                            </div>
+                            <div class="containerCustom">
+                                <div class="rowCustom marginTop20">
+                                    <div class="col-3Custom textAlignRight">
+                                        Numero documento di spesa::
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{numeroDocumentoSpesa}}</b>
+                                    </div>
+                                    <div class="col-3Custom textAlignRight">
+                                        Data atto:
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{dataAtto}}</b>
+                                    </div>
+                                </div>
+                                <div class="rowCustom marginTop20">
+                                    <div class="col-3Custom textAlignRight">
+                                        Anno atto:
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{annoAtto}}</b>
+                                    </div>
+                                    <div class="col-3Custom textAlignRight">
+                                        Numero atto:
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{numeroAtto}}</b>
+                                    </div>
+                                </div>
+                                <div class="rowCustom marginTop20">
+                                    <div class="col-3Custom textAlignRight">
+                                        Esito operazione:
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{esitoOperazione}}</b>
+                                    </div>
+                                    <div class="col-3Custom textAlignRight">
+                                        Stato operazione:
+                                    </div>
+                                    <div class="col-3Custom">
+                                        <b>{{statoOperazione}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <mat-grid-list cols="8" rowHeight="50px">
+                                    <mat-grid-tile [colspan]="8" [rowspan]="1">
+                                        <div class="fullWidth textAlignRight paddingRight15">
+                                            <button class="button-style-1 marginLeft20" mat-button
+                                                (click)="stampa()">STAMPA</button>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

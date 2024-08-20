@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.csi.pbandi</groupId>
+	<artifactId>pbwebfin</artifactId>
+	<version>1.8.0</version>
+	<packaging>pom</packaging>
+	<name>pbwebfin</name>
+
+	<modules>
+		<module>pbwebfin-jar</module>
+		<module>pbwebfin-web</module>
+		<module>pbwebfin-ear</module>
+		<module>pbwebfin-tar</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<build.profile.id>prod-rp-01</build.profile.id>
+		<spring.version>4.3.24.RELEASE</spring.version>
+		<jackson.version>1.9.13</jackson.version>
+		<jackson.jaxrs.version>1.9.12</jackson.jaxrs.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<pbwebfin.name>pbwebfin</pbwebfin.name>
+		<tar.version>1.8.0</tar.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>it.csi.pbandi</groupId>
+				<artifactId>pbwebfin-jar</artifactId>
+				<version>1.8.0</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>it.csi.pbandi</groupId>
+				<artifactId>pbwebfin-web</artifactId>
+				<version>1.8.0</version>
+				<type>war</type>
+				<scope>compile</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>unpack</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-ear-plugin</artifactId>
+							<configuration>
+								<unpackTypes>war,ejb</unpackTypes>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<!-- Configurazioni per l'ambiente di sviluppo -->
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>local</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di dev -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<build.profile.id>dev</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di test -->
+		<profile>
+			<id>tst-rp-01</id>
+			<properties>
+				<build.profile.id>tst-rp-01</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di pre produzione -->
+		<profile>
+			<id>pre-prod-rp-01</id>
+			<properties>
+				<build.profile.id>pre-prod-rp-01</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di beta-test -->
+		<profile>
+			<id>bt-rp-01</id>
+			<properties>
+				<build.profile.id>bt-rp-01</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di produzione -->
+		<profile>
+			<id>coll-rp-01</id>
+			<properties>
+				<build.profile.id>coll-rp-01</build.profile.id>
+			</properties>
+		</profile>
+		<!-- Configurazioni per l'ambiente di produzione -->
+		<profile>
+			<id>prod-rp-01</id>
+			<properties>
+				<build.profile.id>prod-rp-01</build.profile.id>
+			</properties>
+		</profile>
+	</profiles>
+</project>

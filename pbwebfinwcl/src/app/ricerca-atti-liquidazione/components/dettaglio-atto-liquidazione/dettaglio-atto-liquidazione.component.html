@@ -1,0 +1,375 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'display-none':isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer" [hidden]="!consultazioneAtto">
+            <button (click)="tornaAllaConsultazione()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla consultazione</span>
+            </button>
+        </div>
+        <div class="backContainer" [hidden]="consultazioneAtto">
+            <button (click)="tornaARicercaAtti()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna a ricerca atti</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Atto di liquidazione n° {{attoLiquidazione}}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto ? codiceProgetto : 'n.d'}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-tab-group mat-stretch-tabs class="mat-elevation-z2">
+                    <mat-tab label="DATI GENERALI">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Numero documento spesa:</td>
+                                    <td colspan="3">
+                                        {{numeroDocumentoSpesa}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Descrizione stato documento spesa:</td>
+                                    <td colspan="3">
+                                        {{descrizioneStatoDocumentoSpesa}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Importo Atto:</td>
+                                    <td class="width-25-perc"> {{importoAtto | number: '1.2-2' : 'it'}}</td>
+                                    <td class="bold-text textAlignRight">Causale:</td>
+                                    <td> {{causale}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Note:</td>
+                                    <td colspan="3">
+                                        {{note}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Stato:</td>
+                                    <td colspan="3">
+                                        {{stato}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Testo richiesta modifica:</td>
+                                    <td colspan="3">
+                                        {{testoRichiestaModifica}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data inserimento:</td>
+                                    <td class="width-25-perc"> {{dataInserimentoDatiGenerali}}</td>
+                                    <td class="bold-text textAlignRight">Data aggiornamento:</td>
+                                    <td> {{dataAggiornamentoDatiGenerali}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data aggiornamento bilancio:</td>
+                                    <td class="width-25-perc"> {{dataAggiornamentoBilancio}}</td>
+                                    <td class="bold-text textAlignRight">Data emissione:</td>
+                                    <td> {{dataScadenza}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data scadenza:</td>
+                                    <td class="width-25-perc"> {{dataInserimentoDatiGenerali}}</td>
+                                    <td class="bold-text textAlignRight">Data completamento:</td>
+                                    <td> {{dataCompletamento}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data annullamento:</td>
+                                    <td class="width-25-perc"> {{dataEmissione}}</td>
+                                    <td class="bold-text textAlignRight">Data ricezione:</td>
+                                    <td> {{dataRicezione}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data rifiuto:</td>
+                                    <td class="width-25-perc"> {{dataRifiuto}}</td>
+                                    <td class="bold-text textAlignRight">Data richiesta modifica:</td>
+                                    <td> {{dataRichiestaModifica}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </mat-tab>
+                    <mat-tab label="BENEFICIARIO">
+                        <table class="table-benef">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Codice beneficiario bilancio:</td>
+                                    <td> {{codiceBeneficiarioBilancio}}</td>
+                                    <td class="bold-text textAlignRight">Denominazione o Nominativo:</td>
+                                    <td> {{denominazioneNominativo}}</td>
+                                    <td class="bold-text textAlignRight">Ragione sociale aggiuntiva:</td>
+                                    <td> {{ragioneSocialeAggiuntiva}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Indirizzo:</td>
+                                    <td> {{indirizzo}}</td>
+                                    <td class="bold-text textAlignRight">Comune:</td>
+                                    <td> {{comune}}</td>
+                                    <td class="bold-text textAlignRight">Provincia:</td>
+                                    <td> {{provincia}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Codice fiscale:</td>
+                                    <td> {{codiceFiscale}}</td>
+                                    <td class="bold-text textAlignRight">Partita IVA:</td>
+                                    <td> {{partitaIVA}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data inserimento:</td>
+                                    <td> {{dataInserimentoBeneficiario}}</td>
+                                    <td class="bold-text textAlignRight">Data aggiornamento:</td>
+                                    <td> {{dataAggiornamentoBeneficiario}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Email:</td>
+                                    <td> {{email}}</td>
+                                    <td class="bold-text textAlignRight">Telefono:</td>
+                                    <td> {{telefono}}</td>
+                                    <td class="bold-text textAlignRight">Fax:</td>
+                                    <td> {{fax}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </mat-tab>
+                    <mat-tab label="DATI INTEGRATIVI">
+                        <table class="table-dati-integ">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Settore di appartenenza:</td>
+                                    <td colspan="5">
+                                        {{settoreAppartenenza}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Ente di competenza:</td>
+                                    <td colspan="5">
+                                        {{enteCompetenza}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Funzionario liquidatore:</td>
+                                    <td> {{funzionarioLiquidatore}}</td>
+                                    <td class="bold-text textAlignRight">Numero di telefono:</td>
+                                    <td> {{numeroTelefono}}</td>
+                                    <td class="bold-text textAlignRight">Dirigente:</td>
+                                    <td> {{dirigente}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Modalita di agevolazione:</td>
+                                    <td> {{modalitaAgevolazione}}</td>
+                                    <td class="bold-text textAlignRight">Causale erogazione:</td>
+                                    <td> {{causaleErogazione}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Quietanzante:</td>
+                                    <td> {{quietanzante}}</td>
+                                    <td class="bold-text textAlignRight">Codice fiscale:</td>
+                                    <td> {{codicefiscale}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section">Pagamento</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data inserimento:</td>
+                                    <td> {{dataInserimentoPagamento}}</td>
+                                    <td class="bold-text textAlignRight">Data aggiornamento:</td>
+                                    <td> {{dataAggiornamentoPagamento}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Modalita erogazione:</td>
+                                    <td> {{modalitaErogazionePagamento}}</td>
+                                    <td class="bold-text textAlignRight">Estremi bancari:</td>
+                                    <td> {{estremiBancariPagamento}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section"> Beneficiario cedente/ceduto e pagamento atto
+                                            beneficiario
+                                            ceduto</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Beneficiario cedente:</td>
+                                    <td> {{beneficiarioCedente}}</td>
+                                    <td class="bold-text textAlignRight">Beneficiario ceduto:</td>
+                                    <td> {{beneficiarioCeduto}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data inserimento:</td>
+                                    <td> {{dataInserimentoBenefCedCed}}</td>
+                                    <td class="bold-text textAlignRight">Data aggiornamento:</td>
+                                    <td> {{dataAggiornamentoBenefCedCed}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Modalita erogazione:</td>
+                                    <td> {{modalitaErogazioneBenefCedCed}}</td>
+                                    <td class="bold-text textAlignRight">Estremi bancari:</td>
+                                    <td> {{estremiBancariBenefCedCed}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </mat-tab>
+                    <mat-tab label="RITENUTE">
+                        <table class="table-benef">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Natura Onere e Codice Tributo:</td>
+                                    <td> {{naturaOnereCodiceTributo}}</td>
+                                    <td class="bold-text textAlignRight">Imponibile:</td>
+                                    <td> {{imponibile | number: '1.2-2' : 'it'}}</td>
+                                    <td class="bold-text textAlignRight">Somme non soggette:</td>
+                                    <td> {{sommeNonSoggette | number: '1.2-2' : 'it'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </mat-tab>
+                    <mat-tab label="LIQUIDAZIONI">
+                        <form>
+                            <div class="display-flex justify-content-center marginTop20">
+                                <mat-form-field class="width-25-perc" *ngIf="dataDettaglioAtto?.liquidazioni?.length>0">
+                                    <mat-select placeholder="Selezionare una liquidazione (anno - numero)"
+                                        [(ngModel)]="liquidazioneSelected" name="liquidazione"
+                                        (selectionChange)="dettaglioTabLiquidazioni(liquidazioneSelected.idLiquidazione)">
+                                        <mat-option *ngFor="let item of dataDettaglioAtto?.liquidazioni" [value]="item">
+                                            {{item.annoLiquidazione}} - {{item.numBilancioLiquidazione}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                        </form>
+                        <table class="table-liquidazioni">
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section"> Dati relativi ad Anno esercizio /
+                                            Liquidazione</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Numero liquidazione:</td>
+                                    <td> {{numeroLiquidazione}}</td>
+                                    <td class="bold-text textAlignRight">Data inserimento:</td>
+                                    <td> {{dataInserimento}}</td>
+                                    <td class="bold-text textAlignRight">Importo liquidato:</td>
+                                    <td> {{importoLiquidato | number: '1.2-2' : 'it'}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section"> Impegno</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Anno impegno:</td>
+                                    <td> {{annoImpegno}}</td>
+                                    <td class="bold-text textAlignRight">Numero impegno:</td>
+                                    <td> {{numeroImpegno}}</td>
+                                    <td class="bold-text textAlignRight">Anno esercizio:</td>
+                                    <td> {{annoEsercizio}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">CUP impegno:</td>
+                                    <td> {{cupImpegno}}</td>
+                                    <td class="bold-text textAlignRight">CIG impegno:</td>
+                                    <td> {{cigImpegno}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Totale liquidato:</td>
+                                    <td> {{totaleLiquidato | number: '1.2-2' : 'it'}}</td>
+                                    <td class="bold-text textAlignRight">Totale quietanziato:</td>
+                                    <td> {{totaleQuietanziato | number: '1.2-2' : 'it'}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section"> Capitolo</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Numero capitolo:</td>
+                                    <td> {{numeroCapitolo}}</td>
+                                    <td class="bold-text textAlignRight">Tipo fondo:</td>
+                                    <td> {{tipoFondo}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <span class="title-section"> Dati relativi ad Anno esercizio / Liquidazione /
+                                            Mandato</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Numero mandato:</td>
+                                    <td> {{numeroMandato}}</td>
+                                    <td class="bold-text textAlignRight">Data quietanza:</td>
+                                    <td> {{quietanza}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">CUP mandato:</td>
+                                    <td> {{cupMandato}}</td>
+                                    <td class="bold-text textAlignRight">CIG mandato:</td>
+                                    <td> {{cigMandato}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Importo lordo:</td>
+                                    <td> {{importoLordo | number: '1.2-2' : 'it'}}</td>
+                                    <td class="bold-text textAlignRight">Importo ritenute:</td>
+                                    <td> {{importoRitenute | number: '1.2-2' : 'it'}}</td>
+                                    <td class="bold-text textAlignRight">Importo netto:</td>
+                                    <td> {{importoNetto | number: '1.2-2' : 'it'}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Importo quietanziato:</td>
+                                    <td> {{importoQuietanziato | number: '1.2-2' : 'it'}}</td>
+                                    <td colspan="4"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text textAlignRight">Data inserimento mandato:</td>
+                                    <td> {{dataInserimentoMandato}}</td>
+                                    <td class="bold-text textAlignRight">Data aggiornamento mandato:</td>
+                                    <td> {{dataAggiornamentoMandato}}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

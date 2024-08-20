@@ -1,0 +1,105 @@
+<mat-spinner-pbandi [hidden]="!this.isLoading()"></mat-spinner-pbandi>
+<div class="page">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAlleAttivitaDaSvolg()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="reportingContainerUp">
+            <div>
+                <h2>Atti di liquidazione del progetto</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="benef">
+                    <p>Beneficiario: <span>{{beneficiario}}</span></p>
+                </div>
+                <div class="benef">
+                    <p>Codice progetto: <span>{{codiceProgetto}}</span></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <b>Quote liquidate</b>
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-3Custom textAlignRight">
+                            Modalità di agevolazione::
+                        </div>
+                        <div class="col-3Custom">
+                            <b>{{modalitaAgevolazione}}</b>
+                        </div>
+                        <div class="col-3Custom textAlignRight">
+                            Ultimo importo agevolato (€):
+                        </div>
+                        <div class="col-3Custom">
+                            <b>{{ultimoImportoAgevolato | number: '1.2-2' : 'it'}}</b>
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-3Custom textAlignRight">
+                            Importo liquidato (€):
+                        </div>
+                        <div class="col-3Custom">
+                            <b>{{importoLiquidato | number: '1.2-2' : 'it'}}</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!(dataSource.data.length == 0)">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="causaleErog">
+                            <th mat-header-cell *matHeaderCellDef> Causale erogazione </th>
+                            <td mat-cell *matCellDef="let element"> {{element.causaleErogazione}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="numAtto">
+                            <th mat-header-cell *matHeaderCellDef> Numero atto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.estremiAtto}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="impLiquid">
+                            <th mat-header-cell *matHeaderCellDef> Importo liquidato </th>
+                            <td mat-cell *matCellDef="let element"> {{element.importoLiquidato | number: '1.2-2' :
+                                'it'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dettaglio">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element"> <button
+                                    (click)="dettaglio(element.idAttoDiLiquidazione)" type="button" mat-icon-button>
+                                    <mat-icon>visibility</mat-icon>
+                                </button> </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <div class="content align-items-center fullWidth" *ngIf="dataSource.data.length == 0">
+                    <mat-card class="mat-elevation-z4 fullWidth">
+                        <mat-card-content>
+                            Non ci sono elementi da visualizzare.
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
