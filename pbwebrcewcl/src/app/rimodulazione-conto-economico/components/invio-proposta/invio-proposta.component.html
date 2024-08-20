@@ -1,0 +1,111 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <h2>Proposta di rimodulazione del conto economico</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{beneficiario}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content" *ngIf="!isConcluded">
+        <div class="avviso-content">
+            <mat-card class="mat-elevation-z0">
+                <mat-card-content>
+                    <div class="avviso">
+                        Per l'invio elettronico, eseguire il download della proposta di rimodulazione senza variare il
+                        nome del file, firmare il file digitalmente (secondo la normativa italiana - formato CAdES p7m)
+                        e procedere con l'invio.
+                        <br>
+                        In alternativa all'invio elettronico, scaricare, stampare, firmare ed inviare in formato
+                        cartaceo la proposta di rimodulazione.
+                        <br>
+                        È sempre possibile inviare il documento firmato anche in un secondo momento dalla sezione
+                        <span class="boldText">Documenti di progetto</span>.
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="content" *ngIf="!isConcluded">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <mat-tab-group mat-align-tabs="start" #tabs>
+                    <mat-tab label="INVIO DIGITALE">
+                        <div class="marginTop15">
+                            Scarica il documento da firmare
+                            <br>
+                            <a class="blue-color boldText cursor-pointer" (click)="download()"
+                                matTooltip="Download file">{{nomePdf}}</a> del
+                            {{todayDate | date: 'dd/MM/yyyy'}}
+                            <br>
+                            <br>
+                            <span *ngIf="!isInviato">Carica il documento firmato digitalmente e procedi all'invio</span>
+                            <div class="textAlignCenter" *ngIf="!isInviato">
+                                <mat-form-field class="paddingRight10" style="width: 50%;">
+                                    <input type="text" matInput placeholder="Nome file" disabled
+                                        [ngModel]="file?.name" />
+                                </mat-form-field>
+                                <button mat-button class="button-style-1" (click)="uploadFile.click()">SFOGLIA</button>
+                                <button mat-button class="button-style-1 orange-color" (click)="file=null"
+                                    [disabled]="!file">ANNULLA</button>
+                                <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                                    (change)="handleFileInput($event.target.files[0])" />
+                                <!--PULSANTE CARICA ?-->
+                                <button mat-raised-button class="button-style-2" (click)="inviaProposta()"
+                                    [disabled]="!file">INVIA</button>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="INVIO EXTRA-PROCEDURA">
+                        <div class="marginTop15">
+                            Scarica il documento da firmare
+                            <br>
+                            <a class="blue-color boldText cursor-pointer" (click)="download()"
+                                matTooltip="Download file">{{nomePdf}}</a> del
+                            {{todayDate | date: 'dd/MM/yyyy'}}
+                            <br>
+                            <br>
+                            <div class="boldText">Il documento, scaricato e firmato, dovrà essere inviato extra
+                                procedura all'ente competente.</div>
+                            <button mat-raised-button class="button-style-2 marginTop15"
+                                (click)="concludi()">CONCLUDI</button>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

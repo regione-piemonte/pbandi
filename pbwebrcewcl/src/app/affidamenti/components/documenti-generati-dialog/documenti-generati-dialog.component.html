@@ -1,0 +1,43 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Checklist associate all'affidamento</h3>
+        <button mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-grid-list *ngIf="documenti && documenti.length>0; else noDocuments" cols="10" rowHeight="35">
+        <div *ngFor="let doc of documenti">
+            <mat-grid-tile [colspan]="7" [rowspan]="1">
+                <div style="width: 100%; align-content: flex-start;">
+                    <button mat-button class="button-style-1" (click)="downloadDoc(doc)">{{doc.nome}}</button>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <div style="width: 100%; align-content: flex-start;">
+                    {{doc.descStatoTipoDocIndex}}
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <div style="width: 100%; align-content: flex-start; white-space: nowrap;">
+                    <button mat-icon-button class="blue-color" matTooltip="Anteprima file"
+                        (click)="visualizzaAnteprima(doc)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button class="blue-color" matTooltip="Visualizza file allegati"
+                        (click)="openAllegati(doc)">
+                        <mat-icon>attachment</mat-icon>
+                    </button>
+                </div>
+            </mat-grid-tile>
+        </div>
+    </mat-grid-list>
+    <ng-template #noDocuments>
+        <p>Nessuna checklist associata</p>
+    </ng-template>
+</div>

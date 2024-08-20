@@ -1,0 +1,116 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToGestioneAffidamenti()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna all'affidamento</span>
+            </button>
+        </div>
+        <h2>CheckList</h2>
+    </div>
+
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+
+
+                <!-- PK questo viene creato da MDD e serve  -->
+
+                <!-- messi da MDD nella pagina : DEVO VALORIZZARLI CON ANGULAR ?? servono nel remake ??-->
+                <!-- widget hiddenTipologiaChecklist // Constants.COD_TIPO_CHEKCLIST_AFFIDAMENTO_DOCUMENTALE -->
+                <input name="appDatatipoChecklistAffidamento" [(ngModel)]="codTipoChecklist"
+                    id="widg_hiddenTipologiaChecklist" type="hidden">
+                <!-- widget hiddenIdEsitoFase1 -->
+                <input name="appDataidEsitoFase1" [(ngModel)]="idEsitoFase1" id="widg_hiddenIdEsitoFase1" type="hidden">
+                <!-- widget hiddenIdEsitoFase2 -->
+                <input name="appDataidEsitoFase2" [(ngModel)]="idEsitoFase2" id="widg_hiddenIdEsitoFase2" type="hidden">
+                <!-- widget hiddenIdStatoAffidamento -->
+                <input name="appDataaffidamento.idStatoAffidamento" value="" id="widg_hiddenIdStatoAffidamento"
+                    type="hidden">
+                <!-- widget hStatoChecklist -->
+                <input name="appDatastatoChecklist" value="" id="widg_hStatoChecklist" type="hidden">
+                <!-- fine messi da MDD nella pagina -->
+                <!--
+        <input name="widg_hTipoChecklist" [(ngModel)]="codTipoChecklist" id="widg_hTipoChecklist" type="hidden">
+-->
+
+
+                <input id="hiddenChecklistHtmlContent" name="checklistHtmlContent" value="" type="hidden">
+                <input id="hiddenFasiChecklistAffidamentoHtml" name="fasiChecklistHtml" value="" type="hidden">
+                <input id="hiddenFileVerbale" name="fileVerbale" value="" type="hidden">
+                <input id="hiddenNoteRichiestaIntegrazione" name="noteRichiestaIntegrazione" value="" type="hidden">
+                <div id="divPopup"></div>
+
+                <!-- Multi-upload verbali checklist in loco -->
+                <!-- PK spostati su Angular
+                <input name="hArchivioAllowedFileExtensions"
+                    value="doc, docx, odt, ods, pdf, xls, xlsx, gif, jpg, jpeg, png, bmp, dwg, dxf, p7m, tsd, xml, JPEG, JPG, GIF, PDF, DOC, DOCX, XLS, XLSX, txt, XML"
+                    id="hArchivioAllowedFileExtensions" type="hidden">
+                <input name="hArchivioFileSizeLimitUpload" value="5096" id="hArchivioFileSizeLimitUpload" type="hidden">
+                <input name="hNomiVerbali" value="" id="hNomiVerbali" type="hidden">
+                -->
+                <div id="checklistHtml">
+                    <!-- PK questo DIV serve per agganciare il div di upload del verbale..... vedere se metterlo con Angular -->
+                    <!-- PK : quello che segue e' l'html preso dal DB -->
+
+                    <div id="checklistHtmlContent" [innerHtml]="htmlCheckList | safeHTML"></div>
+
+                    <!-- PK : fine l'html preso dal DB -->
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="alignItemsCenter margin-left-65">
+                    <!--checklist in loco-->
+                    <span *ngIf="codTipoChecklist==='CLILA'" class="bold-text">File del verbale *</span>
+                    <span class="bold-text" *ngIf="codTipoChecklist==='CLA'">File allegati </span>
+                    <mat-form-field class="paddingLeft20 width-200-px">
+                        <input type="text" matInput
+                            placeholder="{{files.length}} {{files.length===1 ? 'file selezionato' : 'files selezionati'}}"
+                            disabled disabled />
+                    </mat-form-field>
+                    <button mat-button class="button-style-1 paddingLeft20"
+                        (click)="uploadFile.click()">SFOGLIA</button>
+                    <input [hidden]="true" type="file" #uploadFile id="uploadFile" name="uploadFile"
+                        (change)="handleFileInput($event.target.files)" multiple />
+                </div>
+                <div class="margin-left-175" *ngIf="files?.length > 0">
+                    <ol class="margin-top-0">
+                        <li *ngFor="let file of files; let i = index">
+                            <div class="alignItemsCenter">
+                                <span> <span class="bold-text">{{file.name}}</span> - {{file.size}} bytes</span>
+                                <button mat-icon-button class="red-color" matTooltip="Elimina" (click)="eliminaFile(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <div class="spaceBetween">
+            <div class="backContainer">
+                <button mat-button (click)="goToGestioneAffidamenti()">
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna all'affidamento</span>
+                </button>
+            </div>
+            <div class="reportingContainerDown">
+                <button *ngIf="codTipoChecklist=='CLA'" mat-raised-button (click)="funzRichiestaIntegrazione()"
+                    class="button-style-2 marginLeft10">RICHIESTA INTEGRAZIONE</button>
+                <button mat-raised-button (click)="funzSalvaChecklistDefinitivo()"
+                    class="button-style-2 marginLeft10">SALVA
+                    DEFINITIVO</button>
+                <button mat-raised-button (click)="funzSalvaChecklistBozza()" class="button-style-2 marginLeft10"
+                    id="widg_btSalvaChecklistInBozza">BOZZA</button>
+            </div>
+        </div>
+    </div>
+
+</div>

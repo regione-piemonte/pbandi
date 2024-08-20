@@ -1,0 +1,51 @@
+table,
+td,
+th {
+    border: 1px solid lightgrey;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 5px;
+}
+
+input {
+    font-weight: bold;
+}
+
+.width-65 {
+    width: 65%;
+}
+
+.width-120-px {
+    width: 120px;
+}
+
+.border-color-red {
+    border-color: red;
+}
+
+.border-color-orange {
+    border-color: orange;
+}
+
+.decimal {
+    text-align: end;
+}
+
+.button-style-3-mat-stroked-button {
+    margin: 40px 0 0 0;
+    color: #0060c1;
+    background-color: white;
+    font-weight: bold;
+    border-color: #0060c1;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 16px;
+    padding: 10px 10px 10px 10px;
+    cursor: pointer;
+}

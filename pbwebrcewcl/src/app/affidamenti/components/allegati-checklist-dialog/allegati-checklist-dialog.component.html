@@ -1,0 +1,41 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween align-items-center margin-bottom-15">
+        <h3 class="bold-text margin-0">{{title}}</h3>
+        <button *ngIf="isAggiungiAllegatiVisible" mat-stroked-button class="button-style-3" type="button"
+            (click)="aggiungiAllegati()">AGGIUNGI
+            ALLEGATI</button>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()" cdkFocusInitial>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+        <mat-card-content class="messageSuccessContent">
+            <p [innerHTML]="messageSuccess"></p>
+        </mat-card-content>
+    </mat-card>
+    <p *ngIf="!allegati || allegati?.length===0">Nessun allegato associato</p>
+    <table class="fullWidth" *ngIf="allegati?.length>0">
+        <tbody>
+            <tr *ngFor="let allegato of allegati">
+                <td
+                    class="max-width-0 overflow-hidden text-overflow-ellipsis white-space-nowrap fullWidth cursor-pointer">
+                    <a class=" blue-color bold-text" matTooltip="Download allegato"
+                        (click)="downloadAllegato(allegato.id,allegato.nome)">{{allegato.nome}}</a>
+
+                </td>
+                <td>
+                    <button mat-icon-button class="blue-icon width-5-perc" matTooltip="Anteprima allegato"
+                        (click)="anteprimaAllegato(allegato.nome,allegato.id)">
+                        <mat-icon>remove_red_eye</mat-icon>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

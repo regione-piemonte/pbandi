@@ -1,0 +1,13 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Motivazione richiesta integrazione</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<p>Inserire la motivazione per cui si richiede l’integrazione</p>
+<quill-editor [(ngModel)]="motivazione" [modules]="modules" [placeholder]="'Scrivi qui...'"
+    [styles]="{height: '200px'}"></quill-editor>
+<div class="spaceBetween marginTop20">
+    <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" [disabled]="!motivazione" (click)="inviaRichiesta()">PROCEDI</button>
+</div>

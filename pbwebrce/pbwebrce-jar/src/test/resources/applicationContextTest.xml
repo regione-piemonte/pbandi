@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbwebrce.business.SpringApplicationContextHelper"></bean>
+	
+	
+	<!-- bean di utility -->
+	<bean class="it.csi.pbandi.pbwebrce.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebrce.util.FileSqlUtil"></bean>
+	
+	<!-- bean pbservizit.pbandiutil  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.BeanUtil" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.LoggerUtil" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandiutil.common.TimerUtil"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.business.impl.ProfilazioneBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.UserInfoHelper" />
+	<bean class="it.csi.pbandi.pbservizit.pbandiutil.commonweb.business.impl.EsecuzioneAttivitaBusinessImpl"/>
+	
+	
+ 	<!-- bean pbservizit.pbandisrv.integration  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.dao.GenericDAO"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDatiGeneraliDAOImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiProfilazioneDAOImpl"/>
+ 	<!-- bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDAO"/-->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.util.BeanMapper"/>
+ 	
+ 	<!-- bean pbservizit.pbandisrv.business  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.neoflux.NeofluxBusinessImpl"/>
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DecodificheManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SequenceManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RegolaManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ProgettoManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.TimerManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ConfigurationManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ContoEconomicoManager" />
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SoggettoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SedeManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RevocaRecuperoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.CertificazioneManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DocumentoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.IndicatoriManager" />
+ 	<!-- bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.CheckListManager" /-->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.richiestaerogazione.RichiestaErogazioneBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionedatigenerali.GestioneDatiGeneraliBusinessImpl" /> 
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.gestionedatididominio.GestioneDatiDiDominioBusinessImpl" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.profilazione.ProfilazioneBusinessImpl" />
+	
+ 	
+ 	<!-- bean pbservizit.pbandisrv.dto  -->
+ 	<bean class="it.csi.pbandi.pbservizit.pbandisrv.dto.manager.ConfigurationDTO"/>
+	
+	
+	<!-- bean pbservizit.util  -->
+	<bean class="it.csi.pbandi.pbservizit.util.BeanUtil"/>
+	<bean class="it.csi.pbandi.pbservizit.util.FileSqlUtil"/>
+	
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.ProfilazioneDAOImpl" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.TracciamentoDAOImpl" />
+	
+	<!-- fine bean it.csi.pbandi.pbservizit.pbandisrv --> 	
+
+
+	
+	<!--  BEAN PBWEBRCE -->
+ 	
+ 	<bean class="it.csi.pbandi.pbwebrce.business.CustomSecurityHelper" />
+ 	<bean class="it.csi.pbandi.pbwebrce.business.CheckListBusinessImpl" />
+ 	
+ 	
+	<bean class="it.csi.pbandi.pbwebrce.pbandiutil.common.BeanUtil"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandiutil.common.LoggerUtil"/>
+	<bean class="it.csi.pbandi.pbwebrce.business.MailUtil" />
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.integration.util.BeanMapper"></bean>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.integration.db.dao.GenericDAO"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.manager.SequenceManager" />	
+
+ 	<bean id="inizializzazioneDAOImpl" class="it.csi.pbandi.pbwebrce.integration.dao.impl.InizializzazioneDAOImpl" /> 
+	<bean id="affidamentiDAOImpl" class="it.csi.pbandi.pbwebrce.integration.dao.impl.AffidamentiDAOImpl" />
+	
+	<bean class="it.csi.pbandi.pbwebrce.integration.dao.impl.ArchivioFileDAOImpl" />
+	
+	<bean id="cronoProgrammaDAOImpl" class="it.csi.pbandi.pbwebrce.integration.dao.impl.CronoProgrammaDAOImpl" />
+	<bean id="indicatoriDAOImpl" class="it.csi.pbandi.pbwebrce.integration.dao.impl.IndicatoriDAOImpl" />
+	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+ 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!--  bean conto economico - inizio -->
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.contoeconomico.ContoeconomicoBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.digitalsign.DigitalSignBusinessImpl"/>
+	<!-- <bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoManager"/>-->
+	<bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoIstruttoriaManager"/>
+	<bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoInDomandaManager"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.manager.DoSignManager"/>
+	<!--  bean conto economico - fine -->
+	
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebrce.integration.dao" />
+
+	<context:property-placeholder location="classpath:/enviromentTest.properties" />
+
+</beans>

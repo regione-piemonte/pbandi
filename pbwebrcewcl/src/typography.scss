@@ -1,0 +1,5 @@
+$custom-typography: mat-typography-config(
+  $font-family: "Open Sans, sans-serif",
+);
+
+@include angular-material-typography($custom-typography);

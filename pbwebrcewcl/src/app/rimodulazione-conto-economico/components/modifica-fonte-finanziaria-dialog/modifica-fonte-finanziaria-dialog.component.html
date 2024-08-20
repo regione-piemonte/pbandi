@@ -1,0 +1,48 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Gestione Fonte Finanziaria</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+
+<p><span class="bold-text">Fonte finanziaria: </span>{{descFonteFinanziaria}}</p>
+<form #fonteForm="ngForm">
+    <div class="display-flex">
+        <mat-form-field class="fullWidth margin-right-10">
+            <input type="text" placeholder="Importo *" matInput [ngModel]="importoQuotaFormatted" name="importo"
+                #imp="ngModel" (ngModelChange)="modelChangeImporto($event)" (change)="changeImporto()"
+                pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+            <mat-error *ngIf="imp?.errors?.pattern || imp.errors?.error==='notValid'">
+                Valore non valido
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="fullWidth">
+            <input type="text" placeholder="Percentuale *" matInput [(ngModel)]="percentualeQuotaFormatted" name="perc"
+                #p="ngModel" (ngModelChange)="modelChangePerc($event)" (change)="changePerc()"
+                pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+            <mat-error *ngIf="p?.errors?.pattern || p.errors?.error==='notValid'">
+                Valore non valido
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field class="width-50-perc">
+        <input type="text" placeholder="Estremi del provvedimento *" matInput [(ngModel)]="estremiProvvedimento"
+            name="estremi" #estr="ngModel" maxlength="200" />
+        <mat-error *ngIf="estr.errors?.error==='notValid'">
+            Valore non valido
+        </mat-error>
+    </mat-form-field>
+</form>
+
+<div class="spaceBetween marginTop20">
+    <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <div matTooltip="Compilare tutti i campi obbligatori" [matTooltipDisabled]="!isSalvaDisabled()">
+        <button mat-button class="button-style-1" [disabled]="isSalvaDisabled()" (click)="salva()">SALVA</button>
+    </div>
+</div>

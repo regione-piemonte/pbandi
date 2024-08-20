@@ -1,0 +1,155 @@
+div.toprint {width:90%;margin:10px auto;border:1px solid #ccc;padding:20px 0;}
+table#frontespizio  {width:100%;}
+table#frontespizio  td {text-align:center;width:33%;}
+table#frontespizio h1, table#frontespizio h2, table#frontespizio h3{position:relative; background:none;margin:8px auto;color:#000;top:auto;left:auto;width:100%;}
+table#frontespizio h1 {font-size:2em;}
+/*table#frontespizio h2 {} */
+table#frontespizio h3 { background:none;}
+tbody.toprint tr h2 {text-align:center;font-size:1.3em; background:none;color:#000;}
+table#frontespizio img {max-width:150px;}
+table#frontespizio img.ue {max-width:150px;}
+table#frontespizio img.it {max-width:120px;}
+table#frontespizio img.regp {max-width:180px;}
+table#frontespizio img.fse {max-width:240px;}
+table#anagrafica  {width:80%;margin:0 auto;/*border: 1px solid #cccccc;*/}
+table#anagrafica tr:nth-child(even) {background:#f9f9f9;}
+table#anagrafica th {text-align:left;}
+table#anagrafica tbody th {text-align:left;width:40%;padding:3px;}
+table#anagrafica th.titolo{text-align:center;background:#6593cf;color:#fff;margin:0;padding:6px 0;font-size:1.3em;}
+table#anagrafica td {padding:3px;}
+table#anagrafica td input, #chekListHtml tbody td.note textarea {border: 0; border-bottom: 1px solid;}
+table#noteVerifica { width: 100%;}
+table#noteVerifica h3{text-align: left; padding: 8px 6px!important; margin: 0;}
+#noteVerifica textarea {border: 0; border-bottom: 1px solid; width: 100%;}
+
+table#esitiVerifica { width: 100%;}
+table#esitiVerifica h3{text-align: left; padding: 8px 6px!important; margin: 0;}
+#esitiVerifica textarea {border: 0; border-bottom: 1px solid; width: 100%;}
+
+table#anagrafica td input.error{border: 0; border-bottom: 2px solid #f41622;}
+table#anagrafica td input:focus-visible, #chekListHtml tbody td.note textarea:focus-visible, #noteVerifica textarea:focus-visible, #esitiVerifica textarea:focus-visible{
+  outline:none;
+  border-bottom: 2px solid #006cb4;
+}
+table#anagrafica td:nth-child(2) {width:auto;}
+table#anagrafica td:nth-child(2) input {width:60%;}
+table#anagrafica td:nth-child(2) textarea {width:98%;}
+table#anagrafica td input#dataControllo {width:90px;}
+#checklistHtmlDiv {position:relative;margin: auto;position: relative;width: 100%;}
+#checklistHtmlDiv thead th {text-align:center;}
+#checklistHtmlDiv .containerCK table{border-collapse:collapse;width:100%;}
+#checklistHtmlDiv .containerCK th {text-align:center;padding:3px;border:1px dotted #eaeaea;}
+#checklistHtmlDiv .containerCK td{padding:3px;border-bottom:1px solid #eaeaea;}
+#checklistHtmlDiv .fixedHead thead{background:#fff;border-bottom:2px solid #bbb;}
+#checklistHtmlDiv #fixH, #checklistHtmlDiv .fixH {background:#fff;border-bottom:2px solid #bbb;margin-top:0;
+						-webkit-box-shadow: 0px 3px 3px 0px rgba(50, 50, 50, 0.4);
+						-moz-box-shadow:    0px 3px 3px 0px rgba(50, 50, 50, 0.4);
+						box-shadow:         0px 3px 3px 0px rgba(50, 50, 50, 0.4);z-index:1200;}
+#checklistHtmlDiv dd {display:block;background:transparent;color:#000;width:auto;position:relative;margin-left:6px;z-index:0;font-size:11px;}
+#checklistHtmlDiv dd:before {content:"  - ";}
+.datapicker {width:65px;}
+.luogo {width:80%;}
+.scrollMore{ cursor:pointer;}
+.up{position:fixed;bottom:25%;right:0;color:#FF9900;display:none;z-index:1000;}
+.hide, .noweb {display:none;}
+#descIrregolarita {width:100%;}
+#checklistHtmlDiv td {padding:3px;}
+#checklistHtmlDiv .title {background:#78B4E0;  border: 1px solid #bbbbbb; font-weight: 700; text-transform: uppercase;}
+#checklistHtmlDiv .title td {padding:6px;}
+#checklistHtmlDiv .mainsection {background: #eaeaea; font-weight:600;}
+#checklistHtmlDiv .mainsection td {padding:6px;}
+#checklistHtmlDiv .section {background:#c5d0de; font-weight:600;}
+#checklistHtmlDiv .subsection {background:#e0e4f3; font-weight:600;}
+#checklistHtmlDiv .row_check.subsection {background-color:#EFF4FB!important;}
+#checklistHtmlDiv .row_check:nth-child(odd) {background:#f8f8f8;}
+#checklistHtmlDiv .subsectionappalto {background:#E1E6ED; font-weight:600;}
+#checklistHtmlDiv .subsection td, #checklistHtmlDiv .subsectionappalto td {padding-top:3px;padding-bottom:3px;}
+#checklistHtmlDiv .section td {padding: 8px 6px!important;border-top: 2px solid #fff;border-bottom: 2px solid #fff;}
+#checklistHtmlDiv .subsection td {border-top:1px solid #ccc;padding: 8px 6px!important;}
+/*	#checklistHtmlDiv .generic {} */
+#checklistHtmlDiv .warning {background:#FFFFCC; font-weight:600; text-transform:uppercase;}
+#checklistHtmlDiv .warning td {border-bottom:1px dashed #bbb;border-top:1px dashed #bbb;padding:6px;}
+#checklistHtmlDiv .note {font-size:10px;}
+#checklistHtmlDiv td.codiceControllo {padding-left:0.3%;}
+#checklistHtmlDiv .hD1, #checklistHtmlDiv .hD2 { background:#6593cf; border: 2px solid #3e70b3;color:#fff;}
+#checklistHtmlDiv .appaltotitle tr { background:#6593cf; color:#fff;}
+#checklistHtmlDiv .appaltotitle tr td {padding:6px; border-bottom: 1px solid #ccc;}
+#checklistHtmlDiv tbody.appalto {display:none;}
+#checklistHtmlDiv tbody.appalto td.codiceControllo{border-left:2px solid #6593cf;}
+#checklistHtmlDiv tbody.appalto td:last-child {border-right:2px solid #6593cf;}
+#checklistHtmlDiv tbody.appalto tr:last-child td {border-bottom:2px solid #6593cf;}
+.hD1 td, .hD2 td { border-bottom:1px solid #bbb;}
+/*.subcontentD1, .subcontentD2 {display:none;}*/
+#d1Section, #d2Section {display:none;border:2px solid #3e70b3;}
+.subcontentD1 td:first-child, .subcontentD2 td:first-child {border-left: 1px solid #bbb;}
+.subcontentD1 td:last-child, .subcontentD2 td:last-child {border-right: 1px solid #bbb;}
+#checklistHtmlDiv ol.abcd { list-style-type:lower-alpha;}
+td.documentazioneControllo, span.normalFont {font-weight:normal;}
+#checklistHtmlDiv .containerCK tr.row_check td.descrizioneAttivitaDiControllo p {padding-left:4px;}
+/*#checklistHtmlDiv .containerCK tr.subsection td p.descrAttControl {}*/
+#checklistHtmlDiv td.documentazioneControllo a {display:block;width:50px;text-align:center;margin:auto;}
+#checklistHtmlDiv tr.vds td.descrizioneAttivitaDiControllo p {padding-left:10px;}
+#checklistHtmlDiv tr.vds td.descrizioneAttivitaDiControllo p:before {content:'- '}
+#checklistHtmlDiv .errorMsg {
+ border:10px solid #fff;
+ box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+  margin-bottom: 10px;
+  background-color: #fee7e8;
+  border-left: 5px solid #f41622;
+  background: #fee7e8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cdefs%3E%3Cstyle%3E.a%7Bfill:rgba(255,255,255,0.87);stroke:%23f41622;stroke-width:2px;%7D.b%7Bisolation:isolate;%7D.c%7Bfill:%23f41622;%7D.d%7Bstroke:none;%7D.e%7Bfill:none;%7D%3C/style%3E%3C/defs%3E%3Cg class='a'%3E%3Ccircle class='d' cx='15' cy='15' r='15'/%3E%3Ccircle class='e' cx='15' cy='15' r='14'/%3E%3C/g%3E%3Cg class='b' transform='translate(9.75 9)'%3E%3Cg class='b'%3E%3Cpath class='c' d='M253.972,258.633h-1.626l-3.31-5.415-3.369,5.415h-1.517l4.093-6.435-3.816-5.879h1.584l3.058,4.877,3.083-4.877h1.525l-3.815,5.829Z' transform='translate(-244.151 -246.319)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") 24px 20px no-repeat;
+  padding: 24px 24px 24px 70px !important;
+  left: 50%;
+  position: fixed; bottom: 80px; width:500px;margin-left:-250px;z-index:1000;}
+#checklistHtmlDiv .errorMsg .chiudiMsg {position:absolute;top:0;right:0;cursor:pointer;}
+tr.invalid {border:2px solid #900!important; color:#900}
+textarea.error {border:1px solid #900;}
+  .ui-tooltip, .arrow:after {background: #fff;border: 1px solid #bbb;}
+  .ui-tooltip {padding: 10px 20px;color: #000;border-radius: 10px;box-shadow: 0 0 4px black;}
+#esitiVerifica th.section {text-align:left;}
+#esitiVerifica th.firstCol{width:150px;}
+#esitiVerifica td.esitoCol {width:200px;}
+#esitiVerifica td.esitoCol label {margin-left:10px;}
+.ui-tooltip{max-width: 500px !important;}
+.ui-tooltip-content{max-width:500px !important;}
+#checklistHtmlDiv tfoot label, #checklistHtmlDiv tfoot input[name='irreg']{margin:0;vertical-align:top;}
+#checklistHtmlDiv tfoot p {padding:10px;}
+#checklistHtmlDiv #descIrregolarita {width:90%;margin: 0 auto;}
+#checklistHtmlDiv td.spaced {padding-left:10px;}
+#checklistHtmlDiv p.normalFont {font-weight:normal;}
+
+.error{ font-size: 11px; color: #f41622;}
+
+a.tooltip {
+  display:inline-block;
+  position: relative;
+}
+a.tooltip + span.noweb, a.tooltip span.noweb {
+  display: none;
+  position: absolute;
+  z-index: 99999;
+}
+a.tooltip:hover + span.noweb, a.tooltip:hover span.noweb {
+  display: block;
+   font-family:inherit;
+  text-align: center;
+  min-width: 30em;
+  max-width: 35em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 1ch 1.5ch;
+  border-radius: .5ch;
+  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+  background: #333;
+  color: #fff;
+  z-index: 1000; 
+  text-align:left;
+  
+}
+
+#chekListHtml tbody td.note textarea {
+    height: 34px;
+    width: 98%;
+    font-family: inherit;
+    font-size: 14px;
+    max-width: 320px;
+}

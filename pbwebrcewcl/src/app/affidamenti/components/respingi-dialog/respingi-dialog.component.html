@@ -1,0 +1,14 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Motivazione respingimento</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-form-field style="width: 100%;">
+    <textarea type="text" matInput placeholder="Inserire la motivazione per cui si respinge l’affidamento."
+        [(ngModel)]="motivazione" name="motivazione" required></textarea>
+</mat-form-field>
+<div class="spaceBetween marginTop20">
+    <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" [disabled]="!motivazione" (click)="respingi()">PROCEDI</button>
+</div>

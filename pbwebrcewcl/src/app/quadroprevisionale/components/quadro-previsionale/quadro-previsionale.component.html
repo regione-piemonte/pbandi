@@ -1,0 +1,219 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goToAttivita()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alle attività da svolgere</span>
+      </button>
+    </div>
+    <h2>Quadro Previsionale</h2>
+
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p>{{messageSuccess}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+      <mat-card-content class="messageWarningContent">
+        <p *ngFor="let msg of messageWarning">{{msg}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p *ngFor="let msg of messageError">{{msg}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+        </div>
+        <div class="cod-progetto">
+          <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+            PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <p *ngIf="!responseGetQuadroPrevisionale.vociWeb" style="margin-top: 12px;">Non ci sono elementi da
+          visualizzare.</p>
+        <div
+          [ngClass]="{'displayNone':!responseGetQuadroPrevisionale.vociWeb || responseGetQuadroPrevisionale.vociWeb.length===0}">
+          <form #tableForm="ngForm">
+            <table mat-table [dataSource]="dataSource" [trackBy]="trackByFn" class="fullWidth">
+
+              <ng-container matColumnDef="periodo">
+                <th mat-header-cell *matHeaderCellDef> Periodo </th>
+                <td mat-cell *matCellDef="let row" class="bold-text" [ngClass]="{'blue-color': row.isPeriodo}">
+                  {{row.label}}
+                </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="ultimoPreventivo">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Ultimo preventivo </th>
+                <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                  [ngClass]="{'bold-text': row.isRigaTotale || row.dataUltimaPreventivo}">
+                  <span *ngIf="!row.isRigaDate"> {{row.ultimoPreventivo}} </span>
+                  <span *ngIf="row.isRigaDate"> {{row.dataUltimaPreventivo}} </span>
+                  <a *ngIf="isModifica && !confermaSalvataggio && i===0"
+                    class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                    (click)="ribaltaUltimoPreventivo()">Ribalta i dati <mat-icon>arrow_forward
+                    </mat-icon></a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nuovoPreventivo">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Nuovo Preventivo </th>
+                <td mat-cell *matCellDef="let row; let i = index" class="text-right">
+                  <mat-form-field *ngIf="isModifica && !confermaSalvataggio && i!==0 && i!==1" class="text-right">
+                    <input matInput [ngModel]="row.nuovoPreventivo"
+                      (ngModelChange)="modelChangeNuovoPreventivo($event,i)" name="nuovoPreventivo{{i}}"
+                      #impNuovoPrev="ngModel" (change)="changeNuovoPreventivo(row, i)" [disabled]="row.isRigaTotale"
+                      pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                    <mat-error *ngIf="impNuovoPrev?.errors?.pattern">
+                      Valore non valido
+                    </mat-error>
+                  </mat-form-field>
+                  <span *ngIf="row.isRigaDate">{{row.dataNuovoPreventivo}}</span>
+                  <span *ngIf="confermaSalvataggio && !row.isRigaDate"> {{row.nuovoPreventivo}} <span
+                      *ngIf="row.codiceErrore" class="red-color">({{row.codiceErrore}})</span> </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="realizzato">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Realizzato </th>
+                <td mat-cell *matCellDef="let row; let i = index" class="text-right">
+                  <span *ngIf="!row.isRigaDate" [ngClass]="{'bold-text': row.isRigaTotale}"> {{row.realizzato}} </span>
+                  <a *ngIf="isModifica && !confermaSalvataggio && i===0"
+                    class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                    (click)="ribaltaRealizzato()">
+                    <mat-icon> arrow_back </mat-icon>Ribalta i dati
+                  </a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="daRealizzare">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Da realizzare </th>
+                <td mat-cell *matCellDef="let row" class="text-right">
+                  <span *ngIf="!row.isRigaDate" [ngClass]="{'bold-text': row.isRigaTotale}"> {{row.daRealizzare}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- </form>-->
+              <tr mat-header-row
+                *matHeaderRowDef="isModifica||confermaSalvataggio ? displayedColumns2 : displayedColumns"></tr>
+              <tr mat-row
+                *matRowDef="let row; columns: isModifica||confermaSalvataggio ? displayedColumns2 : displayedColumns; let i = index">
+              </tr>
+            </table>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div
+          [ngClass]="{'displayNone':!responseGetQuadroPrevisionale.quadroComplessivoList || responseGetQuadroPrevisionale.quadroComplessivoList.length===0}">
+          <table mat-table [dataSource]="responseGetQuadroPrevisionale.quadroComplessivoList" class="fullWidth">
+            <ng-container matColumnDef="col0">
+              <th mat-header-cell *matHeaderCellDef> </th>
+              <td mat-cell *matCellDef="let row">
+                <span *ngIf="row.isTotaleComplessivo">{{row.label}} </span>
+                <span *ngIf="!row.isTotaleComplessivo"> </span>
+
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ultimaSpesaAmmessa">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Ultima Spesa Ammessa </th>
+              <td mat-cell *matCellDef="let row" class="text-right">
+                <span *ngIf="!row.isRigaDate"> {{row.ultimaSpesaAmmessa}} </span>
+                <span *ngIf="row.isRigaDate" class="bold-text"> {{row.dataUltimaSpesaAmmessa}}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ultimoPreventivo">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Ultimo Preventivo </th>
+              <td mat-cell *matCellDef="let row" class="text-right">
+                <span *ngIf="!row.isRigaDate"> {{row.ultimoPreventivo}} </span>
+                <span *ngIf="row.isRigaDate" class="bold-text"> {{row.dataUltimaPreventivo}} </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nuovoPreventivo">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Nuovo Preventivo </th>
+              <td mat-cell *matCellDef="let row" class="text-right">
+                <span *ngIf="!row.isRigaDate && (isModifica || confermaSalvataggio)"> {{row.nuovoPreventivo}} <span
+                    *ngIf="row.codiceErrore">({{row.codiceErrore}})</span> </span>
+                <span *ngIf="row.isRigaDate" class="bold-text"> {{row.dataNuovoPreventivo}} </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="realizzato">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Realizzato </th>
+              <td mat-cell *matCellDef="let row" class="text-right">
+                <span> {{row.realizzato}} </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="daRealizzare">
+              <th mat-header-cell *matHeaderCellDef class="text-right"> Da realizzare </th>
+              <td mat-cell *matCellDef="let row" class="text-right">
+                <span> {{row.daRealizzare}} </span>
+              </td>
+            </ng-container>
+
+            <!-- </form>-->
+            <tr mat-header-row
+              *matHeaderRowDef="isModifica||confermaSalvataggio ? displayedColumns3 : displayedColumns1"></tr>
+            <tr mat-row
+              *matRowDef="let row; columns: isModifica||confermaSalvataggio ? displayedColumns3 : displayedColumns1;">
+            </tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content">
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field class="fullWidth">
+          <mat-label>Note</mat-label>
+          <textarea matInput [(ngModel)]="responseGetQuadroPrevisionale.note" rows="3" name="note" maxlength="255"
+            [disabled]="!isModifica || confermaSalvataggio"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="endPageButton">
+    <button *ngIf="!isModifica && !confermaSalvataggio" mat-raised-button class="button-style-2" (click)="modifica()">
+      MODIFICA</button>
+
+    <button *ngIf="isModifica && !confermaSalvataggio" mat-button class="button-style-1"
+      (click)="indietro()">INDIETRO</button>
+    <button *ngIf="isModifica && !confermaSalvataggio" mat-raised-button class="button-style-2"
+      (click)="salva()">SALVA</button>
+
+    <button *ngIf="!isModifica && confermaSalvataggio" mat-button class="button-style-1"
+      (click)="annulla()">ANNULLA</button>
+    <button *ngIf="!isModifica && confermaSalvataggio" mat-raised-button class="button-style-2"
+      (click)="conferma()">CONFERMA</button>
+
+  </div>
+
+</div>

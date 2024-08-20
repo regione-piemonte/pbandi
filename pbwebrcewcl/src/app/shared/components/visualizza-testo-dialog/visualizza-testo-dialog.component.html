@@ -1,0 +1,16 @@
+<h1 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>{{title}} - Indicatore: {{codIgrue}}
+</h1>
+
+<!--
+<div class="flexEnd">
+  <button type="button" mat-icon-button  (click)="close()" class = "close-button">
+      <mat-icon>clear</mat-icon>
+    </button>
+</div>
+-->
+
+<div [innerHTML]="message" class="marginTop20"></div>
+
+<div mat-dialog-actions class="flexEnd">
+  <button mat-button cdkFocusInitial class="button-style-1" (click)="close()">OK</button>
+</div>

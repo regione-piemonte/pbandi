@@ -1,0 +1,38 @@
+.title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+th {
+    text-align: left;
+}
+
+td {
+    vertical-align: top;
+
+    .richiesta {
+        margin: 6px 16px;
+        border: 1px solid #ccc;
+    }
+
+    .note {
+        margin: 6px 0 0;
+        font-size: 10px;
+        padding: 3px 10px!important;
+    }
+}
+
+.blue-color {
+    color: #0060C1;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.spaceBetween{
+    display: flex;
+    justify-content: space-between;
+}

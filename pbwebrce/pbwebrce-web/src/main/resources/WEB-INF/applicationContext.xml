@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx.xsd"
+>
+	<bean class="it.csi.pbandi.pbwebrce.business.SpringApplicationContextHelper"></bean>
+
+	<bean class="it.csi.pbandi.pbwebrce.pbandiutil.common.BeanUtil"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandiutil.common.LoggerUtil"/>
+	
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.integration.util.BeanMapper" />
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.integration.db.dao.GenericDAO"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.manager.SequenceManager" />
+	
+	
+	<!-- bean usati dai servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebrce.business.impl" />
+	
+	
+	<bean class="it.csi.pbandi.pbwebrce.business.CheckListBusinessImpl" />
+	
+	<!-- bean dei servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebrce.business.service.impl" />
+
+	
+	<!-- bean di utility -->
+	<bean class="it.csi.pbandi.pbwebrce.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebrce.util.FileSqlUtil"></bean>
+	<bean class="it.csi.pbandi.pbwebrce.business.MailUtil"></bean>
+<!-- 	<bean class="it.csi.pbandi.pbwebrce.business.SecurityHelper"></bean> -->
+	<bean class="it.csi.pbandi.pbwebrce.business.CustomSecurityHelper"/>
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+      	<property name="jndiName" value="jdbc/pbwebrceDS" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean class="it.csi.pbandi.pbwebrce.integration.dao.impl.ArchivioFileDAOImpl" />
+	
+	<!--  bean conto economico - inizio -->
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.contoeconomico.ContoeconomicoBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.digitalsign.DigitalSignBusinessImpl"/>
+	<!-- <bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoManager"/> -->
+	<bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoIstruttoriaManager"/>
+	<bean class="it.csi.pbandi.pbwebrce.business.manager.ContoEconomicoInDomandaManager"/>
+	<bean class="it.csi.pbandi.pbwebrce.pbandisrv.business.manager.DoSignManager"/>
+	<!--  bean conto economico - fine -->
+	
+	<bean class="it.csi.pbandi.pbservizit.business.CustomSecurityHelper" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.CronoProgrammaDAOImpl" />
+	<bean class="it.csi.pbandi.pbservizit.integration.dao.impl.IndicatoriDAOImpl" />
+	
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbwebrce.integration.dao" />
+	
+	<!-- Senza non funziona il rollback dopo una eccezione -->
+	<context:annotation-config/>
+	<tx:annotation-driven proxy-target-class="true"	transaction-manager="transactionManager" />
+
+</beans>

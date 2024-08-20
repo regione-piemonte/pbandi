@@ -1,0 +1,82 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <h2>Quadro tecnico economico</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p *ngFor="let msg of messageError" [innerHTML]="msg"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p *ngFor="let msg of messageWarning" [innerHTML]="msg"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto height-36-px">
+                    <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                    <button class="button-style-1 paddingLeft20" mat-button (click)="contoEconomico()">CONTO
+                        ECONOMICO</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div id="stampaPDF" #stampaPDF [innerHTML]="htmlContent | safeHTML"></div>
+                <div class="display-flex justify-content-space-between">
+                    <div class="display-flex">
+                        <button *ngIf="!cccExists" mat-raised-button class="button-style-2 margin-right-20"
+                            type="button" (click)="creaCCC(true)">SCARICA
+                            ANTEPRIMA CCC
+                        </button>
+                        <div *ngIf="!cccExists && qteHtml?.idQtesHtmlProgetto"
+                            matTooltip="Il Salvataggio definitivo è possibile solo dopo aver compilato i dati del 'CERTIFICATO DI COLLAUDO' dal Cronoprogramma"
+                            [matTooltipDisabled]="datiCCC?.dtFineEffettiva && datiCCC?.estremiAttoAmministrativo?.length > 0">
+                            <button mat-raised-button class="button-style-2" type="button" (click)="creaCCC()"
+                                [disabled]="!datiCCC?.dtFineEffettiva || !(datiCCC?.estremiAttoAmministrativo?.length > 0)">SALVA
+                                CCC
+                                DEFINITIVO
+                            </button>
+                        </div>
+                        <button *ngIf="cccExists" mat-raised-button class="button-style-2 margin-right-20" type="button"
+                            (click)="visualizzaCCC()">VISUALIZZA CCC DEFINITIVO
+                        </button>
+                        <button *ngIf="cccExists" mat-raised-button class="button-style-2" type="button"
+                            (click)="downloadCCC()">SCARICA
+                            CCC DEFINITIVO
+                        </button>
+                    </div>
+                    <div>
+                        <button mat-raised-button class="button-style-2 margin-right-20" type="button"
+                            (click)="downloadAsPDF()">SCARICA
+                            QTE</button>
+                        <button mat-raised-button class="button-style-2" type="button" (click)="salva()">SALVA QTE
+                        </button>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.width-50-perc {
+    width: 50%;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

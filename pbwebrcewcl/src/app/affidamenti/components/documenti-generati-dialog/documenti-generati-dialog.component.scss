@@ -1,0 +1,26 @@
+p {
+    font-size: 16px;
+}
+
+.displayNone {
+    display: none;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.blue-color {
+    color: #0060c1;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

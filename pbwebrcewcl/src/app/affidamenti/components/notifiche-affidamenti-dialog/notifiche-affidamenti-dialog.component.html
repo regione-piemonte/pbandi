@@ -1,0 +1,22 @@
+<div mat-dialog-title class="spaceBetween">
+    <h3 class="bold-text">Notifiche affidamento</h3>
+    <button mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Data</th>
+                <th>Notifica</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let notifica of notifiche">
+                <td style="width: 15%;">{{notifica.dtNotifica | date: "dd/MM/yyyy"}}</td>
+                <td [innerHTML]="notifica.messageNotifica"></td>
+            </tr>
+        </tbody>
+    </table>
+</mat-dialog-content>

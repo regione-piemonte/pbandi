@@ -1,0 +1,124 @@
+.page {
+
+    .title {
+
+        .backContainer {
+            padding-bottom: 5px;
+
+            button {
+                padding: 0px;
+            }
+            .blue-icon {
+                color: #0060C1;
+            }
+
+            .backText{
+                color: #0060C1;
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+
+    }
+
+    .content {
+
+        mat-card-content {
+            padding-left: 10px;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+
+        .benef {
+            display: flex;
+            align-items: center;
+
+            p {
+                margin: 0px;
+                font-size: 16px;
+            }
+
+            span {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+.blue-color {
+    color: #0060C1;
+}
+
+
+.displayNone {
+    display: none !important;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.endPageCancelButton {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+
+.endPageButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.bold-text{
+    font-weight: bold;
+}
+
+th, td {
+    padding-right: 10px !important;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button-style-3 {
+  color: #0060C1;
+  font-size: 16px;
+  border: 2px solid #0060C1;
+  font-weight: bold;
+}
+
+.button-style-3:hover:enabled {
+  background-color: #0060C1 ;
+  border: 2px solid transparent;
+  color: #FFFFFF;
+}
+
+
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058B1 !important;
+}
+
+::ng-deep .data .mat-form-field-infix {
+    width: 12% !important;
+}
+
+.marginTop10{
+  margin-top: 10px;
+}

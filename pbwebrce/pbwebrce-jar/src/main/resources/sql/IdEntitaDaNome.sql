@@ -1,0 +1,1 @@
+select ID_ENTITA from PBANDI_C_ENTITA where NOME_ENTITA = ?

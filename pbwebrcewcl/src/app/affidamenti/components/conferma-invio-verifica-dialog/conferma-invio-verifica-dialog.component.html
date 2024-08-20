@@ -1,0 +1,18 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Conferma per poter procedere</h3>
+    <button mat-icon-button class="blue-color" (click)="close()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+<p>Confermi l'invio in verifica del seguente affidamento?</p>
+<p class="bold-text">{{oggetto}}</p>
+
+<div class="spaceBetween marginTop20">
+    <button type="button" mat-button class="button-style-1" (click)="close()">ANNULLA</button>
+    <button mat-button class="button-style-1" (click)="conferma()">CONFERMA</button>
+</div>

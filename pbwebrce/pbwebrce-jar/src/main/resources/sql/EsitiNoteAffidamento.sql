@@ -1,0 +1,1 @@
+select * from PBANDI_T_ESITI_NOTE_AFFIDAMENT where id_checklist = ?

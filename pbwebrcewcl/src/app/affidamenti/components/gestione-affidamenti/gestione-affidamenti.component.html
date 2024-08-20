@@ -1,0 +1,203 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToAttivita()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div class="spaceBetween">
+            <div>
+                <h2>Gestione affidamenti</h2>
+            </div>
+            <div *ngIf="isBeneficiario">
+                <button (click)="nuovoAffidamento()" mat-stroked-button class="button-style-3">NUOVO
+                    AFFIDAMENTO</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span
+                                    class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                            <button class="button-style-1 paddingLeft20" mat-button
+                                (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave;
+                                PREGRESSE</button>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Affidamenti</h3>
+                <p *ngIf="!elencoAffidamenti || elencoAffidamenti.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <div [ngClass]="{'displayNone':!elencoAffidamenti || elencoAffidamenti.length===0}">
+                    <table mat-table [dataSource]="dataSource" class="fullWidth">
+
+                        <ng-container matColumnDef="categoria">
+                            <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.descTipologiaAppalto}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="oggetto">
+                            <th mat-header-cell *matHeaderCellDef> Oggetto affidamento </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.oggettoAppalto}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fornitori">
+                            <th mat-header-cell *matHeaderCellDef> Fornitori </th>
+                            <td mat-cell *matCellDef="let row">
+                                <div *ngFor="let fornitore of row.fornitori; let i = index">
+                                    <span *ngIf="fornitore.denominazioneFornitore">
+                                        {{fornitore.denominazioneFornitore}}</span>
+                                    <span *ngIf="!fornitore.denominazioneFornitore"> {{fornitore.nomeFornitore}}
+                                        {{fornitore.cognomeFornitore}}</span>
+                                    <span
+                                        *ngIf="row.numFornitoriAssociati > 1 && i !== (row.numFornitoriAssociati-1)">;</span>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cigCpa">
+                            <th mat-header-cell *matHeaderCellDef> <abbr title="Codice identificativo gara">CIG
+                                </abbr> -
+                                <abbr title="Codice procedura di attivazione">CPA</abbr>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.cigProcAgg">{{row.cigProcAgg}}</span>
+                                <span *ngIf="!row.cigProcAgg">n.d. </span>
+                                -
+                                <span *ngIf="row.codProcAgg">{{row.codProcAgg}}</span>
+                                <span *ngIf="!row.codProcAgg">n.d. </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="data"> <!--nascosto-->
+                            <th mat-header-cell *matHeaderCellDef> Data firma contratto
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.dtFirmaContratto | date: "dd/MM/yyyy"}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="importo">
+                            <th mat-header-cell *matHeaderCellDef> Importo aggiudicato
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.importoContratto | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="stato">
+                            <th mat-header-cell *matHeaderCellDef> Stato
+                            </th>
+                            <td class="bold-text" mat-cell *matCellDef="let row">
+                                <span
+                                    *ngIf="row.idStatoAffidamento===1 && row.iconaInviaInVerifica!=='invio'">COMPLETARE
+                                    PER INVIO</span>
+                                <span
+                                    [ngClass]="{'blue-color': row.idStatoAffidamento===1, 'orange-color': row.idStatoAffidamento===2,'greenColor': row.idStatoAffidamento===4}"
+                                    *ngIf="!(row.idStatoAffidamento===1 && row.iconaInviaInVerifica!=='invio')">{{row.descStatoAffidamento.toUpperCase()}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="esitoint">
+                            <th mat-header-cell *matHeaderCellDef> Esito intermedio
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.esitoIntermedio === 'POSITIVO'">REGOLARE</span>
+                                <span *ngIf="row.esitoIntermedio === 'NEGATIVO'">IRREGOLARE</span>
+                                <span *ngIf="row.esitoIntermedio === 'NEGATIVO CON RETTIFICA'">IRREGOLARE CON
+                                    RETTIFICA</span>
+                                <span *ngIf="row.esitoIntermedio === 'POSITIVO CON RETTIFICA'">REGOLARE CON
+                                    RETTIFICA</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="esitodef">
+                            <th mat-header-cell *matHeaderCellDef> Esito definitivo
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.esitoDefinitivo === 'POSITIVO'">REGOLARE</span>
+                                <span *ngIf="row.esitoDefinitivo === 'NEGATIVO'">IRREGOLARE</span>
+                                <span *ngIf="row.esitoDefinitivo === 'NEGATIVO CON RETTIFICA'">IRREGOLARE CON
+                                    RETTIFICA</span>
+                                <span *ngIf="row.esitoDefinitivo === 'POSITIVO CON RETTIFICA'">REGOLARE CON
+                                    RETTIFICA</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="azioni">
+                            <th mat-header-cell *matHeaderCellDef style="width: 10%; padding-right: 0;">
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="text-right">
+                                <button *ngIf="row.iconaDettaglio==='modifica'" mat-icon-button class="blue-color"
+                                    matTooltip="Modifica affidamento" style="width: 30px;"
+                                    (click)="goToModificaAffidamento(row.idAppalto)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button *ngIf="row.iconaElimina==='S'" mat-icon-button class="red-color"
+                                    matTooltip="Elimina affidamento" style="width: 30px;"
+                                    (click)="eliminaAffidamento(row.idAppalto)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+
+                                <button *ngIf="isInviaVisible(row)" mat-icon-button class="blue-color"
+                                    matTooltip="Invia in verifica" style="width: 30px;" (click)="inviaInVerifica(row)">
+                                    <mat-icon>send</mat-icon>
+                                </button>
+                                <button *ngIf="row.iconaPdf==='S'" mat-icon-button class="blue-color"
+                                    matTooltip="Documenti generati" style="width: 30px;"
+                                    (click)="openDocumentiGenerati(row.idAppalto)">
+                                    <mat-icon>format_list_bulleted</mat-icon>
+                                </button>
+                                <button *ngIf="row.iconaDettaglio==='esamina'" mat-icon-button class="blue-color"
+                                    matTooltip="Esamina affidamento" style="width: 30px;"
+                                    (click)="goToModificaAffidamento(row.idAppalto)">
+                                    <mat-icon>assignment</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+                    </mat-paginator>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="endPageButton">
+        <button *ngIf="isBeneficiario" (click)="nuovoAffidamento()" mat-stroked-button class="button-style-3">NUOVO
+            AFFIDAMENTO</button>
+    </div>
+</div>

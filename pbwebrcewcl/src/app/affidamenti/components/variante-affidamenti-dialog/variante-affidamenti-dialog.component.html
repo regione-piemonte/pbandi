@@ -1,0 +1,34 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Dati variante</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-form-field style="width: 100%;">
+    <mat-label>Selezionare una tipologia</mat-label>
+    <mat-select [(ngModel)]="tipologiaSelected" name="tipologia">
+        <mat-option *ngFor="let option of tipologieVarianti" [value]="option">
+            {{ option.descrizione }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field style="width: 100%;">
+    <input type="string" matInput placeholder="Importo" [(ngModel)]="importoFormatted" name="importo"
+        [disabled]="disabled" #importo="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImporto()">
+    <mat-error *ngIf="importo?.errors?.pattern">
+        Valore non valido
+    </mat-error>
+</mat-form-field>
+<mat-form-field style="width: 100%;">
+    <mat-label>Note</mat-label>
+    <textarea matInput [(ngModel)]="note" name="note" [disabled]="disabled"></textarea>
+</mat-form-field>
+
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="annulla()">ANNULLA</button>
+    <div matTooltip="Selezionare la tipologia e inserire un importo"
+        [matTooltipDisabled]="disabled || (tipologiaSelected && importo)">
+        <button mat-button class="button-style-1" [disabled]="!tipologiaSelected || !importo || disabled"
+            (click)="salva()">SALVA</button>
+    </div>
+</div>

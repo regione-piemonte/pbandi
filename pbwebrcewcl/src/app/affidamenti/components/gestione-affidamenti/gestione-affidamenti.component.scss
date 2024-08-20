@@ -1,0 +1,53 @@
+.blue-color {
+    color: #0060c1;
+}
+
+.greenColor {
+    color: #008000;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.endPageButton {
+    display: flex;
+    margin-left: 15px;
+    margin-top: 15px;
+    justify-content: flex-end;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+th,
+td {
+    padding-right: 10px !important;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button-style-3 {
+    border: 2px solid #1844a8 !important;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0060c1;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058b1 !important;
+}

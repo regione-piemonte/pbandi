@@ -1,0 +1,263 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <h2>Proposta di rimodulazione del conto economico</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto">
+                    <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z8">
+            <mat-card-content>
+                <h3>Dati per la proposta di rimodulazione</h3>
+                <p>Totale richiesto nuova proposta: <span class="bold-text">{{totaleRichiestoNuovaProposta | number:
+                        '1.2-2' : 'it'}}</span></p>
+                <p *ngIf="!dataSourceModalita || !dataSourceModalita.data || dataSourceModalita.data.length===0">Non ci
+                    sono elementi da
+                    visualizzare.</p>
+                <mat-card class="mat-elevation-z2"
+                    [ngClass]="{'displayNone': !dataSourceModalita || !dataSourceModalita.data || dataSourceModalita.data.length===0}">
+                    <mat-card-content>
+                        <table mat-table [dataSource]="dataSourceModalita" class="fullWidth">
+
+                            <ng-container matColumnDef="modalita">
+                                <th mat-header-cell *matHeaderCellDef> Modalità di agevolazione </th>
+                                <td mat-cell *matCellDef="let row" [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.descModalita}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="max">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Importo massimo agevolazione
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.importoMassimoAgevolato | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="perc1">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> % </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.percentualeMassimoAgevolato | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ultimoRichiesto">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Utimo importo richiesto </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.ultimoImportoRichiesto | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="erogato">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Importo già erogato </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.importoErogato | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ultimoAgevolato">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Ultimo importo agevolato </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.ultimoImportoAgevolato | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="perc2">
+                                <th mat-header-cell *matHeaderCellDef class="text-right">% </th>
+                                <td mat-cell *matCellDef="let row" class="text-right"
+                                    [ngClass]="{'bold-text': row.isModalitaTotale}">
+                                    {{row.percentualeUltimoImportoAgevolato | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsModalita"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsModalita;">
+                            </tr>
+                        </table>
+                    </mat-card-content>
+                </mat-card>
+                <form #propostaForm="ngForm" class="margin-top-20 fullWidth display-flex flex-direction-column">
+                    <mat-form-field class="fullWidth">
+                        <mat-label>Note</mat-label>
+                        <textarea matInput [(ngModel)]="note" name="note" maxlength="4000"
+                            [disabled]="isValidated"></textarea>
+                        <mat-hint>{{note ? note.length : 0}}/4000</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field class="width-50-perc">
+                        <mat-label>Selezionare un rappresentante legale *</mat-label>
+                        <mat-select [(ngModel)]="rappresentanteLegaleSelected" name="rappresentante" #rappr="ngModel"
+                            [disabled]="isValidated">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of rappresentantiLegali" [value]="option">
+                                {{ option.descrizione }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="rappr?.errors?.error ==='required'">
+                            Campo obbligatorio.
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="width-50-perc">
+                        <mat-label>Selezionare un delegato</mat-label>
+                        <mat-select [(ngModel)]="delegatoSelected" name="delegato" [disabled]="isValidated">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of delegati" [value]="option">
+                                {{ option.descrizione }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="width-50-perc">
+                        <input type="text" placeholder="Importo richiesto finanziamento banca" matInput
+                            pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" [(ngModel)]="importoFinanziamentoFormatted"
+                            name="importoFinanziamento" #impFin="ngModel" (blur)="setImportoFinanziamento()"
+                            [disabled]="isValidated">
+                        <mat-error *ngIf="impFin?.errors?.error ==='notValid'">
+                            L'importo non è valido
+                        </mat-error>
+                        <mat-error *ngIf="impFin?.errors?.pattern">
+                            Valore non valido
+                        </mat-error>
+                    </mat-form-field>
+                    <p>La documentazione obbligatoria da allegare è quella definita dal bando.
+                        <br />
+                        Non è prevista altra documentazione specifica.
+                    </p>
+                </form>
+                <div *ngIf="allegatiAmmessi">
+                    <h3 class="margin-top-20">Allegati</h3>
+                    <p *ngIf="!allegati || allegati.length===0">
+                        Non ci sono elementi da visualizzare.</p>
+                    <div *ngIf="allegati?.length>0 || allegati?.length>0">
+                        <mat-grid-list cols="2" rowHeight="45" class="margin-bottom-10">
+                            <mat-grid-tile *ngFor="let allegato of allegati" [colspan]="1" [rowspan]="1">
+                                <div class="allegati display-flex align-items-center">
+                                    <span
+                                        class="bold-text fullWidth text-overflow-ellipsis overflow-hidden">{{allegato.nome}}</span>
+                                    <div class="width-170-px text-align-right">
+                                        <span>{{(allegato.sizeFile / 1024) | number: '1.2-2' : 'it'}} KB</span>
+                                        <button type="button" mat-icon-button class="blue-color width-30-px"
+                                            matTooltip="Disassocia allegato" (click)="disassociaAllegato(allegato.id)">
+                                            <mat-icon>link_off</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div *ngIf="!tipiAllegato || !tipiAllegato.length" class="margin-top-20">
+                        <p>La documentazione obbligatoria da allegare &egrave; quella definita dal bando.</p>
+                        <p>Non &egrave; prevista altra documentazione specifica.</p>
+                    </div>
+                    <div class="margin-top-20">
+                        <div *ngFor="let tipoAllegato of tipiAllegato; let i = index">
+                            <span *ngIf="i===0" [innerHTML]="tipoAllegato.descTipoAllegato | safeHTML"></span>
+                            <mat-checkbox *ngIf="i>0" class="display-flex mat-checkbox-white-space-inherit"
+                                [(ngModel)]="tipoAllegato.checked" name="tipo{{i}}">
+                                <span [innerHTML]="tipoAllegato.descTipoAllegato | safeHTML"></span>
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                    <button *ngIf="allegatiAmmessi" mat-button class="button-style-1 margin-top-20"
+                        (click)="aggiungiAllegato()">ASSOCIA ALLEGATI</button>
+                </div>
+                <h3 class="margin-top-20">Procedure di Aggiudicazione</h3>
+                <p *ngIf="!dataSourceProcedure || !dataSourceProcedure.data || dataSourceProcedure.data.length===0">
+                    Non ci sono elementi da visualizzare.</p>
+                <mat-card class="mat-elevation-z2"
+                    [ngClass]="{'displayNone': !dataSourceProcedure || !dataSourceProcedure.data || dataSourceProcedure.data.length===0}">
+                    <mat-card-content>
+                        <table mat-table [dataSource]="dataSourceProcedure" class="fullWidth" matSort #sort="matSort">
+
+                            <ng-container matColumnDef="tipologia">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.descTipologiaAggiudicazione}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="cpaCig">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> CPA/CIG
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.codProcAgg ? row.codProcAgg : row.cigProcAgg}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="importo">
+                                <th mat-header-cell *matHeaderCellDef class="text-right" mat-sort-header> Importo </th>
+                                <td mat-cell *matCellDef="let row" class="text-right">
+                                    {{row.importo | number: '1.2-2' : 'it'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="desc">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Descrizione </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{row.descProcAgg}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsProcedure"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsProcedure;">
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                            [showFirstLastButtons]="true" #paginator>
+                        </mat-paginator>
+                    </mat-card-content>
+                </mat-card>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="spaceBetween margin-bottom-20">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <div>
+            <button mat-button class="button-style-1 margin-right-10" (click)="indietro()">INDIETRO</button>
+            <button mat-raised-button class="button-style-2" (click)="procedi()" *ngIf="!isValidated"> PROCEDI </button>
+            <button mat-raised-button class="button-style-2" (click)="continua()" *ngIf="isValidated"> CONTINUA
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+SELECT ID_APPALTO as idAppalto, 
+	ID_APPALTO_CHECKLIST as idAppaltoChecklist, 
+	ID_CHECKLIST as idChecklist 
+FROM PBANDI_T_APPALTO_CHECKLIST where ID_APPALTO = ?

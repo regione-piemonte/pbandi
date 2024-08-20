@@ -1,0 +1,348 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+  <div class="title">
+    <div class="backContainer">
+      <button (click)="goToRicercaAppalti()" mat-button>
+        <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+        <span class="backText">Torna alla ricerca appalti</span>
+      </button>
+    </div>
+    <h2>Nuovo Appalto / Contratto / Incarico</h2>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+      <mat-card-content class="messageSuccessContent">
+        <p>{{messageSuccess}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p>{{messageError}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="cod-progetto">
+          <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+        </div>
+        <div class="cod-progetto">
+          <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+          <button class="button-style-1 paddingLeft20" mat-button (click)="goToDatiProgettoEAttivitaPregresse()">DATI
+            PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <form #nuovoppaltoForm="ngForm">
+          <mat-form-field class="width-49-perc">
+            <mat-label> Selezionare una tipologia appalto/contratto/incarico *</mat-label>
+            <mat-select [(ngModel)]="tipologieAppaltiSelected" name="tipologie" #tip="ngModel">
+              <mat-option *ngFor="let option of tipologieAppalti" [value]="option">
+                {{option.descrizione}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="tip.errors?.error === 'required'">
+              Campo obbligatorio
+            </mat-error>
+          </mat-form-field>
+
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <mat-label> Data prevista inizio lavori </mat-label>
+              <input matInput [matDatepicker]="picker1" name="dtPrevistaInizioLavori" (click)="picker1.open()"
+                [(ngModel)]="dtPrevistaInizioLavori">
+              <mat-datepicker-toggle matSuffix [for]="picker1" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="width-49-perc">
+              <mat-label> Data consegna lavori </mat-label>
+              <input matInput [matDatepicker]="picker2" name="dtConsegnaLavori" (click)="picker2.open()"
+                [(ngModel)]="dtConsegnaLavori">
+              <mat-datepicker-toggle matSuffix [for]="picker2" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <mat-label> Data firma contratto *</mat-label>
+              <input matInput [matDatepicker]="picker3" name="dtFirmaContratto" (click)="picker3.open()"
+                [(ngModel)]="dtFirmaContratto" #dtFirma="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker3" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+              <mat-error *ngIf="dtFirma.errors?.error === 'required'">
+                Campo obbligatorio
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <input type="text" matInput placeholder="Importo contratto *" name="importoContratto"
+                [(ngModel)]="importoContrattoFormatted" #impContr="ngModel"
+                pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setImportoContratto()">
+              <mat-error *ngIf="impContr?.errors?.pattern">
+                Valore non valido
+              </mat-error>
+              <mat-error *ngIf="impContr.errors?.error === 'required'">
+                Campo obbligatorio
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="width-49-perc">
+              <input type="text" matInput placeholder="Importo a base di gara" name="importoBaseGara"
+                [(ngModel)]="importoBaseGaraFormatted" #impBase="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                (blur)="setImportoBaseGara()">
+              <mat-error *ngIf="impBase?.errors?.pattern">
+                Valore non valido
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <input type="text" matInput placeholder="Importo ribasso d'asta" name="importoRibAsta"
+                [(ngModel)]="importoRibAstaFormatted" #impRib="ngModel" pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                (blur)="setImportoRibAsta()">
+              <mat-error *ngIf="impRib?.errors?.pattern">
+                Valore non valido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="width-49-perc">
+              <input type="text" matInput placeholder="Percentuale ribasso d'asta" name="precentualeRibAsta"
+                [(ngModel)]="precentualeRibAstaFormatted" #percRib="ngModel"
+                pattern="([-]?[0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setPercentualeRibAsta()">
+              <mat-error *ngIf="percRib?.errors?.pattern">
+                Valore non valido
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field class="fullWidth">
+            <mat-label>Oggetto appalto/contratto/incarico *</mat-label>
+            <textarea matInput name="oggetto" [(ngModel)]="oggetto" rows="3" #ogg="ngModel" maxlength="255"></textarea>
+            <mat-hint>{{ogg.value?.length || 0}}/255</mat-hint>
+            <mat-error *ngIf="ogg.errors?.error === 'required'">
+              Campo obbligatorio
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="fullWidth">
+            <mat-label>Impresa appaltatrice/fornitore, prestatore di servizi </mat-label>
+            <textarea matInput [(ngModel)]="impresa" rows="3" name="impresa" #impr="ngModel" maxlength="255"></textarea>
+            <mat-hint>{{impr.value?.length || 0}}/255</mat-hint>
+          </mat-form-field>
+          <mat-form-field class="fullWidth">
+            <mat-label>Identificativo intervento (per PISU) </mat-label>
+            <textarea matInput [(ngModel)]="identificativoPISU" rows="3" name="identificativoPISU" #idpsu="ngModel"
+              maxlength="255"></textarea>
+            <mat-hint>{{idpsu.value?.length || 0}}/255</mat-hint>
+          </mat-form-field>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <mat-label> Data pubblicazione bando/avviso di gara su <abbr
+                  title="Gazzetta ufficiale dell'Unione europea">G.U.U.E</abbr> </mat-label>
+              <input matInput [matDatepicker]="picker4" name="dtPubblicazioneGUUE" (click)="picker4.open()"
+                [(ngModel)]="dtPubblicazioneGUUE">
+              <mat-datepicker-toggle matSuffix [for]="picker4" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker4></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="width-49-perc">
+              <mat-label> Data pubblicazione bando/avviso di gara su <abbr
+                  title="Gazzetta Ufficiale della Repubblica Italiana">G.U.R.I.</abbr> </mat-label>
+              <input matInput [matDatepicker]="picker5" name="dtPubblicazioneGURI" (click)="picker5.open()"
+                [(ngModel)]="dtPubblicazioneGURI">
+              <mat-datepicker-toggle matSuffix [for]="picker5" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker5></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <mat-label>Data pubblicazione bando/avviso di gara su quotidiani nazionali </mat-label>
+              <input matInput [matDatepicker]="picker6" name="dtPubblicazioneNazionali" (click)="picker6.open()"
+                [(ngModel)]="dtPubblicazioneNazionali">
+              <mat-datepicker-toggle matSuffix [for]="picker6" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker6></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="width-49-perc">
+              <mat-label>Data pubblicazione bando/avviso di gara su sito web stazione appaltante </mat-label>
+              <input matInput [matDatepicker]="picker7" name="dtPubblicazioneAppaltante" (click)="picker7.open()"
+                [(ngModel)]="dtPubblicazioneAppaltante">
+              <mat-datepicker-toggle matSuffix [for]="picker7" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker7></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="fullWidt">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <mat-label>Data pubblicazione bando/avviso di gara su sito web osservatorio reg.le LL.PP. </mat-label>
+              <input matInput [matDatepicker]="picker8" name="dtPubblicazioneRegLLPP" (click)="picker8.open()"
+                [(ngModel)]="dtPubblicazioneRegLLPP">
+              <mat-datepicker-toggle matSuffix [for]="picker8" class="blue-color">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker8></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth display-flex align-items-baseline">
+            <mat-form-field class="fullWidth padding-right-10">
+              <mat-label>Procedura aggiudicazione *</mat-label>
+              <textarea matInput [(ngModel)]="proceduraAggiudicazioneSelected.descProcAgg" rows="3"
+                name="proceduraAggiudicazione" maxlength="255" disabled="true" class="disabled"></textarea>
+            </mat-form-field>
+            <button mat-icon-button style="width: 30px;" (click)="showProcedureAggiudicaz()">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+
+          <div class="endPageButton">
+            <button mat-raised-button class="button-style-2" (click)="salva()">SALVA APPALTO </button>
+          </div>
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- PROCEDURE DI AGGIUDICAZIONE-->
+  <div class="content spaceBetween" [ngClass]="{'displayNone':!isProcedureAggiudicazVisible}">
+    <div class="title margin-0 padding-0">
+      <h2> Procedure di Aggiudicazione </h2>
+    </div>
+    <div>
+      <button mat-stroked-button class="button-style-3" (click)="goToNuovaProcedura()">
+        NUOVA PROCEDURA
+      </button>
+    </div>
+  </div>
+
+  <div class="content" [ngClass]="{'displayNone': !isProcedureAggiudicazVisible}">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="header">
+          <h3 class="search">Criteri di ricerca
+            <button mat-icon-button (click)="criteriRicercaOpened = !criteriRicercaOpened;">
+              <mat-icon class="arrow" *ngIf="criteriRicercaOpened">arrow_drop_up</mat-icon>
+              <mat-icon class="arrow" *ngIf="!criteriRicercaOpened">arrow_drop_down</mat-icon>
+            </button>
+          </h3>
+        </div>
+        <div *ngIf="criteriRicercaOpened">
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc">
+              <mat-label> Selezionare una tipologia appalto/contratto/incarico </mat-label>
+              <mat-select [(ngModel)]="tipologieAggiudicazSelected" name="tipologie">
+                <mat-option *ngFor="let option of tipologieAggiudicaz" [value]="option">
+                  {{option.descrizione}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="fullWidth">
+            <mat-form-field class="width-49-perc padding-right-10">
+              <input type="text" matInput placeholder="CPA" matTooltip="Codice Procedura di Aggiudicazione"
+                [(ngModel)]="cpa" name="cpa">
+            </mat-form-field>
+            <mat-form-field class="width-49-perc">
+              <input type="text" matInput placeholder="CIG" matTooltip="Codice Identificativo Gara" [(ngModel)]="cig"
+                name="cig">
+            </mat-form-field>
+          </div>
+          <button mat-raised-button class="button-style-2" (click)="cercaProceduraAggiudicazione()">
+            CERCA
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ELENCO PROCEDURE -->
+  <div class="content" *ngIf="noElementsMessageVisible && isProcedureAggiudicazVisible">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div class="noElements">{{noElementsMessage}}</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="content"
+    [ngClass]="{'displayNone': !dataSource || elencoProcAggiudicaz?.length==0 || !isProcedureAggiudicazVisible}">
+    <p *ngIf="elencoProcAggiudicaz.length == 1" class="textSmallGrey">Un risultato trovato.</p>
+    <p *ngIf="elencoProcAggiudicaz.length > 1" class="textSmallGrey">{{elencoProcAggiudicaz.length}} risultati trovati.
+    </p>
+    <mat-card class="mat-elevation-z2">
+      <mat-card-content>
+        <div *ngIf="noElementsMessageVisible">{{noElementsMessage}}</div>
+        <table mat-table *ngIf="dataSource && elencoProcAggiudicaz.length>0 && !noElementsMessageVisible"
+          [dataSource]="dataSource" matSort #sort="matSort" matSortActive="data" style="width: 100%;">
+
+          <ng-container matColumnDef="descTipologiaAggiudicazione">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipologia </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.descTipologiaAggiudicazione }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="CPA/CIG">
+            <th mat-header-cell *matHeaderCellDef> <abbr title="Codice procedura di attivazione">CPA</abbr>/CIG</th>
+            <td mat-cell *matCellDef="let row">
+              <span *ngIf="row.cigProcAgg">{{row.cigProcAgg }}</span>
+              <span *ngIf="row.codProcAgg">{{row.codProcAgg }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Importo </th>
+            <td mat-cell *matCellDef="let row" class="text-right">
+              {{row.importo | number: '1.2-2' : 'it'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descProcAgg">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrizione </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.descProcAgg }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="azioni">
+            <th mat-header-cell *matHeaderCellDef class="width-100px">
+            </th>
+            <td mat-cell *matCellDef="let row" class="width-100px">
+              <button mat-icon-button class="blueIcon" style="width: 30px;"
+                matTooltip="Scegli la Procedura Aggiudicazione" (click)="selectProceduraAggiudicazione(row)">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button mat-icon-button class="blueIcon" matTooltip="Dettaglio Procedura Aggiudicazione"
+                style="width: 30px;" (click)="goToModificaProcedura(row.idProceduraAggiudicaz)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true">
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="content">
+    <div class="spaceBetween">
+      <div class="backContainer">
+        <button (click)="goToRicercaAppalti()" mat-button>
+          <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+          <span class="backText">Torna alla ricerca appalti</span>
+        </button>
+      </div>
+      <button mat-stroked-button class="button-style-3" (click)="goToNuovaProcedura()"
+        *ngIf="isProcedureAggiudicazVisible">
+        NUOVA PROCEDURA
+      </button>
+    </div>
+  </div>
+</div>

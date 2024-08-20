@@ -1,0 +1,27 @@
+p {
+    font-size: 16px;
+    font-weight: bold;;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;  
+}
+
+.spaceBetween{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Chrome, Safari, Edge, Opera -  remove arrows from input type number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox -  remove arrows from input type number */
+input[type=number] {
+  -moz-appearance: textfield;
+}

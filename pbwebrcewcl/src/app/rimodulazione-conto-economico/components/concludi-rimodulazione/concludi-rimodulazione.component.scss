@@ -1,0 +1,43 @@
+.bold-text {
+    font-weight: bold !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.flex-direction-column {
+    flex-direction: column;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.width-50-perc {
+    width: 50%;
+}
+
+.light-blue-background {
+    background-color: #178cd633;
+}
+
+.border-collapse-collapse {
+    border-collapse: collapse;
+}
+
+.total-border {
+    border: 2px solid #0060c1;
+}
+
+::ng-deep td .mat-form-field-infix {
+    width: 12% !important;
+}

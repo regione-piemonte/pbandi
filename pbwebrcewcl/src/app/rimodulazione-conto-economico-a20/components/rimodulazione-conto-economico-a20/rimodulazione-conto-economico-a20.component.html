@@ -1,0 +1,648 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alle attività da svolgere</span>
+            </button>
+        </div>
+        <h2 *ngIf="isProposta">Proposta di rimodulazione del conto economico</h2>
+        <h2 *ngIf="isRichiesta">Richiesta del conto economico in domanda</h2>
+        <h2 *ngIf="!isProposta && !isRichiesta">Rimodulazione del conto economico</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p [innerHTML]="messageSuccess"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p [innerHTML]="messageError"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <p [innerHTML]="messageWarning"></p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isProposta && esitoFindContoEconomicoDTO?.locked">
+            <mat-card-content class="messageWarningContent">
+                <p>
+                    Il conto economico del progetto risulta in fase di rimodulazione da parte dell'istruttore. <br />Non
+                    è quindi al momento possibile effettuare una nuova proposta. <br />Attendere la conclusione della
+                    rimodulazione dell'istruttore prima di effettuare una nuova proposta di rimodulazione.
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning"
+            *ngIf="isProposta && !esitoFindContoEconomicoDTO?.modificabile">
+            <mat-card-content class="messageWarningContent">
+                <p>
+                    Per il progetto corrente, la funzionalità di proposta di rimodulazione del conto economico non è
+                    stata abilitata.
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto height-36-px">
+                    <p>Beneficiario: <span class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                </div>
+                <div class="cod-progetto">
+                    <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button
+                        (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE</button>
+                </div>
+                <div class="cod-progetto" *ngIf="progettoRicevente">
+                    <p>Economie utilizzate: <span class="bold-text">{{sommaEconomieUtilizzate | number: '1.2-2' :
+                            'it'}}</span></p>
+                    <button class="button-style-1 paddingLeft20" mat-button (click)="goToEconomie()">ECONOMIE</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Conto Economico</h3>
+                <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <!-- INIZIO -->
+                <mat-tab-group>
+                    <mat-tab label="SPESE">
+                        <div [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                            <form #tableForm="ngForm">
+                                <table mat-table [dataSource]="dataSource" class="fullWidth">
+
+                                    <ng-container matColumnDef="vociSpesa">
+                                        <th mat-header-cell *matHeaderCellDef> Voci di spesa</th>
+                                        <td mat-cell *matCellDef="let row"
+                                            [ngClass]="{'bold-text': row.level===0 || row.level===1}">
+                                            <a class="display-flex align-items-center"
+                                                [ngClass]="{'blue-color':row.level===1, 'cursor-pointer': row.haFigli && row.level!==0, 'red-color': row.codiceErrore==='X'}"
+                                                (click)="openCloseVoce(row.id)">
+                                                <span class="min-width-24">
+                                                    <mat-icon
+                                                        [ngClass]="{'displayNone': !row.haFigli || row.level===0 || !row.figliVisible}">
+                                                        arrow_drop_up </mat-icon>
+                                                    <mat-icon
+                                                        [ngClass]="{'displayNone': !row.haFigli || row.level===0 || row.figliVisible}">
+                                                        arrow_drop_down</mat-icon>
+                                                </span>
+                                                {{row.label}}<mat-icon *ngIf="row.codiceErrore==='X'" class="red-color">warning
+                                                </mat-icon></a>
+                                            <div *ngIf="((row.level===0 && row.haFigli) || row.level>0 || (row.level===null && !isIstruttoria)) && !isRichiesta"
+                                                class="flexEnd grey-color">
+                                                ({{row.perc ? (row.perc | number: '1.2-2' : 'it') : row.perc }}%)</div>
+                                            <mat-progress-bar
+                                                *ngIf="((row.level===0 && row.haFigli) || row.level>0 || (row.level===null && !isIstruttoria)) && !isRichiesta"
+                                                mode="determinate" [value]="row.perc">
+                                            </mat-progress-bar>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="richiesto">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"
+                                        [ngClass]="{'width-20-perc': isIstruttoria}"> Richiesto in domanda </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label, 'yellow-background':isRipristinaRichiestoInDomanda, 'width-20-perc': isIstruttoria}">
+                                            <a *ngIf="(isNuovaProposta || isRimodula) && row.level===null"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaRichiestoInDomanda()">Ripristina <mat-icon>arrow_forward</mat-icon>
+                                            </a>
+                                            <span *ngIf="!isCreaRichiesta"> {{row.importoRichiestoInDomanda}}</span>
+                                            <span *ngIf="row.level===0 && !row.label">{{row.dataPresentazioneDomanda}}</span>
+                                            <mat-form-field class="text-right"
+                                                *ngIf="(row.level!==0 || (row.level===0 && row.haFigli)) && isCreaRichiesta && !isSavedRichiesta">
+                                                <input matInput [ngModel]="row.importoRichiestoInDomanda"
+                                                    (ngModelChange)="modelChangeRichiesto($event,row.id,i)"
+                                                    name="importoRichiestoInDomanda{{i}}" #impRich="ngModel"
+                                                    (change)="changeRichiesto(row, i)" [disabled]="!row.modificabile"
+                                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                                                <mat-error *ngIf="impRich?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="ultimaProposta">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Richiesto ultima proposta
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label,'yellow-background': isRipristinaUltimaProposta}">
+                                            <a *ngIf="(isNuovaProposta || isRimodula) && row.level===null"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaUltimaProposta()">
+                                                Ripristina<mat-icon> arrow_forward </mat-icon>
+                                            </a>
+                                            {{row.importoRichiestoUltimaProposta}}
+                                            <span *ngIf="row.level===0 && !row.label">{{row.dataUltimaProposta}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="richiestoNuovaProposta">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Richiesto nuova proposta </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            <span class="red-color bold-text"
+                                                *ngIf="isSavedProposta && !isConfirmedProposta && row.codiceErrore && row.codiceErrore!=='X'">[{{row.codiceErrore}}]
+                                                <br /></span>
+                                            <mat-form-field class="text-right"
+                                                *ngIf="(row.level!==0 || (row.level===0 && row.haFigli)) && !isSavedProposta">
+                                                <input matInput [ngModel]="row.importoRichiestoNuovaProposta"
+                                                    (ngModelChange)="modelChangeRichiestoNuovaProposta($event,row.id,i)"
+                                                    name="importoRichiestoNuovaProposta{{i}}" #impProp="ngModel"
+                                                    (change)="changeRichiestoNuovaProposta(row, i)"
+                                                    [disabled]="!row.modificabile" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                                                <mat-error *ngIf="impProp?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <span *ngIf="isSavedProposta">{{row.importoRichiestoNuovaProposta}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaIstruttoria">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa ammessa in istruttoria
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label,'yellow-background': isRipristinaSpesaAmmessaIstruttoria}">
+                                            <a *ngIf="(isNuovaProposta || isRimodula) && row.level===null"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaSpesaAmmessaIstruttoria()">
+                                                <mat-icon *ngIf="isNuovaProposta"> arrow_back </mat-icon>Ripristina<mat-icon
+                                                    *ngIf="isRimodula"> arrow_forward </mat-icon>
+                                            </a>
+                                            {{row.importoSpesaAmmessaInDetermina}}
+                                            <span *ngIf="row.level===0 && !row.label">{{row.dataFineIstruttoria}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaAmmessa">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Ultima spesa ammessa </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label,'yellow-background': isRipristinaSpesaAmmessaUltima}">
+                                            <a *ngIf="(isNuovaProposta || isRimodula) && row.level===null"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaSpesaAmmessaUltima()">
+                                                <mat-icon *ngIf="isNuovaProposta"> arrow_back </mat-icon>Ripristina<mat-icon
+                                                    *ngIf="isRimodula"> arrow_forward </mat-icon>
+                                            </a>
+                                            {{row.importoSpesaAmmessaUltima}}
+                                            <span *ngIf="row.level===0 && !row.label">{{row.dataUltimaRimodulazione}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaAmmessaRimod">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"
+                                            [ngClass]="{'width-20-perc': isIstruttoria}"> Spesa
+                                            ammessa in rimodulazione
+                                        </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label, 'yellow-background': esitoFindContoEconomicoDTO.copiaModificataPresente && isSavedRimod, 'width-20-perc': isIstruttoria}">
+                                            <span class="red-color bold-text"
+                                                *ngIf="isSavedRimod && !isConfirmedRimod && row.codiceErrore">[{{row.codiceErrore}}]
+                                                <br /></span>
+                                            <mat-form-field class="text-right"
+                                                *ngIf="(row.level>0  || (row.level===null && !isIstruttoria) || (row.level===0 && row.haFigli)) && !isSavedRimod">
+                                                <input matInput [ngModel]="row.importoSpesaAmmessaRimodulazione"
+                                                    (ngModelChange)="modelChangeSpesaAmmessaRimodulazione($event,row.id,i)"
+                                                    name="importoSpesaAmmessaRimodulazione{{i}}" #impRimod="ngModel"
+                                                    (change)="changeSpesaAmmessaRimodulazione(row,i)"
+                                                    [disabled]="!row.modificabile" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                                                <mat-error *ngIf="impRimod?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <span *ngIf="isSavedRimod">{{row.importoSpesaAmmessaRimodulazione}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaRendicontata">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa rendicontata </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            {{row.importoSpesaRendicontata}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaQuietanzata">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa quietanziata </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            {{row.importoSpesaQuietanziata}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="qa">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Q/A (%) </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            {{row.percSpesaQuietanziataSuAmmessa}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="spesaValidata">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa validata totale </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            {{row.importoSpesaValidataTotale}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="via">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> V/A (%) </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                            {{row.percSpesaValidataSuAmmessa}}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"
+                                        [ngClass]="{'displayNone': !row.visible, 'light-blue-background': row.level===null || (row.level===0 && row.haFigli)}">
+                                    </tr>
+                                </table>
+                                <div class="rimodula-display margin-top-20">
+                                    <button
+                                        *ngIf="!isProposta && !isRichiesta && !isRimodula && !isSavedRimod && esitoFindContoEconomicoDTO?.modificabile && (idContoEconomico===null || idContoEconomico===undefined)"
+                                        mat-raised-button class="button-style-2 margin-rimodula-button" (click)="rimodula()">
+                                        RIMODULA
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="margin-top-70"
+                            [ngClass]="{'displayNone': !dataSourceAltriCosti || !dataSourceAltriCosti.data || dataSourceAltriCosti.data.length===0 || !isBR59 || isRichiesta}">
+                            <form #tableAltriCostiForm="ngForm">
+                                <table mat-table [dataSource]="dataSourceAltriCosti" class="fullWidth">
+
+                                    <ng-container matColumnDef="vociCosto">
+                                        <th mat-header-cell *matHeaderCellDef class="width-60-perc"> Voci di costo </th>
+                                        <td mat-cell *matCellDef="let row" class="bold-text fullWidth width-60-perc">
+                                            <a class="display-flex align-items-center blue-color">
+                                                {{row.descCeAltriCosti}}</a>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="importoCeApprovato">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Importo approvato </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right bold-text">
+                                            <mat-form-field class="text-right" *ngIf="!isSavedProposta">
+                                                <input matInput [(ngModel)]="row.impCeApprovatoFormatted"
+                                                    name="importoCeApprovato{{i}}" #impAppr="ngModel"
+                                                    (change)="changeImportoCeApprovato(row, i)"
+                                                    [disabled]="!isProposta || !isNuovaProposta"
+                                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                                    [required]="row.impCePropmodFormatted?.length > 0" />
+                                                <mat-error *ngIf="impAppr?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                                <mat-error *ngIf="impAppr?.errors?.required">
+                                                    Campo obbligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <span *ngIf="isSavedProposta">{{row.impCeApprovatoFormatted}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="importoCeProposto">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Importo proposto </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right bold-text">
+                                            <mat-form-field class="text-right" *ngIf="!isSavedProposta">
+                                                <input matInput [(ngModel)]="row.impCePropmodFormatted"
+                                                    name="importoCeProposto{{i}}" #impCeProp="ngModel"
+                                                    (change)="changeImportoCeProposto(row, i)"
+                                                    [disabled]="!isProposta || !isNuovaProposta"
+                                                    pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                                    [required]="row.impCeApprovatoFormatted?.length > 0" />
+                                                <mat-error *ngIf="impCeProp?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                                <mat-error *ngIf="impCeProp?.errors?.required">
+                                                    Campo obbligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <span *ngIf="isSavedProposta">{{row.impCePropmodFormatted}}</span>
+                                        </td>
+                                    </ng-container>
+                                    
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsAltriCosti"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsAltriCosti; let i = index">
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="ENTRATE">
+                        <div [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                            <form #tableForm="ngForm">
+                                <table mat-table [dataSource]="dataSourceEntrate" class="fullWidth">
+                                    <ng-container matColumnDef="vociDiEntrata">
+                                        <th mat-header-cell *matHeaderCellDef> Voci di Entrata</th>
+                                        <td mat-cell *matCellDef="let row"
+                                        [ngClass]="{'width-20-perc': isIstruttoria}">
+                                            <a class="display-flex align-items-center"
+                                                [ngClass]="{'blue-color': row.figli != undefined && row.descrizione != 'Conto Economico', 'bold-text': row.totali || row.figli != undefined, 'cursor-pointer': row.figli != undefined}"
+                                                (click)="openCloseVoceEntrata(row)">
+                                                <span class="min-width-24">
+                                                    <mat-icon
+                                                        [ngClass]="{'displayNone': row.figli == undefined || !row.expanded}">
+                                                        arrow_drop_up </mat-icon>
+                                                    <mat-icon
+                                                        [ngClass]="{'displayNone': row.figli == undefined || row.expanded}">
+                                                        arrow_drop_down</mat-icon>
+                                                </span>
+                                                {{row.descrizione}}
+                                            </a>
+                                            <!-- PROGRESS BARS PERCENTUALI -->
+                                            <div *ngIf="row.descrizione != undefined && row.descrizione != 'Conto Economico'">
+                                                <div class="flexEnd grey-color">
+                                                    {{(row.importoConsuntivoPresentato * 100)/totaliEntrate.totaleConsuntivoPresentato || 0 | number: '1.2-2' : 'it'}}%
+                                                </div>
+                                                <mat-progress-bar mode="determinate" [value]="(row.importoConsuntivoPresentato * 100)/totaliEntrate.totaleConsuntivoPresentato"></mat-progress-bar>
+                                            </div>
+                                            <div *ngIf="row.descrizione == 'Conto Economico'">
+                                                <div class="flexEnd grey-color">
+                                                    100%
+                                                </div>
+                                                <mat-progress-bar mode="determinate" [value]="100"></mat-progress-bar>
+                                            </div>
+                                            <div *ngIf ="row.figli != undefined">
+                                                <mat-divider vertical style="height:15px"></mat-divider>
+                                            </div>
+                                            <!-- FIGLI NELLA EXPANDED LIST -->
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <a class="display-flex align-items-center">
+                                                            {{figlio.completamento}}
+                                                        </a>
+                                                        <div class="flexEnd grey-color">
+                                                            {{(figlio.importoConsuntivoPresentato * 100)/totaliEntrate.totaleConsuntivoPresentato || 0 | number: '1.2-2' : 'it'}}%
+                                                        </div>
+                                                        <mat-progress-bar mode="determinate" [value]="figlio.percSpGenFunz"></mat-progress-bar>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="entrateInDomanda">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Richiesto in domanda preventivo </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'yellow-background':isRipristinaRichiestoInDomanda, 'width-20-perc': isIstruttoria}">
+                                            <!-- TOLTO IL PULSANTE PERCHE' PER ADESSO NON POSSONO RIMODULARSI LE ENTRATE -->
+                                            <!-- <a *ngIf="(isNuovaProposta || isRimodula) && row.rigaRipristina"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaEntrateInDomanda()">
+                                                Ripristina 
+                                                <mat-icon>arrow_forward</mat-icon>
+                                            </a> -->
+                                            <span *ngIf="!isCreaRichiesta && row.dataPresentazioneDomanda != undefined"> {{row.dataPresentazioneDomanda}}</span>
+                                            <span *ngIf="!isCreaRichiesta && row.dataPresentazioneDomanda == undefined && row.descrizione == 'Conto Economico'"> {{row.totali.totaleRichiesto || 0 | currency : 'EUR' : 'symbol' }}</span>
+                                            <p *ngIf="!isCreaRichiesta && row.dataPresentazioneDomanda == undefined && row.descrizione != 'Conto Economico' && !row.rigaRipristina" class="margin-figlio"> {{row.importoRichiesto  | currency : 'EUR' : 'symbol' }}</p>
+                                            <!-- FIGLI NELLA EXPANDED LIST -->
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <span class="flex-end">
+                                                            {{figlio.importoRichiesto | currency : 'EUR' : 'symbol' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="entrateAmmesseInIstruttoria">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Preventivo ammesso in istruttoria
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'yellow-background': isRipristinaSpesaAmmessaIstruttoria}">
+                                            <!-- TOLTO IL PULSANTE PERCHE' PER ADESSO NON POSSONO RIMODULARSI LE ENTRATE -->
+                                            <!-- <a *ngIf="(isNuovaProposta || isRimodula) && row.rigaRipristina"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaEntrateAmmessaIstruttoria()">
+                                                <mat-icon *ngIf="isNuovaProposta"> arrow_back </mat-icon>Ripristina<mat-icon
+                                                    *ngIf="isRimodula"> arrow_forward </mat-icon>
+                                            </a> -->
+                                            <span *ngIf="row.dataFineIstruttoria != undefined"> {{row.dataFineIstruttoria}}</span>
+                                            <span *ngIf="!isCreaRichiesta && row.dataPresentazioneDomanda == undefined && row.descrizione == 'Conto Economico'"> {{row.totali.totaleAmmesso || 0 | currency : 'EUR' : 'symbol' }}</span>
+                                            <p *ngIf="row.dataFineIstruttoria == undefined && row.descrizione != 'Conto Economico' && !row.rigaRipristina" class="margin-figlio"> {{row.importoAmmesso  | currency : 'EUR' : 'symbol'}}</p>
+                                            <!-- FIGLI NELLA EXPANDED LIST -->
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <span class="flex-end">
+                                                            {{figlio.importoAmmesso | currency : 'EUR' : 'symbol' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="ultimeEntrateAmmesse">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Ultime entrate ammesse </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right">
+                                            <span class="red-color bold-text"
+                                                *ngIf="isSavedProposta && !isConfirmedProposta && row.codiceErrore && row.codiceErrore!=='X'">[{{row.codiceErrore}}]
+                                                <br />
+                                            </span>
+                                            <mat-form-field class="text-right" *ngIf="!isSavedProposta">
+                                                <input matInput [ngModel]="row.importoRichiestoNuovaProposta"
+                                                    (ngModelChange)="modelChangeRichiestoNuovaProposta($event,row.id,i)"
+                                                    name="importoRichiestoNuovaProposta{{i}}" #impProp="ngModel"
+                                                    (change)="changeRichiestoNuovaProposta(row, i)"
+                                                    [disabled]="!row.modificabile" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" />
+                                                <mat-error *ngIf="impProp?.errors?.pattern">
+                                                    Valore non valido
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <span *ngIf="isSavedProposta">{{row.importoUltimoAmmesso  | currency : 'EUR' : 'symbol'}}</span>
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <span class="flex-end">
+                                                            {{figlio.importoUltimoAmmesso | currency : 'EUR' : 'symbol' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container> -->
+                                    <!-- TOLTO IL PULSANTE PERCHE' PER ADESSO NON POSSONO RIMODULARSI LE ENTRATE -->
+                                    <!-- <ng-container matColumnDef="entrateAmmesseInRimodulazione">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"
+                                            [ngClass]="{'width-20-perc': isIstruttoria}"> 
+                                            Entrate ammesse in rimodulazione
+                                        </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right" [ngClass]="{'width-20-perc': isIstruttoria}">
+                                            <span class="red-color bold-text"
+                                                *ngIf="isSavedRimod && !isConfirmedRimod && row.codiceErrore">[{{row.codiceErrore}}]
+                                                <br />
+                                            </span>
+                                            <mat-form-field class="text-right"
+                                                *ngIf="!isSavedRimod && row.dataFineIstruttoria == undefined && row.descrizione != 'Conto Economico' && !row.rigaRipristina">
+                                                <input 
+                                                    matInput
+                                                    [min]="0"
+                                                    (input)="controlloInputRigheSecondoLivelloImportoSpesaPreventivata(row)"
+                                                    (blur)="aggiungiRigaDaModificare(row)"
+                                                    type="number"
+                                                    class="centro"
+                                                    [(ngModel)]="row.importoEntrateAmmesseInRimodulazione"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                />
+                                            </mat-form-field>
+                                            <span *ngIf="!isCreaRichiesta && row.rigaRipristina"> {{row.differenzaRimodulazione || 0 | currency : 'EUR' : 'symbol' }}</span>
+                                            <span *ngIf="!isCreaRichiesta && row.descrizione == 'Conto Economico'"> {{row.totali.totaleEntrateAmmesseInRimodulazione || 0 | currency : 'EUR' : 'symbol' }}</span>
+                                        </td>
+                                    </ng-container> -->
+
+                                    <ng-container matColumnDef="entrateRendicontate">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> Consuntivo presentato </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right"
+                                            [ngClass]="{'yellow-background': isRipristinaSpesaAmmessaUltima}">
+                                            <!-- DA METTERE SOPRA LA TABELLA IN LINEA CON CONTO ECONOMICO-->
+                                            <!-- <a *ngIf="(isNuovaProposta || isRimodula) && row.level===null"
+                                                class="display-flex align-items-center bold-text blue-color cursor-pointer float-right"
+                                                (click)="ripristinaSpesaAmmessaUltima()">
+                                                <mat-icon *ngIf="isNuovaProposta"> arrow_back </mat-icon>
+                                                Ripristina
+                                                <mat-icon *ngIf="isRimodula"> arrow_forward </mat-icon>
+                                            </a> -->
+                                            <span *ngIf="!isCreaRichiesta && row.dataPresentazioneDomanda == undefined && row.descrizione == 'Conto Economico'"> {{row.totali.totaleConsuntivoPresentato || 0 | currency : 'EUR' : 'symbol' }}</span>
+                                            <p *ngIf="row.dataPresentazioneDomanda == undefined && row.descrizione != 'Conto Economico' && !row.rigaRipristina && row.importoConsuntivoPresentato != 0" class="margin-figlio">{{row.importoConsuntivoPresentato | currency : 'EUR' : 'symbol'}}</p>
+                                            <!-- FIGLI NELLA EXPANDED LIST -->
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <span class="flex-end">
+                                                            {{figlio.importoConsuntivoPresentato | currency : 'EUR' : 'symbol' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="entrateValidateTotale">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right">
+                                             Totale entrate validate
+                                        </th>
+                                        <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                            [ngClass]="{'width-20-perc': isIstruttoria}">
+                                            <span class="red-color bold-text"
+                                                *ngIf="isSavedRimod && !isConfirmedRimod && row.codiceErrore">[{{row.codiceErrore}}]
+                                                <br /></span>
+                                            <span *ngIf="isSavedRimod && row.dataPresentazioneDomanda == undefined">{{row.importoValidato || 0 | currency : 'EUR' : 'symbol'}}</span>
+                                            <mat-divider vertical style="height:15px"></mat-divider>
+                                            <div *ngIf="row.figli != undefined">
+                                                <div *ngFor="let figlio of row.figli">
+                                                    <div [hidden] = "!row.expanded">
+                                                        <span class="flex-end">
+                                                            {{figlio.importoValidato|| 0 | currency : 'EUR' : 'symbol' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="percentualeVa">
+                                        <th mat-header-cell *matHeaderCellDef class="text-right"> V/A % </th>
+                                        <td mat-cell *matCellDef="let row" class="text-right">
+                                            <span *ngIf="row.dataPresentazioneDomanda == undefined && !row.rigaRipristina">{{ (100 / importoUltimoAmmesso) * importoQuietanzato || 0 | percent : '0.2-2' : 'it'}}</span>
+                                        <mat-divider vertical style="height:15px"></mat-divider>
+                                        <div *ngIf="row.figli != undefined">
+                                            <div *ngFor="let figlio of row.figli">
+                                                <div [hidden] = "!row.expanded">
+                                                    <span class="flex-end">
+                                                        {{(100 / importoUltimoAmmesso) * importoQuietanzato || 0 | percent : '0.2-2' : 'it'}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    </ng-container> -->
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsEntrate"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsEntrate; let i = index"
+                                        [ngClass]="{'light-blue-background': row.level===null}">
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </mat-tab>
+				</mat-tab-group>
+                <!-- FINE -->
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <div>
+            <app-specchietto-saldo></app-specchietto-saldo>
+        </div>
+        <div class="spaceBetween margin-bottom-20">
+            <div class="backContainer">
+                <button (click)="tornaAAttivitaDaSvolgere()" mat-button>
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna alle attività da svolgere</span>
+                </button>
+            </div>
+            <div>
+                <button *ngIf="isRimodula || isNuovaProposta || isCreaRichiesta" mat-button
+                    class="button-style-1 margin-right-10" (click)="indietro()">INDIETRO</button>
+                <button
+                    *ngIf="(isProposta && isSavedProposta && !isConfirmedProposta) || (isIstruttoria && isSavedRimod && !isConfirmedRimodIstr) || (isRichiesta && isSavedRichiesta && !isConfirmedRichiesta)"
+                    mat-button class="button-style-1 margin-right-10" (click)="annulla()">ANNULLA</button>
+                <!--pulsanti rimodulazione e rimodulazione istruttoria-->
+                <button
+                    *ngIf="!isProposta && !isRimodula && isSavedRimod && (!isIstruttoria || (isIstruttoria && isConfirmedRimodIstr)) && (idContoEconomico===null || idContoEconomico===undefined)"
+                    mat-raised-button class="button-style-2 margin-right-10" (click)="concludiRimodulazione()">CONCLUDI
+                    RIMODULAZIONE</button>
+                <button *ngIf="!isProposta && isRimodula" mat-raised-button class="button-style-2"
+                    (click)="salvaRI()">SALVA</button>
+                <button *ngIf="isIstruttoria && isSavedRimod && !isConfirmedRimodIstr" mat-raised-button
+                    class="button-style-2" (click)="confermaRimodulazioneIstruttoria()">CONFERMA</button>
+                <button
+                    *ngIf="!isProposta && isSavedRimod && (!isIstruttoria || (isIstruttoria && isConfirmedRimodIstr)) && (idContoEconomico===null || idContoEconomico===undefined)"
+                    mat-raised-button class="button-style-2 margin-rimodula-button" (click)="modificaRimod()">RIMODULA</button>
+                <button
+                    *ngIf="idContoEconomico!==null && idContoEconomico!==undefined && !isIstruttoria && !isRichiesta && !isBandoCultura"
+                    mat-raised-button class="button-style-2" (click)="downloadRimod()">SCARICA RIMODULAZIONE</button>
+                <!--pulsanti proposta di rimodulazione-->
+                <button
+                    *ngIf="isProposta && !isNuovaProposta && !isSavedProposta && !esitoFindContoEconomicoDTO?.locked && esitoFindContoEconomicoDTO?.modificabile"
+                    mat-raised-button class="button-style-2" (click)="nuovaProposta()">NUOVA
+                    PROPOSTA</button>
+                <button *ngIf="isProposta && isNuovaProposta" mat-raised-button class="button-style-2"
+                    (click)="salvaProposta()">SALVA</button>
+                <button *ngIf="isProposta && isSavedProposta && !isConfirmedProposta" mat-raised-button
+                    class="button-style-2" (click)="confermaProposta()">CONFERMA</button>
+                <button *ngIf="isProposta && isConfirmedProposta" mat-raised-button
+                    class="button-style-2 margin-right-10" (click)="modificaProposta()"> MODIFICA
+                    PROPOSTA</button>
+                <button *ngIf="isProposta && isConfirmedProposta" mat-raised-button class="button-style-2"
+                    (click)="procediProposta()"> PROCEDI </button>
+                <!--pulsanti richiesto in domanda-->
+                <button *ngIf="isRichiesta && !isCreaRichiesta && !isSavedRichiesta && idContoEconomico===null"
+                    mat-raised-button class="button-style-2" (click)="creaRichiesta()">CREA RICHIESTA</button>
+                <button *ngIf="isRichiesta && isCreaRichiesta" mat-raised-button class="button-style-2"
+                    (click)="salvaRichiesta()">SALVA</button>
+                <button *ngIf="isRichiesta && isSavedRichiesta && !isConfirmedRichiesta" mat-raised-button
+                    class="button-style-2" (click)="confermaRichiesta()">CONFERMA</button>
+                <button *ngIf="isRichiesta && isConfirmedRichiesta && idContoEconomico===null" mat-raised-button
+                    class="button-style-2 margin-right-10" (click)="modificaRichiesta()"> MODIFICA RICHESTA</button>
+                <button *ngIf="isRichiesta && isConfirmedRichiesta && idContoEconomico===null" mat-raised-button
+                    class="button-style-2" (click)="inviaRichiesta()"> INVIA RICHIESTA </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,727 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="title">
+        <div class="backContainer">
+            <button (click)="goToGestioneAffidamenti()" mat-button>
+                <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                <span class="backText">Torna alla gestione affidamenti</span>
+            </button>
+        </div>
+        <h2>Dettaglio affidamento</h2>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="display-flex justify-content-space-between">
+                    <div>
+                        <div class="cod-progetto">
+                            <p>Beneficiario: <span
+                                    class="bold-text">{{user?.beneficiarioSelezionato?.denominazione}}</span></p>
+                        </div>
+                        <div class="cod-progetto">
+                            <p>Codice progetto: <span class="bold-text">{{codiceProgetto}}</span></p>
+                            <button class="button-style-1 paddingLeft20" mat-button
+                                (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave;
+                                PREGRESSE</button>
+                        </div>
+                    </div>
+                    <pbcommon-help *ngIf="user?.codiceRuolo" [apiURL]="apiURL" [user]="user"
+                        [descBrevePagina]="descBrevePagina"></pbcommon-help>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="spaceBetween">
+                    <h3>Affidamenti</h3>
+                    <button *ngIf="notifiche?.length>0" mat-icon-button class="blue-color"
+                        matTooltip="Sono presenti {{notifiche?.length}} notifiche" (click)="openNotifiche()">
+                        <mat-icon matBadge="{{notifiche?.length}}" matBadgeColor="warn">notifications_none</mat-icon>
+                    </button>
+                </div>
+                <form #affidamentiForm="ngForm">
+                    <mat-grid-list cols="4" rowHeight="35">
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Selezionare una normativa *</mat-label>
+                                    <mat-select [(ngModel)]="normativaSelected" name="normativa" #norma="ngModel"
+                                        (selectionChange)="onSelectNormativa()">
+                                        <mat-option *ngFor="let option of normative" [value]="option">
+                                            {{ option.descNorma }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="norma?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2"></mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Selezionare una tipologia *</mat-label>
+                                    <mat-select [(ngModel)]="tipologiaSelected" name="tipologia" #tipo="ngModel"
+                                        [disabled]="!normativaSelected || norma?.disabled"
+                                        (selectionChange)="onSelectTipologia()">
+                                        <mat-option *ngFor="let option of tipologieFiltered" [value]="option">
+                                            {{ option.descTipoAffidamento }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipo?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Selezionare una categoria *</mat-label>
+                                    <mat-select [(ngModel)]="categoriaSelected" name="categoria" #cat="ngModel"
+                                        [disabled]="!normativaSelected || norma?.disabled"
+                                        (selectionChange)="onSelectCategoria()">
+                                        <mat-option *ngFor="let option of categorieFiltered" [value]="option">
+                                            {{ option.descTipologiaAppalto }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="cat?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field>
+                                    <input type="string" matInput placeholder="Importo a base di gara *"
+                                        [(ngModel)]="importoBaseGaraFormatted" name="importoBaseGara"
+                                        #impBaseGara="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        (blur)="setImportoBaseGara()">
+                                    <mat-hint>Obbligatorio se CIG non previsto</mat-hint>
+                                    <mat-error *ngIf="impBaseGara?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                    <mat-error *ngIf="impBaseGara?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-radio-group [(ngModel)]="soglia" name="soglia" #Soglia="ngModel"
+                                    [disabled]="allDisabled || norma?.disabled"
+                                    [ngStyle]="{color: Soglia?.errors?.error ==='required' ? 'red' : 'black'}">
+                                    <mat-label>Sopra soglia / sotto soglia *</mat-label>
+                                    <mat-radio-button value="1">Sotto soglia</mat-radio-button>
+                                    <mat-radio-button value="2">Sopra soglia</mat-radio-button>
+                                    <mat-radio-button value="0" [disabled]="isNAdisabled">n.a.</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error *ngIf="Soglia?.errors?.error ==='required'" style="font-size: 10.5px;">
+                                    Campo obbligatorio.
+                                </mat-error>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field>
+                                    <input type="string" matInput placeholder="Importo ribasso d'asta"
+                                        [(ngModel)]="importoRibAstaFormatted" name="importoRibAsta"
+                                        #impRibAsta="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        (blur)="setImportoRibAsta()">
+                                    <mat-error *ngIf="impRibAsta?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field>
+                                    <input type="string" matInput placeholder="Percentuale ribasso d'asta"
+                                        [(ngModel)]="precentualeRibAstaFormatted" name="precentualeRibAsta"
+                                        #percRibAsta="ngModel" min="0" max="100"
+                                        pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?" (blur)="setPercentualeRibAsta()">
+                                    <mat-error *ngIf="percRibAsta?.errors?.error ==='notAPercentage'">
+                                        Il valore deve essere compreso tra 0 e 100.
+                                    </mat-error>
+                                    <mat-error *ngIf="percRibAsta?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field>
+                                    <input type="string" matInput placeholder="Importo aggiudicato *"
+                                        [(ngModel)]="importoAggiudicatoFormatted" name="importoAggiudicato"
+                                        #impAgg="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        (blur)="setImportoAggiudicato()">
+                                    <mat-error *ngIf="impAgg?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                    <mat-error *ngIf="impAgg?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field>
+                                    <input type="string" matInput placeholder="Importo rendicontabile *"
+                                        [(ngModel)]="importoRendicontabileFormatted" name="importoRendicontabile"
+                                        #impRendic="ngModel" pattern="([0-9]+[\.])*[0-9]*([,][0-9]+)?"
+                                        (blur)="setImportoRendicontabile()">
+                                    <mat-error *ngIf="impRendic?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                    <mat-error *ngIf="impRendic?.errors?.pattern">
+                                        Valore non valido
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Data firma contratto *</mat-label>
+                                    <input matInput [matDatepicker]="picker1" [formControl]="dataFirmaContratto">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1" class="blue-color">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                    <mat-error *ngIf="dataFirmaContratto?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                    <mat-error *ngIf="dataFirmaContratto?.errors?.error !=='required'">
+                                        Data non valida.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Data prevista inizio lavori</mat-label>
+                                    <input matInput [matDatepicker]="picker2" [formControl]="dataInizioLavori">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2" class="blue-color">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <mat-error>
+                                        Data non valida.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Data consegna lavori</mat-label>
+                                    <input matInput [matDatepicker]="picker3" [formControl]="dataConsegnaLavori">
+                                    <mat-datepicker-toggle matSuffix [for]="picker3" class="blue-color">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                    <mat-error>
+                                        Data non valida.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="2"></mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="3">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Oggetto affidamento *</mat-label>
+                                    <textarea matInput [(ngModel)]="oggetto" name="oggetto" #ogg="ngModel"
+                                        maxlength="2000"></textarea>
+                                    <mat-hint>{{ogg.value?.length || 0}}/2000</mat-hint>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="3">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Identificativo intervento (per PISU)</mat-label>
+                                    <textarea matInput [(ngModel)]="identificativoIntervento"
+                                        name="identificativoIntervento" #idInterv="ngModel" maxlength="2000"></textarea>
+                                    <mat-hint>{{idInterv.value?.length || 0}}/2000</mat-hint>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Procedura di aggiudicazione</h3>
+                <form #aggiudicazioneForm="ngForm">
+                    <mat-grid-list cols="4" rowHeight="35">
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <input type="text" matInput placeholder="CPA *" [(ngModel)]="cpa" name="cpa"
+                                        #cpA="ngModel" maxlength="30">
+                                    <mat-hint>{{cpA.value?.length || 0}}/30</mat-hint>
+                                    <mat-error *ngIf="cpA?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="2" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="padding-right: 15px;"
+                                    [style.width]="isProceduraAggEditable ? '70%' : '97%'">
+                                    <input type="text" matInput placeholder="CIG *" [(ngModel)]="cig" name="cig"
+                                        #ciG="ngModel" minlength="10" maxlength="10" [disabled]="nonPrevisto">
+                                    <mat-hint>{{ciG.value?.length || 0}}/10</mat-hint>
+                                    <mat-error *ngIf="ciG?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-checkbox [(ngModel)]="nonPrevisto" (change)="cig=null; motivoSelected=null;"
+                                    name="nonPrevisto" *ngIf="isProceduraAggEditable">non
+                                    previsto</mat-checkbox>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Selezionare un motivo di assenza <abbr
+                                            title="Codice identificativo gara">CIG</abbr> *</mat-label>
+                                    <mat-select [(ngModel)]="motivoSelected" name="motivo" #motiv="ngModel"
+                                        [disabled]="!nonPrevisto">
+                                        <mat-option *ngFor="let option of motivi" [value]="option">
+                                            {{ option.descMotivoAssenzaCig }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-hint>Obbligatorio se CIG non previsto</mat-hint>
+                                    <mat-error *ngIf="motiv?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="2">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Selezionare una tipologia *</mat-label>
+                                    <mat-select [(ngModel)]="tipologiaAggSelected" name="tipologiaAgg"
+                                        #tipoAgg="ngModel"
+                                        [disabled]="!normativaSelected || !tipologiaSelected || !categoriaSelected || !isProceduraAggEditable"
+                                        (selectionChange)="onSelectTipologiaAgg()">
+                                        <mat-option *ngFor="let option of tipologieAggFiltered" [value]="option">
+                                            {{ option.descTipologiaAggiudicazione }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tipoAgg?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="4" [rowspan]="3">
+                            <div style="width: 100%; align-content: flex-start;">
+                                <mat-form-field style="width: 98%;">
+                                    <mat-label>Descrizione *</mat-label>
+                                    <textarea matInput [(ngModel)]="descrizione" name="descrizione" #desc="ngModel"
+                                        maxlength="2000"></textarea>
+                                    <mat-hint>{{desc.value?.length || 0}}/2000</mat-hint>
+                                    <mat-error *ngIf="desc?.errors?.error ==='required'">
+                                        Campo obbligatorio.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Date pubblicazione bando / avviso di gara</h3>
+                <mat-grid-list cols="3" rowHeight="70">
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; align-content: flex-start;">
+                            <mat-form-field style="width: 98%;">
+                                <mat-label>su <abbr title="Gazzetta ufficiale dell'Unione europea">G.U.U.E</abbr>
+                                </mat-label>
+                                <input matInput [matDatepicker]="picker4" [formControl]="dataGUUE">
+                                <mat-datepicker-toggle matSuffix [for]="picker4" class="blue-color">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker4></mat-datepicker>
+                                <mat-error>
+                                    Data non valida.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; align-content: flex-start;">
+                            <mat-form-field style="width: 98%;">
+                                <mat-label>su <abbr title="Gazzetta Ufficiale della Repubblica Italiana">G.U.R.I</abbr>
+                                </mat-label>
+                                <input matInput [matDatepicker]="picker5" [formControl]="dataGURI">
+                                <mat-datepicker-toggle matSuffix [for]="picker5" class="blue-color">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker5></mat-datepicker>
+                                <mat-error>
+                                    Data non valida.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; align-content: flex-start;">
+                            <mat-form-field style="width: 98%;">
+                                <mat-label>su quotidiani nazionali</mat-label>
+                                <input matInput [matDatepicker]="picker6" [formControl]="dataQuotidianiNazionali">
+                                <mat-datepicker-toggle matSuffix [for]="picker6" class="blue-color">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker6></mat-datepicker>
+                                <mat-error>
+                                    Data non valida.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; align-content: flex-start;">
+                            <mat-form-field style="width: 98%;">
+                                <mat-label>su sito web stazione appaltante</mat-label>
+                                <input matInput [matDatepicker]="picker7" [formControl]="dataSitoWebAppaltante">
+                                <mat-datepicker-toggle matSuffix [for]="picker7" class="blue-color">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker7></mat-datepicker>
+                                <mat-error>
+                                    Data non valida.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; align-content: flex-start;">
+                            <mat-form-field style="width: 98%;">
+                                <mat-label>su sito web osservatorio reg.le LL.PP.</mat-label>
+                                <input matInput [matDatepicker]="picker8" [formControl]="dataSitoWebOsservatorio">
+                                <mat-datepicker-toggle matSuffix [for]="picker8" class="blue-color">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker8></mat-datepicker>
+                                <mat-error>
+                                    Data non valida.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1"></mat-grid-tile>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Varianti</h3>
+                <p *ngIf="!affidamento?.varianti || affidamento?.varianti.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <div [ngClass]="{'displayNone':!affidamento?.varianti || affidamento?.varianti.length===0}">
+                    <table mat-table [dataSource]="dataSourceVarianti" class="fullWidth">
+
+                        <ng-container matColumnDef="tipologia">
+                            <th mat-header-cell *matHeaderCellDef> Tipologia </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.descrizioneTipologiaVariante}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="importo">
+                            <th mat-header-cell *matHeaderCellDef> Importo </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.importo | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="data">
+                            <th mat-header-cell *matHeaderCellDef> Data inserimento
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.dtInserimento | date: "dd/MM/yyyy"}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="azioni">
+                            <th mat-header-cell *matHeaderCellDef class="width-10">
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="width-10">
+                                <button
+                                    *ngIf="row.flgInvioVerificaAffidamento==='S' || isIstruttore || (!isIstruttore && !isBeneficiario)"
+                                    mat-icon-button class="blue-color" matTooltip="Visualizza variante"
+                                    (click)="visualizzaVariante(row.idVariante)">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                                <button *ngIf="row.flgInvioVerificaAffidamento!=='S' && isBeneficiario" mat-icon-button
+                                    class="blue-color" matTooltip="Modifica variante"
+                                    (click)="modificaVariante(row.idVariante)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button *ngIf="row.flgInvioVerificaAffidamento!=='S' && isBeneficiario" mat-icon-button
+                                    class="red-color" matTooltip="Elimina variante"
+                                    (click)="eliminaVariante(row.idVariante)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsVarianti"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsVarianti;"></tr>
+                    </table>
+                    <mat-paginator #paginatorVarianti [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                        [showFirstLastButtons]="true">
+                    </mat-paginator>
+                </div>
+                <button *ngIf="!hiddenAddButtons" mat-raised-button class="button-style-2"
+                    (click)="aggiungiVariante()">AGGIUNGI VARIANTE</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Allegati</h3>
+                <p *ngIf="!allegatiPerData || allegatiPerData.length===0">Non ci sono elementi da visualizzare.</p>
+                <div *ngIf="allegatiPerData?.length>0">
+                    <div *ngFor="let allegati of allegatiPerData">
+                        <p *ngIf="allegati[0].dataInvio">File trasmessi il <span
+                                class="bold-text">{{allegati[0].dataInvio}}</span></p>
+                        <p *ngIf="!allegati[0].dataInvio">File ancora da inviare</p>
+                        <mat-grid-list cols="3" rowHeight="45" style="margin-bottom: 10px;">
+                            <mat-grid-tile *ngFor="let allegato of allegati" [colspan]="1" [rowspan]="1">
+                                <div class="allegati spaceBetween align-items-center"
+                                    style="width: 100%; height: 80%; margin-right: 10px;">
+                                    <a class="bold-text size13" matTooltip="Download file"
+                                        style="padding: 0; text-overflow: ellipsis; overflow: hidden; cursor: pointer;"
+                                        (click)="downloadAllegato(allegato)">{{allegato.nome}}</a>
+                                    <div style="white-space: nowrap;">
+                                        <button *ngIf="allegato.isDisassociabile && !hiddenDisassociaAllegato"
+                                            mat-icon-button class="blue-color" matTooltip="Disassocia allegato"
+                                            style="width: 30px;" (click)="disassociaAllegato(allegato.id)">
+                                            <mat-icon>link_off</mat-icon>
+                                        </button>
+                                        <button mat-icon-button class="blue-color" matTooltip="Anteprima file"
+                                            style="width: 30px;" (click)="anteprimaAllegato(allegato)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                </div>
+                <button *ngIf="!hiddenAddButtons" mat-raised-button class="button-style-2"
+                    (click)="aggiungiAllegato()">AGGIUNGI ALLEGATO</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <h3>Fornitori</h3>
+                <p *ngIf="!affidamento?.fornitori || affidamento?.fornitori.length===0">Non ci sono elementi da
+                    visualizzare.</p>
+                <div [ngClass]="{'displayNone':!affidamento?.fornitori || affidamento?.fornitori.length===0}">
+                    <table mat-table [dataSource]="dataSourceFornitori" class="fullWidth" multiTemplateDataRows>
+
+                        <ng-container matColumnDef="denominazione">
+                            <th mat-header-cell *matHeaderCellDef> Denominazione </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.denominazioneFornitore">{{row.denominazioneFornitore}}</span>
+                                <span *ngIf="!row.denominazioneFornitore">{{row.cognomeFornitore}}
+                                    {{row.nomeFornitore}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cfiva">
+                            <th mat-header-cell *matHeaderCellDef> CF/P.IVA </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.codiceFiscaleFornitore && !row.partitaIvaFornitore">
+                                    {{row.codiceFiscaleFornitore}}</span>
+                                <span *ngIf="row.partitaIvaFornitore">
+                                    {{row.partitaIvaFornitore}}</span>
+                                <span *ngIf="!row.codiceFiscaleFornitore && !row.partitaIvaFornitore"> n.d.</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="ruolo">
+                            <th mat-header-cell *matHeaderCellDef> Ruolo
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.descTipoPercettore}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="azioni">
+                            <th mat-header-cell *matHeaderCellDef class="width-10">
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="width-10">
+                                <button *ngIf="row.flgInvioVerificaAffidamento!=='S'" mat-icon-button
+                                    matTooltip="Aggiungi subcontratto" (click)="aggiungiSubcontratto(row)">
+                                    <mat-icon>post_add</mat-icon>
+                                </button>
+                                <button
+                                    *ngIf="row.flgInvioVerificaAffidamento!=='S' && !(row.subcontrattiAffid?.length > 0)"
+                                    mat-icon-button class="red-color" matTooltip="Elimina fornitore"
+                                    (click)="eliminaFornitore(row.idFornitore)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                <button mat-icon-button *ngIf="row.subcontrattiAffid?.length > 0"
+                                    (click)="expandedElement = expandedElement === row ? null : row">
+                                    <mat-icon *ngIf="expandedElement != row"
+                                        matTooltip="Visualizza subcontratti">expand_more</mat-icon>
+                                    <mat-icon *ngIf="expandedElement == row"
+                                        matTooltip="Nascondi subcontratti">expand_less</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        <ng-container matColumnDef="subcontratti">
+                            <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumnsFornitori.length"
+                                class="subcontratti-td">
+                                <div class="element-detail"
+                                    [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+                                    <table mat-table [dataSource]="row.subcontrattiAffid"
+                                        class="fullWidth background-subcontratti">
+
+                                        <ng-container matColumnDef="denominazioneSub">
+                                            <th mat-header-cell *matHeaderCellDef> Denominazione subcontraente
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.denominazioneSubcontraente}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cfivaSub">
+                                            <th mat-header-cell *matHeaderCellDef> CF/P.IVA subcontraente
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.cfPivaSubcontraente}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="dtFirmaContratto">
+                                            <th mat-header-cell *matHeaderCellDef> Data firma contratto
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.dtSubcontratto | date: "dd/MM/yyyy"}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="rifContratto">
+                                            <th mat-header-cell *matHeaderCellDef> Oggetto contratto
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.riferimentoSubcontratto}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="importo">
+                                            <th mat-header-cell *matHeaderCellDef> Importo contratto
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.importoSubcontratto | number: '1.2-2' : 'it'}}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="azioniSub">
+                                            <th mat-header-cell *matHeaderCellDef class="width-10 padding-left-7"> </th>
+                                            <td mat-cell *matCellDef="let element" class="width-10 padding-left-7">
+                                                <button *ngIf="row.flgInvioVerificaAffidamento!=='S'" mat-icon-button
+                                                    matTooltip="Modifica subcontratto"
+                                                    (click)="modificaSubcontratto(row, element)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button *ngIf="row.flgInvioVerificaAffidamento!=='S'" mat-icon-button
+                                                    class="red-color" matTooltip="Elimina subcontratto"
+                                                    (click)="eliminaSubcontratto(element)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef=" displayedColumnsSubcontratti"></tr>
+                                        <tr mat-row *matRowDef="let element; columns: displayedColumnsSubcontratti;">
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsFornitori"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsFornitori;">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: ['subcontratti']" class="detail-row"></tr>
+                    </table>
+                    <mat-paginator #paginatorFornitori [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                        [showFirstLastButtons]="true">
+                    </mat-paginator>
+                </div>
+                <button *ngIf="!hiddenAddButtons" mat-raised-button class="button-style-2"
+                    (click)="aggiungiFornitore()">AGGIUNGI FORNITORE</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div *ngIf="!hiddenChecklistButtons" class="content textStyleBozze">
+        <p *ngIf="statoChecklistInLoco==='B'">È presente una checklist in loco in stato BOZZA</p>
+        <p *ngIf="statoChecklistDocumentale==='B'">È presente una checklist documentale in stato BOZZA </p>
+    </div>
+    <div class="content">
+        <div class="spaceBetween">
+            <div class="backContainer">
+                <button (click)="goToGestioneAffidamenti()" mat-button>
+                    <mat-icon class="blue-icon">keyboard_backspace</mat-icon>
+                    <span class="backText">Torna alla gestione affidamenti</span>
+                </button>
+            </div>
+            <div class="display-flex">
+                <button *ngIf="!hiddenSalva" mat-raised-button class="button-style-2" (click)="salva()">SALVA
+                    AFFIDAMENTO
+                </button>
+                <button *ngIf="!hiddenRespingi" mat-raised-button class="button-style-2 marginLeft10"
+                    (click)="respingi()">RESPINGI
+                </button>
+                <div *ngIf="!hiddenChecklistButtons">
+                    <button *ngIf="esitoCh" mat-raised-button class="button-style-2 marginLeft10"
+                        (click)="goToChecklistDocumentale()">CHECKLIST DOCUMENTALE
+                    </button>
+                    <button *ngIf="!esitoCh" mat-raised-button class="button-style-2 marginLeft10" [disabled]="true"
+                        matTooltip="Checklist documentale bloccata">CHECKLIST DOCUMENTALE
+                    </button>
+                </div>
+
+                <button *ngIf="!hiddenChecklistButtons" mat-raised-button class="button-style-2 marginLeft10"
+                    (click)="goToChecklistInLoco()">CHECKLIST IN LOCO
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

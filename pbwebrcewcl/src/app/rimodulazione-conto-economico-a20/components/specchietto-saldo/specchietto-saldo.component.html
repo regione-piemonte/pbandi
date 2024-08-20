@@ -1,0 +1,102 @@
+<div class="content" *ngIf="spesaVo && spesaVo.totali">
+	<mat-card class="mat-elevation-z2" style="width: 50%">
+		<mat-card-content>
+			<span class="font-class">Saldo contabile</span>
+			<br /><br />
+			<p>
+				A. Spese connesse all’attività :
+				<b>€&nbsp;{{ spesaVo.figli[0].importoSpesaRendicontata | number: '1.2-2' : 'it'}}</b>
+			</p>
+
+			<p>
+				A1. Spese da rendicontare :
+				<b>€&nbsp;{{ spesaVo.figli[0].importoSpesaPreventivata | number: '1.2-2' : 'it'}}</b>
+			</p>
+
+			<p>
+				B. Spese generali e di funzionamento :
+				<b>€&nbsp;{{ spesaVo.figli[1]?.importoSpesaRendicontata || 0 | number: '1.2-2' : 'it'}}</b>
+			</p>
+
+			<p>
+				B1. Spese da rendicontare :
+				<b>€&nbsp;{{ spesaVo.figli[1].importoSpesaPreventivata | number: '1.2-2' : 'it'}}</b>
+			</p>
+
+			<p>
+				B2. Spese generali e di funzionamento in quota parte :
+				<b>
+					€&nbsp;{{ (spesaVo.figli[1]?.importoSpesaRendicontata * spesaVo.percentuale) / 100 | number: '1.2-2'
+					: 'it'}}
+				</b>
+			</p>
+
+			<p>
+				C. Totale spese effettive (A + A1 + B1 + B2) :
+				<b>
+					€&nbsp;{{ spesaVo.figli[0].importoSpesaRendicontata + spesaVo.figli[0].importoSpesaPreventivata +
+					spesaVo.figli[1].importoSpesaPreventivata + (spesaVo.figli[1]?.importoSpesaRendicontata *
+					spesaVo.percentuale) / 100 | number: '1.2-2' : 'it'}}
+				</b>
+			</p>
+
+			<p>
+				D. Totale entrate :
+				<b>€&nbsp;{{ totali.totaleConsuntivoPresentato | number: '1.2-2' : 'it'}}</b>
+			</p>
+
+			<p>
+				E. Contributo concesso :
+				<b>€&nbsp;{{ spesaVo.contributoConcesso | number: '1.2-2' : 'it'}} </b>
+			</p>
+
+			<p>
+				F. Totale entrate effettive (D + E):
+				<b>
+					€&nbsp;{{ totali.totaleConsuntivoPresentato + spesaVo.contributoConcesso | number: '1.2-2' : 'it'}}
+				</b>
+			</p>
+
+			<div class="d-flex">
+				<p>G. Saldo contabile (C - F) : </p>
+				<span *ngIf="controlloSaldo() === 0">
+					<b class="d-flex green">
+						<div>
+							€&nbsp;{{ controlloSaldo() | number: '1.2-2' : 'it'}}
+						</div>
+						<span class="material-icons"> check_circle_outline </span>
+					</b>
+				</span>
+				<span *ngIf="controlloSaldo() !== 0">
+					<b class="d-flex red">
+						<div>
+							€&nbsp;{{ controlloSaldo() | number: '1.2-2' : 'it'}}
+						</div>
+						<span class="material-icons"> highlight_off </span>
+					</b>
+				</span>
+			</div>
+
+			<!-- COMMENTATO IN CASO SI CAMBIASSE IDEA -->
+			<!-- <div class="d-flex">
+				<p>Saldo spesa da rendicontare: </p>
+				<span *ngIf="differenzaSpesaPreventivata() == 0">
+					<b class="d-flex green">
+						<div>
+							{{ differenzaSpesaPreventivata() | number: '1.2-2' : 'it'}}
+						</div>
+						<span class="material-icons"> check_circle_outline </span>
+					</b>
+				</span>
+				<span *ngIf="differenzaSpesaPreventivata() != 0">
+					<b class="d-flex red">
+						<div>
+							{{ differenzaSpesaPreventivata() | number: '1.2-2' : 'it'}}
+						</div>
+						<span class="material-icons"> highlight_off </span>
+					</b>
+				</span>
+			</div> -->
+		</mat-card-content>
+	</mat-card>
+</div>

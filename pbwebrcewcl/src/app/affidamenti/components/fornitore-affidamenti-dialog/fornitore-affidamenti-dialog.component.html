@@ -1,0 +1,49 @@
+<div class="spaceBetween">
+    <h3 class="bold-text">Fornitore affidamento</h3>
+    <button mat-icon-button class="blue-color" (click)="annulla()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+    <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+    </mat-card-content>
+</mat-card>
+<mat-form-field style="width: 100%;">
+    <mat-label>Selezionare una tipologia</mat-label>
+    <mat-select [(ngModel)]="tipologiaSelected" name="tipologia" (selectionChange)="onSelectTipologia()">
+        <mat-option *ngFor="let option of tipologie" [value]="option">
+            {{ option.descTipoSoggetto }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field style="width: 100%;">
+    <mat-label>Selezionare un fornitore</mat-label>
+    <mat-select [(ngModel)]="fornitoreSelected" name="fornitore">
+        <mat-option *ngFor="let option of fornitoriFiltered" [value]="option"
+            [ngClass]="{'colorRed': option.idFormaGiuridica===0 && option.idTipoSoggetto===2}">
+            <span *ngIf="option.denominazioneFornitore"> {{ option.denominazioneFornitore }} -
+                <span *ngIf="option.partitaIvaFornitore">{{option.partitaIvaFornitore}}</span>
+                <span *ngIf="!option.partitaIvaFornitore">{{option.codiceFiscaleFornitore}}</span>
+            </span>
+            <span *ngIf="!option.denominazioneFornitore"> {{ option.cognomeFornitore }} {{ option.nomeFornitore }} -
+                {{option.codiceFiscaleFornitore}}
+            </span>
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field style="width: 100%;">
+    <mat-label>Selezionare un ruolo</mat-label>
+    <mat-select [(ngModel)]="ruoloSelected" name="ruolo">
+        <mat-option *ngFor="let option of ruoliFiltered" [value]="option">
+            {{ option.descrizione }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<div class="spaceBetween">
+    <button mat-button class="button-style-1" (click)="annulla()">ANNULLA</button>
+    <div matTooltip="Selezionare il fornitore e il ruolo" [matTooltipDisabled]="fornitoreSelected && ruoloSelected">
+        <button mat-button class="button-style-1" [disabled]="!fornitoreSelected || !ruoloSelected"
+            (click)="salva()">SALVA</button>
+    </div>
+</div>
