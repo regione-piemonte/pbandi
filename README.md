@@ -18,16 +18,16 @@ favorisce una serie di aspetti, tra cui:
 
 Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi moduli angular:
 
-- [PBWORKSPACE](https://github.com/regione-piemonte/pbandi/pbworkspace)  	Workspace per BPM
-- [PBWORKSPACEWCL](https://github.com/regione-piemonte/pbandi/pbworkspacewcl)  Workspace per BPM (Front-End in Angular)
-- [PBWEB](https://github.com/regione-piemonte/pbandi/pbweb)  	        Gestione fase di rendicontazione
-- [PBWEBWCL](https://github.com/regione-piemonte/pbandi/pbwebwcl)  	    Gestione fase di rendicontazione (Front-End in Angular)
-- [PBWEBBO](https://github.com/regione-piemonte/pbandi/pbwebbo)  	    Gestione back-office
-- [PBWEBBOWCL](https://github.com/regione-piemonte/pbandi/pbwebbowcl)  	Gestione back-office (Front-End in Angular)
-- [PBWEBCERT](https://github.com/regione-piemonte/pbandi/pbwebcert)  	    Certificazione dei finanziamenti pubblici erogati 
-- [PBWEBCERTWCL](https://github.com/regione-piemonte/pbandi/pbwebcertwcl)  	Certificazione dei finanziamenti pubblici erogati (Front-End in Angular)
-- [PBWEBEROG](https://github.com/regione-piemonte/pbandi/pbweberog)  	    Gestione dell'erogazione dei finanziamenti pubblici
-- [PBWEBEROGWCL](https://github.com/regione-piemonte/pbandi/pbweberogwcl)  	Gestione dell'erogazione dei finanziamenti pubblici (Front-End in Angular)
+- [PBWORKSPACE](https://github.com/regione-piemonte/pbandi/tree/main/pbworkspace)  	Workspace per BPM
+- [PBWORKSPACEWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbworkspacewcl)  Workspace per BPM (Front-End in Angular)
+- [PBWEB](https://github.com/regione-piemonte/pbandi/tree/main/pbweb)  	        Gestione fase di rendicontazione
+- [PBWEBWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebwcl)  	    Gestione fase di rendicontazione (Front-End in Angular)
+- [PBWEBBO](https://github.com/regione-piemonte/pbandi/tree/main/pbwebbo)  	    Gestione back-office
+- [PBWEBBOWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebbowcl)  	Gestione back-office (Front-End in Angular)
+- [PBWEBCERT](https://github.com/regione-piemonte/pbandi/tree/main/pbwebcert)  	    Certificazione dei finanziamenti pubblici erogati 
+- [PBWEBCERTWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbwebcertwcl)  	Certificazione dei finanziamenti pubblici erogati (Front-End in Angular)
+- [PBWEBEROG](https://github.com/regione-piemonte/pbandi/tree/main/pbweberog)  	    Gestione dell'erogazione dei finanziamenti pubblici
+- [PBWEBEROGWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbweberogwcl)  	Gestione dell'erogazione dei finanziamenti pubblici (Front-End in Angular)
 - [PBWEBFIN](https://github.com/regione-piemonte/pbandi/pbwebfin)  	    Gestione integrazione con Bilancio Regionale
 - [PBWEBFINWCL](https://github.com/regione-piemonte/pbandi/pbwebfinwcl)  	Gestione integrazione con Bilancio Regionale (Front-End in Angular)
 - [PBWEBRCE](https://github.com/regione-piemonte/pbandi/pbwebrce)  	    Rimodulazione del conto economico
