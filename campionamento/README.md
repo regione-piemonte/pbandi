@@ -8,7 +8,7 @@ CAMPIONAMENTO
 Procedura ORACLE/PSQL di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia.
 
 ## Configurazioni iniziali
-Per procedere all'installazione dei packages contenuti nella componente, bisogna collegarsi al DB Oracle ed arricurarsi che che le unità di installazione contenute nelle componenti [PBANDIDB], [PBANDIRO] e [PBANDIRW] siano già state installate.
+Per procedere all'installazione dei packages contenuti nella componente, bisogna collegarsi al DB Oracle ed assicurarsi che le unità di installazione contenute nelle componenti [PBANDIDB], [PBANDIRO] e [PBANDIRW] siano già state installate.
 
 ## Prerequisiti di sistema
 * [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
