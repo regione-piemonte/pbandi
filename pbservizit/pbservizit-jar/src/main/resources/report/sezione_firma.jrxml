@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sezione_firma" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="0">
+	<property name="ireport.zoom" value="1.6105100000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<title>
+		<band height="75">
+			<textField>
+				<reportElement x="7" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Luogo e data"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="360" y="6" width="185" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="9" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["In fede"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="360" y="26" width="185" height="12" forecolor="#666666"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(firma leggibile del dichiarante)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="507" y="22" width="38" height="12" forecolor="#666666"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="6" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(* note)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="2" y="63" width="38" height="12" forecolor="#000000"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["* note"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

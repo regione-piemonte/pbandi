@@ -1,0 +1,143 @@
+.textAlignRight {
+    text-align: right;
+}
+
+.bold-text {
+    font-weight: bold !important;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}
+
+.marginBottom40 {
+    margin-bottom: 40px;
+}
+
+.fontSize11 {
+    font-size: 11px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+    flex-basis: 0;
+    font-size: 16px;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+::ng-deep .mat-expansion-panel-content {
+    font-size: 16px;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+.marginLeft30 {
+    margin-left: 30px;
+}
+
+.marginRight30 {
+    margin-right: 30px;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.marginBottom30 {
+    margin-bottom: 30px;
+}
+
+.marginBottom15 {
+    margin-bottom: 15px;
+}
+
+.colorBlack {
+    color: black;
+}
+
+.matExpansionDisableClick {
+    pointer-events: none;
+}
+
+.max-width-100px {
+    max-width: 100px !important;
+}
+
+.rowCustom {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-2Custom {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 16.6667%;
+    max-width: 16.6666666667%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-4Custom {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 33.3333%;
+    max-width: 33.3333333333%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-6Custom {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50%;
+    max-width: 50%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.containerCustom {
+    max-width: 1140px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    box-sizing: border-box;
+    display: block;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box; // 1
+}
+
+::ng-deep .mat-dialog-container {
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}

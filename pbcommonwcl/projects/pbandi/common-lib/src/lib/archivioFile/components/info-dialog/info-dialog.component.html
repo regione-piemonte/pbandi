@@ -1,0 +1,120 @@
+<div class="dialog-form-container">
+  <div class="spaceBetween">
+    <h3 class="bold-text">Associazioni</h3>
+    <button type="button" mat-icon-button class="blue-color" (click)="close()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content class="mat-typography">
+    Il file <b>{{nomeFile}} </b> risulta così associato: <br><br>
+
+    <!-- PROGETTI -->
+    <div *ngIf="(!(infoFile.codiceProgetto == undefined)) && (!(infoFile.titoloProgetto == undefined))">
+      <b>PROGETTI</b> <br>
+      <div>
+        {{infoFile.codiceProgetto}} <br>
+        {{infoFile.titoloProgetto}} <br>
+        {{infoFile.descBandoLinea}} <br>
+      </div>
+    </div>
+
+    <!-- RICHIESTA EROGAZIONE -->
+    <div *ngIf="infoFile.richiestaErogazioneInfo">
+      <b>RICHIESTE DI EROGAZIONE</b> <br>
+      <div *ngFor="let richiestaErogazioneInfo of infoFile.richiestaErogazioneInfo">
+        del {{ convertiData(richiestaErogazioneInfo.dtRichiestaErogazione)}} del {{
+        richiestaErogazioneInfo.numeroRichiestaErogazione}}
+        del {{ richiestaErogazioneInfo.importoErogazioneRichiesto}} {{ richiestaErogazioneInfo.titoloProgetto}}<br>
+        [cod.prog. {{ richiestaErogazioneInfo.codiceProgetto}}]<br>
+        {{ richiestaErogazioneInfo.descBandoLinea}}<br>
+      </div>
+    </div>
+
+    <!-- PAGAMENTO -->
+    <div *ngIf="infoFile.pagamentoInfo">
+      <b>QUIETANZE</b> <br>
+      <div *ngFor="let pagamentoInfo of infoFile.pagamentoInfo">
+        {{pagamentoInfo.descModalitaPagamento}} {{pagamentoInfo.dtPagamentoFormattata}}
+        €{{pagamentoInfo.importoPagamento}} <br>
+        {{pagamentoInfo.descTipoDocumentoSpesa}} n. {{pagamentoInfo.numeroDocumento}}
+        {{pagamentoInfo.dtEmissioneDocumentoFormattata}} [cod.prog. {{pagamentoInfo.codiceProgetto}}] <br>
+        {{pagamentoInfo.nomeFornitore}} [CF/P.iva {{pagamentoInfo.cfFornitore}}]<br>
+        {{pagamentoInfo.descBandoLinea}}<br>
+      </div>
+    </div>
+
+    <!-- FORNITORI -->
+    <div *ngIf="infoFile.fornitoreInfo">
+      <b>FORNITORI</b> <br>
+      <div *ngFor="let fornitoreInfo of infoFile.fornitoreInfo">
+        {{fornitoreInfo.nomeFornitore}} [CF/P.iva {{fornitoreInfo.cfFornitore}} - cod.prog.
+        {{fornitoreInfo.codiceProgetto}}]<br>
+      </div>
+    </div>
+
+    <!-- DOCUMENTI DI SPESA -->
+    <div *ngIf="infoFile.docDiSpesaInfo">
+      <b>DOCUMENTI DI SPESA</b> <br>
+      <div *ngFor="let docDiSpesaInfo of infoFile.docDiSpesaInfo">
+        {{docDiSpesaInfo.descTipoDocumentoSpesa}} n. {{docDiSpesaInfo.numeroDocumento}} del
+        {{docDiSpesaInfo.dtEmissioneDocumentoFormattata}} [cod.prog. {{docDiSpesaInfo.codiceProgetto}}] <br>
+        {{docDiSpesaInfo.nomeFornitore}} [CF/P.iva {{docDiSpesaInfo.cfFornitore}}]<br>
+        {{docDiSpesaInfo.descBandoLinea}} <br>
+      </div>
+    </div>
+
+    <!-- DICHIARAZIONI -->
+    <div *ngIf="infoFile.dichiarazioneInfo">
+      <b>DICHIARAZIONI</b> <br>
+      <div *ngFor="let dichiarazioneInfo of infoFile.dichiarazioneInfo">
+        {{dichiarazioneInfo.descTipoDichiarazioneSpesa}} n. {{dichiarazioneInfo.idDichiarazioneSpesa}} del {{
+        convertiData(dichiarazioneInfo.dtDichiarazione)}} {{dichiarazioneInfo.titoloProgetto}}<br>
+        [cod.prog. {{dichiarazioneInfo.codiceProgetto}}]<br>
+        {{dichiarazioneInfo.descBandoLinea}}<br>
+      </div>
+    </div>
+
+    <!-- COMUNICAZIONE DI FINE PROGETTO -->
+    <div *ngIf="infoFile.comFineProgInfo">
+      <b>COMUNICAZIONE DI FINE PROGETTO</b> <br>
+      <div *ngFor="let comFineProgInfo of infoFile.comFineProgInfo">
+        del {{convertiData(comFineProgInfo.dtComunicazione)}} {{comFineProgInfo.titoloProgetto}}<br>
+        [cod.prog. {{comFineProgInfo.codiceProgetto}}]<br>
+        {{comFineProgInfo.descBandoLinea}}<br>
+      </div>
+    </div>
+
+    <!-- AFFIDAMENTI -->
+    <div *ngIf="infoFile.appaltoInfo">
+      <b>AFFIDAMENTI</b> <br>
+      <div *ngFor="let appaltoInfo of infoFile.appaltoInfo">
+        CPA: {{appaltoInfo.codProcAgg}} - Oggetto: {{appaltoInfo.oggetto}} <br>
+        [cod.prog. {{appaltoInfo.codiceProgettoVisualizzato}}] {{appaltoInfo.nomeBandoLinea}} <br>
+      </div>
+    </div>
+
+    <!-- PROPOSTE DI RIMODULAZIONE -->
+    <div *ngIf="infoFile.contoEcoInfo">
+      <b>PROPOSTE DI RIMODULAZIONE</b> <br>
+      <div *ngFor="let contoEcoInfo of infoFile.contoEcoInfo">
+        del {{convertiData(contoEcoInfo.dtProposta)}} {{contoEcoInfo.titoloProgetto}} <br>
+        [cod.prog. {{contoEcoInfo.codiceProgetto}}]<br>
+        {{contoEcoInfo.descBandoLinea}}<br>
+      </div>
+    </div>
+
+    <!-- INTEGRAZIONI A DICHIARAZIONI DI SPESA -->
+    <div *ngIf="infoFile.integrazioneDsInfo">
+      <b>INTEGRAZIONI A DICHIARAZIONI DI SPESA</b> <br>
+      <div *ngFor="let integrazioneDsInfo of infoFile.integrazioneDsInfo">
+        {{integrazioneDsInfo.descTipoDichiarazioneSpesa}} n. {{integrazioneDsInfo.idDichiarazioneSpesa}} del
+        {{convertiData(integrazioneDsInfo.dtInserimento)}} {{integrazioneDsInfo.titoloProgetto}} <br>
+        [cod.prog. {{integrazioneDsInfo.codiceProgetto}}] <br>
+        {{integrazioneDsInfo.descBandoLinea}}
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="button-style-1">CHIUDI</button>
+  </mat-dialog-actions>

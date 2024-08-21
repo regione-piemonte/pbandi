@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="575" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descModalita" class="java.lang.String">
+		<fieldDescription><![CDATA[descModalita]]></fieldDescription>
+	</field>
+	<field name="importoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoAgevolato]]></fieldDescription>
+	</field>
+	<field name="importoErogato" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoErogato]]></fieldDescription>
+	</field>
+	<field name="importoMassimoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoMassimoAgevolato]]></fieldDescription>
+	</field>
+	<field name="importoRichiesto" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoRichiesto]]></fieldDescription>
+	</field>
+	<field name="percentualeImportoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[percentualeImportoAgevolato]]></fieldDescription>
+	</field>
+	<field name="percentualeImportoRichiesto" class="java.lang.Double">
+		<fieldDescription><![CDATA[percentualeImportoRichiesto]]></fieldDescription>
+	</field>
+	<field name="percentualeMassimoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[percentualeMassimoAgevolato]]></fieldDescription>
+	</field>
+	<field name="percentualeUltimoImportoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[percentualeUltimoImportoAgevolato]]></fieldDescription>
+	</field>
+	<field name="ultimoImportoAgevolato" class="java.lang.Double">
+		<fieldDescription><![CDATA[ultimoImportoAgevolato]]></fieldDescription>
+	</field>
+	<field name="ultimoImportoRichiesto" class="java.lang.Double">
+		<fieldDescription><![CDATA[ultimoImportoRichiesto]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="23">
+			<staticText>
+				<reportElement x="0" y="3" width="284" height="20"/>
+				<box leftPadding="3"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[MODALITÀ DI AGEVOLAZIONE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="122" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Modalità di agevolazione]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="122" y="0" width="84" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Importo massimo agevolazione]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="206" y="0" width="32" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="238" y="0" width="84" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Utimo importo richiesto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="322" y="0" width="32" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="0" width="84" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Importo erogato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="438" y="0" width="84" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ultimo importo agevolato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="522" y="0" width="32" height="25" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="122" height="21"/>
+				<box leftPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descModalita}!=null?$F{descModalita}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="122" y="0" width="84" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoMassimoAgevolato}!=null?new DecimalFormat("#,##0.00").format($F{importoMassimoAgevolato}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="206" y="0" width="32" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{percentualeMassimoAgevolato}!=null?new DecimalFormat("#,##0.00").format($F{percentualeMassimoAgevolato}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="238" y="0" width="84" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoRichiesto}!=null?new DecimalFormat("#,##0.00").format($F{importoRichiesto}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="322" y="0" width="32" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{percentualeImportoRichiesto}!=null?new DecimalFormat("#,##0.00").format($F{percentualeImportoRichiesto}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="354" y="0" width="84" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoErogato}!=null?new DecimalFormat("#,##0.00").format($F{importoErogato}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="438" y="0" width="84" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{ultimoImportoAgevolato}!=null?new DecimalFormat("#,##0.00").format($F{ultimoImportoAgevolato}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="522" y="0" width="32" height="21"/>
+				<box rightPadding="4">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{percentualeUltimoImportoAgevolato}!=null?new DecimalFormat("#,##0.00").format($F{percentualeUltimoImportoAgevolato}):"")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

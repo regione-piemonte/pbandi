@@ -1,0 +1,415 @@
+swagger: "2.0"
+info:
+  description: "API per pbandi"
+  version: "1.0.5"
+  title: "pbservrest"
+host: "localhost:8080"
+basePath: "/pbservrest/api"
+tags:
+- name: "Servizi"
+schemes:
+- "http"
+paths:
+  /esitiDurcAntimafia/getEsitoDurcAntimafia:
+    get:
+      operationId: getEsitoDurcAntimafia
+      description: restituisce l'esito del DurcAntimafia
+      produces:
+        - application/json
+      tags:
+        - EsitoDurcAntimafia
+      parameters:
+        - in: query
+          required: true
+          name: codFiscaleSoggetto
+          type: string
+        - in: query
+          required: true
+          name: cognomeIstruttore
+          type: string
+        - in: query
+          required: true
+          name: nomeIstruttore
+          type: string
+        - in: query
+          required: true
+          name: codFiscaleIstruttore
+          type: string
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: true
+          name: tipoRichiesta
+          type: string
+        - in: query
+          required: true
+          name: modalitaRichiesta
+          type: string
+      responses:
+        '200':
+          description: Lista esiti DurcAntimafia
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoDurcAntimafiaListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /domandeBeneficiario/getDatiBeneficiarioDoquiActa:
+    get:
+      operationId: getDatiBeneficiarioDoquiActa
+      description: restituisce una lista di informazioni sulle domande
+      produces:
+        - application/json
+      tags:
+        - domandeBeneficiario
+      parameters:
+        - in: query
+          required: false
+          name: codiceBando
+          type: number
+        - in: query
+          required: false
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: false
+          name: ndg
+          type: string
+        - in: query
+          required: true
+          name: tipoSogg
+          type: string           
+        - in: query
+          required: false
+          name: numRelazDichSpesa
+          type: number
+        - in: query
+          required: false
+          name: pec
+          type: string
+        - in: query
+          required: false
+          name: codiceFiscaleSoggetto
+          type: string
+        - in: query
+          required: false
+          name: denominazioneEnteGiuridico
+          type: string
+        - in: query
+          required: false
+          name: partitaIva
+          type: string
+        - in: query
+          required: false
+          name: acronimoProgetto
+          type: string
+        - in: query
+          required: false
+          name: nome
+          type: string
+        - in: query
+          required: false
+          name: cognome
+          type: string
+      responses:
+        '200':
+          description: Lista informazioni domande
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DomandaInfoListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /credito/getCredito:
+    get:
+      operationId: getStatoCreditoProgettiBeneficiario
+      description: restituisce una lista di staticredito
+      produces:
+        - application/json
+      tags:
+        - credito
+      parameters:
+        - in: query
+          name: numeroDomanda
+          type: string
+      responses:
+        '200':
+          description: Lista statiCredito
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/StatoCreditoListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /datiBeneficiario/getDatiBeneficiario:
+    get:
+      operationId: getDatiBeneficiario
+      description: restituisce una lista di dati del beneficiario
+      produces:
+        - application/json
+      tags:
+        - getDatiBeneficiario
+      parameters:
+        - in: query
+          name: codiceFiscale
+          type: string
+        - in: query
+          name: numeroDomanda
+          type: string
+      responses:
+        '200':
+          description: Lista dati del beneficiario
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DatiBeneficiarioListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /datiBeneficiario/setDatiBeneficiario:
+    post:
+      operationId: setDatiBeneficiario
+      description: salva/aggiorna i dati del beneficiario
+      produces:
+        - application/json
+      tags:
+        - setDatiBeneficiario
+      parameters:
+        - in: body
+          name: requestDatiBeneficiarioVO
+          schema: 
+            $ref: '#/definitions/RequestDatiBeneficiarioVO'
+      responses:
+        '200':
+          description: Lista esiti
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Esito'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /cup/acquisizioneCup:
+    post:
+      operationId: acquisizioneCup
+      description: acquisizione nuovo codice CUP
+      produces:
+        - application/json
+      tags:
+        - acquisizioneCup
+      parameters:
+        - in: body
+          name: requestCupVO
+          schema: 
+            $ref: '#/definitions/RequestCupVO'
+      responses:
+        '200':
+          description: esitoAcquisizioneCup
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Esito'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+definitions:
+  EsitoDurcAntimafiaListResponse:
+    properties:
+      esitoDurcAntimafiaList:
+        type: array
+        items:
+          $ref: '#/definitions/EsitoDurcAntimafia'
+  StatoCreditoListResponse:
+    properties:
+      statiCreditoList:
+        type: array
+        items:
+          $ref: '#/definitions/StatoCredito'
+  DatiBeneficiarioListResponse:
+      properties:
+        datiBeneficiarioList:
+          type: array
+          items:
+            $ref: '#/definitions/DatiBeneficiario'
+  DomandaInfoListResponse:
+      properties:
+        esito:
+          type: string
+        messaggioErrore:
+          type: string
+        DomandaInfoList:
+          type: array
+          items:
+            $ref: '#/definitions/DomandaInfo'
+  Esito:
+    type: object
+    properties:
+      esitoServizio:
+        type: string
+      codiceErrore:
+        type: integer
+      descErrore:
+        type: string
+  EsitoDurcAntimafia:
+    type: object
+    properties:
+      idDomanda:
+        type: string
+      numeroDomanda:
+        type: string
+      esito:
+        type: string
+      dtRicezioneDocumentazione:
+        type: string
+        format: date-time
+      dtScadenza:
+        type: string
+        format: date-time
+      dtChiusuraRichiesta:
+        type: string
+        format: date-time
+      descTipoRichiesta:
+        type: string
+      descStatoRichiesta:
+        type: string
+      dtEmissione:
+        type: string
+        format: date-time
+  DomandaInfo:
+    type: object
+    properties:
+      tipoSogg:
+        type: string
+      codiceBando:
+        type: number
+      numeroDomanda:
+        type: string
+      descStatoDomanda:
+        type: string
+      ndg:
+        type: string
+      numRelazDichSpesa:
+        type: string
+      pec:
+        type: string
+      codiceFiscaleSoggetto:
+        type: string
+      importoConcesso:
+        type: number
+      denominazioneEnteGiuridico:
+        type: string
+      partitaIva:
+        type: string
+      acronimoProgetto:
+        type: string
+      nome:
+        type: string
+      cognome:
+        type: string
+      CAP:
+        type: string
+      indirizzo:
+        type: string
+      provincia:
+        type: string
+      nazione:
+        type: string
+      comune:
+        type: string
+      regione:
+        type: string
+      dtNascita:
+        type: string
+      esitoServizio:
+        type: string
+      codiceErrore:
+        type: integer
+      descErrore:
+        type: string
+  StatoCredito:
+    type: object
+    properties:
+      codiceProgetto:
+        type: string
+      statoCredito:
+        type: string
+      dtInzioValidita:
+        type: string
+        format: date-time
+  DatiBeneficiario:
+    type: object
+    properties:
+      idDataBeneficiario:
+        type: string
+      codiceDimensioneImpresa:
+        type: string
+      dtValutazioneEsito:
+        type: string
+        format: date-time
+      dtClassificazione:
+        type: string
+        format: date-time
+      descIndirizzo:
+        type: string
+      descComune:
+        type: string
+      descComuneEstero:
+        type: string
+      descProvincia:
+        type: string
+      descNazione:
+        type: string
+      cap:
+        type: string
+      pec:
+        type: string
+      descProvider:
+        type: string
+      codiceRating:
+        type: string
+      desBreveClasseRischio:
+        type: string
+  RequestDatiBeneficiarioVO:
+    type: object
+    properties:
+      codiceFiscale:
+        type: string
+      numeroDomanda:
+        type: string
+      codiceDimensioneImpresa:
+        type: string
+      dtValutazioneEsito:
+        type: string
+      descrizioneProvider:
+        type: string
+      codiceRating:
+        type: string
+      dtClassificazione:
+        type: string
+      desBreveClasseRischio:
+        type: string
+  RequestCupVO:
+    type: object
+    properties:
+      codiceCup:
+        type: string
+      numeroDomanda:
+        type: string
+  ApiError:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string

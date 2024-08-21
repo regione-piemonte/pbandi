@@ -1,0 +1,300 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Dati del progetto e attività pregresse</h3>
+        <button mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <div class="content">
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent">
+                <p>{{messageError}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-tab-group mat-stretch-tabs class="mat-elevation-z2" #tabs>
+            <mat-tab label="DATI GENERALI">
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Bando</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.bando.titolo}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Bando linea</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.bando.descrizione}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Titolo progetto</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.progetto.titolo}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Codice progetto</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.progetto.codice}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Acronimo</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.progetto.acronimo}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>CUP</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.progetto.cup}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Data domanda</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.dataPresentazione | date: "dd/MM/yyyy"}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b>Data concessione</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.progetto.dtConcessione | date: "dd/MM/yyyy"}}
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="DATI FINANZIARI">
+                <div class="containerCustom">
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Ammesso</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoAmmesso | number: '0.2' : 'it'}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Rendicontato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoRendicontato | number: '0.2' : 'it'}}
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b *ngIf="datiGenerali?.importoSoppressioni">Importo soppressioni</b>
+                        </div>
+                        <div class="col-4Custom">
+                            <span *ngIf="datiGenerali?.importoSoppressioni">{{datiGenerali?.importoSoppressioni |
+                                number: '0.2' : 'it'}}</span>
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Residuo ammesso</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoResiduoAmmesso}}
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b *ngIf="datiGenerali?.importoCofinanziamentoPrivato">Cofinanziamento Privato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            <span
+                                *ngIf="datiGenerali?.importoCofinanziamentoPrivato">{{datiGenerali?.importoCofinanziamentoPrivato
+                                | number: '0.2' : 'it'}}</span>
+                        </div>
+                        <div class="col-2Custom textAlignRight">
+                            <b *ngIf="datiGenerali?.importoCofinanziamentoPubblico">Cofinanziamento Pubblico</b>
+                        </div>
+                        <div class="col-4Custom">
+                            <span
+                                *ngIf="datiGenerali?.importoCofinanziamentoPubblico">{{datiGenerali?.importoCofinanziamentoPubblico
+                                | number: '0.2' : 'it'}}</span>
+                        </div>
+                    </div>
+                    <div *ngIf="numeroRigheImportiAgevolati>0">
+                        <div *ngFor="let index of rowIndexesImportiAgevolati" class="rowCustom marginTop20">
+                            <div class="col-2Custom textAlignRight">
+                                <b>{{datiGenerali.importiAgevolati[2*index].descrizione}} (*)</b>
+                            </div>
+                            <div class="col-4Custom">
+                                {{datiGenerali.importiAgevolati[2*index].importoAlNettoRevoche | number: '0.2' : 'it'}}
+                            </div>
+                            <div class="col-2Custom textAlignRight" *ngIf="datiGenerali.importiAgevolati[2*index+1]">
+                                <b>{{datiGenerali.importiAgevolati[2*index+1].descrizione}} (*)</b>
+                            </div>
+                            <div class="col-4Custom" *ngIf="datiGenerali.importiAgevolati[2*index+1]">
+                                {{datiGenerali.importiAgevolati[2*index+1].importoAlNettoRevoche | number: '0.2' :
+                                'it'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Impegno</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoImpegno | number: '0.2' : 'it'}}
+                        </div>
+                        <div class="col-2Custom textAlignRight"
+                            *ngIf="datiGenerali?.flagImportoCertificatoNettoVisibile">
+                            <b>Certificato Ultimo</b>
+                        </div>
+                        <div class="col-4Custom" *ngIf="datiGenerali?.flagImportoCertificatoNettoVisibile">
+                            <span *ngIf="datiGenerali?.importoCertificatoNettoUltimaPropAppr">
+                                {{datiGenerali?.importoCertificatoNettoUltimaPropAppr | number: '0.2' : 'it'}}</span>
+                            <span *ngIf="!datiGenerali?.importoCertificatoNettoUltimaPropAppr">n.c.</span>
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Quietanzato</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoQuietanzato | number: '0.2' : 'it'}}
+                        </div>
+                        <div class="col-2Custom textAlignRight"
+                            *ngIf="datiGenerali?.economie && datiGenerali?.economie.length>0">
+                            <b>Economie</b>
+                        </div>
+                        <div class="col-4Custom" *ngIf="datiGenerali?.economie && datiGenerali?.economie.length>0">
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20">
+                        <div class="col-2Custom textAlignRight">
+                            <b>Validato (*)</b>
+                        </div>
+                        <div class="col-4Custom">
+                            {{datiGenerali?.importoValidatoNettoRevoche | number: '0.2' : 'it'}}
+                        </div>
+                    </div>
+                    <div *ngIf="numeroRigheErogazioni>0">
+                        <div *ngFor="let index of rowIndexesErogazioni" class="rowCustom marginTop20">
+                            <div class="col-2Custom textAlignRight">
+                                <b>{{datiGenerali.erogazioni[2*index].descrizione}}
+                                    <span *ngIf="datiGenerali?.isLegatoBilancio"> Liquidato</span>
+                                    <span *ngIf="!datiGenerali?.isLegatoBilancio"> Erogato</span>
+                                </b>
+                            </div>
+                            <div class="col-4Custom">
+                                {{datiGenerali.erogazioni[2*index].importo | number: '0.2' : 'it'}}
+                            </div>
+                            <div class="col-2Custom textAlignRight" *ngIf="datiGenerali.erogazioni[2*index+1]">
+                                <b>{{datiGenerali.erogazioni[2*index+1].descrizione}} Erogato</b>
+                            </div>
+                            <div class="col-4Custom" *ngIf="datiGenerali.erogazioni[2*index+1]">
+                                {{datiGenerali.erogazioni[2*index+1].importo | number: '0.2' :
+                                'it'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="numeroRigheRevoche>0">
+                        <div *ngFor="let index of rowIndexesRevoche" class="rowCustom marginTop20">
+                            <div class="col-2Custom textAlignRight">
+                                <b>{{datiGenerali.revoche[2*index].descrizione}} Revocato</b>
+                            </div>
+                            <div class="col-4Custom">
+                                {{datiGenerali.revoche[2*index].importo | number: '0.2' : 'it'}}
+                            </div>
+                            <div class="col-2Custom textAlignRight" *ngIf="datiGenerali.revoche[2*index+1]">
+                                <b>{{datiGenerali.revoche[2*index+1].descrizione}} Revocato</b>
+                            </div>
+                            <div class="col-4Custom" *ngIf="datiGenerali.revoche[2*index+1]">
+                                {{datiGenerali.revoche[2*index+1].importo | number: '0.2' :
+                                'it'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="numeroRigheRecuperi>0">
+                        <div *ngFor="let index of rowIndexesRecuperi" class="rowCustom marginTop20">
+                            <div class="col-2Custom textAlignRight">
+                                <b>{{datiGenerali.recuperi[2*index].descrizione}} Recuperato</b>
+                            </div>
+                            <div class="col-4Custom">
+                                {{datiGenerali.recuperi[2*index].importo | number: '0.2' : 'it'}}
+                            </div>
+                            <div class="col-2Custom textAlignRight" *ngIf="datiGenerali.recuperi[2*index+1]">
+                                <b>{{datiGenerali.recuperi[2*index+1].descrizione}} Recuperato</b>
+                            </div>
+                            <div class="col-4Custom" *ngIf="datiGenerali.recuperi[2*index+1]">
+                                {{datiGenerali.recuperi[2*index+1].importo | number: '0.2' :
+                                'it'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="numeroRighePrerecuperi>0">
+                        <div *ngFor="let index of rowIndexesPrerecuperi" class="rowCustom marginTop20">
+                            <div class="col-2Custom textAlignRight">
+                                <b>{{datiGenerali.preRecuperi[2*index].descrizione}} Prerecuperato</b>
+                            </div>
+                            <div class="col-4Custom">
+                                {{datiGenerali.preRecuperi[2*index].importo | number: '0.2' : 'it'}}
+                            </div>
+                            <div class="col-2Custom textAlignRight" *ngIf="datiGenerali.preRecuperi[2*index+1]">
+                                <b>{{datiGenerali.preRecuperi[2*index+1].descrizione}} Prerecuperato</b>
+                            </div>
+                            <div class="col-4Custom" *ngIf="datiGenerali.preRecuperi[2*index+1]">
+                                {{datiGenerali.preRecuperi[2*index+1].importo | number: '0.2' :
+                                'it'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rowCustom marginTop20 marginBottom40">
+                        <div class="col-6Custom fontSize11">
+                            (*) Importo al netto delle revoche
+                        </div>
+                        <div class="col-6Custom textAlignRight">
+                            <button class="button-style-1" mat-button (click)="loadData()">AGGIORNA</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="ATTIVITA' PREGRESSE">
+                <mat-accordion class="example-headers-align">
+                    <div class="marginTop10">
+                        <mat-expansion-panel *ngFor="let attivita of attivitaPregresse"
+                            class="marginLeft30 marginRight30 marginBottom10"
+                            [ngClass]="{'matExpansionDisableClick' : !attivita.righe || attivita.righe.length===0}"
+                            hideToggle>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="max-width-100px">
+                                    <b>{{attivita.data |date: "dd/MM/yyyy"}}</b>
+                                </mat-panel-title>
+                                <mat-panel-description class="colorBlack">
+                                    <b>{{attivita.descAttivita}}</b>
+                                    <mat-icon *ngIf="attivita.righe?.length>0">keyboard_arrow_down</mat-icon>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div *ngFor="let riga of attivita.righe" class="marginLeft30 marginBottom15">
+                                <div *ngIf="riga.etichetta && riga.valore">
+                                    <b>{{riga.etichetta}}:&nbsp; </b> {{riga.valore}}
+                                </div>
+                            </div>
+                            <mat-action-row *ngIf="attivita.idDocumentoIndex || attivita.idDocumentoIndexReport">
+                                <button class="button-style-1" mat-button color="primary"
+                                    (click)="scarica(attivita)">SCARICA</button>
+                            </mat-action-row>
+                        </mat-expansion-panel>
+                    </div>
+                </mat-accordion>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

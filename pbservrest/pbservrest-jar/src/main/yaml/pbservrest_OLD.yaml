@@ -1,0 +1,113 @@
+swagger: "2.0"
+info:
+  description: "API per pbandi"
+  version: "1.0.0"
+  title: "finservrest"
+host: "localhost:8080"
+basePath: "/pbservrest/api"
+tags:
+- name: "Servizi"
+schemes:
+- "http"
+paths:
+  /credito/getCredito:
+    get:
+      operationId: GetStatoCreditoProgettiBeneficiario
+      description: restituisce una lista di staticredito
+      produces:
+        - application/json
+      tags:
+        - credito
+      parameters:
+        - in: query
+          name: numeroDomanda
+          type: string
+      responses:
+        '200':
+          description: Lista statiCredito
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/StatoCreditoListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /attivita/getDati:
+    get:
+      operationId: getDatiBeneficiario
+      description: restituisce una lista di dati del beneficiario
+      produces:
+        - application/json
+      tags:
+        - attivita
+      parameters:
+        - in: query
+          name: codiceFiscale
+          type: string
+        - in: query
+          name: numeroDomanda
+          type: string
+      responses:
+        '200':
+          description: Lista dati del beneficiario
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DatiBeneficiarioListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+definitions:
+  StatoCreditoListResponse:
+    properties:
+      statiCreditoList:
+        type: array
+        items:
+          $ref: '#/definitions/StatoCredito'
+  DatiBeneficiarioListResponse:
+      properties:
+        DatiBeneficiarioList:
+          type: array
+          items:
+            $ref: '#/definitions/DatiBeneficiario'
+  StatoCredito:
+    type: object
+    properties:
+      codiceProgetto:
+        type: string
+      statoCredito:
+        type: string
+      dtInzioValidita:
+        type: string
+        format: date-time
+  DatiBeneficiario:
+    type: object
+    properties:
+      codiceDimensioneImpresa:
+        type: string
+      dtValutazioneEsito:
+        type: string
+        format: date-time
+      descIndirizzo:
+        type: string
+      descComune:
+        type: string
+      descComuneEstero:
+        type: string
+      descProvincia:
+        type: string
+      descNazione:
+        type: string
+      cap:
+        type: string
+      pec:
+        type: string    
+  ApiError:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string

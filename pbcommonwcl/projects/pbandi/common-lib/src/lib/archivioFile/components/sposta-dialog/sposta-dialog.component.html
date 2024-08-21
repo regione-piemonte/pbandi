@@ -1,0 +1,51 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Selezionare la cartella di destinazione</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="manageTextOutBox">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      <mat-radio-group>
+        <mat-radio-button value={{ottieniIdFolderDaStringa(node.name)}} (click)="clickRadio($event, node.name)"
+          [checked]="ottieniIdFolderDaStringa(node.name) == radioSelected"></mat-radio-button>
+      </mat-radio-group>
+      <div class="colorBlack paddingLeft0 parent">
+        <mat-icon class="colorYellow child" aria-hidden="false" aria-label="Example home icon">
+          folder_open
+        </mat-icon>
+        <a class="child marginLeft10">
+          {{ottieniNomeFolderDaStringa(node.name)}}
+        </a>
+      </div>
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror blue-color">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <mat-radio-group>
+        <mat-radio-button value={{ottieniIdFolderDaStringa(node.name)}} (click)="clickRadio($event, node.name)"
+          [checked]="ottieniIdFolderDaStringa(node.name) == radioSelected"></mat-radio-button>
+      </mat-radio-group>
+      <div class="colorBlack paddingLeft0 parent">
+        <mat-icon aria-hidden="false" class="colorYellow child" aria-label="Example home icon">
+          folder_open
+        </mat-icon>
+        <a class="child marginLeft10">
+          {{ottieniNomeFolderDaStringa(node.name)}}
+        </a>
+      </div>
+    </mat-tree-node>
+  </mat-tree>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="annulla()" class="button-style-1">ANNULLA</button>
+  <button mat-button cdkFocusInitial (click)="sposta()" class="button-style-1">SPOSTA</button>
+</mat-dialog-actions>

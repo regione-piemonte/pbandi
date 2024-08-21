@@ -1,0 +1,95 @@
+SELECT
+	*
+FROM
+	(
+	SELECT
+		i.*,
+		prov.IMPORTO_IRREGOLARITA AS importo_Irregolarita_Provv,
+		prov.DESC_MOTIVO_REVOCA AS desc_motivo_revoca_provv,
+		NVL(PROV.TIPO_CONTROLLI, i.TIPO_CONTROLLI) AS TIPO_CONTROLLI_PROV,
+		NVL(prov.DATA_INIZIO_CONTROLLI, i.DATA_INIZIO_CONTROLLI) AS DATA_INIZIO_CONTROLLI_PROV,
+		NVL(PROV.DATA_FINE_CONTROLLI, I.DATA_FINE_CONTROLLI) AS DATA_FINE_CONTROLLI_PROV,
+		p.codice_visualizzato,
+		mr.DESC_MOTIVO_REVOCA,
+		ti.desc_tipo_irregolarita,
+		ti.desc_breve_tipo_irregolarita,
+		qi.desc_qualificazione_irreg,
+		qi.desc_breve_qualific_irreg,
+		dc.desc_disp_comunitaria,
+		dc.desc_breve_disp_comunitaria,
+		mi.desc_metodo_ind,
+		mi.desc_breve_metodo_ind,
+		sa.desc_stato_amministrativo,
+		sa.desc_breve_stato_amministrativ,
+		sf.desc_stato_finanziario,
+		sf.desc_breve_stato_finanziario,
+		ns.desc_natura_sanzione,
+		ns.desc_breve_natura_sanzione,
+		rsp.id_soggetto AS id_soggetto_beneficiario,
+		CASE
+			WHEN rsp.id_persona_fisica IS NULL THEN (
+			SELECT
+				DISTINCT eg.denominazione_ente_giuridico
+			FROM
+				PBANDI_T_ENTE_GIURIDICO eg
+			WHERE
+				eg.id_ente_giuridico = rsp.id_ente_giuridico )
+			ELSE (
+			SELECT
+				DISTINCT pf.cognome || ' ' || pf.nome
+			FROM
+				PBANDI_T_PERSONA_FISICA pf
+			WHERE
+				pf.id_persona_fisica = rsp.id_persona_fisica )
+		END denominazione_beneficiario
+	FROM
+		PBANDI_T_IRREGOLARITA i
+	LEFT JOIN PBANDI_D_MOTIVO_REVOCA mr ON
+		i.ID_MOTIVO_REVOCA = mr.ID_MOTIVO_REVOCA
+	LEFT JOIN (
+			SELECT prov.*,
+			mrp.DESC_MOTIVO_REVOCA
+		FROM
+			PBANDI_T_IRREGOLARITA_PROVV prov,
+			PBANDI_D_MOTIVO_REVOCA mrp
+		WHERE
+			prov.ID_MOTIVO_REVOCA = mrp.ID_MOTIVO_REVOCA) prov ON
+		i.ID_IRREGOLARITA_PROVV = prov.ID_IRREGOLARITA_PROVV,
+		PBANDI_T_PROGETTO p,
+		PBANDI_D_TIPO_IRREGOLARITA ti,
+		PBANDI_D_QUALIFICAZIONE_IRREG qi,
+		PBANDI_D_DISP_COMUNITARIA dc,
+		PBANDI_D_METODO_INDIVIDUAZIONE mi,
+		PBANDI_D_STATO_AMMINISTRATIVO sa,
+		PBANDI_D_STATO_FINANZIARIO sf,
+		PBANDI_D_NATURA_SANZIONE ns,
+		PBANDI_R_SOGGETTO_PROGETTO rsp
+	WHERE
+		p.id_progetto = i.id_progetto
+		AND i.id_tipo_irregolarita = ti.id_tipo_irregolarita
+		AND i.id_qualificazione_irreg = qi.id_qualificazione_irreg
+		AND i.id_disp_comunitaria = dc.id_disp_comunitaria
+		AND i.id_metodo_individuazione = mi.id_metodo_individuazione
+		AND i.id_stato_amministrativo = sa.id_stato_amministrativo
+		AND i.id_stato_finanziario = sf.id_stato_finanziario
+		AND i.id_natura_sanzione = ns.id_natura_sanzione
+		AND p.id_progetto = rsp.id_progetto
+		AND rsp.id_tipo_anagrafica = (
+		SELECT
+			dta.id_tipo_anagrafica
+		FROM
+			pbandi_d_tipo_anagrafica dta
+		WHERE
+			dta.desc_breve_tipo_anagrafica = 'BENEFICIARIO')
+		AND NVL(rsp.id_tipo_beneficiario, '-1') <> (
+		SELECT
+			dtb.id_tipo_beneficiario
+		FROM
+			pbandi_d_tipo_beneficiario dtb
+		WHERE
+			dtb.desc_breve_tipo_beneficiario = 'BEN-ASSOCIATO')
+		AND NVL(TRUNC(i.DT_FINE_VALIDITA), TRUNC(SYSDATE + 1)) > TRUNC(SYSDATE) ) irr
+START WITH
+	id_irregolarita_collegata IS NULL
+CONNECT BY
+	PRIOR id_irregolarita = id_irregolarita_collegata ORDER siblings BY numero_versione

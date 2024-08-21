@@ -1,0 +1,17 @@
+<p class="bold-text" [innerHTML]="message"></p>
+
+<form >
+    <div class="margin-bottom-50">
+        <mat-form-field class="full-width ">
+            <mat-label class="margin-bottom-50">Motivo scostamento</mat-label> 
+            
+            <textarea matInput placeholder="Scrivere il motivo dello scostamento" [(ngModel)]="value" name="textarea">                
+            </textarea>
+        </mat-form-field>
+    </div>
+
+    <div class="spaceBetween">
+        <button mat-button class="button-style-1" (click)="onAnnulla()">ANNULLA</button>
+        <button mat-button class="button-style-1" (click)="onConferma()">CONFERMA</button>
+    </div>
+</form>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbservrest.business.SpringApplicationContextHelper"></bean>
+
+
+	<!-- bean di utility -->
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+	    <constructor-arg ref="dataSource" />
+	  </bean>
+	
+	<!-- bean usati dai servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbservrest.business.impl" />
+
+	
+	<!-- bean dei servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbservrest.business.service.impl" />
+	
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+      	<property name="jndiName" value="jdbc/pbservrestDS" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbservrest.integration.dao" />
+
+	<bean id="datiBeneficiarioDAO" class="it.csi.pbandi.pbservrest.integration.dao.impl.DatiBeneficiarioDAOImpl">
+	</bean>
+	<bean id="CreditoDAO" class="it.csi.pbandi.pbservrest.integration.dao.impl.CreditoDAOImpl"></bean>
+	<bean id="domandaBeneficiarioDAO" class="it.csi.pbandi.pbservrest.integration.dao.impl.DomandaBeneficiarioDAOImpl"></bean>
+	<bean id="esitoDurcAntimafiaDAO" class="it.csi.pbandi.pbservrest.integration.dao.impl.EsitoDurcAntimafiaDAOImpl"></bean>
+	<bean id="cupDAO" class="it.csi.pbandi.pbservrest.integration.dao.impl.CupDAOImpl"></bean>
+</beans>

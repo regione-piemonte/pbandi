@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="richiestaErogazioneLavFornServ" pageWidth="575" pageHeight="842" columnWidth="575" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="210179b3-4620-496f-80ff-d1c05b928a61">
+	<property name="ireport.zoom" value="2.8531167061100073"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fornitore" class="java.lang.String">
+		<fieldDescription><![CDATA[fornitore]]></fieldDescription>
+	</field>
+	<field name="servizioAffidato" class="java.lang.String">
+		<fieldDescription><![CDATA[servizioAffidato]]></fieldDescription>
+	</field>
+	<field name="documento" class="java.lang.String">
+		<fieldDescription><![CDATA[documento]]></fieldDescription>
+	</field>
+	<field name="nomeFile" class="java.lang.String">
+		<fieldDescription><![CDATA[nomeFile]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="11">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="107" height="11" backcolor="#CCCCCC" uuid="58b76773-1f81-4992-b9b0-6db590e61feb"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+					<pen lineWidth="0.25" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FORNITORE"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="107" y="0" width="254" height="11" backcolor="#CCCCCC" uuid="61fb5483-623d-4370-808e-0ee7a4524424"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+					<pen lineWidth="0.25" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OGGETTO DELL'AFFIDAMENTO"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="361" y="0" width="81" height="11" backcolor="#CCCCCC" uuid="fe6c74a8-242d-483f-9f47-5d22c632380a"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+					<pen lineWidth="0.25" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TIPO DOCUMENTO"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="442" y="0" width="114" height="11" backcolor="#CCCCCC" uuid="befa3c08-7687-46f5-b1f9-eae919e5ccdc"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+					<pen lineWidth="0.25" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DOCUMENTO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12">
+			<elementGroup>
+				<elementGroup>
+					<elementGroup>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="107" y="0" width="254" height="12" uuid="5af0120d-4f21-4010-8a47-61d4cf3dbb8f"/>
+							<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+								<pen lineWidth="0.25" lineColor="#999999"/>
+								<topPen lineWidth="0.25" lineColor="#999999"/>
+								<leftPen lineWidth="0.25" lineColor="#999999"/>
+								<bottomPen lineWidth="0.25" lineColor="#999999"/>
+								<rightPen lineWidth="0.25" lineColor="#999999"/>
+							</box>
+							<textElement verticalAlignment="Top">
+								<font size="7"/>
+								<paragraph rightIndent="2"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{servizioAffidato}!=null?$F{servizioAffidato}:""]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="107" height="12" uuid="0111f92c-c60a-4df8-8fc5-d8540905c0f0"/>
+							<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+								<pen lineWidth="0.25" lineColor="#999999"/>
+								<topPen lineWidth="0.25" lineColor="#999999"/>
+								<leftPen lineWidth="0.25" lineColor="#999999"/>
+								<bottomPen lineWidth="0.25" lineColor="#999999"/>
+								<rightPen lineWidth="0.25" lineColor="#999999"/>
+							</box>
+							<textElement verticalAlignment="Top">
+								<font size="7"/>
+								<paragraph rightIndent="2"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{fornitore}!=null?$F{fornitore}:""]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="361" y="0" width="81" height="12" uuid="aa893754-ec35-44be-9a18-4905a6d9539d"/>
+							<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+								<pen lineWidth="0.25" lineColor="#999999"/>
+								<topPen lineWidth="0.25" lineColor="#999999"/>
+								<leftPen lineWidth="0.25" lineColor="#999999"/>
+								<bottomPen lineWidth="0.25" lineColor="#999999"/>
+								<rightPen lineWidth="0.25" lineColor="#999999"/>
+							</box>
+							<textElement verticalAlignment="Top">
+								<font size="7"/>
+								<paragraph rightIndent="2"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{documento}!=null?$F{documento}:""]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="442" y="0" width="114" height="12" uuid="53965a91-033c-47f4-8d5d-f34c329175af"/>
+							<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+								<pen lineWidth="0.25" lineColor="#999999"/>
+								<topPen lineWidth="0.25" lineColor="#999999"/>
+								<leftPen lineWidth="0.25" lineColor="#999999"/>
+								<bottomPen lineWidth="0.25" lineColor="#999999"/>
+								<rightPen lineWidth="0.25" lineColor="#999999"/>
+							</box>
+							<textElement verticalAlignment="Top">
+								<font size="7"/>
+								<paragraph rightIndent="2"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nomeFile}!=null?$F{nomeFile}:""]]></textFieldExpression>
+						</textField>
+					</elementGroup>
+				</elementGroup>
+			</elementGroup>
+		</band>
+	</detail>
+</jasperReport>

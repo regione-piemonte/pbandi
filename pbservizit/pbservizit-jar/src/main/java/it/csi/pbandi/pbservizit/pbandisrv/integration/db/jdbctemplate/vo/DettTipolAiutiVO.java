@@ -1,0 +1,70 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+package it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.vo;
+
+import java.math.BigDecimal;
+
+public class DettTipolAiutiVO extends GenericVO {
+	
+	private BigDecimal idDettTipolAiuti;
+	private String descrizione;
+	private String codice;
+	private BigDecimal idTipoAiuto;
+	private String descrizioneTipoAiuto;
+	private String flagFittizio;
+	private String link;
+	private BigDecimal progrBandoLineaIntervento;
+	
+	public BigDecimal getProgrBandoLineaIntervento() {
+		return progrBandoLineaIntervento;
+	}
+	public void setProgrBandoLineaIntervento(BigDecimal progrBandoLineaIntervento) {
+		this.progrBandoLineaIntervento = progrBandoLineaIntervento;
+	}
+	public BigDecimal getIdDettTipolAiuti() {
+		return idDettTipolAiuti;
+	}
+	public void setIdDettTipolAiuti(BigDecimal idDettTipolAiuti) {
+		this.idDettTipolAiuti = idDettTipolAiuti;
+	}
+	public String getDescrizione() {
+		return descrizione;
+	}
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
+	public String getCodice() {
+		return codice;
+	}
+	public void setCodice(String codice) {
+		this.codice = codice;
+	}
+	public BigDecimal getIdTipoAiuto() {
+		return idTipoAiuto;
+	}
+	public void setIdTipoAiuto(BigDecimal idTipoAiuto) {
+		this.idTipoAiuto = idTipoAiuto;
+	}
+	public String getDescrizioneTipoAiuto() {
+		return descrizioneTipoAiuto;
+	}
+	public void setDescrizioneTipoAiuto(String descrizioneTipoAiuto) {
+		this.descrizioneTipoAiuto = descrizioneTipoAiuto;
+	}
+	public String getFlagFittizio() {
+		return flagFittizio;
+	}
+	public void setFlagFittizio(String flagFittizio) {
+		this.flagFittizio = flagFittizio;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}
+	
+}

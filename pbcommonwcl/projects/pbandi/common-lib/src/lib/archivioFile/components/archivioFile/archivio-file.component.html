@@ -1,0 +1,282 @@
+<mat-spinner-pbandi *ngIf="this.isLoading"></mat-spinner-pbandi>
+<div [hidden]="this.isLoading">
+    <div class="page">
+        <div class="title">
+            <div class="containerUp">
+                <div>
+                    <h2>Archivio file</h2>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <mat-grid-list cols="8" rowHeight="30px">
+                <mat-grid-tile [colspan]="4" [rowspan]="1">
+                    <a class="fullWidth fontSize18">Beneficiario:
+                        <span class="boldText">{{user?.beneficiarioSelezionato.denominazione}}</span></a>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                    <div class="fullWidth alignRight paddingRight5">
+                        <a>Hai utilizzato {{usedMemoryValue}} di {{totalMemoryValue}} GB</a>
+
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div class="fullWidth alignRight">
+                        <section class="example-section">
+                            <mat-progress-bar class="example-margin" [color]="color" [mode]="mode" [value]="value"
+                                [bufferValue]="bufferValue">
+                            </mat-progress-bar>
+                        </section>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+        <div id="div1" class="contentRow">
+            <mat-card id="cardLeft" class="mat-elevation-z2 width25Perc fixedPosition width300 minHeight400"
+                [ngStyle]="styleLeftCard" style="padding: 0px 1px 0px 0px;" mwlResizable [validateResize]="validate"
+                [enableGhostResize]="true" [resizeSnapGrid]="{ left: 1, right: 1 }" (resizeEnd)="onResizeEnd($event)"
+                (resizing)="resizing($event)">
+                <div class="resize-handle-right" mwlResizeHandle [resizeEdges]="{ right: true }"></div>
+                <mat-card-content id="contentCardLeft" style="padding: 0px 16px 0px 0px;"
+                    class="scroll thin scrollbar-primary" [ngStyle]="{'height': heightCard}">
+                    <div class="force-overflow">
+
+                        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" [ngStyle]="styleTree">
+                            <mat-tree-node style="margin-left: -15x; margin-right: -15px;"
+                                [ngClass]="{'highlightTreeFolder': ottieniIdFolderDaStringa(node.name) == selectedTreeFolder}"
+                                *matTreeNodeDef="let node" matTreeNodePadding>
+                                <button mat-icon-button disabled></button>
+                                <button mat-button (click)="esplodiContenutoCartella(node.name)"
+                                    style="width: 100%; text-align: left;" class="colorBlack paddingLeft0">
+                                    <mat-icon class="colorYellow" aria-hidden="false" aria-label="Example home icon">
+                                        folder_open
+                                    </mat-icon>
+                                    {{ottieniNomeFolderDaStringa(node.name)}}
+                                </button>
+                            </mat-tree-node>
+                            <mat-tree-node style="margin-left: -15x; margin-right: -15px;"
+                                [ngClass]="{'highlightTreeFolder': ottieniIdFolderDaStringa(node.name) == selectedTreeFolder}"
+                                *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                                <button (click)="espandereCartella()" mat-icon-button matTreeNodeToggle
+                                    [attr.aria-label]="'Toggle ' + node.name">
+                                    <mat-icon class="mat-icon-rtl-mirror blue-color">
+                                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                    </mat-icon>
+                                </button>
+                                <button mat-button class="colorBlack paddingLeft0"
+                                    (click)="esplodiContenutoCartella(node.name)"
+                                    style="width: 100%; text-align: left;">
+                                    <mat-icon aria-hidden="false" class="colorYellow" aria-label="Example home icon">
+                                        folder_open
+                                    </mat-icon>
+                                    {{ottieniNomeFolderDaStringa(node.name)}}
+                                </button>
+                            </mat-tree-node>
+                        </mat-tree>
+
+                    </div>
+
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card
+                class="mat-elevation-z2 width75Perc backgroundWhite  width800 left800 scroll thin scrollbar-primary"
+                style="padding: 0px 0px 0px 0px;" [ngStyle]="styleRightCard">
+
+                <!--mat-card
+                class="mat-elevation-z2 scroll thin scrollbar-primary" [ngStyle]="styleRightCard" id="cardRight"-->
+                <div class="force-overflow">
+                    <mat-card-content>
+                        <div class="grayColor fixed">
+                            <mat-grid-list cols="8" rowHeight="55px">
+                                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                    <div class="fullWidth alignLeft paddingLeft15">
+                                        <button mat-icon-button (click)="createFolder()">
+                                            <mat-icon aria-hidden="false" aria-label="crea cartella" class="blue-color"
+                                                title="crea cartella">
+                                                create_new_folder</mat-icon>
+                                        </button>
+                                        <button mat-icon-button (click)="rinomina()">
+                                            <mat-icon aria-hidden="false" aria-label="rinomina file" class="blue-color"
+                                                title="rinomina file">
+                                                create
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button (click)="sposta()">
+                                            <mat-icon aria-hidden="false" aria-label="sposta file" class="blue-color"
+                                                title="sposta file">
+                                                shuffle
+                                            </mat-icon>
+                                        </button>
+                                        <input (click)="clearFile()" hidden type="file"
+                                            accept={{this.estensioniAmmesse}} multiple #uploader
+                                            (change)="uploadFile($event)" />
+                                        <button mat-icon-button (click)="uploader.click()">
+                                            <mat-icon aria-hidden="false" aria-label="upload file" class="blue-color"
+                                                title="upload file">
+                                                upgrade
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button (click)="elimina()">
+                                            <mat-icon aria-hidden="false" aria-label="elimina file" class="colorRed"
+                                                title="elimina file">
+                                                delete
+                                            </mat-icon>
+                                        </button>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                                    <div class="fullWidth alignRight paddingRight15">
+                                        <mat-checkbox [checked]="mostraInviatiChecked" (change)="mostraInviati($event)"
+                                            class="example-margin">Mostra inviati</mat-checkbox>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                                    <div class="fullWidth alignRight paddingRight15 tipoAlign">
+                                        <mat-form-field>
+                                            <mat-label>Cerca</mat-label>
+                                            <input matInput (keyup)="applyFilter($event)" #input>
+                                        </mat-form-field>
+                                        <mat-icon aria-hidden="false" aria-label="cerca" class="blue-color">
+                                            search
+                                        </mat-icon>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                        <mat-grid-list class="marginTop15 marginBottom10" cols="8" rowHeight="30px">
+                            <mat-grid-tile [colspan]="6" [rowspan]="1">
+                                <div class="fullWidth alignLeft paddingLeft15">
+                                    Sei in <b>{{path}}</b>
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <div>
+                            <table mat-table [dataSource]="dataSourceTable" matSort>
+
+                                <!-- Checkbox Column -->
+                                <ng-container matColumnDef="select" class="radio">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox color="primary" (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [aria-label]="checkboxLabel()">
+                                        </mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="radio">
+                                        <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <!-- nome Column -->
+                                <ng-container matColumnDef="nome">
+                                    <th class="colorBlack bold" mat-header-cell *matHeaderCellDef mat-sort-header> Nome
+                                    </th>
+                                    <td class="paddingRight10" mat-cell *matCellDef="let row">
+                                        <div *ngIf="row.tipo == 'File' " class="tipoAlign">
+                                            <div *ngIf="!row.associato" class="tipoAlign">
+                                                <mat-icon aria-hidden="false"
+                                                    [ngClass]="{'blue-color': !row.inviato, 'colorGray': row.inviato}"
+                                                    aria-label="Example home icon"
+                                                    [matTooltip]="getTooltipText('description', row.inviato)">
+                                                    description
+                                                </mat-icon>
+                                            </div>
+                                            <div *ngIf="row.associato" class="tipoAlign">
+                                                <mat-icon aria-hidden="false"
+                                                    [ngClass]="{'blue-color': !row.inviato, 'colorGray': row.inviato}"
+                                                    aria-label="Example home icon"
+                                                    [matTooltip]="getTooltipText('attachment', row.inviato)">
+                                                    attachment
+                                                </mat-icon>
+                                            </div>
+                                            <a [ngClass]="row.inviato ? 'colorGray bold' : 'blue-color bold' "
+                                                (click)="download(row.idDocumentoIndex, row.nome)"
+                                                class="marginLeft10 cursor-pointer">{{row.nome}}</a>
+                                        </div>
+                                        <div *ngIf="row.tipo == 'Cartella' " class="tipoAlign">
+                                            <mat-icon aria-hidden="false" class="colorYellow"
+                                                aria-label="Example home icon" matTooltip="Cartella">
+                                                folder_open
+                                            </mat-icon>
+                                            <a class="marginLeft10">{{row.nome}}</a>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <!-- ultimaModifica Column -->
+                                <ng-container matColumnDef="ultimaModifica">
+                                    <th class="colorBlack bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Ultima
+                                        modifica </th>
+                                    <td [ngClass]="row.tipo == 'Cartella' ? 'd-none' : row.inviato ? 'colorGray' : 'd-none'"
+                                        mat-cell *matCellDef="let row"> {{row.ultimaModifica}} </td>
+                                </ng-container>
+
+                                <!-- dimensione Column -->
+                                <ng-container matColumnDef="dimensione">
+                                    <th class="colorBlack bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Dimensione
+                                    </th>
+                                    <td [ngClass]="row.tipo == 'Cartella' ? 'd-none' : row.inviato ? 'colorGray' : 'd-none'"
+                                        mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.dimensione}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- info Column -->
+                                <ng-container matColumnDef="info">
+                                    <th class="colorBlack bold" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                                    <td mat-cell *matCellDef="let row" [style.color]="row.color" class="text-right">
+                                        <button (click)="infoFile(row.idDocumentoIndex, row.idFolder)"
+                                            *ngIf="row.associato || row.inviato" mat-icon-button>
+                                            <mat-icon
+                                                [ngClass]="row.tipo == 'Cartella' ? 'd-none' : row.inviato ? 'colorGray' : 'blue-color'">
+                                                info
+                                            </mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- anteprima Column -->
+                                <ng-container matColumnDef="anteprima" class="text-right">
+                                    <th class="colorBlack bold" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                                    <td mat-cell *matCellDef="let row" [style.color]="row.color">
+                                        <button (click)="anteprima(row.nome, row.idDocumentoIndex)"
+                                            *ngIf="mostrareAnteprima(row.nome)" mat-icon-button>
+                                            <mat-icon
+                                                [ngClass]="row.tipo == 'Cartella' ? 'd-none' : row.inviato ? 'colorGray' : 'blue-color'">
+                                                remove_red_eye
+                                            </mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td *ngIf="!cartellaVuota" class="mat-cell" colspan="4">No data matching the filter
+                                        "{{input.value}}"</td>
+                                    <td *ngIf="cartellaVuota" class="mat-cell" colspan="4">Cartella vuota</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
+                </div>
+            </mat-card>
+        </div>
+
+        <div id="divActionButtons" class="marginTop15 flexEndCenter" *ngIf="isDialog">
+            <button class="button-style-2 marginRight10" mat-raised-button (click)="allegaFilesDialog()">
+                ALLEGA
+            </button>
+            <button class="button-style-2" mat-raised-button (click)="chiudiDialog()">
+                CHIUDI
+            </button>
+        </div>
+    </div>
+</div>

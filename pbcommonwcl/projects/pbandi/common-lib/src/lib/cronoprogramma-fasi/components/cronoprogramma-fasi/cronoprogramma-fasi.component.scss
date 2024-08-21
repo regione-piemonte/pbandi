@@ -1,0 +1,93 @@
+.title-text {
+    font-size: medium;
+}
+
+th,
+td {
+    padding-right: 10px !important;
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-actions .mat-icon-button:enabled {
+    color: #0058B1 !important;
+}
+
+::ng-deep .data .mat-form-field-infix {
+    width: 12% !important;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+
+.allignCenter {
+    text-align: center;
+}
+
+.button-style-1 {
+    color: #0060C1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.table {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.containerTextArea {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.myError {
+    color: red;
+    margin: 0px;
+}
+
+.myDate {
+    margin-bottom: 25px;
+}
+
+.subtitle {
+    font-weight: bold;
+    font-size: medium;
+}
+
+.margin25 {
+    margin: 25px;
+}
+
+.container-flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    p {
+        margin: 0px !important;
+    }
+
+}
+
+
+.allegati {
+    display: flex;
+    background-color: #178cd633;
+    color: #016cb4;
+    align-items: center;
+
+    button {
+        font-size: 12px;
+        font-weight: bold;
+    }
+}
+
+.alignItemsCenter {
+    display: flex;
+    align-items: center;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

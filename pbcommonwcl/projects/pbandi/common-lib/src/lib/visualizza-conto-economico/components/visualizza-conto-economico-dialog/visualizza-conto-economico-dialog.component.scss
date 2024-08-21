@@ -1,0 +1,76 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bold-text {
+    font-weight: bold !important;
+}
+
+.grey-color {
+    color: #777;
+}
+
+.yellow-background {
+    background-color: #f4ffba;
+}
+
+.light-blue-background {
+    background-color: #178cd633;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.align-items-baseline {
+    align-items: baseline;
+}
+
+.justify-content-space-around {
+    justify-content: space-around;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.min-width-24 {
+    min-width: 24px;
+}
+
+.width-50-perc {
+    width: 50%;
+}
+
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell {
+    padding: 4px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+::ng-deep .mat-dialog-container {
+    /*max-height: calc(100vh - 30px) !important;*/
+    height: auto !important;
+    overflow: hidden;
+    overflow-y: auto !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}

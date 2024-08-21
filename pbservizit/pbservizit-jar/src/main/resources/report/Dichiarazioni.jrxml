@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dichiarazioni" pageWidth="575" pageHeight="300" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="10" bottomMargin="10">
+	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="numero" class="java.lang.String">
+		<fieldDescription><![CDATA[numero]]></fieldDescription>
+	</field>
+	<field name="data" class="java.lang.String">
+		<fieldDescription><![CDATA[data]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="229" height="20"/>
+				<box leftPadding="3"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[DICHIARAZIONI DI SPESA DEL PROGETTO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="11" splitType="Prevent">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="177" height="11" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Numero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="177" y="0" width="185" height="11" backcolor="#E3E3E3"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="177" height="15"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}!=null?$F{numero}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="177" y="0" width="185" height="15"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#666666"/>
+					<leftPen lineWidth="0.25" lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineWidth="0.25" lineColor="#666666"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}!=null?$F{data}:""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

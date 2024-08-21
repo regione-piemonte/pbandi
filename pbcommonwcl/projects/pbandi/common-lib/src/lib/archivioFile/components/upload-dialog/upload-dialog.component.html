@@ -1,0 +1,25 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Upload file</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="chiudi()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  <div *ngFor="let file of files; let indexOfelement=index;" class="displayFlex">
+    <div>
+      <mat-icon *ngIf="fileLoadible(file) == null" aria-hidden="false" class="colorGreen">
+        done
+      </mat-icon>
+      <mat-icon *ngIf="!(fileLoadible(file) == null)" matTooltip={{fileLoadible(file)}} aria-hidden="false"
+        class="colorRed">
+        warning
+      </mat-icon>
+    </div>
+    <a>{{indexOfelement+1}}- {{file.name}}</a>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="chiudi()" class="button-style-1">CHIUDI</button>
+  <button mat-button [disabled]="(filesLoadible.length == 0) || !showButtonCarica" (click)="carica()"
+    class="button-style-1">CARICA</button>
+</mat-dialog-actions>

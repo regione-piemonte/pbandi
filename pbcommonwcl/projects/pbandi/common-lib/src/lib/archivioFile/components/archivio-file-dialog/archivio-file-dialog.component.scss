@@ -1,0 +1,29 @@
+::ng-deep .mat-dialog-container {
+  /*max-height: calc(100vh - 30px) !important;*/
+  height: auto !important;
+
+  /*overflow-y: auto !important;*/
+overflow: hidden  !important;
+
+  .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+  .mat-select-value-text,
+  .cdk-text-field-autofill-monitored:-webkit-autofill {
+   font-weight: bold !important;
+  }
+
+  #divActionButtons{ padding-right: 12px;}
+
+  .containerUp h2{
+    margin: 16px 0 0 0px;
+    font-weight: bold;
+  }
+
+  .content{ margin:0 0 8px 0px;}
+
+}
+
+.cdk-overlay-pane{
+  overflow: scroll;
+}
+
+

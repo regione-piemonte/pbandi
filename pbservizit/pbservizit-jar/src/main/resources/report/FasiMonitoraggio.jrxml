@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FasiMonitoraggio" pageWidth="575" pageHeight="842" columnWidth="575" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="60">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IS_BR34" class="java.lang.Boolean" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descFaseMonit" class="java.lang.String">
+		<fieldDescription><![CDATA[descFaseMonit]]></fieldDescription>
+	</field>
+	<field name="dtInizioPrevista" class="java.util.Date">
+		<fieldDescription><![CDATA[dtInizioPrevista]]></fieldDescription>
+	</field>
+	<field name="dtFinePrevista" class="java.util.Date">
+		<fieldDescription><![CDATA[dtFinePrevista]]></fieldDescription>
+	</field>
+	<field name="dtInizioEffettiva" class="java.util.Date">
+		<fieldDescription><![CDATA[dtInizioEffettiva]]></fieldDescription>
+	</field>
+	<field name="dtFineEffettiva" class="java.util.Date">
+		<fieldDescription><![CDATA[dtFineEffettiva]]></fieldDescription>
+	</field>
+	<field name="descMotivoScostamento" class="java.lang.String">
+		<fieldDescription><![CDATA[descMotivoScostamento]]></fieldDescription>
+	</field>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement x="0" y="11" width="308" height="20"/>
+				<box leftPadding="4"/>
+				<textElement/>
+				<text><![CDATA[CRONOPROGRAMMA DI REALIZZAZIONE DELL'INTERVENTO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="17">
+			<printWhenExpression><![CDATA[$P{IS_BR34}!=null && $P{IS_BR34}]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="0" y="0" width="150" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fase del progetto"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="150" y="0" width="75" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Inizio previsto"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="225" y="0" width="75" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Inizio effettivo"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="300" y="0" width="75" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fine prevista"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="375" y="0" width="75" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fine effettiva"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="450" y="0" width="105" height="17" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Motivo scostamento"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23">
+			<printWhenExpression><![CDATA[$P{IS_BR34}!=null && $P{IS_BR34}]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="150" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descFaseMonit}!=null?$F{descFaseMonit}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="150" y="0" width="75" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dtInizioPrevista}!=null?new SimpleDateFormat("dd/MM/yyyy").format($F{dtInizioPrevista}):""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="225" y="0" width="75" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dtInizioEffettiva}!=null?new SimpleDateFormat("dd/MM/yyyy").format($F{dtInizioEffettiva}):""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="375" y="0" width="75" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dtFineEffettiva}!=null?new SimpleDateFormat("dd/MM/yyyy").format($F{dtFineEffettiva}):""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="450" y="0" width="105" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{descMotivoScostamento}==null?"":$F{descMotivoScostamento})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="300" y="0" width="75" height="23"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dtFinePrevista}!=null?new SimpleDateFormat("dd/MM/yyyy").format($F{dtFinePrevista}):""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="18" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{IS_BR34}!=null && $P{IS_BR34}]]></printWhenExpression>
+		</band>
+	</columnFooter>
+</jasperReport>

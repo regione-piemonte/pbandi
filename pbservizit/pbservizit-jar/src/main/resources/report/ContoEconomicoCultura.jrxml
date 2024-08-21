@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ContoEconomico" pageWidth="575" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" whenResourceMissingType="Empty" uuid="e31b68ab-2a53-40df-9816-e5d6c8ab6fb2">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="13"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="importoSpesaAmmessaInDetermina" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaAmmessaInDetermina]]></fieldDescription>
+	</field>
+	<field name="importoSpesaAmmessaRimodulazione" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaAmmessaRimodulazione]]></fieldDescription>
+	</field>
+	<field name="importoSpesaAmmessaUltima" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaAmmessaUltima]]></fieldDescription>
+	</field>
+	<field name="importoSpesaQuietanziata" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaQuietanziata]]></fieldDescription>
+	</field>
+	<field name="importoSpesaRendicontata" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaRendicontata]]></fieldDescription>
+	</field>
+	<field name="importoSpesaValidataTotale" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaValidataTotale]]></fieldDescription>
+	</field>
+	<field name="importoSpesaPreventivata" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoSpesaPreventivata]]></fieldDescription>
+	</field>
+	<field name="label" class="java.lang.String">
+		<fieldDescription><![CDATA[label]]></fieldDescription>
+	</field>
+	<field name="percSpesaQuietanziataSuAmmessa" class="java.lang.Double">
+		<fieldDescription><![CDATA[percSpesaQuietanziataSuAmmessa]]></fieldDescription>
+	</field>
+	<field name="percSpesaValidataSuAmmessa" class="java.lang.Double">
+		<fieldDescription><![CDATA[percSpesaValidataSuAmmessa]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement x="0" y="11" width="476" height="20" uuid="3041417b-7b1a-4d52-b6c7-92e535689594"/>
+				<box leftPadding="3"/>
+				<text><![CDATA[QUADRO RAPPRESENTATIVO DEL GRADO DI REALIZZAZIONE DELL'INTERVENTO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="26">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="128" height="26" backcolor="#E3E3E3" uuid="673b11c6-1cb4-4c4e-ba64-5426d7b2c79b"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Voce di spesa"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="128" y="0" width="72" height="26" backcolor="#E3E3E3" uuid="3df3694b-6149-4ffd-bd23-c8c1c8621672"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ultima spesa ammessa"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="522" y="0" width="33" height="26" backcolor="#E3E3E3" uuid="a33e9f79-9f27-4c4d-b91b-274c53e801bf"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["V/A [%]"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="200" y="0" width="72" height="26" backcolor="#E3E3E3" uuid="eb034c5c-e86e-414e-ab51-e9fe38ec8b30"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Spesa rendicontata"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="416" y="0" width="33" height="26" backcolor="#E3E3E3" uuid="35debdb9-d65c-43d5-82b2-2c75eb6b2445"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Q/A [%]"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="344" y="0" width="72" height="26" backcolor="#E3E3E3" uuid="e0bd549c-6e56-4c4e-a96f-1cc8ecd95937"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Spesa quietanziata"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="449" y="0" width="73" height="26" backcolor="#E3E3E3" uuid="c5fd878c-b7d6-48f7-a205-c69880e232aa"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Spesa validata totale"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="272" y="0" width="72" height="26" backcolor="#E3E3E3" uuid="b37c0379-49bc-476d-8a7b-07a9bd5e1d9b"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Spesa da rendicontare"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="128" height="26" uuid="736d9116-b946-4ae5-98a1-57768e9f2cf6"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{label}!=null?$F{label}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="128" y="0" width="72" height="26" uuid="46f94a8a-81ac-4109-8501-968de39d45d4"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoSpesaAmmessaUltima}!=null?new DecimalFormat("#,##0.00").format($F{importoSpesaAmmessaUltima}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="200" y="0" width="72" height="26" uuid="bc488b84-764f-42c1-88d2-838c1800aef0"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoSpesaRendicontata}!=null?new DecimalFormat("#,##0.00").format($F{importoSpesaRendicontata}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="344" y="0" width="72" height="26" uuid="f22c02c5-a42b-4ad8-afcd-179db74276da"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoSpesaQuietanziata}!=null?new DecimalFormat("#,##0.00").format($F{importoSpesaQuietanziata}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="416" y="0" width="33" height="26" uuid="386eba0c-5d30-41ff-85f7-13f0bd0e1cf0"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{percSpesaQuietanziataSuAmmessa}!=null?new DecimalFormat("#,##0.00").format($F{percSpesaQuietanziataSuAmmessa}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="449" y="0" width="73" height="26" uuid="ec486263-aab9-4c62-8ff4-a0675a280469"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoSpesaValidataTotale}!=null?new DecimalFormat("#,##0.00").format($F{importoSpesaValidataTotale}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="522" y="0" width="33" height="26" uuid="fea87a3e-5fba-4634-a31c-d863f3fcba5d"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{percSpesaValidataSuAmmessa}!=null?new DecimalFormat("#,##0.00").format($F{percSpesaValidataSuAmmessa}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="272" y="0" width="72" height="26" uuid="5f5cc254-4e30-4e90-a972-5d7fcc53f5e7"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoSpesaPreventivata}!=null?new DecimalFormat("#,##0.00").format($F{importoSpesaPreventivata}):"0,00")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,212 @@
+.page {
+    .title {
+        .containerUp {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .content {
+        mat-progress-bar {
+            height: 14px;
+        }
+    }
+
+    .contentRow {
+        display: flex;
+        flex-direction: row;
+        width: 85%;
+        margin-top: 10px;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.fontSize18 {
+    font-size: 18px;
+}
+
+.alignRight {
+    text-align: right;
+}
+
+.alignLeft {
+    text-align: left;
+}
+
+.paddingRight5 {
+    padding-right: 5px;
+}
+
+.paddingLeft15 {
+    padding-left: 15px;
+}
+
+.paddingRight15 {
+    padding-right: 15px;
+}
+
+.colorGray {
+    color: gray;
+}
+
+.colorYellow {
+    color: #ffd62c;
+}
+
+.colorBlack {
+    color: #000000;
+}
+
+.width25Perc {
+    width: 25%;
+}
+
+.width75Perc {
+    width: 75%;
+}
+
+.marginLeft25 {
+    margin-left: 25px;
+}
+
+.minHeight600 {
+    min-height: 600px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.tipoAlign {
+    display: flex;
+    align-items: center;
+}
+
+.marginLeft10 {
+    margin-left: 10px;
+}
+
+.colorGreen {
+    color: #009f3d;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: #0060c1 !important;
+}
+
+::ng-deep .mat-checkbox.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+.grayColor {
+    background-color: #f7f7f7;
+}
+
+.green-progress .mat-progress-bar-fill::after {
+    background-color: green !important;
+}
+
+::ng-deep .mat-progress-bar-fill::after {
+    background-color: #ddeeff;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+    background: white;
+}
+
+::ng-deep .mat-progress-bar {
+    border-radius: 2px;
+}
+
+.marginTop15 {
+    margin-top: 15px;
+}
+
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.backgroundWhite {
+    background-color: white;
+}
+
+.paddingLeft0 {
+    padding-left: 0px;
+}
+
+.manageTextOutBox {
+    overflow: hidden;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color: #0058b1 !important; /*click effect color change*/
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #0058b1 !important; /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0058b1 !important; /*outer ring color change*/
+}
+
+.parent {
+    display: flex;
+    height: 100%;
+}
+
+.child {
+    display: inline-block;
+    align-self: flex-end;
+}
+
+::ng-deep .mat-dialog-container {
+    overflow-y: hidden !important;
+    padding-bottom: 10px !important;
+    max-height: calc(100vh - 30px) !important;
+    height: auto !important;
+
+    .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+    .mat-select-value-text,
+    .cdk-text-field-autofill-monitored:-webkit-autofill {
+        font-weight: bold !important;
+    }
+}
+.cdk-overlay-pane {
+    overflow: scroll;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-style-1 {
+    color: #0060c1;
+    font-size: 16px;
+    font-weight: bold;
+}

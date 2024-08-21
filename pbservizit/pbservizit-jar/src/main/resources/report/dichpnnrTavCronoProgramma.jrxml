@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ContoEconomico" pageWidth="575" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" whenResourceMissingType="Empty" uuid="9ae4a276-081c-4586-9182-82dd7e7206fe">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+    <parameter name="codiceIgrue" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descFaseMonit" class="java.lang.String">
+		<fieldDescription><![CDATA[descFaseMonit]]></fieldDescription>
+	</field>
+	<field name="estremiAttoAmministrativo" class="java.lang.String">
+		<fieldDescription><![CDATA[estremiAttoAmministrativo]]></fieldDescription>
+	</field>
+	<field name="dataLimite" class="java.sql.Date">
+		<fieldDescription><![CDATA[dataLimite]]></fieldDescription>
+	</field>
+	<field name="dataPrevista" class="java.sql.Date">
+		<fieldDescription><![CDATA[dataPrevista]]></fieldDescription>
+	</field>
+	<field name="dataEffettiva" class="java.sql.Date">
+		<fieldDescription><![CDATA[dataEffettiva]]></fieldDescription>
+	</field>
+	<field name="motivoScostamento" class="java.lang.String">
+		<fieldDescription><![CDATA[motivoScostamento]]></fieldDescription>
+	</field>
+	<field name="descIter" class="java.lang.String">
+		<fieldDescription><![CDATA[descIter]]></fieldDescription>
+	</field>
+	<field name="idIter" class="java.lang.Long">
+		<fieldDescription><![CDATA[idIter]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement x="0" y="11" width="476" height="20" uuid="ae3a3333-0998-412a-9a5d-2e033a11303d"/>
+				<box leftPadding="3"/>
+				<text><![CDATA[Cronoprogramma]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="26">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="193" height="26" backcolor="#E3E3E3" uuid="5f845d48-e7e7-4665-9161-afa333a54a6e"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fase-Attività"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="193" y="0" width="60" height="26" backcolor="#E3E3E3" uuid="349e414e-0fdb-4a09-aee2-fc875730e824"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data massima definita da D.M."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="253" y="0" width="60" height="26" backcolor="#E3E3E3" uuid="852930f1-a622-4dbd-8e04-88eaf3d42c38"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data prevista"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Opaque" x="448" y="0" width="107" height="26" backcolor="#E3E3E3" uuid="bef4126f-0cf7-4082-a2bb-fc67523ab86a"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Estremi atto amministrativo"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="373" y="0" width="75" height="26" backcolor="#E3E3E3" uuid="c90792cd-3a56-4642-a73c-74679dcada90"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Motivo scostamento"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="313" y="0" width="60" height="26" backcolor="#E3E3E3" uuid="830a536a-2768-4370-ac55-5fddac7bd4cc"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data effettiva"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="193" height="26" uuid="f8d2bd93-c6fa-42fd-a0a8-2f3dfa8d16f6"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $F{descIter} + " - " +$F{descFaseMonit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="193" y="0" width="60" height="26" uuid="aa71cd69-fa9c-431a-afdc-d4d605169bb8"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" +$F{dataLimite}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="253" y="0" width="60" height="26" uuid="d6e60a4c-8d39-41f1-8238-280ca8892cdc"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" +$F{dataPrevista}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="313" y="0" width="60" height="26" uuid="881ce046-21b2-42fd-8182-4fa7b5db8b0b"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{dataEffettiva}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="448" y="0" width="107" height="26" uuid="843c2668-7c75-4ea7-b8dc-5fba10736dca"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{estremiAttoAmministrativo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="373" y="0" width="75" height="26" uuid="11557d3b-5f99-42f0-9bfb-7e84b7510684"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" +$F{motivoScostamento}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="documenti contabili" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="553" leftMargin="0" rightMargin="42" topMargin="6" bottomMargin="8" uuid="ccae3c4f-d722-457c-83a9-77cd6b2f8fe6">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="IS_BR05" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="IS_BR16" class="java.lang.Boolean" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="dataDocumento" class="java.util.Date">
+		<fieldDescription><![CDATA[dataDocumento]]></fieldDescription>
+	</field>
+	<field name="dataPagamento" class="java.util.Date">
+		<fieldDescription><![CDATA[dataPagamento]]></fieldDescription>
+	</field>
+	<field name="dataValuta" class="java.util.Date">
+		<fieldDescription><![CDATA[dataValuta]]></fieldDescription>
+	</field>
+	<field name="destinatarioPagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[destinatarioPagamento]]></fieldDescription>
+	</field>
+	<field name="idDocumentoDiSpesa" class="java.lang.Long">
+		<fieldDescription><![CDATA[idDocumentoDiSpesa]]></fieldDescription>
+	</field>
+	<field name="idPagamento" class="java.lang.Long">
+		<fieldDescription><![CDATA[idPagamento]]></fieldDescription>
+	</field>
+	<field name="imponibile" class="java.lang.Double">
+		<fieldDescription><![CDATA[imponibile]]></fieldDescription>
+	</field>
+	<field name="importoIva" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoIva]]></fieldDescription>
+	</field>
+	<field name="importoPagamento" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoPagamento]]></fieldDescription>
+	</field>
+	<field name="importoTotaleDocumento" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoTotaleDocumento]]></fieldDescription>
+	</field>
+	<field name="modalitaPagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[modalitaPagamento]]></fieldDescription>
+	</field>
+	<field name="numeroDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[numeroDocumento]]></fieldDescription>
+	</field>
+	<field name="tipoDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[tipoDocumento]]></fieldDescription>
+	</field>
+	<field name="task" class="java.lang.String">
+		<fieldDescription><![CDATA[task]]></fieldDescription>
+	</field>
+	<field name="importoRendicontabile" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoRendicontabile]]></fieldDescription>
+	</field>
+	<field name="descDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[descDocumento]]></fieldDescription>
+	</field>
+	<field name="tipoInvio" class="java.lang.String">
+		<fieldDescription><![CDATA[tipoInvio]]></fieldDescription>
+	</field>
+	<field name="numProtocollo" class="java.lang.String"/>
+	<field name="flagElettronico" class="java.lang.String"/>
+	<field name="ruolo" class="java.lang.String"/>
+	<field name="dataFirmaContratto" class="java.util.Date">
+		<fieldDescription><![CDATA[dataFirmaContratto]]></fieldDescription>
+	</field>
+	<group name="gruppoPagamenti" minHeightToStartNewPage="104">
+		<groupExpression><![CDATA[$F{idDocumentoDiSpesa}]]></groupExpression>
+		<groupHeader>
+			<band height="108" splitType="Prevent">
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="13" width="356" height="13" uuid="74ff1d4e-1304-45dc-8287-5389e3056e99">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{numeroDocumento}==null?"":$F{numeroDocumento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="26" width="486" height="38" uuid="3bb94cf0-109b-4199-a558-1c426ef0d1af"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{descDocumento}==null?"":$F{descDocumento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" mode="Opaque" x="0" y="26" width="67" height="38" backcolor="#E7E7E7" uuid="42deaf49-129a-4064-b626-de90d91ae154"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Descrizione"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="13" width="67" height="13" backcolor="#E7E7E7" uuid="17ede42e-0851-4f0f-9b5b-3ef221a490fc">
+						<property name="net.sf.jasperreports.export.pdf.tag.table" value="start"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.tr" value="start"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Numero"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="64" width="67" height="13" backcolor="#E7E7E7" uuid="c828b43b-2217-442d-ac38-d761435e23d3"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Fornitore"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="64" width="486" height="13" uuid="f88a1470-9225-432e-b854-33fa81ab88dd"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{destinatarioPagamento}==null?"":$F{destinatarioPagamento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="144" y="90" width="48" height="13" backcolor="#E7E7E7" uuid="d1a4fb16-cc16-4001-aeac-bf59d6f1f58c">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Imposta"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="423" y="90" width="53" height="13" backcolor="#E7E7E7" uuid="adb1bee4-7de1-44b7-ba55-ea3469682aa2">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Totale"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="269" y="90" width="77" height="13" backcolor="#E7E7E7" uuid="dde3e87b-5362-41ea-8d35-734eba5182d0">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Rendicontabile"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="90" width="67" height="13" backcolor="#E7E7E7" uuid="0ce79221-6d1f-43b3-ae01-5bd6ad88fbb5">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Imponibile"]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="476" y="90" width="77" height="13" uuid="3593bbbd-312f-44cb-a4e0-365435f20f0c">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="1" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{importoTotaleDocumento}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoTotaleDocumento})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="90" width="77" height="13" uuid="ba799a23-61eb-4b21-a3d6-9ab86adfa3b9">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{imponibile}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{imponibile})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="192" y="90" width="77" height="13" uuid="26af7c6a-d0ad-407f-b177-c87c28951d85">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{importoIva}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoIva})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="346" y="90" width="77" height="13" uuid="5672bed3-4490-49fa-9f8b-84ae38228cb6">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{importoRendicontabile}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoRendicontabile})]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="476" y="13" width="77" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="662fd889-f65f-463f-939d-5c19ee1ce0c5">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dataDocumento}==null?"":new SimpleDateFormat("dd/MM/yyyy").format($F{dataDocumento})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="423" y="13" width="53" height="13" backcolor="#E7E7E7" uuid="84db9585-af69-4219-a754-943c30b3ef90">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Data"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="51" width="486" height="13" uuid="3dc50030-4261-4e75-98f9-f261edae2485"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineColor="#999999"/>
+						<leftPen lineWidth="0.0" lineColor="#999999"/>
+						<bottomPen lineWidth="0.0" lineColor="#999999"/>
+						<rightPen lineWidth="0.0" lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{task}==null ? "":("Task: " +$F{task})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="67" height="13" backcolor="#E7E7E7" uuid="294597d5-c027-4b48-9f10-d1c31a77e1d7"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tipologia"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="0" width="253" height="13" uuid="494b10db-4707-4e96-ab96-529df5a64923"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.0" lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipoDocumento}==null?"":$F{tipoDocumento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="320" y="0" width="233" height="13" uuid="bce5d6bb-07ad-464f-8623-cf60ae916024"/>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.0" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{flagElettronico}!=null && $F{flagElettronico}.equals("S")?"Nat. Dgt ":""
++$F{tipoInvio}!=null && $F{tipoInvio}.equals("D")?"Invio Dgt":""
++" "
++$F{tipoInvio}!=null && $F{tipoInvio}.equals("D") && $F{numProtocollo}!=null ?" - n°prot."+ $F{numProtocollo}:""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="77" width="67" height="13" backcolor="#E7E7E7" uuid="eff0107f-f07d-4962-9c46-84ac2c973bbd"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Ruolo"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" mode="Opaque" x="269" y="77" width="103" height="13" backcolor="#E7E7E7" uuid="98e7a362-b12b-4a05-9349-ef83f2bf1614"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+						<paragraph rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Data firma contratto"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="67" y="77" width="202" height="13" uuid="f8367faa-9310-4894-8092-d4e8ffb68687">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ruolo}==null?"":$F{ruolo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="372" y="77" width="181" height="13" uuid="f2690c36-8c83-4272-8c4a-d7c4a5db7788">
+						<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="4">
+						<topPen lineWidth="0.25" lineColor="#999999"/>
+						<leftPen lineWidth="0.25" lineColor="#999999"/>
+						<bottomPen lineWidth="0.25" lineColor="#999999"/>
+						<rightPen lineWidth="0.25" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dataFirmaContratto}==null?"":new SimpleDateFormat("dd/MM/yyyy").format($F{dataFirmaContratto})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gruppoTask" minHeightToStartNewPage="52">
+		<groupExpression><![CDATA[$F{destinatarioPagamento}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Prevent"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="7">
+				<line>
+					<reportElement x="0" y="4" width="553" height="1" forecolor="#CCCCCC" backcolor="#CCCCCC" uuid="7522d4c5-63c2-4418-92b6-17b5e4219043"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="27" splitType="Prevent">
+			<staticText>
+				<reportElement x="0" y="7" width="229" height="20" uuid="771fbfd9-2115-4397-9cea-2ba6c0b1fe6d"/>
+				<box leftPadding="3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTI CONTABILI DELLE SPESE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="44" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="26" width="361" height="13" uuid="a96fc67c-87e1-4697-bcad-b89824ef1217">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.table" value="end"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
+				</reportElement>
+				<box leftPadding="4" rightPadding="1">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modalitaPagamento}==null?"":$F{modalitaPagamento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="361" y="26" width="95" height="13" uuid="0637ad98-1cfa-4051-aaed-8a847a0aa903">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{IS_BR05}==null ||$P{IS_BR05}.booleanValue() == false)?($F{dataValuta}==null?"":new SimpleDateFormat("dd/MM/yyyy").format($F{dataValuta})):($F{dataPagamento}==null?"":new SimpleDateFormat("dd/MM/yyyy").format($F{dataPagamento}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="456" y="26" width="97" height="13" uuid="702a8654-9d4e-4fd5-ab6e-cb72a1c68f4c">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importoPagamento}==null?"N.D.":new DecimalFormat("#,##0.00").format($F{importoPagamento})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="553" height="13" backcolor="#E7E7E7" uuid="857b610a-8e41-401b-9f38-e61eab4d22b3">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+				</reportElement>
+				<box leftPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagamenti del documento"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="361" y="13" width="95" height="13" backcolor="#E7E7E7" uuid="95c12ebe-c318-4ee8-a3c1-7ed5c938965d">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+				</reportElement>
+				<box leftPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data accredito"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="456" y="13" width="97" height="13" backcolor="#E7E7E7" uuid="4236b359-effe-498f-8f0e-cf00ca4970d2">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+				</reportElement>
+				<box leftPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Importo pagato"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="13" width="361" height="13" backcolor="#E7E7E7" uuid="1282a2a3-8317-4f77-b10e-cc7acc536867">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+				</reportElement>
+				<box leftPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Modalità"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="44">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="1" width="553" height="41" uuid="7bfe0bad-b26e-4fe9-8d4a-c2b30cf69a41"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[ (#) indica un pagamento già comunicato in precedenti dichiarazioni
+ (Nat. Dgt) Documento nativamente digitale (art. 20 d.l. 7.03.2005 n. 82), Duplicato informatico o Copia informatica di documento informatico (art. 23 bis comma 1 e 2 d.l. 7.03.2005 n. 82).
+ (Invio Dgt) Il documento è copia informatica di documento analogico ottenuto da scansione (cartaceo - art. 22 comma 2 d.l. 7.03.2005 n. 82). ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

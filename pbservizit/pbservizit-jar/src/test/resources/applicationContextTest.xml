@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+
+	<!-- bean di utility -->
+	<bean class="it.csi.pbandi.pbservizit.util.BeanUtil"></bean>
+	<bean class="it.csi.pbandi.pbservizit.util.FileSqlUtil"></bean>
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" >
+		<property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	</bean>
+	
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" />
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="profilazioneDAOImpl"
+		class="it.csi.pbandi.pbservizit.integration.dao.impl.ProfilazioneDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="gestioneFileDAOImpl"
+		class="it.csi.pbandi.pbservizit.integration.dao.impl.GestioneFileDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	
+	<!-- bean necessari per le classi di TEST  -->
+	<bean id="documentoManager" class="it.csi.pbandi.pbservizit.business.manager.DocumentiFSManager"/>
+
+	
+	<bean id="neofluxBusinessImpl" class="it.csi.pbandi.pbservizit.pbandisrv.business.neoflux.NeofluxBusinessImpl"/>
+	<bean id="decodificheManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DecodificheManager"/>
+	<bean id="sequenceManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SequenceManager"/>
+	<bean id="regolaManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.RegolaManager"/>
+	<bean id="progettoManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ProgettoManager"/>
+	<bean id="timerManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.TimerManager"/>
+	<bean id="configurationManager" class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ConfigurationManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.ContoEconomicoManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.SedeManager" />
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.IndicatoriManager" />
+	
+	<bean id="pbandiProfilazioneDAO" class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiProfilazioneDAOImpl"/>
+	<bean id="pbandiDatiGeneraliDAO" class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiDatiGeneraliDAOImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiGestioneProgettoDAOImpl" />
+	
+	<bean id="configurationDTO" class="it.csi.pbandi.pbservizit.pbandisrv.dto.manager.ConfigurationDTO"/>
+	
+	<bean id="genericDAO" class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.dao.GenericDAO"/>
+	<bean id="logger" class="it.csi.pbandi.pbservizit.pbandiutil.common.LoggerUtil"/>
+	<bean id="beanUtil" class="it.csi.pbandi.pbservizit.pbandiutil.common.BeanUtil"/>
+	<bean id="beanMapperNew" class="it.csi.pbandi.pbservizit.pbandisrv.integration.util.BeanMapper"/>
+	<bean id="timerUtil" class="it.csi.pbandi.pbservizit.pbandiutil.common.TimerUtil"/>
+
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.tracciamento.TracciamentoBusinessImpl" />
+	
+	<!-- bean aggiunti per ArchivioFile - inizio -->
+	<bean id="archivioFileDAOImpl"
+		class="it.csi.pbandi.pbservizit.integration.dao.impl.ArchivioFileDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean class="it.csi.pbandi.pbservizit.util.FileUtil"/>
+	<bean class="it.csi.pbandi.pbservizit.business.manager.DocumentoManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.archivio.ArchivioBusinessImpl"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.business.manager.DocumentoManager"/>
+	<bean class="it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.dao.PbandiArchivioFileDAOImpl"/>
+	<!-- bean aggiunti per ArchivioFile - fine -->
+	
+ 	<!-- bean DAO -->
+	<context:component-scan base-package="it.csi.pbandi.pbservizit.integration.dao" />
+
+	<context:property-placeholder location="classpath:/enviromentTest.properties" />
+
+</beans>

@@ -1,0 +1,45 @@
+.displayFlex {
+  display: flex;
+}
+
+.colorGreen {
+  color: green;
+}
+
+.colorRed {
+  color: #b8191a;
+}
+
+::ng-deep .mat-dialog-container {
+  overflow-y: hidden !important;
+  padding-bottom: 10px !important;
+  max-height: calc(100vh - 30px) !important;
+  height: auto !important;
+
+  .cdk-text-field-autofill-monitored:not(:-webkit-autofill),
+  .mat-select-value-text,
+  .cdk-text-field-autofill-monitored:-webkit-autofill {
+    font-weight: bold !important;
+  }
+}
+.cdk-overlay-pane {
+  overflow: scroll;
+}
+::ng-deep .mat-tooltip {
+  font-size: 14px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.spaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-style-1 {
+  color: #0060c1;
+  font-size: 16px;
+  font-weight: bold;
+}

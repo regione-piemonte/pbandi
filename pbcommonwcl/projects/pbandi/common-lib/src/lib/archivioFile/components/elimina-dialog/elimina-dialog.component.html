@@ -1,0 +1,13 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Eliminazione cartelle e file</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  Cartelle e file selezionati saranno eliminati
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="annulla()">ANNULLA</button>
+  <button mat-button cdkFocusInitial (click)="elimina()">ELIMINA</button>
+</mat-dialog-actions>

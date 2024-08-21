@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ContoEconomico" pageWidth="575" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" whenResourceMissingType="Empty" uuid="9ae4a276-081c-4586-9182-82dd7e7206fe">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="importoRichiesto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[importoRichiesto]]></fieldDescription>
+	</field>
+	<field name="importoConsuntivoPresentato" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[importoConsuntivoPresentato]]></fieldDescription>
+	</field>
+	<field name="importoAmmesso" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[importoAmmesso]]></fieldDescription>
+	</field>
+	<field name="descrizione" class="java.lang.String">
+		<fieldDescription><![CDATA[descrizione]]></fieldDescription>
+	</field>
+	<field name="completamento" class="java.lang.String">
+		<fieldDescription><![CDATA[completamento]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement x="0" y="11" width="476" height="20" uuid="ae3a3333-0998-412a-9a5d-2e033a11303d"/>
+				<box leftPadding="3"/>
+				<text><![CDATA[Voci di Entrata]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="26">
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="210" height="26" backcolor="#E3E3E3" uuid="5f845d48-e7e7-4665-9161-afa333a54a6e"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Voce di entrata"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="210" y="0" width="115" height="26" backcolor="#E3E3E3" uuid="349e414e-0fdb-4a09-aee2-fc875730e824">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Richiesto in domanda preventivo"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="325" y="0" width="115" height="26" backcolor="#E3E3E3" uuid="852930f1-a622-4dbd-8e04-88eaf3d42c38">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Preventivo ammesso in istruttoria"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="440" y="0" width="115" height="26" backcolor="#E3E3E3" uuid="830a536a-2768-4370-ac55-5fddac7bd4cc"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Consuntivo presentato"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26">
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="210" height="26" uuid="f8d2bd93-c6fa-42fd-a0a8-2f3dfa8d16f6"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{completamento}!=null?$F{descrizione} + " - " + $F{completamento}:$F{descrizione}!=null ? $F{descrizione} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="210" y="0" width="115" height="26" uuid="aa71cd69-fa9c-431a-afdc-d4d605169bb8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoRichiesto}!=null?new DecimalFormat("#,##0.00").format($F{importoRichiesto}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="325" y="0" width="115" height="26" uuid="d6e60a4c-8d39-41f1-8238-280ca8892cdc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoAmmesso}!=null?new DecimalFormat("#,##0.00").format($F{importoAmmesso}):"0,00")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="440" y="0" width="115" height="26" uuid="881ce046-21b2-42fd-8182-4fa7b5db8b0b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineColor="#999999"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+($F{importoConsuntivoPresentato}!=null?new DecimalFormat("#,##0.00").format($F{importoConsuntivoPresentato}):"0,00")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+</jasperReport>

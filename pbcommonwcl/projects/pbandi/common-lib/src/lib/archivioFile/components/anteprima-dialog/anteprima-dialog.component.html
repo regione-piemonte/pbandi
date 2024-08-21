@@ -1,0 +1,58 @@
+<mat-spinner-pbandi *ngIf="this.isLoading"></mat-spinner-pbandi>
+<div *ngIf="!isLoading" class="display-flex justify-content-space-between flex-direction-column height-93-perc">
+  <div class="justify-content-center align-items-center display-flex height-100-perc">
+    <div *ngIf='leftArrow' class="margin-right-40">
+      <button mat-icon-button (click)="leftButton()">
+        <mat-icon class="fontSize50 width50">keyboard_arrow_left</mat-icon>
+      </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError fullWidth" *ngIf="isMessageErrorVisible">
+      <mat-card-content class="messageErrorContent">
+        <p [innerHTML]="messageError"></p>
+      </mat-card-content>
+    </mat-card>
+    <mat-dialog-content *ngIf='pdfFile && !isMessageErrorVisible'
+      class="fullWidth mat-typography display-flex height-99-perc max-height-99-perc"
+      [ngClass]="{'margin-left-20': !leftArrow, 'margin-right-20': !rightArrow}">
+      <div class="marginLeft30 marginRight30">
+        <pdf-viewer [src]="pdfSrc" [render-text]="true" [rotation]="gradi" [zoom]="zoom" class="display-block"
+          (error)="showError($event)">
+        </pdf-viewer>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-content *ngIf='!pdfFile' class="fullWidth mat-typography display-flex height-99-perc max-height-99-perc"
+      [ngClass]="{'margin-left-20': !leftArrow, 'margin-right-20': !rightArrow}">
+      <!--[@rotatedState]='state'-->
+      <div [style.transform]="'scale('+zoom+')'"
+        class="marginLeft30 marginRight30  height-100-perc transform-origin-top-left" *ngIf="!anteprimaNonDisponibile"
+        [innerHtml]="html | safeHtml"></div>
+      <p *ngIf="anteprimaNonDisponibile">Anteprima non disponibile.</p>
+    </mat-dialog-content>
+    <div *ngIf='rightArrow' class="margin-right-40 margin-left-40">
+      <button mat-icon-button (click)="rightButton()">
+        <mat-icon class="fontSize50 width50">keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- visualizzo l'html generato dalla trasformata senza far applicare il sanitizer ... pericoloso.... verificare con Luigi la grafica ottenuta
+Se il sanitizer non elimina cose indispensabili per la grafica NON usarlo
+-->
+
+
+  <mat-dialog-actions align="end">
+    <button mat-icon-button (click)="zoomIn()" *ngIf="!anteprimaNonDisponibile || pdfFile">
+      <mat-icon>zoom_in</mat-icon>
+    </button>
+    <button mat-icon-button (click)="zoomOut()" *ngIf="!anteprimaNonDisponibile || pdfFile">
+      <mat-icon>zoom_out</mat-icon>
+    </button>
+    <button mat-icon-button (click)="rotateLeft()" *ngIf="pdfFile">
+      <mat-icon>rotate_left</mat-icon>
+    </button>
+    <button mat-icon-button (click)="rotateRight()" *ngIf="pdfFile">
+      <mat-icon>rotate_right</mat-icon>
+    </button>
+    <button mat-button (click)="annulla()" class="button-style-1">CHIUDI</button>
+  </mat-dialog-actions>
+</div>

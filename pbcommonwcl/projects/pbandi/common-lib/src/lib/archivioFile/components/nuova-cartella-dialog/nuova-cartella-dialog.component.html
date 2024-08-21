@@ -1,0 +1,16 @@
+<div class="spaceBetween">
+  <h3 class="bold-text">Nuova cartella</h3>
+  <button type="button" mat-icon-button class="blue-color" (click)="annulla()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field>
+    <mat-label>Nome cartella</mat-label>
+    <input matInput [(ngModel)]="nomeCartella">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="annulla()" class="button-style-1">ANNULLA</button>
+  <button mat-button cdkFocusInitial (click)="creaCartella()" class="button-style-1">CREA CARTELLA</button>
+</mat-dialog-actions>

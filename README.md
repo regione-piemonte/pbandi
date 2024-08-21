@@ -36,12 +36,12 @@ Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi m
 - [PBGESTFINBOWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbgestfinbowcl)  Servizi REST trasversali del BackOffice Gestionale Finanziamenti (Front-End in Angular)
 
 una componente trasversale per le componenti Angular
-- [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi/pbcommonwcl)     Componente funzionalità comuni per BPM (Angular)
+- [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbcommonwcl)     Componente funzionalità comuni per BPM (Angular)
 
 tre componenti di esposizione servizi:
 - [PBSERVWELFARE](https://github.com/regione-piemonte/pbandi/pbservwelfare)   Componente di esposizione servizi per i bandi welfare 
-- [PBSERVIZIT](https://github.com/regione-piemonte/pbandi/pbservizit)  	Servizi REST trasversali  	
-- [PBSERVREST](https://github.com/regione-piemonte/pbandi/pbservrest)  	Servizi esposti verso fruitori esterni 	
+- [PBSERVIZIT](https://github.com/regione-piemonte/pbandi/tree/main/pbservizit)  	Servizi REST trasversali  	
+- [PBSERVREST](https://github.com/regione-piemonte/pbandi/tree/main/pbservrest)  	Servizi esposti verso fruitori esterni 	
 
 una componente trasversale di utility per la gesione dei file da archiviare
 - [FILESTORAGE](https://github.com/regione-piemonte/pbandi/tree/main/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem

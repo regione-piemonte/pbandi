@@ -20,9 +20,13 @@ Questa componente deve essere installata dopo la componente PBANDIWORKSPACE.
 
 ## Installazione
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbwebbo\pbwebbo-tar\src\pbwebbo-ds.xml:
+
 	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
+
 	Line  9: 		<user-name>@@DB_USER@@</user-name>
+
 	Line 10: 		<password>@@DB_PWD@@</password>
+	
 
 Per generare i pacchetti effettuare i seguenti step:
 

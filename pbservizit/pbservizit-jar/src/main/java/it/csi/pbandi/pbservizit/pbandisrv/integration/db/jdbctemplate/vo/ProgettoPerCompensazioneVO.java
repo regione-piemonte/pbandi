@@ -1,0 +1,29 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+package it.csi.pbandi.pbservizit.pbandisrv.integration.db.jdbctemplate.vo;
+
+import it.csi.pbandi.pbservizit.pbandisrv.integration.db.vo.PbandiTDettPropostaCertifVO;
+
+public class ProgettoPerCompensazioneVO extends PbandiTDettPropostaCertifVO {
+	public String getDescAsse() {
+		return descAsse;
+	}
+
+	public void setDescAsse(String descAsse) {
+		this.descAsse = descAsse;
+	}
+
+	public String getCodiceVisualizzato() {
+		return codiceVisualizzato;
+	}
+
+	public void setCodiceVisualizzato(String codiceVisualizzato) {
+		this.codiceVisualizzato = codiceVisualizzato;
+	}
+
+	private String descAsse;
+	private String codiceVisualizzato;
+}

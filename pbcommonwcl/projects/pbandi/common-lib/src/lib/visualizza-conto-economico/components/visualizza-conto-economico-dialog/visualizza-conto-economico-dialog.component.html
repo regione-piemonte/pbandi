@@ -1,0 +1,127 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+<div class="page" [ngClass]="{'displayNone': isLoading()}">
+    <div class="spaceBetween">
+        <h3 class="bold-text">Conto Economico</h3>
+        <button type="button" mat-icon-button class="blue-color" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+        <mat-card-content class="messageErrorContent">
+            <p [innerHTML]="messageError"></p>
+        </mat-card-content>
+    </mat-card>
+    <div *ngIf="ricercaCapofila"
+        class="display-flex align-items-baseline justify-content-space-around margin-bottom-20">
+        <mat-radio-group aria-label="Select an option" [(ngModel)]="tipoRicerca" name="tipoRicerca"
+            class="row marginRadioButton">
+            <mat-radio-button class="marginRight20" value="CAPOFILA">Capofila
+            </mat-radio-button>
+            <mat-radio-button class="marginRight20" value="COMPLESSIVO">Complessivo</mat-radio-button>
+            <mat-radio-button value="PARTNER">Partner</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field class="width-50-perc">
+            <mat-label>Selezionare un partner</mat-label>
+            <mat-select [(ngModel)]="partnerSelected" name="partner">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let option of partnersCapofila" [value]="option">
+                    {{option.descrizione}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button class="button-style-2" mat-raised-button (click)="aggiorna()">
+            AGGIORNA
+        </button>
+    </div>
+    <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+            <p *ngIf="!dataSource || !dataSource.data || dataSource.data.length===0">Non ci sono elementi da
+                visualizzare.</p>
+
+            <div [ngClass]="{'displayNone': !dataSource || !dataSource.data || dataSource.data.length===0}">
+                <form #tableForm="ngForm">
+                    <table mat-table [dataSource]="dataSource" class="fullWidth">
+
+                        <ng-container matColumnDef="vociSpesa">
+                            <th mat-header-cell *matHeaderCellDef> Voci di spesa </th>
+                            <td mat-cell *matCellDef="let row"
+                                [ngClass]="{'bold-text': row.level===0 || row.level===1}">
+                                <a class="display-flex align-items-center"
+                                    [ngClass]="{'blue-color':row.level===1, 'cursor-pointer': row.haFigli && row.level!==0}"
+                                    (click)="openCloseVoce(row.id)">
+                                    <span class="min-width-24">
+                                        <mat-icon
+                                            [ngClass]="{'displayNone': !row.haFigli || row.level===0 || !row.figliVisible}">
+                                            arrow_drop_up </mat-icon>
+                                        <mat-icon
+                                            [ngClass]="{'displayNone': !row.haFigli || row.level===0 || row.figliVisible}">
+                                            arrow_drop_down</mat-icon>
+                                    </span>
+                                    {{row.label}}
+                                </a>
+                                <div *ngIf="(row.level===0 && row.haFigli) || row.level>0" class="flexEnd grey-color">
+                                    ({{row.perc ? (row.perc | number: '1.2-2' : 'it') : row.perc }}%)</div>
+                                <mat-progress-bar *ngIf="(row.level===0 && row.haFigli) || row.level>0"
+                                    mode="determinate" [value]="row.perc">
+                                </mat-progress-bar>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="spesaAmmessa">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa ammessa </th>
+                            <td mat-cell *matCellDef="let row" class="text-right yellow-background"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.importoSpesaAmmessa | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="spesaRendicontata">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa rendicontata </th>
+                            <td mat-cell *matCellDef="let row" class="text-right"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.importoSpesaRendicontata | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="spesaQuietanzata">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa quietanziata </th>
+                            <td mat-cell *matCellDef="let row; let i = index" class="text-right"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.importoSpesaQuietanziata | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="qa">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Q/A (%) </th>
+                            <td mat-cell *matCellDef="let row" class="text-right"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.percentualeSpesaQuietanziataSuAmmessa | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="spesaValidata">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Spesa validata totale </th>
+                            <td mat-cell *matCellDef="let row" class="text-right"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.importoSpesaValidataTotale | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="via">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> V/A (%) </th>
+                            <td mat-cell *matCellDef="let row" class="text-right"
+                                [ngClass]="{'bold-text': (row.level===0 || row.level===1) && row.label}">
+                                {{row.percentualeSpesaValidataSuAmmessa | number: '1.2-2' : 'it'}}
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"
+                            [ngClass]="{'displayNone': !row.visible, 'light-blue-background': row.level===0 && row.haFigli}">
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

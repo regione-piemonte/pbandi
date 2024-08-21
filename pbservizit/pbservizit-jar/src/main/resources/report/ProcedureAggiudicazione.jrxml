@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Indicatori" pageWidth="575" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IS_BR35" class="java.lang.Boolean" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="cigProcAgg" class="java.lang.String">
+		<fieldDescription><![CDATA[cigProcAgg]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="codProcAgg" class="java.lang.String">
+		<fieldDescription><![CDATA[codProcAgg]]></fieldDescription>
+	</field>
+	<field name="codice" class="java.lang.String">
+		<fieldDescription><![CDATA[codice]]></fieldDescription>
+	</field>
+	<field name="descProcAgg" class="java.lang.String">
+		<fieldDescription><![CDATA[descProcAgg]]></fieldDescription>
+	</field>
+	<field name="descTipologiaAggiudicazione" class="java.lang.String">
+		<fieldDescription><![CDATA[descTipologiaAggiudicazione]]></fieldDescription>
+	</field>
+	<field name="dtAggiudicazione" class="java.util.Date">
+		<fieldDescription><![CDATA[dtAggiudicazione]]></fieldDescription>
+	</field>
+	<field name="idMotivoAssenzaCig" class="java.lang.Long">
+		<fieldDescription><![CDATA[idMotivoAssenzaCig]]></fieldDescription>
+	</field>
+	<field name="idProceduraAggiudicaz" class="java.lang.Long">
+		<fieldDescription><![CDATA[idProceduraAggiudicaz]]></fieldDescription>
+	</field>
+	<field name="idProgetto" class="java.lang.Long">
+		<fieldDescription><![CDATA[idProgetto]]></fieldDescription>
+	</field>
+	<field name="idTipologiaAggiudicaz" class="java.lang.Long">
+		<fieldDescription><![CDATA[idTipologiaAggiudicaz]]></fieldDescription>
+	</field>
+	<field name="importo" class="java.lang.Double">
+		<fieldDescription><![CDATA[importo]]></fieldDescription>
+	</field>
+	<field name="importoPercentuale" class="java.lang.Double">
+		<fieldDescription><![CDATA[importoPercentuale]]></fieldDescription>
+	</field>
+	<field name="iter" class="java.lang.Object">
+		<fieldDescription><![CDATA[iter]]></fieldDescription>
+	</field>
+	<field name="iva" class="java.lang.Double">
+		<fieldDescription><![CDATA[iva]]></fieldDescription>
+	</field>
+	<field name="percentuale" class="java.lang.Double">
+		<fieldDescription><![CDATA[percentuale]]></fieldDescription>
+	</field>
+	<field name="oggettoAffidamento" class="java.lang.String">
+		<fieldDescription><![CDATA[oggettoAffidamento]]></fieldDescription>
+	</field>
+	<title>
+		<band height="27"/>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{IS_BR35}!=null && $P{IS_BR35}]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="0" y="0" width="108" height="21" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CPA"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="108" y="0" width="106" height="21" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CIG"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="214" y="0" width="137" height="21" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tipologia"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="351" y="0" width="204" height="21" backcolor="#E3E3E3"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Oggetto affidamento"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{IS_BR35}!=null && $P{IS_BR35}]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="108" height="40"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codProcAgg}!=null?$F{codProcAgg}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="108" y="0" width="106" height="40"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{cigProcAgg}!=null?$F{cigProcAgg}:"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="214" y="0" width="137" height="40"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descTipologiaAggiudicazione}!=null?$F{descTipologiaAggiudicazione}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="351" y="0" width="204" height="40"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{oggettoAffidamento}!=null?$F{oggettoAffidamento}:""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

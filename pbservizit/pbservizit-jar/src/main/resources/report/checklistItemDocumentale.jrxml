@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2022-06-16T12:47:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="checklist_doc_14-20" pageWidth="802" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="762" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="4a543d73-9a7a-4672-bda0-ee4fda9334dc">
+	<property name="ireport.zoom" value="1.3636363636363704"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.layers" value="##Fri Mar 31 14:22:12 CEST 2017\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="codiceControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[codiceControllo]]></fieldDescription>
+	</field>
+	<field name="codiceControlloSection" class="java.lang.String">
+		<fieldDescription><![CDATA[codiceControlloSection]]></fieldDescription>
+	</field>
+	<field name="codiceControlloSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[codiceControlloSubsection]]></fieldDescription>
+	</field>
+	<field name="descrizioneAttivitaDiControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[descrizioneAttivitaDiControllo]]></fieldDescription>
+	</field>
+	<field name="descrizioneAttivitaDiControlloSection" class="java.lang.String">
+		<fieldDescription><![CDATA[descrizioneAttivitaDiControlloSection]]></fieldDescription>
+	</field>
+	<field name="descrizioneAttivitaDiControlloSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[descrizioneAttivitaDiControlloSubsection]]></fieldDescription>
+	</field>
+	<field name="documentazioneControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[documentazioneControllo]]></fieldDescription>
+	</field>
+	<field name="documentazioneControlloSection" class="java.lang.String">
+		<fieldDescription><![CDATA[documentazioneControlloSection]]></fieldDescription>
+	</field>
+	<field name="documentazioneControlloSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[documentazioneControlloSubsection]]></fieldDescription>
+	</field>
+	<field name="esito" class="java.lang.String">
+		<fieldDescription><![CDATA[esito]]></fieldDescription>
+	</field>
+	<field name="esitoSection" class="java.lang.String">
+		<fieldDescription><![CDATA[esitoSection]]></fieldDescription>
+	</field>
+	<field name="esitoSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[esitoSubsection]]></fieldDescription>
+	</field>
+	<field name="note" class="java.lang.String">
+		<fieldDescription><![CDATA[note]]></fieldDescription>
+	</field>
+	<field name="noteSection" class="java.lang.String">
+		<fieldDescription><![CDATA[noteSection]]></fieldDescription>
+	</field>
+	<field name="noteSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[noteSubsection]]></fieldDescription>
+	</field>
+	<field name="pistaDiControllo" class="java.lang.String">
+		<fieldDescription><![CDATA[pistaDiControllo]]></fieldDescription>
+	</field>
+	<field name="pistaDiControlloSection" class="java.lang.String">
+		<fieldDescription><![CDATA[pistaDiControlloSection]]></fieldDescription>
+	</field>
+	<field name="pistaDiControlloSubsection" class="java.lang.String">
+		<fieldDescription><![CDATA[pistaDiControlloSubsection]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<pageHeader>
+		<band height="48">
+			<staticText>
+				<reportElement mode="Opaque" x="88" y="12" width="307" height="36" backcolor="#E3E3E3" uuid="b282f3fb-88d2-42c1-b6db-a3757744c098"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrizione Attività di Controllo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="12" width="46" height="36" backcolor="#E3E3E3" uuid="43af76c0-a605-433d-9a0b-ce5a421c7a13"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod.
+controllo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="604" y="12" width="26" height="36" backcolor="#E3E3E3" uuid="8bac22fa-c215-4030-ba3d-b5a7db54c7ab"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Esito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="46" y="12" width="42" height="36" backcolor="#E3E3E3" uuid="11723031-648a-462c-9057-62f8029cdf16"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rif. Attività di
+Controllo
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="630" y="12" width="132" height="36" backcolor="#E3E3E3" uuid="109e7510-cfc0-4a81-8fd1-f26c5489a43c"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="395" y="12" width="209" height="36" backcolor="#E3E3E3" uuid="f61d384c-1fbd-4127-b1f0-9b6f8cf53ebf"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documentazione oggetto del Controllo 	]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Prevent"/>
+	</columnHeader>
+	<detail>
+		<band height="65">
+			<printWhenExpression><![CDATA[($F{descrizioneAttivitaDiControllo}.equals( "" ) ? Boolean.FALSE : Boolean.TRUE)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="46" height="65" isPrintWhenDetailOverflows="true" uuid="07f13cfa-a495-4248-a948-7ebf6670afdf"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codiceControllo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="46" y="0" width="42" height="65" isPrintWhenDetailOverflows="true" uuid="1850b4a6-3d00-4819-b938-37cb9cf4d3db"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pistaDiControllo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="88" y="0" width="307" height="65" isPrintWhenDetailOverflows="true" uuid="ba0733d1-531e-4dfd-af2b-fdb4f0d66c11">
+					<printWhenExpression><![CDATA[$F{descrizioneAttivitaDiControllo}!=null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+					<paragraph spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descrizioneAttivitaDiControllo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="395" y="0" width="209" height="65" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF" uuid="ca2dcbac-0668-41b2-b118-89742c432dab"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentazioneControllo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="604" y="0" width="26" height="65" isPrintWhenDetailOverflows="true" uuid="09d08d05-315c-4500-bad0-535eb66f88cc"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{esito}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="630" y="0" width="132" height="65" isPrintWhenDetailOverflows="true" uuid="bc7fd6f8-435c-4c1e-a559-8c538e9f0c61"/>
+				<box leftPadding="3" rightPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+					<paragraph lineSpacingSize="0.5" spacingBefore="5" spacingAfter="5" tabStopWidth="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{note}.replace("\n","<br>")+"<br><br> "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="18">
+			<printWhenExpression><![CDATA[($F{descrizioneAttivitaDiControlloSection}.equals( "" ) ? Boolean.FALSE : Boolean.TRUE)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="88" height="18" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#C5D0DE" uuid="5485a250-f7a9-4e73-8ee8-cdb7504dea12"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codiceControlloSection}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="88" y="0" width="307" height="18" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#C5D0DE" uuid="a31284ab-a286-4c52-8a63-6bfc9095a2a3">
+					<printWhenExpression><![CDATA[$F{descrizioneAttivitaDiControlloSection}!=null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descrizioneAttivitaDiControlloSection}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="395" y="0" width="367" height="18" isPrintWhenDetailOverflows="true" backcolor="#C5D0DE" uuid="a664e51f-225b-4cb4-b0e4-f9102ae70f2e"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="7"/>
+					<paragraph spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentazioneControlloSection}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="18">
+			<printWhenExpression><![CDATA[($F{descrizioneAttivitaDiControlloSubsection}.equals( "" ) ? Boolean.FALSE : Boolean.TRUE)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="88" y="0" width="307" height="18" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#E1E6ED" uuid="7b08d4f8-df35-444f-8733-c67462aef4e2">
+					<printWhenExpression><![CDATA[$F{descrizioneAttivitaDiControlloSubsection}!=null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descrizioneAttivitaDiControlloSubsection}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="88" height="18" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#E1E6ED" uuid="2f8208f8-fd10-405d-9dc5-fa736343a68c"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codiceControlloSubsection}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="395" y="0" width="367" height="18" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#E1E6ED" uuid="9f0a7010-f8a4-449d-b454-89e7db5114c1"/>
+				<box leftPadding="3">
+					<topPen lineWidth="0.25" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentazioneControlloSubsection}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

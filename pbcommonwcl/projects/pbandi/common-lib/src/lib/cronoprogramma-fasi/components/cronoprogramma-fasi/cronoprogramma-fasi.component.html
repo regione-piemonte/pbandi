@@ -1,0 +1,250 @@
+<mat-spinner-pbandi class="page" *ngIf="isLoading()"></mat-spinner-pbandi>
+
+<div class="page" [ngClass]="{'displayNone': isLoading()}" id="scrollId2">
+
+    <div class="content">
+        <!-- DATI PROGETTO -->
+        <mat-card class="mat-elevation-z2">
+            <mat-card-content>
+                <div class="cod-progetto container-flex-row title-text" *ngIf="!isInvioDichiarazione">
+                    <div>
+                        <p>Beneficiario: <span class="bold-text">
+                                {{user?.beneficiarioSelezionato?.denominazione}}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="cod-progetto" *ngIf="!isInvioDichiarazione">
+                    <div class="cod-progetto container-flex-row title-text">
+                        <p>Codice progetto: <span class="bold-text"> {{codiceProgetto}} </span></p>
+                        <button class="button-style-1 paddingLeft20" mat-button
+                            (click)="goToDatiProgettoEAttivitaPregresse()">DATI PROGETTO ATTIVIT&Agrave; PREGRESSE
+                        </button>
+                        <button class="button-style-1 paddingLeft20" mat-button (click)="goToContoEconomico()">CONTO
+                            ECONOMICO
+                        </button>
+                    </div>
+                </div>
+                <div class="cod-progetto container-flex-row title-text">
+                    <div>
+                        <p>Data presentazione domanda: <span class="bold-text"> {{dataPresentazione | date:
+                                "dd/MM/yyy"}}</span>
+                        </p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <!-- ERRORI -->
+        <mat-card class="mat-elevation-z2 messageSuccess" *ngIf="isMessageSuccessVisible">
+            <mat-card-content class="messageSuccessContent">
+                <p>{{messageSuccess}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageWarning" *ngIf="isMessageWarningVisible">
+            <mat-card-content class="messageWarningContent">
+                <!-- <mat-icon>warning</mat-icon>-->
+                <p>{{messageWarning}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z2 messageError" *ngIf="isMessageErrorVisible">
+            <mat-card-content class="messageErrorContent" *ngFor="let msg of messageError">
+                <!--  <mat-icon>clear</mat-icon>-->
+                <p>{{msg}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="content">
+        <form #cronoForm="ngForm">
+            <div *ngFor="let datasource of dataSourceList; let j = index" class="table">
+
+                <!-- CARD FASI -->
+                <div class="content"
+                    [ngClass]="{'displayNone': isInvioDichiarazione && salCorrente?.codice !== datasource?.data[0]?.idIter?.toString() && !datasource?.data[0]?.faseIterAttiva}">
+
+                    <mat-card class="mat-elevation-z2">
+                        <mat-card-content>
+                            <h3>{{datasource?.data[0]?.descIter}}</h3>
+
+                            <p *ngIf="!dataCronoprogramma || dataCronoprogramma.length===0" style="margin-top: 12px;">
+                                Non ci sono elementi da visualizzare.
+                            </p>
+
+                            <div [ngClass]="{'displayNone':!dataCronoprogramma || dataCronoprogramma.length===0}">
+
+                                <!-- TABELLA -->
+                                <table mat-table [dataSource]="dataSourceList[j]" style="width: 100%;">
+
+                                    <!--FASE DEL PROGETTO -->
+                                    <ng-container matColumnDef="fase">
+                                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">
+                                            Attività </th>
+                                        <td mat-cell *matCellDef="let row" style="width: 20%;">
+                                            {{row.descFaseMonit}} <span *ngIf="row.obbligatorio">*</span>
+                                        </td>
+                                    </ng-container>
+
+
+                                    <!-- DATA LIMITE -->
+                                    <ng-container matColumnDef="dataLimite">
+                                        <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Data massima definita
+                                            da
+                                            D.M.
+                                        </th>
+                                        <td mat-cell *matCellDef="let row; let i=index;" style="width: 10%;"
+                                            class="data">
+                                            <mat-form-field style="width: 90%;" class="myDate">
+                                                <input matInput [matDatepicker]="picker3" [(ngModel)]="row.dataLimite"
+                                                    name="dataLimite{{i}}-{{j}}" #finPrev="ngModel" disabled>
+                                                <mat-datepicker-toggle matSuffix [for]="picker3" class="blue-color">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker3></mat-datepicker>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+
+                                    <!-- DATA PREVISTA -->
+                                    <ng-container matColumnDef="dataPrevista">
+                                        <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data prevista</th>
+                                        <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;"
+                                            class="data">
+                                            <mat-form-field style="width: 90%;" class="myDate">
+                                                <input matInput [matDatepicker]="picker1" [(ngModel)]="row.dataPrevista"
+                                                    name="dataPrevista{{j}}-{{i}}" #inPrev="ngModel"
+                                                    (change)="onChangeDate(row, row.dataEffettiva, j, i)"
+                                                    (dateChange)="onChangeDate(row,row.dataPrevista, j, i)"
+                                                    [disabled]="!row.faseIterAttiva || isReadOnly || isBR58b">
+                                                <mat-datepicker-toggle matSuffix [for]="picker1" class="blue-color">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker1></mat-datepicker>
+
+                                                <mat-error
+                                                    *ngIf="row.errorDataPrevista != undefined && inPrev?.errors?.error === 'errors'">
+                                                    {{row.errorDataPrevista}}
+                                                </mat-error>
+
+
+                                            </mat-form-field>
+
+                                        </td>
+                                    </ng-container>
+
+
+                                    <!-- DATA EFFETTIVA -->
+                                    <ng-container matColumnDef="dataEffettiva">
+                                        <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Data effettiva</th>
+                                        <td mat-cell *matCellDef="let row; let i=index;" style="width: 12%;"
+                                            class="data">
+                                            <mat-form-field style="width: 90%;" class="myDate">
+                                                <input matInput [matDatepicker]="picker2"
+                                                    [(ngModel)]="row.dataEffettiva"
+                                                    (change)="onChangeDate(row, row.dataEffettiva, j, i)"
+                                                    (dateChange)="onChangeDate(row, row.dataEffettiva, j, i)"
+                                                    name="dataEffettiva{{j}}-{{i}}" #inEff="ngModel"
+                                                    [disabled]="!row.faseIterAttiva || isReadOnly" />
+                                                <mat-datepicker-toggle matSuffix [for]="picker2" class="blue-color">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker2></mat-datepicker>
+                                                <mat-hint *ngIf="row.warnDataEffettiva"
+                                                    class="orange-color">{{row.warnDataEffettiva}}</mat-hint>
+                                                <mat-error
+                                                    *ngIf="row.errorDataEffettiva != undefined && inEff?.errors?.error === 'errors'">
+                                                    {{row.errorDataEffettiva}}
+                                                </mat-error>
+
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+
+                                    <!-- MOTIVO SCOSTAMENTO -->
+                                    <ng-container matColumnDef="motivo">
+                                        <th mat-header-cell *matHeaderCellDef style="width: 35%; " class="allignCenter">
+                                            Motivo scostamento
+                                        </th>
+                                        <td mat-cell *matCellDef="let row; let i=index;" style="width: 35%;"
+                                            class="allignCenter">
+
+                                            <button mat-icon-button *ngIf="!row.motivoScostamento && !isReadOnly"
+                                                (click)="onClickMotivoScostamento(row)"
+                                                [disabled]="!row.requireMotivoScostamento || isReadOnly">
+                                                <mat-icon
+                                                    [ngClass]="{'grey-color':!row.requireMotivoScostamento || isReadOnly}">add_circle_outline</mat-icon>
+                                            </button>
+
+                                            <div *ngIf="row.motivoScostamento" class="containerTextArea">
+                                                {{row.motivoScostamento}}
+                                                <mat-icon *ngIf="!isReadOnly" class="cursor-pointer"
+                                                    (click)="onClickEditMotivoScostamento(row)">edit</mat-icon>
+                                            </div>
+
+                                            <mat-error *ngIf="motivo?.errors?.error === 'required'">
+                                                Campo obbligatorio
+                                            </mat-error>
+
+                                        </td>
+                                    </ng-container>
+
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i= index"></tr>
+                                </table>
+
+                                <!-- ALLEGATI -->
+                                <div class="margin25">
+                                    <p class="subtitle"> Allegati </p>
+
+                                    <div *ngIf="!dataCronoprogramma[j].allegatiList.length">
+                                        <p> Non ci sono allegati da visualizzare </p>
+                                    </div>
+                                    <div *ngIf="dataCronoprogramma[j]?.allegatiList?.length">
+                                        <mat-grid-list cols="2" rowHeight="45" style="margin-bottom: 10px;">
+                                            <mat-grid-tile *ngFor="let allegato of dataCronoprogramma[j].allegatiList"
+                                                [colspan]="1" [rowspan]="1">
+                                                <div class="allegati spaceBetween" style="width: 98%; height: 80%;">
+                                                    <a matTooltip="Download file" class="boldText size13 linkAllegati"
+                                                        (click)="downloadAllegato(allegato)">{{allegato.nomeFile}}</a>
+                                                    <div class="alignItemsCenter">
+                                                        <div class="noWrap">{{allegato.sizeFile}} KB</div>
+                                                        <button
+                                                            *ngIf="!isReadOnly && dataSourceList && dataSourceList[j]?.data && dataSourceList[j]?.data[0]?.faseIterAttiva"
+                                                            type="button" mat-icon-button class="blue-color"
+                                                            matTooltip="Disassocia allegato" style="width: 30px;"
+                                                            (click)="rimuoviAllegato(j, allegato)">
+                                                            <mat-icon>link_off</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+                                    </div>
+
+                                    <button
+                                        *ngIf="!isReadOnly && dataSourceList && dataSourceList[j]?.data && dataSourceList[j]?.data[0]?.faseIterAttiva"
+                                        mat-button class="button-style-1" type='button'
+                                        (click)="aggiungiAllegati(j)">AGGIUNGI ALLEGATI
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+            </div>
+        </form>
+
+        <div class="displayFlex flexEnd">
+            <button mat-raised-button class="button-style-2" (click)="salva()">
+                <span>SALVA</span>
+            </button>
+        </div>
+
+
+
+
+    </div>
+</div>
