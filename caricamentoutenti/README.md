@@ -22,8 +22,6 @@ Esecuzione dei file che si trovano sotto la cartella src\plsql\package nel segue
 * PCK_PBANDI_CARICAMENTO_UTENTI.pks
 * PCK_PBANDI_CARICAMENTO_UTENTI.pkb
 
-## Deployment
-
 ## Versioning
 Per il versionamento del software si usa la tecnica Semantic Versioning (http://semver.org).
 
