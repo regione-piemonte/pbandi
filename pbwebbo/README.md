@@ -4,7 +4,7 @@ PBWEBBO
 ## Versione
 1.8.0
 
-## Descrizione del prodotto
+## Descrizione della componente
 Questa componente si occupa della gestione della gestione back-office.
 
 ## Configurazioni iniziali

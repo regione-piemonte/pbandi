@@ -4,8 +4,8 @@ FILESTORAGE
 ## Versione
 1.0.0
 
-## Descrizione del prodotto
-Componente trasversale (jar) per la gestione degli storage su fileSystem.
+## Descrizione della componente
+Componente (jar) per la gestione degli storage su fileSystem.
 
 ## Configurazioni iniziali
 Questa componente deve essere installata come libreria trasversale delle componenti che accedono al FileSystem.

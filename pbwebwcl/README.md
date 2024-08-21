@@ -4,7 +4,7 @@ PBWEBWCL
 ## Versione
 1.8.0
 
-## Descrizione del prodotto
+## Descrizione della componente
 Si tratta della parte di front-end della componente [PBWEB](../pbweb). 
 
 ## Configurazioni iniziali

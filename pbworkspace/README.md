@@ -4,7 +4,7 @@ PBWORKSPACEWCL
 ## Versione
 1.8.0
 
-## Descrizione del prodotto
+## Descrizione della componente
 Si tratta della parte di front-end della componente [PBWORKSPACE](../pbworkspace). Questa componente equivale ad un Desktop da cui vengono richiamate tutte le altre componenti web (moduli) che compongono il prodotto PBANDI.
 
 ## Configurazioni iniziali

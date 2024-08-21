@@ -44,7 +44,7 @@ tre componenti di esposizione servizi:
 - [PBSERVREST](https://github.com/regione-piemonte/pbandi/pbservrest)  	Servizi esposti verso fruitori esterni 	
 
 una componente trasversale di utility per la gesione dei file da archiviare
-- [FILESTORAGE](https://github.com/regione-piemonte/pbandi/tree/main/pbwebrce/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
+- [FILESTORAGE](https://github.com/regione-piemonte/pbandi/tree/main/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
 
 due componenti di utilizi per le componenti online e batch
 - [UTILITYBATCH](https://github.com/regione-piemonte/pbandi/utilitybatch)    Package plSql di utility batch 
@@ -60,8 +60,8 @@ sei componenti ORACLE/PLSQL
 - [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi/restituzionecup) Componente pl/sql per procedura restituzione cup  	
 - [RETTIFICAFORF](https://github.com/regione-piemonte/pbandirettificaforf)  	Calcolo importo validato rettificato  	
 - [RICHIESTACUP](https://github.com/regione-piemonte/pbandi/richiestacup)  	Procedura PLSQL di richiesta CUP  	
-- [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi/campionamento)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
-- [CARICAMENTOUTE](https://github.com/regione-piemonte/pbandi/caricamentoute)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
+- [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi/tree/main/campionamento)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
+- [CARICAMENTOUTENTI](https://github.com/regione-piemonte/pbandi/tree/main/caricamentoutenti)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
 # Configurazioni iniziali
 Nei file README.md delle singole componenti verranno elencati i dettagli per la loro configurazione iniziale.
 # Prerequisiti di sistema
