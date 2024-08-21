@@ -13,7 +13,7 @@ Questa componente deve essere installata come libreria trasversale delle compone
 ## Prerequisiti di sistema
 
 ## Software
-[Java Development Kit (jdk): 8](https://https://www.oracle.com/java)
+[Java Development Kit (jdk): 8](https://www.oracle.com/java)
 [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione

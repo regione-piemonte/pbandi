@@ -11,10 +11,10 @@ Procedura ORACLE/PSQL di campionamento che estrae un campione delle operazioni (
 Per procedere all'installazione dei packages contenuti nella componente, bisogna collegarsi al DB Oracle ed assicurarsi che le unità di installazione contenute nelle componenti [PBANDIDB], [PBANDIRO] e [PBANDIRW] siano già state installate.
 
 ## Prerequisiti di sistema
-* [RDBMS: Oracle Database - 11.2.0.4.](https://https://www.oracle.com/java)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.com/java)
 
 ## Software
-* [RDBMS: Oracle Database - 11.2.0.4.](https://https://www.oracle.com/java)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.com/java)
 
 ## Installazione
 Esecuzione dei file che si trovano sotto la cartella src\plsql\package nel seguente ordine:
