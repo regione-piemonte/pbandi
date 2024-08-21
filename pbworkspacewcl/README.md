@@ -13,9 +13,9 @@ Questa deve essere la prima componente ad essere installata in quanto funge da D
 ## Prerequisiti di sistema
 * [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)
 * [Application Server: WildFly - 17.0](https://www.wildfly.org/)
-* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://https://www.oracle.com/java)
 ## Software
-* [Java Development Kit (jdk): 8](https://www.oracle.org)
+* [Java Development Kit (jdk): 8](https://https://www.oracle.com/java)
 * [Angular CLI: 10.2.0](https://angular.io)
 * [Node: 12.20.1](https://nodejs.org)
 * [Maven: 3.2.5](https://maven.apache.org)

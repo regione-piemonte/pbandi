@@ -11,10 +11,10 @@ Componente schema pbandi_rw per RDBMS Oracle 11.
 Definire l'utente "pbandi" su una istanza DBMS Oracle 11 proprietario dello schema, un utente "pbandi_rw" per accedere ai dati da applicativo (questo utente non ha la possibilità di modificare lo schema dati) ed un utente "pbandi_ro" per accedere ai dati dell'applicativo in sola lettura.
 
 ## Prerequisiti di sistema
-* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://https://www.oracle.com/java)
 
 ## Software
-* [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.org)
+* [RDBMS: Oracle Database - 11.2.0.4.](https://https://www.oracle.com/java)
 
 ## Installazione
 * Esecuzione del file che si trova sotto la cartella src\sql\init:
