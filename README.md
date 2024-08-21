@@ -51,9 +51,9 @@ due componenti di utilizi per le componenti online e batch
 - [UTILITIONLINE](https://github.com/regione-piemonte/pbandi/utilityonline)   Componente logica plsql usata dall'online 
 
 tre componenti Sql-Schema DB
-- [PBANDIDB](https://github.com/regione-piemonte/pbandi/pbandidb)        Componente schema pbandi
-- [PBANDIDBRO](https://github.com/regione-piemonte/pbandi/pbandidbro)      Componente schema pbandi_ro
-- [PBANDIDBRW](https://github.com/regione-piemonte/pbandi/pbandidbrw)      Componente schema pbandi_rw
+- [PBANDIDB](https://github.com/regione-piemonte/pbandi/tree/main/pbandidb)        Componente schema pbandi
+- [PBANDIDBRO](https://github.com/regione-piemonte/pbandi/tree/main/pbandidbro)      Componente schema pbandi_ro
+- [PBANDIDBRW](https://github.com/regione-piemonte/pbandi/tree/main/pbandidbrw)      Componente schema pbandi_rw
 
 sei componenti ORACLE/PLSQL
 - [PROCESSO](https://github.com/regione-piemonte/pbandi/processo)  	    Gestione del nuovo processo interno  	

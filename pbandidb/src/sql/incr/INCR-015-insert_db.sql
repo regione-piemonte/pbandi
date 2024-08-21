@@ -1,0 +1,339 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+SET DEFINE OFF;
+
+ INSERT INTO PBANDI_C_COSTANTI (ATTRIBUTO,VALORE)
+   VALUES
+     ('PCK_PBANDI_RICHIESTA_CUP.NUM_MAX_PROG_CUP','150');
+  COMMIT;
+  
+delete from PBANDI_R_FORNITORE_QUALIFICA
+where id_qualifica = (select id_qualifica
+                        from pbandi_d_qualifica
+                        where desc_breve_qualifica = 'NN');
+                        
+delete from pbandi_d_qualifica
+ where desc_breve_qualifica = 'NN';
+
+commit;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('W083', 'Impossibile valorizzare la fideiussione collegata all''erogazione');
+COMMIT;
+
+SET DEFINE OFF;
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (96, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (96, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (96, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (97, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (97, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (97, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (98, 6, 90.66, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (98, 7, 9.34, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (98, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (99, 6, 86.88, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (99, 7, 13.12, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (99, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (100, 6, 100, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (100, 7, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (100, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (101, 6, 52.83, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (101, 7, 2.95, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (101, 3, 44.22, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (102, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (102, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (102, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (103, 6, 43.97, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (103, 7, 56.03, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (103, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (104, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (104, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (104, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (105, 6, 82.66, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (105, 7, 12.56, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (105, 3, 4.78, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (106, 6, 86.88, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (106, 7, 13.12, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (106, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (107, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (107, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (107, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (108, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (108, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (108, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (109, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (109, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (109, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (110, 6, 82.53, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (110, 7, 17.47, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (110, 3, 0, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (111, 6, 66.34, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (111, 7, 33.66, 0);
+Insert into PBANDI_R_LINEA_TIPO_SOGG_FIN
+   (ID_LINEA_DI_INTERVENTO, ID_TIPO_SOGG_FINANZIAT, PERC_TIPO_SOGG_FIN, ID_UTENTE_INS)
+ Values
+   (111, 3, 0, 0);
+COMMIT;
+
+INSERT INTO PBANDI_D_TIPO_DOCUMENTO_SPESA 
+(ID_TIPO_DOCUMENTO_SPESA, DESC_BREVE_TIPO_DOC_SPESA, DESC_TIPO_DOCUMENTO_SPESA, DT_INIZIO_VALIDITA) 
+VALUES 
+(23,'CC','Cedolino CoCoPro',sysdate);
+commit;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('E146', 'La qualifica del fornitore e'' obbligatoria per il cedolino.');
+COMMIT;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('W088', 'I dati relativi a beneficiario e progetto sono incoerenti, impossibile generare l''associazione');
+COMMIT;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('E147', 'Il documento di spesa e'' gia'' presente per un progetto diverso. Non e'' possibile acquisire per il progetto corrente: l''importo rendicontabile, le associazioni con le voci di spesa, i pagamenti.Il totale degli importi rendicontabili e'' superiore all''importo totale del documento.');
+COMMIT;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_PERMESSO
+   (ID_PERMESSO, DESC_BREVE_PERMESSO, DESC_PERMESSO, DT_INIZIO_VALIDITA)
+ Values
+   ((select max(ID_PERMESSO) + 1 from PBANDI_D_PERMESSO), 'OPEREN128-1', 'Clona documento di spesa', TO_DATE('05/08/2012 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_D_PERMESSO
+   (ID_PERMESSO, DESC_BREVE_PERMESSO, DESC_PERMESSO, DT_INIZIO_VALIDITA)
+ Values
+   ((select max(ID_PERMESSO) + 1 from PBANDI_D_PERMESSO), 'OPEREN128', 'Associa documento di spesa a progetto corrente', TO_DATE('05/08/2012 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+COMMIT;
+
+insert into PBANDI_R_PERMESSO_TIPO_ANAGRAF
+(ID_PERMESSO, ID_TIPO_ANAGRAFICA, DT_INIZIO_VALIDITA)
+(select ID_PERMESSO,16,to_date('01/01/2012','dd/mm/yyyy')
+ from PBANDI_D_PERMESSO
+ where DESC_BREVE_PERMESSO in ('OPEREN128-1','OPEREN128'));
+ 
+insert into PBANDI_R_PERMESSO_TIPO_ANAGRAF
+(ID_PERMESSO, ID_TIPO_ANAGRAFICA, DT_INIZIO_VALIDITA)
+(select ID_PERMESSO,19,to_date('01/01/2012','dd/mm/yyyy')
+ from PBANDI_D_PERMESSO
+ where DESC_BREVE_PERMESSO in ('OPEREN128-1','OPEREN128')); 
+ 
+commit; 
+
+/*
+*** script da eseguire ad ogni rilascio
+*/
+update PBANDI_C_VERSIONE
+set VERSIONE_DB = '2.6.0';
+
+insert into PBANDI_C_ENTITA
+(ID_ENTITA, NOME_ENTITA, FLAG_DA_TRACCIARE) 
+(select seq_PBANDI_C_ENTITA.nextval,tabs.TABLE_NAME,'S'
+from all_tables tabs
+where tabs.OWNER = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+and tabs.TABLE_NAME like 'PBANDI_%'
+and not exists (select 'x' from pbandi_c_entita where tabs.TABLE_NAME = NOME_ENTITA));
+
+commit;
+
+declare
+  cursor curAttr is select col.COLUMN_NAME,en.id_ENTITA,col.TABLE_NAME
+                    from all_tab_cols col,PBANDI_C_ENTITA en
+                    where col.owner = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+                    and col.TABLE_NAME like 'PBANDI_%'
+                    and col.COLUMN_NAME not like 'SYS_%'
+                    and col.TABLE_NAME = en.NOME_ENTITA
+                    and not exists (select 'x' from PBANDI_C_ATTRIBUTO att 
+                                    where col.COLUMN_NAME = att.NOME_ATTRIBUTO
+                                    and att.id_entita = en.id_ENTITA);
+                                    
+  nPosiz  PLS_INTEGER := NULL;                                                                          
+begin
+  for recAttr in curAttr loop
+
+    BEGIN
+      SELECT POSITION
+      INTO   nPosiz 
+      FROM   all_CONSTRAINTS A,all_CONS_COLUMNS B
+      WHERE  A.CONSTRAINT_TYPE = 'P'
+      AND    A.TABLE_NAME      = recAttr.TABLE_NAME
+      AND    A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+      AND    COLUMN_NAME       = recAttr.COLUMN_NAME;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        nPosiz := NULL;
+    END;
+    
+    insert into PBANDI_C_ATTRIBUTO
+    (ID_ATTRIBUTO, 
+     NOME_ATTRIBUTO, 
+     FLAG_DA_TRACCIARE, 
+     ID_ENTITA,
+     KEY_POSITION_ID) 
+    values
+    (SEQ_PBANDI_C_ATTRIBUTO.NEXTVAL,
+     recAttr.COLUMN_NAME,
+     'N',
+     recAttr.id_ENTITA,
+     nPosiz);
+  end loop;
+  COMMIT;
+end;
+/
+
+
+

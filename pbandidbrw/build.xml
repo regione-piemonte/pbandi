@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<project name="pbandidbrw" default="distribution">
+
+	<property file="buildfiles/build.properties"/>
+
+	<target name="init" description="Inizializza lo script Ant">
+		<tstamp/>
+			<mkdir dir="${build}/temp" />
+			<mkdir dir="${dist}" />
+		<echo message="target: ${target}" />
+		<loadproperties srcFile="buildfiles/${target}.properties"/>
+	</target>
+
+	<target name="environment-config" description="Predispone le configurazioni dipendenti dall'ambiente" depends="init">
+		<copy todir="${build}/temp">
+			<!-- fileset dir="${src}/sql/init" /-->
+			<fileset dir="${src}/sql/incr" includes="INCR-016*" />
+		</copy>
+		
+		<antcall target="replace-token" />
+	</target>
+
+	<target name="replace-token" if="environment.config">
+		<echo message="eseguo le parsificazioni necessarie sui file sorgenti se nel build.properties e' settata environment.config" />
+		<replace file="${build}/temp/**/*.sql " token="@linea.cliente@" value="${linea.cliente}"/>
+		<replace file="${build}/temp/**/*.sql" token="@linea.cliente@" value="${linea.cliente}"/>
+	</target>
+
+	<target name="distribution" depends="environment-config" description="crea gli zip">
+		<mkdir dir="${dist}/${target}" />
+		<zip destfile="${dist}/${target}/${utente}-${version}.zip" basedir="${build}/temp" update="true"/>
+		<delete dir="${build}/temp" />
+	</target>
+
+	<target name="clean-all" description="Rimuove le cartelle temporanee." depends="clean-dist, clean-temp"/>
+
+      <target name="clean-temp" description="Rimuove la cartella dei files temporanei di build.">
+            <delete dir="${build}/temp" />
+      </target>
+
+      <target name="clean-dist" description="Rimuove la cartella delle distribuzioni.">
+            <delete includeEmptyDirs="true">
+				<fileset dir="dist"/>
+			</delete>
+
+      </target>
+</project>

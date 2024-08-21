@@ -1,0 +1,2071 @@
+
+
+-- pbandi_d_modalita_agevolazione
+insert into pbandi_d_modalita_agevolazione (ID_MODALITA_AGEVOLAZIONE, DESC_BREVE_MODALITA_AGEVOLAZ, DESC_MODALITA_AGEVOLAZIONE, DT_INIZIO_VALIDITA, DT_FINE_VALIDITA, COD_IGRUE_T8, FLAG_CERTIFICAZIONE)
+values (15, 'FinanziamentoContrib', 'agevolazione mista Finanziamento e Contributo', to_date('23-02-2022', 'dd-mm-yyyy'), null, '', 'S');
+
+-- pbandi_d_modalita_agevolazione
+insert into pbandi_d_modalita_agevolazione (ID_MODALITA_AGEVOLAZIONE, DESC_BREVE_MODALITA_AGEVOLAZ, DESC_MODALITA_AGEVOLAZIONE, DT_INIZIO_VALIDITA, DT_FINE_VALIDITA, COD_IGRUE_T8, FLAG_CERTIFICAZIONE)
+values (16, 'ContributoGaranzia', 'agevolazione mista Contributo e Garanzia', to_date('23-02-2022', 'dd-mm-yyyy'), null, '', 'S');
+
+-- PBANDI_T_ENTE_COMPETENZA
+insert into PBANDI_T_ENTE_COMPETENZA (ID_ENTE_COMPETENZA, DESC_ENTE, DT_INIZIO_VALIDITA, DT_FINE_VALIDITA, ID_TIPO_ENTE_COMPETENZA, ID_INDIRIZZO, ID_UTENTE_INS, ID_UTENTE_AGG, COD_CIPE, USER_CIPE, PASS_CIPE, ID_ATTIVITA_ATECO, ID_FORMA_GIURIDICA, DESC_BREVE_ENTE, CODICE_FISCALE_ENTE, INDIRIZZO_MAIL_PEC, DESC_SETTORE, CODICE_FISCALE_UO, PARTITA_IVA_ENTE)
+values (150, 'COMUNE DI TORINO', to_date('25-02-2022', 'dd-mm-yyyy'), null, 7, 7027, -4, null, '', '', '', 2747, 44, 'CTO', '00514490010', '', '', '', '');
+
+-- pbandi_d_ruolo_ente_competenza
+insert into pbandi_d_ruolo_ente_competenza (ID_RUOLO_ENTE_COMPETENZA, DESC_BREVE_RUOLO_ENTE, DESC_RUOLO_ENTE, DT_INIZIO_VALIDITA, DT_FINE_VALIDITA, COD_IGRUE, FLAG_VISIBILE)
+values (15, 'DIREZIONE DI  RIFER', 'Direzione di riferimento', to_date('25-02-2022', 'dd-mm-yyyy'), null, null, 'N');
+
+---
+-- SEQ_PBANDI_R_BAN_MOD_AG_ES_BAN
+CREATE SEQUENCE SEQ_PBANDI_R_BAN_MOD_AG_ES_BAN
+  START WITH 1
+  MAXVALUE 999999999999999999999999999
+  MINVALUE 1
+  NOCYCLE
+  NOCACHE
+  NOORDER;
+
+
+
+-- MIGRAZIONE DA FINPIS vs PBANDI
+---
+
+-- bandi_fondi
+CREATE TABLE Bandi_Fondi
+(id_bando number(8) ,
+ codice_fondo_finpis varchar2(4)
+ );
+
+-- MFINPIS_D_LINEA_DI_INTERVENTO
+create table MFINPIS_D_LINEA_DI_INTERVENTO
+(
+  id_linea_di_intervento       NUMBER(4) not null,
+  id_linea_di_intervento_padre NUMBER(3),
+  desc_breve_linea             VARCHAR2(20) not null,
+  desc_linea                   VARCHAR2(255) not null,
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_tipo_linea_intervento     NUMBER(3) not null,
+  id_tipo_strumento_progr      NUMBER(3),
+  cod_igrue_t13_t14            VARCHAR2(20),
+  id_strumento_attuativo       NUMBER(3),
+  num_delibera                 NUMBER(6),
+  anno_delibera                NUMBER(4),
+  id_processo                  INTEGER,
+  cod_liv_gerarchico           VARCHAR2(18),
+  flag_campion_rilev           VARCHAR2(2),
+  flag_trasferimenti           VARCHAR2(1),  
+  id_linea_di_intervento_PBAN  NUMBER(3), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE       
+);
+
+-- pk
+alter table MFINPIS_D_LINEA_DI_INTERVENTO ADD
+  (constraint PK_MFINPIS_D_LINEA_DI_INTERV primary key (ID_LINEA_DI_INTERVENTO)
+USING INDEX TABLESPACE PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_D_LINEA_DI_INTERVENTO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_01
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+ );
+-- idx
+CREATE INDEX IE1_MFINPIS_D_LINEA_DI_INTERV ON MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_T_BANDO
+create table MFINPIS_T_BANDO
+(
+  id_bando                     NUMBER(8) not null,
+  titolo_bando                 VARCHAR2(255),
+  dt_pubblicazione_bando       DATE,
+  dt_inizio_presentaz_domande  DATE,
+  dt_scadenza_bando            DATE,
+  stato_bando                  VARCHAR2(255),
+  flag_allegato                CHAR(1) not null,
+  flag_graduatoria             CHAR(1) not null,
+  dotazione_finanziaria        NUMBER(17,2),
+  costo_totale_min_ammissibile NUMBER(17,2),
+  flag_quietanza               CHAR(1) not null,
+  percentuale_premialita       NUMBER(5,2),
+  importo_premialita           NUMBER(17,2),
+  punteggio_premialita         NUMBER(17,2),
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_materia                   NUMBER(3) not null,
+  id_intesa                    NUMBER(3),
+  id_sotto_settore_cipe        NUMBER(3),
+  id_natura_cipe               NUMBER(3),
+  id_tipo_operazione           NUMBER(3) not null,
+  id_settore_cpt               NUMBER(3),
+  id_tipologia_attivazione     NUMBER(3) not null,
+  determina_approvazione       VARCHAR2(1000),
+  dt_inserimento               DATE not null,
+  dt_aggiornamento             DATE,
+  id_linea_di_intervento       NUMBER(3),
+  data_determina_approvazione  DATE,
+  flag_macro_voce_spesa        NUMBER,
+  --codice_fondo_finpis          number(8),
+  id_BANDO_PBAN                NUMBER(8), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE      
+);
+
+-- pk
+alter table MFINPIS_T_BANDO add
+  (constraint PK_MFINPIS_T_BANDO primary key (ID_BANDO)
+  using index tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_T_BANDO ADD (
+  CONSTRAINT FK_MFINPIS_D_LINEA_DI_INT_01
+  FOREIGN KEY (id_linea_di_intervento) 
+  REFERENCES MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento));
+-- fk
+ALTER TABLE MFINPIS_T_BANDO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_02
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_BANDO ON MFINPIS_T_BANDO (id_BANDO_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_R_BANDO_LINEA_INTERVENT
+create table MFINPIS_R_BANDO_LINEA_INTER
+(
+  id_linea_di_intervento        NUMBER(4) not null,
+  id_bando                      NUMBER(8) not null,
+  fondo_finpis                  NUMBER(8) not null,
+  progr_bando_linea_intervento  NUMBER(8) not null,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  id_area_scientifica           NUMBER(3),
+  nome_bando_linea              VARCHAR2(255),
+  id_definizione_processo       NUMBER(8),
+  id_unita_organizzativa        NUMBER(3),
+  mesi_durata_da_dt_concessione NUMBER(3),
+  id_obiettivo_specif_qsn       NUMBER(3),
+  id_categoria_cipe             NUMBER(3),
+  id_tipologia_cipe             NUMBER(3),
+  flag_schedin                  VARCHAR2(1),
+  id_processo                   INTEGER,
+  flag_sif                      VARCHAR2(1),
+  progr_bando_linea_interv_sif  NUMBER(8),
+  id_tipo_localizzazione        NUMBER(3),
+  id_livello_istituzione        NUMBER(3),
+  id_progetto_complesso         NUMBER(3),
+  id_classificazione_met        NUMBER(3),
+  flag_fondo_di_fondi           VARCHAR2(1),
+  id_classificazione_ra         NUMBER(3),
+  cod_aiuto_rna                 VARCHAR2(30),
+  id_linea_azione               NUMBER(5),
+  flag_monitoraggio_tempi       VARCHAR2(1),  
+  progr_bando_linea_interv_PBAN NUMBER(8), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE    
+);
+
+-- pk
+alter table MFINPIS_R_BANDO_LINEA_INTER add
+  (constraint PK_MFINPIS_R_BANDO_LINEA_INT primary key (PROGR_BANDO_LINEA_INTERVENTO)
+  using index tablespace PBANDI_IDX);
+--fk
+ALTER TABLE MFINPIS_R_BANDO_LINEA_INTER ADD (
+  CONSTRAINT FK_MFINPIS_D_LINEA_DI_INT_02
+  FOREIGN KEY (id_linea_di_intervento) 
+  REFERENCES MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento));
+--fk
+alter table MFINPIS_R_BANDO_LINEA_INTER
+  add constraint FK_MFINPIS_T_BANDO_01 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_LINEA_INTER ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_03
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BANDO_LIN_INTER ON MFINPIS_R_BANDO_LINEA_INTER (progr_bando_linea_interv_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_R_BANDO_MOD_AG_ESTR_BAN
+create table MFINPIS_R_BANDO_MOD_AG_ES_BAN
+(
+  id_bando_mod_ag_estr_ban NUMBER(15) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  id_bando                 NUMBER(8) not null,
+  id_estremi_bancari       NUMBER(12) not null,
+  moltiplicatore           VARCHAR2(8),
+  TIPOLOGIA_CONTO          VARCHAR2(50),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  id_bando_mod_ag_estr_ban_PBAN NUMBER(8), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE 
+);
+
+-- pk
+alter table MFINPIS_R_BANDO_MOD_AG_ES_BAN add
+  (constraint PK_MFIN_R_BAN_MOD_AG_ES_BAN primary key (ID_BANDO_MOD_AG_ESTR_BAN)
+  using index tablespace PBANDI_TBL);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_MOD_AG_ES_BAN ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_04
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* essendo una tabella nuova ci sono anche i bandi CSI
+   non presenti in fase di caricamento sulla tabella
+   MFINPIS_T_BANDO
+alter table MFINPIS_R_BANDO_MOD_AG_ES_BAN
+  add constraint FK_MFINPIS_T_BANDO_02 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+*/
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BAN_MO_AG_ES_BAN ON MFINPIS_R_BANDO_MOD_AG_ES_BAN (id_bando_mod_ag_estr_ban_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_R_BANDO_MODALITA_AGEVOL
+create table MFINPIS_R_BANDO_MODALITA_AGEV
+(
+  id_modalita_agevolazione      NUMBER(3) not null,
+  id_bando                      NUMBER(8) not null,
+  percentuale_importo_agevolato NUMBER(5,2),
+  massimo_importo_agevolato     NUMBER(17,2),
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  flag_liquidazione             VARCHAR2(1) default 'N',
+  minimo_importo_agevolato      NUMBER(17,2),
+  id_bando_PBAN                 NUMBER(8), -- idx
+  id_modalita_agevolazione_PBAN      NUMBER(3),--idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE
+);
+-- pk
+alter table MFINPIS_R_BANDO_MODALITA_AGEV add
+  (constraint PK_MFINPIS_R_BANDO_MODALITA_AG primary key (ID_BANDO, ID_MODALITA_AGEVOLAZIONE)
+  using index tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_MODALITA_AGEV ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_05
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+alter table MFINPIS_R_BANDO_MODALITA_AGEV
+  add constraint FK_MFINPIS_T_BANDO_03 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_bando_PBAN ) TABLESPACE PBANDI_IDX;
+-- idx
+CREATE INDEX IE2_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_modalita_agevolazione_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_T_INDIRIZZO
+create table MFINPIS_T_INDIRIZZO
+(
+  id_indirizzo       NUMBER(9) not null,
+  desc_indirizzo     VARCHAR2(255),
+  cap                VARCHAR2(5),
+  id_nazione         NUMBER(6),
+  id_comune          NUMBER(8),
+  id_provincia       NUMBER(4),
+  id_via_l2          NUMBER(9),
+  civico             VARCHAR2(20),
+  bis                VARCHAR2(4),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_regione         NUMBER(3),
+  id_fonte_indirizzo NUMBER(3),
+  id_geo_riferimento NUMBER(9),
+  id_comune_estero   NUMBER(8),
+  id_indirizzo_PBAN  NUMBER(9), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE
+);
+
+-- pk
+alter  table MFINPIS_T_INDIRIZZO
+  add (constraint PK_MFINPIS_T_INDIRIZZO primary key (ID_INDIRIZZO)
+  using index   tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_T_INDIRIZZO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_06
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_INDIRIZZO ON MFINPIS_T_INDIRIZZO (id_indirizzo_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_T_AGENZIA
+create table MFINPIS_T_AGENZIA
+(
+  id_agenzia         NUMBER(8) not null,
+  cod_agenzia        VARCHAR2(6) not null,
+  desc_agenzia       VARCHAR2(255),
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_banca           NUMBER(6) not null,
+  id_indirizzo       NUMBER(9),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_agenzia_PBAN    NUMBER(8), -- idx
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE
+);
+-- pk
+alter table MFINPIS_T_AGENZIA ADD
+  (constraint PK_MFINPIS_T_AGENZIA primary key (ID_AGENZIA)
+  using index tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_T_AGENZIA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_07
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+ALTER TABLE MFINPIS_T_AGENZIA ADD (
+  CONSTRAINT FK_MFinpis_t_indirizzo_01
+  FOREIGN KEY (ID_INDIRIZZO) 
+  REFERENCES MFinpis_t_indirizzo (ID_INDIRIZZO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_AGENZIA ON MFINPIS_T_AGENZIA (id_agenzia_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_T_ESTREMI_BANCARI
+create table MFINPIS_T_ESTREMI_BANCARI
+(
+  id_estremi_bancari NUMBER(12) not null,
+  numero_conto       VARCHAR2(20),
+  cin                VARCHAR2(1),
+  abi                VARCHAR2(5),
+  cab                VARCHAR2(5),
+  iban               VARCHAR2(40),
+  bic                VARCHAR2(14),
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_agenzia         NUMBER(8),
+  id_banca           NUMBER(6),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_estremi_bancari_PBAN    NUMBER(8), -- idx
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE
+);
+
+-- pk
+alter table MFINPIS_T_ESTREMI_BANCARI ADD
+  (constraint PK_MFINPIS_T_ESTREMI_BANCARI primary key (ID_ESTREMI_BANCARI)
+  using index tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_T_ESTREMI_BANCARI ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_08
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+ALTER TABLE MFINPIS_T_ESTREMI_BANCARI ADD (
+  CONSTRAINT FK_MFINPIS_T_AGENZIA_01
+  FOREIGN KEY (ID_AGENZIA) 
+  REFERENCES MFINPIS_T_AGENZIA (ID_AGENZIA));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_ESTREMI_BANCARI ON MFINPIS_T_ESTREMI_BANCARI (id_estremi_bancari_PBAN) TABLESPACE PBANDI_IDX;
+
+-- MFinpis_r_bando_linea_ente_comp
+create table MFinpis_R_BANDO_LINEA_ENTE_COM
+(
+  dt_fine_validita             DATE,
+  id_ruolo_ente_competenza     NUMBER(3) not null,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_ente_competenza           NUMBER(8) not null,
+  progr_bando_linea_intervento NUMBER(8) not null,
+  progr_bando_linea_ente_comp  NUMBER(8) not null,
+  parola_chiave                VARCHAR2(30),
+  feedback_acta                VARCHAR2(100),
+  indirizzo_mail_pec           VARCHAR2(100),
+  conservazione_corrente       NUMBER(10),
+  conservazione_generale       NUMBER(10),
+  progr_bando_linea_ente_c_pban     NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE  
+);
+
+-- pk
+alter table MFinpis_R_BANDO_LINEA_ENTE_COM ADD
+  (constraint PK_MFinpis_R_BANDO_LIN_ENTE_C primary key (PROGR_BANDO_LINEA_ENTE_COMP)
+  using index tablespace PBANDI_IDX);
+-- fk
+ALTER TABLE MFinpis_R_BANDO_LINEA_ENTE_COM ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_09
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/*
+alter table MFinpis_R_BANDO_LINEA_ENTE_COM ADD
+  (constraint FK_MFinpis_R_BANDO_LIN_INT_01 foreign key (PROGR_BANDO_LINEA_INTERVENTO)
+  references MFinpis_R_BANDO_LINEA_INTER (PROGR_BANDO_LINEA_INTERVENTO));
+*/
+-- idx
+CREATE INDEX IE1_MFinpis_R_BAN_LIN_ENTE_COM ON MFinpis_R_BANDO_LINEA_ENTE_COM (progr_bando_linea_ente_c_pban) TABLESPACE PBANDI_IDX;
+
+------
+-- idx ID_CARICAMENTO
+CREATE INDEX IE2_MFINPIS_D_LINEA_DI_INTERV ON MFINPIS_D_LINEA_DI_INTERVENTO (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_BANDO ON MFINPIS_T_BANDO (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_R_BANDO_LIN_INTER ON MFINPIS_R_BANDO_LINEA_INTER (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_R_BAN_MO_AG_ES_BAN ON MFINPIS_R_BANDO_MOD_AG_ES_BAN (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_INDIRIZZO ON MFINPIS_T_INDIRIZZO (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_AGENZIA ON MFINPIS_T_AGENZIA (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_ESTREMI_BANCARI ON MFINPIS_T_ESTREMI_BANCARI (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFinpis_R_BAN_LIN_ENTE_COM ON MFinpis_R_BANDO_LINEA_ENTE_COM (id_caricamento) TABLESPACE PBANDI_IDX;
+------
+-- idx sulle fk
+create index IE3_MFINPIS_T_BANDO on MFINPIS_T_BANDO (ID_LINEA_DI_INTERVENTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_R_BANDO_LIN_INTER on MFINPIS_R_BANDO_LINEA_INTER (ID_BANDO) tablespace PBANDI_IDX;
+create index IE4_MFINPIS_R_BANDO_LIN_INTER on MFINPIS_R_BANDO_LINEA_INTER (ID_LINEA_DI_INTERVENTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_R_BAN_MO_AG_ES_BAN on MFINPIS_R_BANDO_MOD_AG_ES_BAN (ID_BANDO)  tablespace PBANDI_IDX;
+create index IE3_MFINPIS_R_BAN_LIN_ENTE_COM on MFINPIS_R_BANDO_LINEA_ENTE_COM (PROGR_BANDO_LINEA_INTERVENTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_AGENZIA on MFINPIS_T_AGENZIA (ID_INDIRIZZO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_ESTREMI_BANCARI on MFINPIS_T_ESTREMI_BANCARI (ID_AGENZIA) tablespace PBANDI_IDX;
+---
+-- MFinpis_T_NOTE
+create table MFinpis_T_NOTE
+(
+  id_nota                      NUMBER(8) not null,
+  id_soggetto_beneficiario     NUMBER(8),
+  id_progetto                  NUMBER(8),
+  testo_nota                   clob not null,
+  id_modalita_agevolazione     NUMBER(3),
+  flag_visibilita_beneficiario VARCHAR2(1),
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_nota_PBAN                 NUMBER(8), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE 
+);  
+-- pk
+alter table MFINPIS_T_NOTE add
+  (constraint PK_MFINPIS_T_NOTE primary key (ID_NOTA)
+  using index tablespace PBANDI_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_NOTE ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_10
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_NOTE ON MFINPIS_T_NOTE (id_nota_PBAN) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_NOTE ON MFINPIS_T_NOTE (id_caricamento) TABLESPACE PBANDI_IDX;
+--
+-- mfinpis_r_bando_sogg_finanziat
+create table mfinpis_r_bando_sogg_finanziat
+(
+  id_bando                      NUMBER(8) not null,
+  id_soggetto_finanziatore      NUMBER(3) not null,
+  percentuale_quota_sogg_finanz NUMBER(5,2),
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  perc_quota_contributo_pub     NUMBER(5,2),
+  ID_bando_PBAN NUMBER(8),
+  id_soggetto_finanziatore_pban NUMBER(3), 		
+  ID_CARICAMENTO number,		
+  DATA_CARICAMENTO date
+);
+
+-- pk
+alter table mfinpis_r_bando_sogg_finanziat add
+  (constraint PK_mfinpis_r_bando_sogg_fin primary key (id_bando,id_soggetto_finanziatore )
+  using index tablespace PBANDI_TBL);
+-- fk
+ALTER TABLE mfinpis_r_bando_sogg_finanziat ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_11
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+alter table mfinpis_r_bando_sogg_finanziat
+  add constraint FK_MFINPIS_T_BANDO_04 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- idx
+CREATE INDEX IE1_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_bando_PBAN ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_soggetto_finanziatore_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_caricamento) TABLESPACE PBANDI_IDX;
+
+--
+-- MFinpis_d_voce_di_spesa
+create table MFinpis_d_voce_di_spesa
+(id_voce_di_spesa           NUMBER(8) not null,
+  id_voce_di_spesa_padre     NUMBER(8),
+  desc_voce_di_spesa         VARCHAR2(255) not null,
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  cod_tipo_voce_di_spesa     VARCHAR2(20) not null,
+  id_voce_di_spesa_monit     NUMBER(3),
+  id_tipologia_voce_di_spesa NUMBER(3),
+  flag_edit                  VARCHAR2(1),
+  ID_VOCE_DI_SPESA_PBAN NUMBER(8),
+  ID_CARICAMENTO number,    
+  DATA_CARICAMENTO date  
+);
+
+-- pk
+alter table MFinpis_d_voce_di_spesa add
+  (constraint PK_MFinpis_d_voce_di_spesa primary key (ID_VOCE_DI_SPESA)
+  using index tablespace PBANDI_TBL);
+
+-- fk
+/*
+alter table MFinpis_d_voce_di_spesa
+  add constraint FK_MFinpis_d_voce_di_spesa_01 foreign key (ID_VOCE_DI_SPESA_PADRE)
+  references MFinpis_d_voce_di_spesa (ID_VOCE_DI_SPESA) on delete set null;
+*/
+-- fk
+ALTER TABLE MFinpis_d_voce_di_spesa ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_12
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_MFinpis_d_voce_di_spesa ON MFinpis_d_voce_di_spesa (ID_VOCE_DI_SPESA_PBAN ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFinpis_d_voce_di_spesa ON MFinpis_d_voce_di_spesa (id_caricamento) TABLESPACE PBANDI_IDX;
+--
+-- MFinpis_r_bando_voce_spesa
+create table MFinpis_R_BANDO_VOCE_SPESA
+(
+  id_bando                    NUMBER(8) not null,
+  id_voce_di_spesa            NUMBER(8) not null,
+  percentuale_imp_ammissibile NUMBER(5,2),
+  massimo_importo_ammissibile NUMBER(17,2),
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  progr_ordinamento           NUMBER(3) not null,
+  id_bando_PBAN               NUMBER(8),
+  ID_VOCE_DI_SPESA_PBAN  NUMBER(8),
+  ID_CARICAMENTO number,    
+  DATA_CARICAMENTO date
+);
+
+-- pk
+alter table MFinpis_R_BANDO_VOCE_SPESA add
+  (constraint PK_MFinpis_R_BANDO_VOCE_SPESA primary key (ID_BANDO,ID_VOCE_DI_SPESA)
+  using index tablespace PBANDI_TBL);
+
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_13
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+   constraint FK_MFINPIS_T_BANDO_05 
+   foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO));
+  
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+   constraint FK_MFinpis_d_voce_di_spesa_02  
+   foreign key (id_voce_di_spesa)
+  references MFinpis_d_voce_di_spesa (id_voce_di_spesa));
+
+-- idx
+CREATE INDEX IE1_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_VOCE_DI_SPESA) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_VOCE_DI_SPESA_PBAN ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_BANDO_PBAN ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE4_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- Mfinpis_T_RICHIESTA
+create table Mfinpis_T_RICHIESTA
+(
+  id_richiesta          NUMBER(8) not null,
+  id_domanda            NUMBER(12) not null,
+  id_tipo_richiesta     NUMBER(3) not null,
+  id_stato_richiesta    NUMBER(3) not null,
+  id_utente_richiedente NUMBER(8) not null,
+  dt_invio_richiesta    DATE not null,
+  dt_chiusura_richiesta DATE,
+  flag_urgenza          VARCHAR2(1),
+  id_utente_ins         NUMBER(8) not null,
+  id_utente_agg         NUMBER(8),
+  dt_inizio_validita    DATE not null,
+  dt_fine_validita      DATE,
+  id_richiesta_pban          NUMBER(8),
+  id_domanda_pban            NUMBER(8),
+  ID_CARICAMENTO		         NUMBER,
+  DATA_CARICAMENTO           DATE
+);
+
+-- pk
+alter table Mfinpis_T_RICHIESTA add
+  (constraint PK_Mfinpis_T_RICHIESTA primary key (id_richiesta)
+  using index tablespace PBANDI_TBL); 
+-- fk
+ALTER TABLE Mfinpis_T_RICHIESTA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_14
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));  
+-- fk
+/*
+alter table Mfinpis_T_RICHIESTA
+  add constraint FK_Mfinpis_T_DOMANDA_01 foreign key (ID_DOMANDA)
+  references mfinpis_T_DOMANDA (ID_DOMANDA);
+*/
+
+-- idx  
+CREATE INDEX IE1_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_richiesta_pban ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_domanda_pban ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_domanda ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE4_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_caricamento ) TABLESPACE PBANDI_IDX;
+
+-- Mfinpis_T_SOGGETTO_DURC
+create table Mfinpis_T_SOGGETTO_DURC
+(
+  id_soggetto_durc    NUMBER(8) not null,
+  id_soggetto         NUMBER(8) not null,
+  id_tipo_esito_durc  NUMBER(3),
+  dt_emissione_durc   DATE not null,
+  dt_scadenza         DATE not null,
+  num_protocollo_inps VARCHAR2(255),
+  id_utente_ins       NUMBER(8) not null,
+  id_utente_agg       NUMBER(8),
+  dt_inizio_validita  DATE not null,
+  dt_fine_validita    DATE,
+  id_soggetto_durc_pban NUMBER(8),
+  id_soggetto_pban      NUMBER(8),
+  ID_CARICAMENTO		         NUMBER,
+  DATA_CARICAMENTO           DATE
+);
+
+-- pk
+alter table Mfinpis_T_SOGGETTO_DURC add
+  (constraint PK_Mfinpis_T_SOGGETTO_DURC primary key (id_soggetto_durc)
+  using index tablespace PBANDI_TBL);  
+-- fk
+/*
+ALTER TABLE Mfinpis_T_SOGGETTO_DURC ADD (
+  CONSTRAINT FK_Mfinpis_T_SOGGETTO_01
+  FOREIGN KEY (ID_SOGGETTO) 
+  REFERENCES MFINPIS_T_SOGGETTO (ID_SOGGETTO)); 
+*/
+-- fk
+ALTER TABLE Mfinpis_T_SOGGETTO_DURC ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_15
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));  
+  
+-- idx
+CREATE INDEX IE1_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_soggetto ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_soggetto_durc_pban ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_caricamento ) TABLESPACE PBANDI_IDX;
+--
+-- MFINPIS_T_SOGGETTO_ANTIMAFIA
+create table MFINPIS_T_SOGGETTO_ANTIMAFIA
+(
+  id_soggetto_antimafia       NUMBER(8) not null,
+  id_domanda                  NUMBER(8),
+  id_tipo_esito_antimafia     NUMBER(3),
+  dt_ricezione_bdna           DATE not null,
+  numer_protocollo_ricevuta   NUMBER(8) not null,
+  dt_emissione                DATE,
+  esito_liberatoria_antimafia VARCHAR2(255),
+  dt_scadenza_antimafia       DATE,
+  num_protocollo_prefettura   VARCHAR2(50),
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_soggetto_antimafia_pban  NUMBER(8),
+  id_domanda_pban             NUMBER(8),
+  id_caricamento        NUMBER,
+  data_caricamento      DATE  
+);
+
+-- pk
+alter table Mfinpis_T_SOGGETTO_ANTIMAFIA add
+  (constraint PK_Mfinpis_T_SOGGETTO_ANT primary key (id_soggetto_antimafia)
+  using index tablespace PBANDI_TBL);
+-- fk
+ALTER TABLE Mfinpis_T_SOGGETTO_ANTIMAFIA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_16
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* DA FARE
+alter table Mfinpis_T_SOGGETTO_ANTIMAFIA
+  add constraint FK_Mfinpis_T_DOMANDA_02 foreign key (ID_DOMANDA)
+  references mfinpis_T_DOMANDA (ID_DOMANDA);
+*/
+-- idx
+CREATE INDEX IE1_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_domanda_pban ) TABLESPACE PBANDI_IDX; 
+CREATE INDEX IE2_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_soggetto_antimafia_pban ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_caricamento ) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE4_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_domanda ) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_t_revoca
+create table MFINPIS_T_REVOCA
+(
+  id_revoca                NUMBER(8) not null,
+  importo                  NUMBER(17,2),
+  dt_revoca                DATE not null,
+  id_progetto              NUMBER(17) not null,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  estremi                  VARCHAR2(250),
+  id_motivo_revoca         NUMBER(3),
+  note                     VARCHAR2(4000),
+  id_modalita_agevolazione NUMBER(3) not null,
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  interessi_revoca         NUMBER(17,2),
+  id_causale_disimpegno    NUMBER(3),
+  id_periodo               NUMBER(8),
+  flag_ordine_recupero     VARCHAR2(1),
+  id_mancato_recupero      NUMBER(8),
+  id_revoca_pban           NUMBER(8),
+  id_progetto_pban         NUMBER(8),
+  ID_CARICAMENTO          NUMBER(8),
+  DATA_CARICAMENTO         DATE
+);
+
+-- pk
+alter table MFINPIS_T_REVOCA ADD
+  (constraint PK_MFINPIS_T_REVOCA primary key (id_revoca)
+USING INDEX TABLESPACE PBANDI_IDX);
+-- fk 
+ALTER TABLE MFINPIS_T_REVOCA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_17
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* DA FARE
+ALTER TABLE MFINPIS_T_REVOCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_01
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+--
+-- IDX
+CREATE INDEX IE1_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_revoca_pban) TABLESPACE PBANDI_IDX; 
+CREATE INDEX IE2_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_progetto_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE4_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_progetto) TABLESPACE PBANDI_IDX;
+
+-- MFINPIS_T_ESCUSSIONE
+create table MFINPIS_T_ESCUSSIONE
+(
+  id_escussione          NUMBER(20) not null,
+  id_progetto            NUMBER(20) not null,
+  id_tipo_escussione     NUMBER(3) not null,
+  id_stato_escussione    NUMBER(3) not null,
+  dt_ric_rich_escussione DATE not null,
+  dt_notifica            DATE,
+  imp_richiesto          NUMBER(13,2) not null,
+  imp_approvato          NUMBER(13,2),
+  causale_bonifico       VARCHAR2(4000),
+  iban_bonifico          VARCHAR2(40),
+  note                   VARCHAR2(4000),
+  dt_inizio_validita     DATE not null,
+  dt_fine_validita       DATE,
+  id_utente_ins          NUMBER(8),
+  id_utente_agg          NUMBER(8),
+  dt_inserimento         DATE not null,
+  dt_aggiornamento       DATE,
+  ID_ESCUSSIONE_PBAN     NUMBER(8),
+  ID_PROGETTO_PBAN       NUMBER(8),
+  ID_CARICAMENTO         NUMBER(8),			
+  DATA_CARICAMENTO       DATE
+);
+
+-- pk
+alter table MFINPIS_T_ESCUSSIONE ADD
+  (constraint PK_MFINPIS_T_ESCUSSIONE primary key (id_escussione)
+USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk 
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_18
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+
+/* DA FARE
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_02
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+-- IDX
+CREATE INDEX IE1_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_escussione_pban) TABLESPACE PBANDI_IDX; 
+CREATE INDEX IE2_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_progetto_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE3_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE4_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_progetto) TABLESPACE PBANDI_IDX;
+------
+
+
+-------------------
+-------------------
+--  AREA CREDITI --
+-------------------
+-------------------
+
+
+-- MFINPIS_R_SOGG_PROG_STA_CRED_FP
+create table MFINPIS_R_SOGG_PROG_STA_CRE_FP
+(
+  id_sogg_prog_stato_credito_fp NUMBER(8) not null,
+  progr_soggetto_progetto       NUMBER(8) not null,
+  id_stato_credito_fp           NUMBER(3) not null,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  dt_inserimento                DATE not null,
+  dt_aggiornamento              DATE,
+  dt_inizio_validita            DATE not null,
+  dt_fine_validita              DATE,
+  id_sogg_prog_stato_cre_fp_pban NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+-- pk
+alter table mfinpis_R_SOGG_PROG_STA_CRE_FP
+  add (constraint PK_mfinpis_R_SOGG_PROG_STA_CRE primary key (ID_SOGG_PROG_STATO_CREDITO_FP)
+  USING INDEX TABLESPACE PBANDI_IDX);
+-- fk
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_19
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_mfinpis_R_SOG_PR_STA_CR_FP ON mfinpis_R_SOGG_PROG_STA_CRE_FP (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_R_SOG_PR_STA_CR_FP ON mfinpis_R_SOGG_PROG_STA_CRE_FP ( id_sogg_prog_stato_cre_fp_pban) TABLESPACE PBANDI_IDX;
+
+
+-- 
+-- mfinpis_T_AZIONE_RECUP_BANCA
+--
+create table mfinpis_T_AZIONE_RECUP_BANCA
+(
+  id_azione_recupero_banca NUMBER(8) not null,
+  id_progetto              NUMBER(8) not null,
+  id_attivita_azione       NUMBER(3) not null,
+  dt_azione                DATE,
+  num_protocollo           VARCHAR2(30),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_azione_recupero_banca_pban NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+  
+-- pk
+alter table mfinpis_T_AZIONE_RECUP_BANCA
+  add (constraint PK_mfinpis_T_AZIONE_REC_BANCA primary key (ID_AZIONE_RECUPERO_BANCA)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+
+/* DA FARE
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_03
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- fk
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_20
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_azione_recupero_banca_pban) TABLESPACE PBANDI_IDX;
+--CREATE INDEX IE3_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_progetto) TABLESPACE PBANDI_IDX;
+
+--
+-- mfinpis_T_CESSIONE_QUOTA_FP
+--
+
+Create table mfinpis_T_CESSIONE_QUOTA_FP
+(
+  id_cessione_quota_fp        NUMBER(8) not null,
+  id_progetto                 NUMBER(8) not null,
+  imp_cessione_capitale       NUMBER(13,2),
+  imp_cessione_oneri          NUMBER(13,2),
+  imp_cessione_interessi_mora NUMBER(13,2),
+  imp_cessione_complessiva    NUMBER(13,2),
+  dt_cessione                 DATE,
+  imp_corrisp_cessione        NUMBER(13,2),
+  denom_cessionario           VARCHAR2(400),
+  id_stato_cessione           NUMBER(3),
+  note                        VARCHAR2(4000),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inserimento              DATE not null,
+  dt_aggiornamento            DATE,
+  id_cessione_quota_fp_pban   NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+
+
+-- pk
+alter table mfinpis_T_CESSIONE_QUOTA_FP
+  add (constraint PK_mfinpis_T_CESSIONE_QUOTA_FP primary key (ID_CESSIONE_QUOTA_FP)
+  USING INDEX TABLESPACE PBANDI_IDX);
+  
+-- fk
+
+/* DA FARE
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_04
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+---- fk
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_21
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_CES_QUOTA_FP ON mfinpis_T_CESSIONE_QUOTA_FP (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_CES_QUOTA_FP ON mfinpis_T_CESSIONE_QUOTA_FP (id_cessione_quota_fp_pban) TABLESPACE PBANDI_IDX;
+
+--
+-- mfinpis_T_ESCUSS_CONFIDI
+--
+create table mfinpis_T_ESCUSS_CONFIDI
+(
+  id_escuss_confidi            NUMBER(8) not null,
+  id_progetto                  NUMBER(8) not null,
+  id_attivita_garanzia_confidi NUMBER(3),
+  denom_confidi                VARCHAR2(400),
+  dt_escuss_confidi            DATE,
+  dt_pagam_confidi             DATE,
+  perc_garanzia                NUMBER(5,2),
+  note                         VARCHAR2(4000),
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  dt_inserimento               DATE not null,
+  dt_aggiornamento             DATE,
+  id_escuss_confidi_pban       NUMBER(8),
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE 
+);
+
+-- pk
+alter table mfinpis_T_ESCUSS_CONFIDI
+  add (constraint PK_mfinpis_T_ESCUSS_CONFIDI primary key (ID_ESCUSS_CONFIDI)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+/* DA FARE
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_05
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- fk
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_22
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_ESCUSS_CONFIDI ON mfinpis_T_ESCUSS_CONFIDI (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_ESCUSS_CONFIDI ON mfinpis_T_ESCUSS_CONFIDI(id_escuss_confidi_pban) TABLESPACE PBANDI_IDX;
+
+--
+-- mfinpis_t_iscrizione_ruolo
+--
+create table mfinpis_t_iscrizione_ruolo
+(
+  id_iscrizione_ruolo       NUMBER(8) not null,
+  id_progetto               NUMBER(8) not null,
+  dt_richiesta_iscrizione   DATE,
+  num_protocollo            VARCHAR2(30),
+  dt_richiesta_discarico    DATE,
+  num_protocollo_discarico  VARCHAR2(30),
+  dt_iscrizione_ruolo       DATE,
+  dt_discarico              DATE,
+  num_protocollo_discar_reg VARCHAR2(30),
+  dt_richiesta_sosp         DATE,
+  num_protocollo_sosp       VARCHAR2(30),
+  imp_capitale_ruolo        NUMBER(13,2),
+  imp_agevolaz_ruolo        NUMBER(13,2),
+  dt_iscrizione             DATE,
+  num_protocollo_regione    VARCHAR2(30),
+  tipo_pagamento            VARCHAR2(1),
+  note                      VARCHAR2(4000),
+  dt_inizio_validita        DATE not null,
+  dt_fine_validita          DATE,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  id_iscrizione_ruolo_pban       NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_t_iscrizione_ruolo
+  add (constraint PK_mfinpis_t_iscrizione_ruolo primary key (ID_ISCRIZIONE_RUOLO)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+ALTER TABLE  mfinpis_t_iscrizione_ruolo ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_23
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+/* DA FARE
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT FK_mfinpis_t_iscrizione_ruolo_06
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_t_iscrizione_ruolo ON mfinpis_t_iscrizione_ruolo (id_caricamento) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_t_iscrizione_ruolo ON mfinpis_t_iscrizione_ruolo (id_iscrizione_ruolo_pban) TABLESPACE PBANDI_IDX;
+
+--
+-- mfinpis_T_PASSAGGIO_PERDITA
+--
+create table mfinpis_T_PASSAGGIO_PERDITA
+(
+  id_passaggio_perdita    NUMBER(8) not null,
+  id_progetto             NUMBER(8) not null,
+  dt_passaggio_perdita    DATE,
+  imp_perdita_complessiva NUMBER(13,2),
+  imp_perdita_capitale    NUMBER(13,2),
+  imp_perdita_interessi   NUMBER(13,2),
+  imp_perdita_agevolaz    NUMBER(13,2),
+  imp_perdita_mora        NUMBER(13,2),
+  note                    VARCHAR2(4000),
+  dt_inizio_validita      DATE not null,
+  dt_fine_validita        DATE,
+  id_utente_ins           NUMBER(8) not null,
+  id_utente_agg           NUMBER(8),
+  dt_inserimento          DATE not null,
+  dt_aggiornamento        DATE,
+  id_passaggio_perdita_pban    NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_T_PASSAGGIO_PERDITA
+  add (constraint PK_mfinpis_T_PASSAGGIO_PERDITA primary key (ID_PASSAGGIO_PERDITA)
+  USING INDEX TABLESPACE PBANDI_IDX);
+  
+-- fk
+ALTER TABLE  mfinpis_T_PASSAGGIO_PERDITA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_24
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_PASS_PERDITA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_06
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_PASS_PERDITA ON mfinpis_T_PASSAGGIO_PERDITA (ID_PASSAGGIO_PERDITA_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_PASS_PERDITA ON mfinpis_T_PASSAGGIO_PERDITA (id_caricamento) TABLESPACE PBANDI_IDX;
+
+--
+-- mfinpis_T_PIANO_RIENTRO
+--
+create table mfinpis_T_PIANO_RIENTRO
+(
+  id_piano_rientro     NUMBER(8) not null,
+  id_progetto          NUMBER(8) not null,
+  dt_proposta          DATE,
+  imp_quota_capitale   NUMBER(13,2),
+  imp_agevolazione     NUMBER(13,2),
+  id_attivita_esito    NUMBER(3),
+  dt_esito             DATE,
+  id_attivita_recupero NUMBER(3),
+  note                 VARCHAR2(4000),
+  dt_inizio_validita   DATE not null,
+  dt_fine_validita     DATE,
+  id_utente_ins        NUMBER(8) not null,
+  id_utente_agg        NUMBER(8),
+  dt_inserimento       DATE not null,
+  dt_aggiornamento     DATE,
+  id_piano_rientro_pban     NUMBER(8),  
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_T_PIANO_RIENTRO
+  add (constraint PK_mfinpis_T_PIANO_RIENTRO primary key (ID_PIANO_RIENTRO)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+ALTER TABLE  mfinpis_T_PIANO_RIENTRO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_25
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_PIANO_RIENTRO ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_07
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_PIANO_RIENTRO ON mfinpis_T_PIANO_RIENTRO (ID_PIANO_RIENTRO_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_PIANO_RIENTRO ON mfinpis_T_PIANO_RIENTRO (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_T_REVOCA_BANCARIA
+--
+create table mfinpis_T_REVOCA_BANCARIA
+(
+  id_revoca_bancaria       NUMBER(8) not null,
+  id_progetto              NUMBER(8) not null,
+  dt_ricezione_comunicaz   DATE,
+  dt_revoca                DATE,
+  imp_debito_residuo_banca NUMBER(13,2),
+  imp_debito_residuo_fp    NUMBER(13,2),
+  perc_cofinanz_fp         NUMBER(5,2),
+  num_protocollo           VARCHAR2(30),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_revoca_bancaria_pban    NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+  
+-- pk
+alter table mfinpis_T_REVOCA_BANCARIA
+  add (constraint PK_mfinpis_T_REVOCA_BANCARIA primary key (ID_REVOCA_BANCARIA)
+  USING INDEX TABLESPACE PBANDI_IDX);
+  
+-- fk
+ALTER TABLE  mfinpis_T_REVOCA_BANCARIA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_26
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_REVOCA_BANCARIA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_07
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_REVOCA_BANCARIA ON mfinpis_T_REVOCA_BANCARIA (ID_REVOCA_BANCARIA_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_REVOCA_BANCARIA ON mfinpis_T_REVOCA_BANCARIA (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_t_saldo_stralcio
+Create table mfinpis_t_saldo_stralcio
+(
+  id_saldo_stralcio          NUMBER(8) not null,
+  id_progetto                NUMBER(8) not null,
+  id_attivita_saldo_stralcio NUMBER(3),
+  dt_proposta                DATE,
+  dt_accettazione            DATE,
+  imp_debitore               NUMBER(13,2),
+  imp_confidi                NUMBER(13,2),
+  id_attivita_esito          NUMBER(3),
+  dt_esito                   DATE,
+  dt_pagam_debitore          DATE,
+  dt_pagam_confidi           DATE,
+  id_attivita_recupero       NUMBER(3),
+  imp_recuperato             NUMBER(13,2),
+  imp_perdita                NUMBER(13,2),
+  note                       VARCHAR2(4000),
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inserimento             DATE not null,
+  dt_aggiornamento           DATE,
+  id_saldo_stralcio_pban     NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);
+  
+-- pk
+alter table mfinpis_T_SALDO_STRALCIO
+  add (constraint PK_mfinpis_T_SALDO_STRALCIO primary key (ID_SALDO_STRALCIO)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+ALTER TABLE  mfinpis_T_SALDO_STRALCIO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_27
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_SALDO_STRALCIO ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_08
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_SALDO_STRALCIO ON mfinpis_T_SALDO_STRALCIO (id_saldo_stralcio_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_SALDO_STRALCIO ON mfinpis_T_SALDO_STRALCIO (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_T_SOGG_STATO_AZIENDA
+create table mfinpis_T_SOGG_STATO_AZIENDA
+(
+  id_soggetto_stato_azienda NUMBER(8) not null,
+  id_soggetto               NUMBER(8) not null,
+  id_stato_azienda          NUMBER(3) not null,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  dt_inizio_validita        DATE not null,
+  dt_fine_validita          DATE,
+  id_soggetto_stato_az_pban    NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);
+  
+-- pk
+alter table mfinpis_T_SOGG_STATO_AZIENDA
+  add (constraint PK_mfinpis_T_SOGG_STATO_AZ primary key (ID_SOGGETTO_STATO_AZIENDA)
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+
+-- fk
+ALTER TABLE  mfinpis_T_SOGG_STATO_AZIENDA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_28
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SOGG_STATO_AZ ON mfinpis_T_SOGG_STATO_AZIENDA (id_soggetto_stato_az_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_SOGG_STATO_AZ ON mfinpis_T_SOGG_STATO_AZIENDA (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_T_SOGGETTO_CLA_RISCHIO 
+create table mfinpis_T_SOGGETTO_CLA_RISCHIO
+(
+  id_soggetto_cla_rischio NUMBER(8) not null,
+  id_soggetto             NUMBER(8) not null,
+  id_classe_rischio       NUMBER(3) not null,
+  dt_inizio_validita      DATE not null,
+  dt_fine_validita        DATE,
+  id_utente_ins           NUMBER(8) not null,
+  id_utente_agg           NUMBER(8),
+  dt_inserimento          DATE not null,
+  dt_aggiornamento        DATE,
+  id_soggetto_cla_risc_pban NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);  
+
+-- pk
+alter table mfinpis_T_SOGGETTO_CLA_RISCHIO
+  add (constraint PK_mfinpis_T_SOGG_CLA_RISCHIO primary key (ID_SOGGETTO_CLA_RISCHIO)
+   USING INDEX TABLESPACE PBANDI_IDX);
+-- fk
+ALTER TABLE  mfinpis_T_SOGGETTO_CLA_RISCHIO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_29
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SOGGETTO_CLA_RIS ON mfinpis_T_SOGGETTO_CLA_RISCHIO (id_soggetto_cla_risc_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_SOGGETTO_CLA_RIS ON mfinpis_T_SOGGETTO_CLA_RISCHIO (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_t_soggetto_rating
+create table mfinpis_t_soggetto_rating
+(
+  id_soggetto_rating NUMBER(8) not null,
+  id_soggetto        NUMBER(8) not null,
+  id_rating          NUMBER(3) not null,
+  dt_classificazione DATE not null,
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  dt_inserimento     DATE not null,
+  dt_aggiornamento   DATE,
+  id_soggetto_rating_pban NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);  
+  
+-- pk
+alter table mfinpis_t_soggetto_rating
+  add (constraint PK_mfinpis_T_SOGGETTO_RATING primary key (ID_SOGGETTO_RATING)  
+  USING INDEX TABLESPACE PBANDI_IDX);
+
+-- fk
+ALTER TABLE  mfinpis_t_soggetto_rating ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_30
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_t_soggetto_rating ON mfinpis_t_soggetto_rating (id_soggetto_rating_pban) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_t_soggetto_rating ON mfinpis_t_soggetto_rating (id_caricamento) TABLESPACE PBANDI_IDX;
+
+
+-- Modifica struttura
+-- codice_fondo_finpis
+alter table mfinpis_r_bando_mod_ag_es_ban add  codice_fondo_finpis number(8);
+alter table pbandi_r_bando_mod_ag_estr_ban add codice_fondo_finpis number(8);
+
+-- MFINPIS_T_ESCUSSIONE
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD Motivo_rich_integrazione VARCHAR2(200);
+-- MFINPIS_R_BANDO_MODALITA_AGEV
+ALTER TABLE MFINPIS_R_BANDO_MODALITA_AGEV ADD PERIODO_STABILITA NUMBER(2);
+-- mfinpis_t_soggetto_antimafia
+ALTER TABLE mfinpis_t_soggetto_antimafia MODIFY ID_DOMANDA NOT NULL;
+
+-- mfinpis_T_DELIBERA_PROG
+create table mfinpis_T_DELIBERA_PROG
+(
+  id_delibera        NUMBER(8) not null,
+  id_progetto        NUMBER(8),
+  oggetto_delibera   VARCHAR2(4000) not null,
+  dt_delibera        DATE,
+  dt_annullamento    DATE,
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  ID_DELIBERA_PBAN	NUMBER(8),			
+  ID_CARICAMENTO	INTEGER,			
+  DATA_CARICAMENTO	DATE
+);
+
+-- pk
+alter table mfinpis_T_DELIBERA_PROG ADD
+(constraint PK_mfinpis_T_DELIBERA_PROG primary key (id_delibera)
+USING INDEX TABLESPACE PBANDI_IDX);
+-- fk
+ALTER TABLE mfinpis_T_DELIBERA_PROG ADD (
+CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_31
+FOREIGN KEY (ID_CARICAMENTO)
+REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+);
+-- idx
+CREATE INDEX IE1_mfinpis_T_DELIBERA_PROG ON mfinpis_T_DELIBERA_PROG (ID_DELIBERA_PBAN) TABLESPACE PBANDI_IDX;
+
+
+
+-- MFINPIS_T_AMMORTAMENTO_PROGETTI
+create table MFINPIS_T_AMMORTAMENTO_PROG
+(
+id_ammort_progetti NUMBER(8) not null,
+id_delibera NUMBER(8),
+mm_ammortamento NUMBER(3) not null,
+mm_preammortamento NUMBER(3),
+id_tipo_tasso NUMBER(3),
+perc_spread NUMBER(5,2),
+frequenza NUMBER(3),
+perc_interessi NUMBER(5,2),
+dt_inizio_validita DATE not null,
+dt_fine_validita DATE,
+id_utente_ins NUMBER(8) not null,
+id_utente_agg NUMBER(8),
+id_ammort_progetti_pban NUMBER(8),
+id_caricamento INTEGER,
+data_caricamento DATE
+);
+
+-- pk
+alter table MFINPIS_T_AMMORTAMENTO_PROG ADD
+(constraint PK_MFINPIS_T_AMMORTAMENTO_PROG primary key (id_ammort_progetti)
+USING INDEX TABLESPACE PBANDI_IDX);
+-- fk
+ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD (
+CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_30
+FOREIGN KEY (ID_CARICAMENTO)
+REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+);
+-- fk
+ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD (
+CONSTRAINT FK_mfinpis_T_DELIB_PROG_01
+FOREIGN KEY (ID_DELIBERA)
+REFERENCES mfinpis_T_DELIBERA_PROG (ID_DELIBERA)
+);
+-- idx
+CREATE INDEX IE1_MFINPIS_T_AMM_PROG ON MFINPIS_T_AMMORTAMENTO_PROG (id_ammort_progetti_pban) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_t_ammortamento_prog
+alter table mfinpis_t_ammortamento_prog add
+(ID_TIPO_CALC_AMM	NUMBER(3),	
+ID_TASSO_AMM	NUMBER(3)
+);
+-- MFINPIS_T_RNA_PROGETTO
+CREATE TABLE MFINPIS_T_RNA_PROGETTO
+(ID_RNA_PROGETTO  NUMBER(8) NOT NULL,  
+  CODICE_BANDO_RNA  INTEGER ,   
+  ID_PROGETTO  NUMBER(8)   NOT NULL,
+  TIPO_AGEVOLAZIONE VARCHAR2(1),  
+  ID_CONCESSIONE_GEST  VARCHAR2(60)  NOT NULL,   
+  ID_COMP_AIUTO_GEST  VARCHAR2(100)  NOT NULL,   
+  COR  INTEGER NOT NULL,  
+  CODICE_FISCALE_BENEFICIARIO  VARCHAR2(50)  NOT NULL, 
+  COVAR  INTEGER ,   
+  DT_ESITO_VALIDAZIONE  DATE,
+  ID_COSTO_GEST  VARCHAR2(100)   NOT NULL,  
+  ID_STRUM_AIUTO_GEST  VARCHAR2(100)   NOT NULL,  
+  ID_MODALITA_AGEVOLAZIONE  NUMBER(3,0)  NOT NULL,  
+  IMPORTO_NOMINALE  NUMBER(16,2)  NOT NULL,  
+  IMPORTO_AGEVOLAZIONE    NUMBER(16,2)  NOT NULL, 
+  INTENSITA_AIUTO  NUMBER(16,2) NOT NULL,   
+  DT_INIZIO_VALIDITA  Date  NOT NULL,  
+  DT_FINE_VALIDITA  Date,    
+  ID_UTENTE_INS  NUMBER(8)  NOT NULL, 
+  ID_UTENTE_AGG  NUMBER(8),
+  ID_RNA_PROGETTO_PBAN	NUMBER(8),		
+  ID_CARICAMENTO	INTEGER,			
+  DATA_CARICAMENTO	DATE
+ );
+ 
+-- PK
+ALTER TABLE MFINPIS_T_RNA_PROGETTO  ADD 
+(CONSTRAINT PK_MFINPIS_T_RNA_PROGETTO PRIMARY KEY (ID_RNA_PROGETTO)
+USING INDEX TABLESPACE PBANDI_IDX);
+
+-- FK
+ALTER TABLE  MFINPIS_T_RNA_PROGETTO ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_31
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_MFINPIS_T_RNA_PROGETTO ON MFINPIS_T_RNA_PROGETTO (ID_RNA_PROGETTO_PBAN) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_MFINPIS_T_RNA_PROGETTO ON MFINPIS_T_RNA_PROGETTO (id_caricamento) TABLESPACE PBANDI_IDX;
+--
+--
+-- mfinpis_d_voce_di_spesa
+ALTER TABLE mfinpis_d_voce_di_spesa add
+(FLAG_CANCELLATO      VARCHAR2(1),
+ ID_VOCE_DI_SPESA_NEW  NUMBER(8),      
+ ID_VOCE_DI_SPESA_PADRE_NEW  NUMBER(8)  
+);
+-- mfinpis_r_bando_voce_spesa
+ALTER TABLE mfinpis_r_bando_voce_spesa add
+(ID_VOCE_DI_SPESA_NEW  NUMBER(8)  
+);
+-- FIN QUI RILASCIO PRE-PROD 09112022
+
+ALTER TABLE MFinpis_t_richiesta MODIFY ID_DOMANDA VARCHAR2(10);
+ALTER TABLE MFINPIS_T_SOGGETTO_ANTIMAFIA MODIFY ID_DOMANDA VARCHAR2(10);
+ALTER TABLE MFINPIS_T_ESCUSSIONE MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP MODIFY ID_SOGG_PROG_STATO_CREDITO_FP VARCHAR2(20);
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA MODIFY ID_AZIONE_RECUPERO_BANCA VARCHAR2(17);
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP MODIFY ID_CESSIONE_QUOTA_FP VARCHAR2(17);
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_T_ESCUSS_CONFIDI MODIFY ID_ESCUSS_CONFIDI VARCHAR2(17);
+ALTER TABLE mfinpis_T_ESCUSS_CONFIDI MODIFY ID_PROGETTO VARCHAR2(15);
+alter table MFINPIS_T_ISCRIZIONE_RUOLO modify id_progetto varchar2(17);
+ alter table MFINPIS_T_PASSAGGIO_PERDITA modify id_passaggio_perdita varchar2(17);
+alter table MFINPIS_T_PASSAGGIO_PERDITA modify id_progetto varchar2(15);
+alter table MFINPIS_T_PIANO_RIENTRO modify ID_PIANO_RIENTRO VARCHAR2(20);
+alter table MFINPIS_T_PIANO_RIENTRO modify ID_PROGETTO VARCHAR2(17);
+alter table mfinpis_t_note modify id_soggetto_beneficiario varchar2(15);
+alter table mfinpis_t_note modify id_progetto varchar2(18);
+alter table mfinpis_t_note modify id_modalita_agevolazione varchar2(1);
+
+-- 
+-- add --> id modalita agevolazione
+alter table mfinpis_t_revoca_bancaria --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_azione_recup_banca --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_escuss_confidi --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_piano_rientro  --
+add id_modalita_agevolazione number(3); 
+alter table mfinpis_t_saldo_stralcio --
+add id_modalita_agevolazione number(3); 
+alter table mfinpis_t_passaggio_perdita --
+add id_modalita_agevolazione number(3);
+alter table  mfinpis_t_iscrizione_ruolo --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_cessione_quota_fp --
+add id_modalita_agevolazione number(3);
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP --
+ADD ID_MODALITA_AGEVOLAZIONE NUMBER(3);
+--
+
+-- mfinpis_T_LIBERAZ_GARANTE
+create table mfinpis_T_LIBERAZ_GARANTE
+(
+  id_liberaz_garante       NUMBER(8) not null,
+  id_progetto              varchar2(17) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  dt_liberaz_garante       DATE,
+  imp_liberazione          NUMBER(13,2),
+  denom_garante_liberato   VARCHAR2(400),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_liberaz_garante_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+
+-- PK
+ALTER TABLE mfinpis_T_LIBERAZ_GARANTE  ADD 
+(CONSTRAINT PK_mfinpis_T_LIBERAZ_GARANTE PRIMARY KEY (id_liberaz_garante)
+USING INDEX TABLESPACE PBANDI_IDX);
+
+-- FK
+ALTER TABLE  mfinpis_T_LIBERAZ_GARANTE ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_32
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_LIBERAZ_GARANTE ON mfinpis_T_LIBERAZ_GARANTE (id_liberaz_garante_PBAN) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_LIBERAZ_GARANTE ON mfinpis_T_LIBERAZ_GARANTE (id_caricamento) TABLESPACE PBANDI_IDX;
+
+-- mfinpis_T_MESSA_IN_MORA
+create table mfinpis_T_MESSA_IN_MORA
+(
+  id_messa_in_mora              NUMBER(8) not null,
+  id_progetto                   varchar2(17) not null,
+  id_modalita_agevolazione      NUMBER(3) not null,
+  id_attivita_mora              NUMBER(3),
+  dt_messa_in_mora              DATE,
+  imp_messa_in_mora_complessiva NUMBER(13,2),
+  imp_quota_capitale_revoca     NUMBER(13,2),
+  imp_agevolaz_revoca           NUMBER(13,2),
+  imp_credito_residuo           NUMBER(13,2),
+  imp_interessi_mora            NUMBER(13,2),
+  dt_notifica                   DATE,
+  id_attivita_recupero_mora     NUMBER(3),
+  dt_pagamento                  DATE,
+  note                          VARCHAR2(4000),
+  dt_inizio_validita            DATE not null,
+  dt_fine_validita              DATE,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  dt_inserimento                DATE not null,
+  dt_aggiornamento              DATE,
+  id_messa_in_mora_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+  
+
+-- PK
+ALTER TABLE mfinpis_T_MESSA_IN_MORA  ADD 
+(CONSTRAINT PK_mfinpis_T_MESSA_IN_MORA PRIMARY KEY (id_messa_in_mora)
+USING INDEX TABLESPACE PBANDI_IDX);
+
+-- FK
+ALTER TABLE  mfinpis_T_MESSA_IN_MORA ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_33
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_MESSA_IN_MORA ON mfinpis_T_MESSA_IN_MORA (id_messa_in_mora_PBAN) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_MESSA_IN_MORA ON mfinpis_T_MESSA_IN_MORA (id_caricamento) TABLESPACE PBANDI_IDX; 
+
+-- mfinpis_T_SEGNALAZ_CORTE_CONTI
+create table mfinpis_T_SEGNALAZ_CORTE_CONTI
+(
+  id_segnalazione_corte_conti NUMBER(8) not null,
+  id_progetto                 varchar2(17) not null,
+  id_modalita_agevolazione    NUMBER(3) not null,
+  dt_segnalazione             DATE,
+  num_protocollo_segn         VARCHAR2(30),
+  imp_cred_res_capitale       NUMBER(13,2),
+  imp_oneri_agevolaz          NUMBER(13,2),
+  imp_quota_segnalaz          NUMBER(13,2),
+  imp_garanzia                NUMBER(13,2),
+  flag_piano_rientro          VARCHAR2(2),
+  dt_piano_rientro            DATE,
+  flag_saldo_stralcio         VARCHAR2(2),
+  dt_saldo_stralcio           DATE,
+  flag_pagam_integrale        VARCHAR2(2),
+  dt_pagamento                DATE,
+  flag_dissegnalazione        VARCHAR2(2),
+  dt_dissegnalazione          DATE,
+  num_protocollo_diss         VARCHAR2(30),
+  flag_decreto_archiv         VARCHAR2(2),
+  dt_archiv                   DATE,
+  num_protocollo_archiv       VARCHAR2(30),
+  flag_comunicaz_regione      VARCHAR2(2),
+  note                        VARCHAR2(4000),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inserimento              DATE not null,
+  dt_aggiornamento            DATE,
+  id_segnalazione_corte_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+  
+
+-- PK
+ALTER TABLE mfinpis_T_SEGNALAZ_CORTE_CONTI  ADD 
+(CONSTRAINT PK_mfinpis_T_SEGNALAZ_CORTE_C PRIMARY KEY (id_segnalazione_corte_conti)
+USING INDEX TABLESPACE PBANDI_IDX);
+
+-- FK
+ALTER TABLE mfinpis_T_SEGNALAZ_CORTE_CONTI ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_34
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SEGNALAZ_CORTE_C ON mfinpis_T_SEGNALAZ_CORTE_CONTI (id_segnalazione_corte_PBAN) TABLESPACE PBANDI_IDX;
+CREATE INDEX IE2_mfinpis_T_SEGNALAZ_CORTE_C ON mfinpis_T_SEGNALAZ_CORTE_CONTI (id_caricamento) TABLESPACE PBANDI_IDX; 
+
+-- mfinpis_t_note
+alter table mfinpis_t_note add 
+(area varchar2(2),
+ fase varchar2(2),
+ tipo varchar2(2)
+);
+-- mfinpis_t_escussione
+alter table mfinpis_t_escussione add data_stato_escussione date;
+
+create table MFINPIS_T_SOGGETTO_DSAN
+(
+  id_soggetto_dsan      NUMBER(8) not null,
+  id_domanda            VARCHAR2(10) not null,
+  id_esito_dsan         NUMBER(3),
+  dt_emissione_dsan     DATE not null,
+  dt_scadenza           DATE not null,
+  num_protocollo        VARCHAR2(20),
+  id_utente_ins         NUMBER(8) not null,
+  id_utente_agg         NUMBER(8),
+  dt_inizio_validita    DATE not null,
+  dt_fine_validita      DATE,
+  id_soggetto_dsan_pban NUMBER(8),
+  id_caricamento        NUMBER,
+  data_caricamento      DATE
+);
+
+alter table MFINPIS_T_SOGGETTO_DSAN
+  add constraint FK_PBANDI_T_MIGR_FINPIS_32 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- Create/Recreate indexes 
+create index IE1_MFINPIS_T_SOGGETTO_DSAN on MFINPIS_T_SOGGETTO_DSAN (ID_SOGGETTO_DSAN_PBAN);
+  
+  
+  alter table mfinpis_T_DELIBERA_PROG modify id_progetto varchar2(20);
+  
+  alter table mfinpis_R_SOGG_PROG_STA_CRE_FP modify PROGR_SOGGETTO_PROGETTO varchar2(20);
+  alter table mfinpis_t_revoca_bancaria modify id_progetto varchar2(20);
+  alter table mfinpis_t_saldo_stralcio modify id_progetto varchar2(20);
+  alter table mfinpis_t_rna_progetto modify id_progetto varchar2(20);
+  
+  
+  -- mfinpis_t_rna_progetto_man
+create table mfinpis_t_rna_progetto_man
+          (id_rna_progetto_man number(8) not null,
+           id_progetto varchar2(20),
+           fondo_finpis number(8),
+           domanda_finpis  number(8),
+           ACOVAR1  number(10),
+           DDATCOVAR1 date,
+           ACOVAR2  number(10),
+           DDATCOVAR2 date,
+           ACOVAR3  number(10),
+           DDATCOVAR3 date,
+           AVERCOR1  number(10),
+           DDTVERCOR1 date,
+           AVERCOR2  number(10),
+           DDTVERCOR2 date,
+           AVERCOR3  number(10),
+           DDTVERCOR3  number(10),
+           ACOR2  number(10),
+           DDATACOR2 date,
+           ACUP varchar2(100),
+           AIDCONC  number(10),
+           AIDRICH  number(10),
+           CODRNA varchar2(100),
+           CODRNA2  number(10),
+           DDATRNA2 date,
+           id_rna_progetto_man_pban  NUMBER(8),    
+           ID_CARICAMENTO  NUMBER,  
+           DATA_CARICAMENTO  DATE
+          );
+  -- pk        
+  alter table mfinpis_t_rna_progetto_man
+  add constraint PK_mfinpis_t_rna_progetto_man primary key (id_rna_progetto_man);
+ -- fk
+alter table  mfinpis_t_rna_progetto_man
+  add constraint FK_MFINPIS_T_MIGR_FINPIS_35 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+ -- idx
+create index IE1_mfinpis_t_rna_progetto_man on mfinpis_t_rna_progetto_man (id_rna_progetto_man_pban)
+  tablespace PBANDI_IDX;
+create index IE2_mfinpis_t_rna_progetto_man on mfinpis_t_rna_progetto_man (ID_CARICAMENTO)
+  tablespace PBANDI_IDX;
+  
+  create table MFINPIS_T_CONTRODEDUZ
+(
+  id_controdeduz       NUMBER(8) not null,
+  numero_controdeduz   NUMBER(8) not null,
+  id_entita            NUMBER(3) not null,
+  id_target            NUMBER(8) not null,
+  id_stato_controdeduz NUMBER(3) not null,
+  dt_stato_controdeduz DATE not null,
+  id_attiv_controdeduz NUMBER(3),
+  dt_attiv_controdeduz DATE,
+  dt_inizio_validita   DATE not null,
+  dt_fine_validita     DATE,
+  id_utente_ins        NUMBER(8) not null,
+  id_utente_agg        NUMBER(8),
+  dt_inserimento       DATE not null,
+  dt_aggiornamento     DATE,
+  id_controdeduz_pban  NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+alter table MFINPIS_T_CONTRODEDUZ
+  add constraint PK_MFINPIS_T_CONTRODEDUZ primary key (ID_CONTRODEDUZ)
+  using index 
+  tablespace PBANDI_IDX;
+
+alter table MFINPIS_T_CONTRODEDUZ
+  add constraint FK_PBANDI_T_MIGR_FINPIS_33 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+create index IE1_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_CONTRODEDUZ_PBAN)
+  tablespace PBANDI_IDX;
+create index IE2_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_CARICAMENTO)
+  tablespace PBANDI_IDX;
+  
+  
+  create table MFINPIS_T_RICHIESTA_INTEGRAZ
+(
+  id_richiesta_integraz      NUMBER(8) not null,
+  id_entita                  NUMBER(3) not null,
+  id_target                  NUMBER(8) not null,
+  dt_richiesta               DATE not null,
+  dt_invio                   DATE,
+  id_utente_richiesta        NUMBER(8) not null,
+  id_utente_invio            NUMBER(8),
+  dt_notifica                DATE,
+  num_giorni_scadenza        NUMBER(4),
+  dt_chiusura_ufficio        DATE,
+  id_stato_richiesta         NUMBER(3) not null,
+  dt_scadenza                DATE,
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inserimento             DATE not null,
+  dt_aggiornamento           DATE,
+  id_richiesta_integraz_pban NUMBER(8),
+  id_caricamento             NUMBER(8),
+  data_caricamento           DATE
+);
+alter table MFINPIS_T_RICHIESTA_INTEGRAZ
+  add constraint PK_MFINPIS_T_RICHIESTA_INTEGR primary key (ID_RICHIESTA_INTEGRAZ)
+  using index 
+  tablespace PBANDI_IDX;
+  alter table MFINPIS_T_RICHIESTA_INTEGRAZ
+  add constraint FK_PBANDI_T_MIGR_FINPIS_36 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+  create index IE1_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_RICHIESTA_INTEGRAZ_PBAN)
+  tablespace PBANDI_IDX;
+  create index IE2_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_CARICAMENTO)
+  tablespace PBANDI_IDX;
+  
+  create table MFINPIS_T_PROROGA
+(
+  id_richiesta_proroga      NUMBER(8) not null,
+  id_entita                 NUMBER(3),
+  id_target                 NUMBER(8) not null,
+  dt_richiesta              DATE not null,
+  num_giorni_rich           NUMBER(3) not null,
+  motivazione               VARCHAR2(2000) not null,
+  num_giorni_approv         NUMBER(3),
+  id_stato_proroga          NUMBER(3),
+  dt_esito_richiesta        DATE,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  id_richiesta_proroga_pban NUMBER(8),
+  id_caricamento            NUMBER(8),
+  data_caricamento          DATE
+);
+alter table MFINPIS_T_PROROGA
+  add constraint PK_MFINPIS_T_PROROGA primary key (ID_RICHIESTA_PROROGA)
+  using index 
+  tablespace PBANDI_IDX;
+ alter table MFINPIS_T_PROROGA
+  add constraint FK_PBANDI_T_MIGR_FINPIS_34 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+  create index IE1_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_RICHIESTA_PROROGA_PBAN)
+  tablespace PBANDI_IDX;
+  create index IE2_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_CARICAMENTO)
+  tablespace PBANDI_IDX;
+  -- mfinpis_t_revoca
+  alter table mfinpis_t_revoca modify id_progetto varchar2(17);
+  -- MFINPIS_T_AMMORTAMENTO_PROG
+  ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD ID_TIPO_PERIODO_AMMORTAMENTO INTEGER;
+  
+ --
+ -- mfinpis_t_riassicurazioni
+CREATE TABLE mfinpis_t_riassicurazioni
+     (    id_riassicurazione NUMBER(8),
+          id_sogg_riassicurato VARCHAR2(10),
+          linea_intervento_soggetto VARCHAR2(50),
+          ragione_sociale VARCHAR2(200),
+          forma_giuridica VARCHAR2(255),
+          descr_forma_giuridica VARCHAR2(500),
+          codice_fiscale VARCHAR2(16),
+          indirizzo_sede_destinataria VARCHAR2(255),
+          localita_sede_destinataria VARCHAR2(255),
+          provincia_sede_destinataria VARCHAR2(2),
+          ateco VARCHAR2(8),
+          descrizione_ateco VARCHAR2(500),
+          importo_finanziato NUMBER(17,2),
+          id_progetto VARCHAR2(20),
+          importo_garanzia NUMBER(17,2),
+          importo_ammesso NUMBER(17,2),
+          percentuale_garanzia NUMBER(5,2),
+          percentuale_riassicurato NUMBER(5,2),
+          erogazione_mutuo date,
+          delibera_mutuo date,
+          emissione_garanzia date,
+          scadenza_mutuo date,
+          importo_escusso NUMBER(17,2),
+		  data_escussione date,
+          data_scarico date,
+          data_revoca date,
+          ID_RIASSICURAZIONE_PBAN NUMBER(8),
+          ID_CARICAMENTO number(3),
+          DATA_CARICAMENTO date
+      );
+-- pk     
+alter table mfinpis_t_riassicurazioni
+ add constraint PK_mfinpis_t_riassicurazioni primary key (id_riassicurazione)
+ using index 
+ tablespace PBANDI_IDX;
+-- fk  
+alter table mfinpis_t_riassicurazioni
+ add constraint fk_pbandi_t_migr_finpis_37 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_riassicuraz on mfinpis_t_riassicurazioni (ID_RIASSICURAZIONE_PBAN) tablespace PBANDI_IDX;  
+create index IE2_mfinpis_t_riassicuraz on mfinpis_t_riassicurazioni (ID_CARICAMENTO) tablespace PBANDI_IDX;
+
+
+-- mfinpis_T_CALC_DIM_IMPRESA
+create table mfinpis_T_CALC_DIM_IMPRESA
+          (
+            id_calc_dim_impresa NUMBER(8) not null,
+            codice_visualizzato varchar2(20),
+            fondo               NUMBER,
+            domanda             NUMBER,
+            id_soggetto         NUMBER not null,
+            id_periodo          varchar2(4),
+            ula                 NUMBER(8),
+            imp_fatturato       NUMBER(13,2) not null,
+            tot_bilancio_annuo  NUMBER(13,2),
+            id_utente_ins       NUMBER(8) not null,
+            id_utente_agg       NUMBER(8),
+            dt_inizio_validita  DATE not null,
+            dt_fine_validita    DATE,
+            id_calc_dim_impresa_pban  NUMBER(8),
+            id_caricamento       NUMBER(8),
+            data_caricamento     DATE
+           );
+           
+           alter table mfinpis_T_CALC_DIM_IMPRESA
+             add constraint PK_mfinpis_T_CALC_DIM_IMPRESA primary key (id_calc_dim_impresa)
+             using index 
+             tablespace PBANDI_IDX;
+            -- fk  
+            alter table mfinpis_T_CALC_DIM_IMPRESA
+             add constraint fk_pbandi_t_migr_finpis_38 foreign key (ID_CARICAMENTO)
+             references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+            -- idx  
+            create index IE1_mfinpis_T_CALC_DIM_IMPRESA on mfinpis_T_CALC_DIM_IMPRESA (id_calc_dim_impresa_pban) tablespace PBANDI_IDX;  
+            create index IE2_mfinpis_T_CALC_DIM_IMPRESA on mfinpis_T_CALC_DIM_IMPRESA (ID_CARICAMENTO) tablespace PBANDI_IDX;
+
+-- mfinpis_t_liberaz_banca     
+create table mfinpis_t_liberaz_banca
+(
+  id_liberaz_banca         NUMBER(8) not null,
+  id_progetto              varchar2(17) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  id_attivita_liberazione  NUMBER(3),
+  dt_liberaz_banca         DATE,
+  banca_liberata           VARCHAR2(400),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_liberaz_banca_pban    NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+  
+-- pk  
+alter table mfinpis_t_liberaz_banca
+ add constraint PK_mfinpis_t_liberaz_banca primary key (id_liberaz_banca)
+ using index 
+ tablespace PBANDI_IDX;
+-- fk  
+alter table mfinpis_t_liberaz_banca
+ add constraint fk_pbandi_t_migr_finpis_39 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_liberaz_banca on mfinpis_t_liberaz_banca (id_liberaz_banca_pban) tablespace PBANDI_IDX;  
+create index IE2_mfinpis_t_liberaz_banca on mfinpis_t_liberaz_banca (ID_CARICAMENTO) tablespace PBANDI_IDX;
+
+
+-- mfinpis_T_SOGG_DOMANDA_BLOCCO
+create table mfinpis_T_SOGG_DOMANDA_BLOCCO
+(
+  id_soggetto_domanda_blocco NUMBER(8) not null,
+  id_progetto     varchar2(17) not null,
+  id_causale_blocco          NUMBER(3),
+  dt_inserimento_blocco      DATE,
+  dt_inserimento_sblocco     DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_sogg_dom_pban    NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+
+-- pk  
+alter table mfinpis_T_SOGG_DOMANDA_BLOCCO
+ add constraint PK_mfinpis_T_SOGG_DOM_BLOCCO primary key (id_soggetto_domanda_blocco)
+ using index 
+ tablespace PBANDI_IDX;
+-- fk  
+alter table mfinpis_T_SOGG_DOMANDA_BLOCCO
+ add constraint fk_pbandi_t_migr_finpis_40 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_T_SOGG_DOM_BLOCCO on mfinpis_T_SOGG_DOMANDA_BLOCCO (id_sogg_dom_pban) tablespace PBANDI_IDX;  
+create index IE2_mfinpis_T_SOGG_DOM_BLOCCO on mfinpis_T_SOGG_DOMANDA_BLOCCO (ID_CARICAMENTO) tablespace PBANDI_IDX;
+create index IE3_mfinpis_T_SOGG_DOM_BLOCCO on mfinpis_T_SOGG_DOMANDA_BLOCCO (progr_soggetto_domanda) tablespace PBANDI_IDX;
+
+-- mfinpis_t_note
+ALTER TABLE mfinpis_t_note modify ID_NOTA NUMBER(20);
+
+
+--  mfinpis_t_contestaz
+create table mfinpis_t_contestaz
+(
+ID_CONTESTAZ  NUMBER(8) NOT NULL,  
+NUMERO_CONTESTAZ  NUMBER(8),
+ID_ENTITA  NUMBER(3) NOT NULL, 
+ID_TARGET  NUMBER(8) NOT NULL, 
+ID_STATO_CONTESTAZ  NUMBER(3) NOT NULL,  
+DT_STATO_CONTESTAZ  DATE,
+DT_INIZIO_VALIDITA  DATE   NOT NULL,
+DT_FINE_VALIDITA  DATE ,
+ID_UTENTE_INS  NUMBER(8) NOT NULL,  
+ID_UTENTE_AGG  NUMBER(8),
+DT_INSERIMENTO	DATE NOT NULL,	
+DT_AGGIORNAMENTO	DATE,
+ID_CONTESTAZ_PBAN  NUMBER(8),
+ID_CARICAMENTO	INTEGER,	
+DATA_CARICAMENTO	DATE
+);
+
+-- pk  
+alter table mfinpis_t_contestaz
+ add constraint PK_mfinpis_t_contestaz primary key (id_contestaz)
+ using index 
+ tablespace PBANDI_IDX;
+-- fk  
+alter table mfinpis_t_contestaz
+ add constraint fk_pbandi_t_migr_finpis_41 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_contestaz on mfinpis_t_contestaz (ID_CONTESTAZ_PBAN) tablespace PBANDI_IDX;  
+create index IE2_mfinpis_t_contestaz on mfinpis_t_contestaz (ID_CARICAMENTO) tablespace PBANDI_IDX;
+
+
+
+
+--- nuovi indici
+create index IE3_MFINPIS_T_SOGG_STATO_AZ on MFINPIS_T_SOGG_STATO_AZIENDA (ID_SOGGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_SOGGETTO_RATING on MFINPIS_T_SOGGETTO_RATING (ID_SOGGETTO) tablespace PBANDI_IDX;
+create index IE2_MFINPIS_T_SOGGETTO_DSAN on MFINPIS_T_SOGGETTO_DSAN (ID_DOMANDA)tablespace PBANDI_TBL;
+create index IE3_MFINPIS_T_SOGGETTO_CLA_RIS on MFINPIS_T_SOGGETTO_CLA_RISCHIO (ID_SOGGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_SEGNALAZ_CORTE_C on MFINPIS_T_SEGNALAZ_CORTE_CONTI (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_SALDO_STRALCIO on MFINPIS_T_SALDO_STRALCIO (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_RNA_PROGETTO_MAN on MFINPIS_T_RNA_PROGETTO_MAN (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_RNA_PROGETTO on MFINPIS_T_RNA_PROGETTO (ID_PROGETTO)tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_TARGET) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_RIASSICURAZ on MFINPIS_T_RIASSICURAZIONI (ID_SOGG_RIASSICURATO)  tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_REVOCA_BANCARIA on MFINPIS_T_REVOCA_BANCARIA (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_TARGET) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_PIANO_RIENTRO on MFINPIS_T_PIANO_RIENTRO (ID_PROGETTO)  tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_PASS_PERDITA on MFINPIS_T_PASSAGGIO_PERDITA (ID_PROGETTO)   tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_NOTE on MFINPIS_T_NOTE (ID_SOGGETTO_BENEFICIARIO) tablespace PBANDI_IDX;
+create index IE4_MFINPIS_T_NOTE on MFINPIS_T_NOTE (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_MESSA_IN_MORA on MFINPIS_T_MESSA_IN_MORA (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_LIBERAZ_GARANTE on MFINPIS_T_LIBERAZ_GARANTE (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_LIBERAZ_BANCA on MFINPIS_T_LIBERAZ_BANCA (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_ISCRIZIONE_RUOLO on MFINPIS_T_ISCRIZIONE_RUOLO (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE1_MFINPIS_T_GESTIONE_REVOCA on MFINPIS_T_GESTIONE_REVOCA (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_ESCUSS_CONFIDI on MFINPIS_T_ESCUSS_CONFIDI (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE2_MFINPIS_T_DELIBERA_PROG on MFINPIS_T_DELIBERA_PROG (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_TARGET) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_CES_QUOTA_FP on MFINPIS_T_CESSIONE_QUOTA_FP (ID_PROGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_CALC_DIM_IMPRESA on MFINPIS_T_CALC_DIM_IMPRESA (ID_SOGGETTO) tablespace PBANDI_IDX;
+create index IE3_MFINPIS_T_AZIONE_REC_BANCA on MFINPIS_T_AZIONE_RECUP_BANCA (ID_PROGETTO)tablespace PBANDI_IDX;
+--
+
+-- mfinpis_t_revoca
+ALTER TABLE mfinpis_t_revoca ADD NUMERO_DISTINTA NUMBER(10);
+ALTER TABLE mfinpis_t_revoca ADD RIGA_DISTINTA NUMBER(10);
+
+-- mfinpis_t_escussione
+alter table mfinpis_t_escussione ADD NUMERO_DISTINTA NUMBER(8);
+alter table mfinpis_t_escussione ADD RIGA_DISTINTA NUMBER(8);
+
+--mfinpis_t_gestione_revoca
+ALTER TABLE mfinpis_t_gestione_revoca RENAME COLUMN IMP_DA_EROGARE TO IMP_DA_EROGARE_CONTRIBUTO;
+alter table mfinpis_t_gestione_revoca ADD IMP_DA_EROGARE_FINANZIAMENTO NUMBER(17,2);
+

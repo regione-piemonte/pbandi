@@ -1,0 +1,35 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+/* Formatted on 06/02/2019 14:18:20 (QP5 v5.163.1008.3004) */
+CREATE OR REPLACE FORCE VIEW PBANDI.PBANDI_V_CERTIF_CUM_ANNI_PREC
+(
+   ID_PROGETTO,
+   IMPORTO_REVOCHE_RILEV_CUM,
+   IMPORTO_RECUPERI_CUM,
+   IMPORTO_SOPPRESSIONI_CUM,
+   IMPORTO_EROGAZIONI_CUM,
+   IMPORTO_PAGAM_VALID_CUM,
+   IMPORTO_CERTIF_NETTO_ANNUAL
+)
+AS
+   (  SELECT ID_PROGETTO,
+             SUM (NVL (pca.IMPORTO_REVOCHE_RILEV_CUM, 0))
+                IMPORTO_REVOCHE_RILEV_CUM,
+             SUM (NVL (pca.IMPORTO_RECUPERI_CUM, 0)) IMPORTO_RECUPERI_CUM,
+             SUM (NVL (pca.IMPORTO_SOPPRESSIONI_CUM, 0))
+                IMPORTO_SOPPRESSIONI_CUM,
+             SUM (NVL (pca.IMPORTO_EROGAZIONI_CUM, 0)) IMPORTO_EROGAZIONI_CUM,
+             SUM (NVL (pca.IMPORTO_PAGAM_VALID_CUM, 0)) IMPORTO_PAGAM_VALID_CUM,
+             SUM (NVL (pca.IMPORTO_CERTIF_NETTO_ANNUAL, 0))
+                IMPORTO_CERTIF_NETTO_ANNUAL
+        FROM PBANDI_T_DETT_PROP_CERT_ANNUAL pca,
+             PBANDI_T_PROPOSTA_CERTIFICAZ pc,
+             PBANDI_T_DETT_PROPOSTA_CERTIF dpc
+       WHERE     pca.ID_PROPOSTA_CERTIFICAZ = pc.ID_PROPOSTA_CERTIFICAZ
+             AND dpc.ID_DETT_PROPOSTA_CERTIF = pca.ID_DETT_PROPOSTA_CERTIF
+             AND pc.ID_PERIODO IS NOT NULL
+             AND pc.ID_STATO_PROPOSTA_CERTIF IN (17)
+    GROUP BY ID_PROGETTO);

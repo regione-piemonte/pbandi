@@ -1,0 +1,15 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+-- PBANDI_L_LOG_STATO_ELAB_DOC
+ALTER TABLE PBANDI_L_LOG_STATO_ELAB_DOC ADD requestElaboraDocumento CLOB;
+-- PBANDI_T_ATTO_LIQUIDAZIONE
+ALTER TABLE PBANDI_T_ATTO_LIQUIDAZIONE MODIFY DESC_ATTO VARCHAR2(255);
+-- PBANDI_W_ATTI_LIQUIDAZIONE_DT
+ALTER TABLE PBANDI_W_ATTI_LIQUIDAZIONE_DT MODIFY DESCRI VARCHAR2(255);
+-- PBANDI_T_IMPEGNO
+ALTER TABLE PBANDI_T_IMPEGNO ADD
+(CODICE_FISCALE VARCHAR2(16),
+ RAGSOC VARCHAR2(140));

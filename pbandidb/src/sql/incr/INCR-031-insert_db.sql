@@ -1,0 +1,145 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+SET DEFINE OFF;
+Insert into PBANDI.PBANDI_D_SPECIFICA_STATO
+   (ID_SPECIFICA_STATO, DESCR_SPECIFICA_STATO, STATO)
+ Values
+   (1, 'Progetto trasferito ad altro Programma ricompreso nel perimetro del monitoraggio unitario', 2);
+Insert into PBANDI.PBANDI_D_SPECIFICA_STATO
+   (ID_SPECIFICA_STATO, DESCR_SPECIFICA_STATO, STATO)
+ Values
+   (2, 'Progetto attuato fuori dal perimetro del monitoraggio unitario', 2);
+Insert into PBANDI.PBANDI_D_SPECIFICA_STATO
+   (ID_SPECIFICA_STATO, DESCR_SPECIFICA_STATO, STATO)
+ Values
+   (3, 'Progetto annullato', 2);
+Insert into PBANDI.PBANDI_D_SPECIFICA_STATO
+   (ID_SPECIFICA_STATO, DESCR_SPECIFICA_STATO, STATO)
+ Values
+   (4, 'Rinuncia da parte del Beneficiario', 2);
+COMMIT;
+-- PBANDI_T_PERIODO
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (14, 3, '2016_2017', '2016 - 2017', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2017 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (15, 3, '2017_2018', '2017 - 2018', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2017 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2018 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (16, 3, '2018_2019', '2018 - 2019', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2018 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2019 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (17, 3, '2019_2020', '2019 - 2020', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2019 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2020 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (18, 3, '2020_2021', '2020 - 2021', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2020 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2021 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (19, 3, '2021_2022', '2021 - 2022', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2021 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2022 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (20, 3, '2022_2023', '2022 - 2023', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2022 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2023 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (21, 3, '2023_2024', '2023 - 2024', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2023 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2024 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS, DT_INIZIO_CONTABILE, DT_FINE_CONTABILE)
+ Values
+   (22, 3, '2025_2026', '2024 - 2025', TO_DATE('01/01/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    9740, TO_DATE('07/01/2024 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('06/30/2025 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_T_PERIODO
+   (ID_PERIODO, ID_TIPO_PERIODO, DESC_PERIODO, DESC_PERIODO_VISUALIZZATA, DT_INIZIO_VALIDITA, ID_UTENTE_INS)
+ Values
+   (23, 4, '9999', '2014-2020', TO_DATE('01/27/2017 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 
+    0);
+COMMIT;
+
+--PBANDI_D_TIPO_DOCUMENTO_SPESA
+Insert into PBANDI_D_TIPO_DOCUMENTO_SPESA
+   (ID_TIPO_DOCUMENTO_SPESA, DESC_BREVE_TIPO_DOC_SPESA, DESC_TIPO_DOCUMENTO_SPESA, DT_INIZIO_VALIDITA)
+ Values
+   (57, 'CDCS', 'Cedolino costi standard', TO_DATE('01/01/2017 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+COMMIT;
+
+/*
+*** script da eseguire ad ogni rilascio
+*/
+update PBANDI_C_VERSIONE
+set VERSIONE_DB = '3.2.0';
+
+
+insert into PBANDI_C_ENTITA
+(ID_ENTITA, NOME_ENTITA, FLAG_DA_TRACCIARE) 
+(select seq_PBANDI_C_ENTITA.nextval,tabs.TABLE_NAME,'S'
+from all_tables tabs
+where tabs.OWNER = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+and tabs.TABLE_NAME like 'PBANDI_%'
+and not exists (select 'x' from pbandi_c_entita where tabs.TABLE_NAME = NOME_ENTITA));
+
+commit;
+
+declare
+  cursor curAttr is select col.COLUMN_NAME,en.id_ENTITA,col.TABLE_NAME
+                    from all_tab_cols col,PBANDI_C_ENTITA en
+                    where col.owner = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+                    and col.TABLE_NAME like 'PBANDI_%'
+                    and col.COLUMN_NAME not like 'SYS_%'
+                    and col.TABLE_NAME = en.NOME_ENTITA
+                    and not exists (select 'x' from PBANDI_C_ATTRIBUTO att 
+                                    where col.COLUMN_NAME = att.NOME_ATTRIBUTO
+                                    and att.id_entita = en.id_ENTITA);
+                                    
+  nPosiz  PLS_INTEGER := NULL;                                                                          
+begin
+  for recAttr in curAttr loop
+
+    BEGIN
+      SELECT POSITION
+      INTO   nPosiz 
+      FROM   all_CONSTRAINTS A,all_CONS_COLUMNS B
+      WHERE  A.CONSTRAINT_TYPE = 'P'
+      AND    A.TABLE_NAME      = recAttr.TABLE_NAME
+      AND    A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+      AND    COLUMN_NAME       = recAttr.COLUMN_NAME;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        nPosiz := NULL;
+    END;
+    
+    insert into PBANDI_C_ATTRIBUTO
+    (ID_ATTRIBUTO, 
+     NOME_ATTRIBUTO, 
+     FLAG_DA_TRACCIARE, 
+     ID_ENTITA,
+     KEY_POSITION_ID) 
+    values
+    (SEQ_PBANDI_C_ATTRIBUTO.NEXTVAL,
+     recAttr.COLUMN_NAME,
+     'N',
+     recAttr.id_ENTITA,
+     nPosiz);
+  end loop;
+  COMMIT;
+end;
+/
+

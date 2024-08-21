@@ -1,0 +1,4825 @@
+-------------------------------------
+-- MIGRAZIONE DA FINPIS vs PBANDI
+-------------------------------------
+
+-- bandi_fondi
+CREATE TABLE Bandi_Fondi
+(id_bando number(8) ,
+ codice_fondo_finpis varchar2(4)
+ );
+
+-- MFINPIS_D_LINEA_DI_INTERVENTO
+create table MFINPIS_D_LINEA_DI_INTERVENTO
+(
+  id_linea_di_intervento       NUMBER(4) not null,
+  id_linea_di_intervento_padre NUMBER(3),
+  desc_breve_linea             VARCHAR2(20) not null,
+  desc_linea                   VARCHAR2(255) not null,
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_tipo_linea_intervento     NUMBER(3) not null,
+  id_tipo_strumento_progr      NUMBER(3),
+  cod_igrue_t13_t14            VARCHAR2(20),
+  id_strumento_attuativo       NUMBER(3),
+  num_delibera                 NUMBER(6),
+  anno_delibera                NUMBER(4),
+  id_processo                  INTEGER,
+  cod_liv_gerarchico           VARCHAR2(18),
+  flag_campion_rilev           VARCHAR2(2),
+  flag_trasferimenti           VARCHAR2(1),  
+  id_linea_di_intervento_PBAN  NUMBER(3), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE       
+);
+
+-- pk
+alter table MFINPIS_D_LINEA_DI_INTERVENTO ADD
+  (constraint PK_MFINPIS_D_LINEA_DI_INTERV primary key (ID_LINEA_DI_INTERVENTO)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_D_LINEA_DI_INTERVENTO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_01
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+ );
+-- idx
+CREATE INDEX IE1_MFINPIS_D_LINEA_DI_INTERV ON MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_T_BANDO
+create table MFINPIS_T_BANDO
+(
+  id_bando                     NUMBER(8) not null,
+  titolo_bando                 VARCHAR2(255),
+  dt_pubblicazione_bando       DATE,
+  dt_inizio_presentaz_domande  DATE,
+  dt_scadenza_bando            DATE,
+  stato_bando                  VARCHAR2(255),
+  flag_allegato                CHAR(1) not null,
+  flag_graduatoria             CHAR(1) not null,
+  dotazione_finanziaria        NUMBER(17,2),
+  costo_totale_min_ammissibile NUMBER(17,2),
+  flag_quietanza               CHAR(1) not null,
+  percentuale_premialita       NUMBER(5,2),
+  importo_premialita           NUMBER(17,2),
+  punteggio_premialita         NUMBER(17,2),
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_materia                   NUMBER(3) not null,
+  id_intesa                    NUMBER(3),
+  id_sotto_settore_cipe        NUMBER(3),
+  id_natura_cipe               NUMBER(3),
+  id_tipo_operazione           NUMBER(3) not null,
+  id_settore_cpt               NUMBER(3),
+  id_tipologia_attivazione     NUMBER(3) not null,
+  determina_approvazione       VARCHAR2(1000),
+  dt_inserimento               DATE not null,
+  dt_aggiornamento             DATE,
+  id_linea_di_intervento       NUMBER(3),
+  data_determina_approvazione  DATE,
+  flag_macro_voce_spesa        NUMBER,
+  --codice_fondo_finpis          number(8),
+  id_BANDO_PBAN                NUMBER(8), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE      
+);
+
+-- pk
+alter table MFINPIS_T_BANDO add
+  (constraint PK_MFINPIS_T_BANDO primary key (ID_BANDO)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_BANDO ADD (
+  CONSTRAINT FK_MFINPIS_D_LINEA_DI_INT_01
+  FOREIGN KEY (id_linea_di_intervento) 
+  REFERENCES MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento));
+-- fk
+ALTER TABLE MFINPIS_T_BANDO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_02
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_BANDO ON MFINPIS_T_BANDO (id_BANDO_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_R_BANDO_LINEA_INTERVENT
+create table MFINPIS_R_BANDO_LINEA_INTER
+(
+  id_linea_di_intervento        NUMBER(4) not null,
+  id_bando                      NUMBER(8) not null,
+  fondo_finpis                  NUMBER(8) not null,
+  progr_bando_linea_intervento  NUMBER(8) not null,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  id_area_scientifica           NUMBER(3),
+  nome_bando_linea              VARCHAR2(255),
+  id_definizione_processo       NUMBER(8),
+  id_unita_organizzativa        NUMBER(3),
+  mesi_durata_da_dt_concessione NUMBER(3),
+  id_obiettivo_specif_qsn       NUMBER(3),
+  id_categoria_cipe             NUMBER(3),
+  id_tipologia_cipe             NUMBER(3),
+  flag_schedin                  VARCHAR2(1),
+  id_processo                   INTEGER,
+  flag_sif                      VARCHAR2(1),
+  progr_bando_linea_interv_sif  NUMBER(8),
+  id_tipo_localizzazione        NUMBER(3),
+  id_livello_istituzione        NUMBER(3),
+  id_progetto_complesso         NUMBER(3),
+  id_classificazione_met        NUMBER(3),
+  flag_fondo_di_fondi           VARCHAR2(1),
+  id_classificazione_ra         NUMBER(3),
+  cod_aiuto_rna                 VARCHAR2(30),
+  id_linea_azione               NUMBER(5),
+  flag_monitoraggio_tempi       VARCHAR2(1),  
+  progr_bando_linea_interv_PBAN NUMBER(8), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE    
+);
+
+-- pk
+alter table MFINPIS_R_BANDO_LINEA_INTER add
+  (constraint PK_MFINPIS_R_BANDO_LINEA_INT primary key (PROGR_BANDO_LINEA_INTERVENTO)
+  using index tablespace PBANDI_RW_TBL);
+--fk
+ALTER TABLE MFINPIS_R_BANDO_LINEA_INTER ADD (
+  CONSTRAINT FK_MFINPIS_D_LINEA_DI_INT_02
+  FOREIGN KEY (id_linea_di_intervento) 
+  REFERENCES MFINPIS_D_LINEA_DI_INTERVENTO (id_linea_di_intervento));
+--fk
+alter table MFINPIS_R_BANDO_LINEA_INTER
+  add constraint FK_MFINPIS_T_BANDO_01 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_LINEA_INTER ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_03
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BANDO_LIN_INTER ON MFINPIS_R_BANDO_LINEA_INTER (progr_bando_linea_interv_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_R_BANDO_MOD_AG_ESTR_BAN
+create table MFINPIS_R_BANDO_MOD_AG_ES_BAN
+(
+  id_bando_mod_ag_estr_ban NUMBER(15) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  id_bando                 NUMBER(8) not null,
+  id_estremi_bancari       NUMBER(12) not null,
+  moltiplicatore           VARCHAR2(8),
+  TIPOLOGIA_CONTO          VARCHAR2(50),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  id_bando_mod_ag_estr_ban_PBAN NUMBER(8), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE 
+);
+
+-- pk
+alter table MFINPIS_R_BANDO_MOD_AG_ES_BAN add
+  (constraint PK_MFIN_R_BAN_MOD_AG_ES_BAN primary key (ID_BANDO_MOD_AG_ESTR_BAN)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_MOD_AG_ES_BAN ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_04
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* essendo una tabella nuova ci sono anche i bandi CSI
+   non presenti in fase di caricamento sulla tabella
+   MFINPIS_T_BANDO
+alter table MFINPIS_R_BANDO_MOD_AG_ES_BAN
+  add constraint FK_MFINPIS_T_BANDO_02 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+*/
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BAN_MO_AG_ES_BAN ON MFINPIS_R_BANDO_MOD_AG_ES_BAN (id_bando_mod_ag_estr_ban_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_R_BANDO_MODALITA_AGEVOL
+create table MFINPIS_R_BANDO_MODALITA_AGEV
+(
+  id_modalita_agevolazione      NUMBER(3) not null,
+  id_bando                      NUMBER(8) not null,
+  percentuale_importo_agevolato NUMBER(5,2),
+  massimo_importo_agevolato     NUMBER(17,2),
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  flag_liquidazione             VARCHAR2(1) default 'N',
+  minimo_importo_agevolato      NUMBER(17,2),
+  id_bando_PBAN                 NUMBER(8), -- idx
+  id_modalita_agevolazione_PBAN      NUMBER(3),--idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE
+);
+-- pk
+alter table MFINPIS_R_BANDO_MODALITA_AGEV add
+  (constraint PK_MFINPIS_R_BANDO_MODALITA_AG primary key (ID_BANDO, ID_MODALITA_AGEVOLAZIONE)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_R_BANDO_MODALITA_AGEV ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_05
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+alter table MFINPIS_R_BANDO_MODALITA_AGEV
+  add constraint FK_MFINPIS_T_BANDO_03 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- idx
+CREATE INDEX IE1_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_bando_PBAN ) TABLESPACE PBANDI_RW_TBL;
+-- idx
+CREATE INDEX IE2_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_modalita_agevolazione_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_T_INDIRIZZO
+create table MFINPIS_T_INDIRIZZO
+(
+  id_indirizzo       NUMBER(9) not null,
+  desc_indirizzo     VARCHAR2(255),
+  cap                VARCHAR2(5),
+  id_nazione         NUMBER(6),
+  id_comune          NUMBER(8),
+  id_provincia       NUMBER(4),
+  id_via_l2          NUMBER(9),
+  civico             VARCHAR2(20),
+  bis                VARCHAR2(4),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_regione         NUMBER(3),
+  id_fonte_indirizzo NUMBER(3),
+  id_geo_riferimento NUMBER(9),
+  id_comune_estero   NUMBER(8),
+  id_indirizzo_PBAN  NUMBER(9), -- idx
+  id_caricamento                INTEGER,   -- fk
+  data_caricamento              DATE
+);
+
+-- pk
+alter  table MFINPIS_T_INDIRIZZO
+  add (constraint PK_MFINPIS_T_INDIRIZZO primary key (ID_INDIRIZZO)
+  using index   tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_INDIRIZZO ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_06
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_INDIRIZZO ON MFINPIS_T_INDIRIZZO (id_indirizzo_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_T_AGENZIA
+create table MFINPIS_T_AGENZIA
+(
+  id_agenzia         NUMBER(8) not null,
+  cod_agenzia        VARCHAR2(6) not null,
+  desc_agenzia       VARCHAR2(255),
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_banca           NUMBER(6) not null,
+  id_indirizzo       NUMBER(9),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_agenzia_PBAN    NUMBER(8), -- idx
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE
+);
+-- pk
+alter table MFINPIS_T_AGENZIA ADD
+  (constraint PK_MFINPIS_T_AGENZIA primary key (ID_AGENZIA)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_AGENZIA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_07
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+ALTER TABLE MFINPIS_T_AGENZIA ADD (
+  CONSTRAINT FK_MFinpis_t_indirizzo_01
+  FOREIGN KEY (ID_INDIRIZZO) 
+  REFERENCES MFinpis_t_indirizzo (ID_INDIRIZZO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_AGENZIA ON MFINPIS_T_AGENZIA (id_agenzia_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_T_ESTREMI_BANCARI
+create table MFINPIS_T_ESTREMI_BANCARI
+(
+  id_estremi_bancari NUMBER(12) not null,
+  numero_conto       VARCHAR2(20),
+  cin                VARCHAR2(1),
+  abi                VARCHAR2(5),
+  cab                VARCHAR2(5),
+  iban               VARCHAR2(40),
+  bic                VARCHAR2(14),
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  id_agenzia         NUMBER(8),
+  id_banca           NUMBER(6),
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_estremi_bancari_PBAN    NUMBER(8), -- idx
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE
+);
+
+-- pk
+alter table MFINPIS_T_ESTREMI_BANCARI ADD
+  (constraint PK_MFINPIS_T_ESTREMI_BANCARI primary key (ID_ESTREMI_BANCARI)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_ESTREMI_BANCARI ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_08
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+ALTER TABLE MFINPIS_T_ESTREMI_BANCARI ADD (
+  CONSTRAINT FK_MFINPIS_T_AGENZIA_01
+  FOREIGN KEY (ID_AGENZIA) 
+  REFERENCES MFINPIS_T_AGENZIA (ID_AGENZIA));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_ESTREMI_BANCARI ON MFINPIS_T_ESTREMI_BANCARI (id_estremi_bancari_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+-- MFinpis_r_bando_linea_ente_comp
+create table MFinpis_R_BANDO_LINEA_ENTE_COM
+(
+  dt_fine_validita             DATE,
+  id_ruolo_ente_competenza     NUMBER(3) not null,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_ente_competenza           NUMBER(8) not null,
+  progr_bando_linea_intervento NUMBER(8) not null,
+  progr_bando_linea_ente_comp  NUMBER(8) not null,
+  parola_chiave                VARCHAR2(30),
+  feedback_acta                VARCHAR2(100),
+  indirizzo_mail_pec           VARCHAR2(100),
+  conservazione_corrente       NUMBER(10),
+  conservazione_generale       NUMBER(10),
+  progr_bando_linea_ente_c_pban     NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE  
+);
+
+-- pk
+alter table MFinpis_R_BANDO_LINEA_ENTE_COM ADD
+  (constraint PK_MFinpis_R_BANDO_LIN_ENTE_C primary key (PROGR_BANDO_LINEA_ENTE_COMP)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFinpis_R_BANDO_LINEA_ENTE_COM ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_09
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/*
+alter table MFinpis_R_BANDO_LINEA_ENTE_COM ADD
+  (constraint FK_MFinpis_R_BANDO_LIN_INT_01 foreign key (PROGR_BANDO_LINEA_INTERVENTO)
+  references MFinpis_R_BANDO_LINEA_INTER (PROGR_BANDO_LINEA_INTERVENTO));
+*/
+-- idx
+CREATE INDEX IE1_MFinpis_R_BAN_LIN_ENTE_COM ON MFinpis_R_BANDO_LINEA_ENTE_COM (progr_bando_linea_ente_c_pban) TABLESPACE PBANDI_RW_TBL;
+
+------
+-- idx ID_CARICAMENTO
+CREATE INDEX IE2_MFINPIS_D_LINEA_DI_INTERV ON MFINPIS_D_LINEA_DI_INTERVENTO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_BANDO ON MFINPIS_T_BANDO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_R_BANDO_LIN_INTER ON MFINPIS_R_BANDO_LINEA_INTER (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_R_BAN_MO_AG_ES_BAN ON MFINPIS_R_BANDO_MOD_AG_ES_BAN (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_MFINPIS_R_BANDO_MOD_AGE ON MFINPIS_R_BANDO_MODALITA_AGEV (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_INDIRIZZO ON MFINPIS_T_INDIRIZZO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_AGENZIA ON MFINPIS_T_AGENZIA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_ESTREMI_BANCARI ON MFINPIS_T_ESTREMI_BANCARI (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFinpis_R_BAN_LIN_ENTE_COM ON MFinpis_R_BANDO_LINEA_ENTE_COM (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+------
+-- idx sulle fk
+create index IE3_MFINPIS_T_BANDO on MFINPIS_T_BANDO (ID_LINEA_DI_INTERVENTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_R_BANDO_LIN_INTER on MFINPIS_R_BANDO_LINEA_INTER (ID_BANDO) tablespace PBANDI_RW_TBL;
+create index IE4_MFINPIS_R_BANDO_LIN_INTER on MFINPIS_R_BANDO_LINEA_INTER (ID_LINEA_DI_INTERVENTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_R_BAN_MO_AG_ES_BAN on MFINPIS_R_BANDO_MOD_AG_ES_BAN (ID_BANDO)  tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_R_BAN_LIN_ENTE_COM on MFINPIS_R_BANDO_LINEA_ENTE_COM (PROGR_BANDO_LINEA_INTERVENTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_AGENZIA on MFINPIS_T_AGENZIA (ID_INDIRIZZO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_ESTREMI_BANCARI on MFINPIS_T_ESTREMI_BANCARI (ID_AGENZIA) tablespace PBANDI_RW_TBL;
+---
+-- MFinpis_T_NOTE
+create table MFinpis_T_NOTE
+(
+  id_nota                      NUMBER(8) not null,
+  id_soggetto_beneficiario     NUMBER(8),
+  id_progetto                  NUMBER(8),
+  testo_nota                   clob not null,
+  id_modalita_agevolazione     NUMBER(3),
+  flag_visibilita_beneficiario VARCHAR2(1),
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  id_nota_PBAN                 NUMBER(8), -- idx
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE 
+);  
+-- pk
+alter table MFINPIS_T_NOTE add
+  (constraint PK_MFINPIS_T_NOTE primary key (ID_NOTA)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_NOTE ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_10
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_MFINPIS_T_NOTE ON MFINPIS_T_NOTE (id_nota_PBAN) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_NOTE ON MFINPIS_T_NOTE (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+--
+-- mfinpis_r_bando_sogg_finanziat
+create table mfinpis_r_bando_sogg_finanziat
+(
+  id_bando                      NUMBER(8) not null,
+  id_soggetto_finanziatore      NUMBER(3) not null,
+  percentuale_quota_sogg_finanz NUMBER(5,2),
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  perc_quota_contributo_pub     NUMBER(5,2),
+  ID_bando_PBAN NUMBER(8),
+  id_soggetto_finanziatore_pban NUMBER(3), 		
+  ID_CARICAMENTO number,		
+  DATA_CARICAMENTO date
+);
+
+-- pk
+alter table mfinpis_r_bando_sogg_finanziat add
+  (constraint PK_mfinpis_r_bando_sogg_fin primary key (id_bando,id_soggetto_finanziatore )
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE mfinpis_r_bando_sogg_finanziat ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_11
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+alter table mfinpis_r_bando_sogg_finanziat
+  add constraint FK_MFINPIS_T_BANDO_04 foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO);
+-- idx
+CREATE INDEX IE1_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_bando_PBAN ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_soggetto_finanziatore_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_mfinpis_r_bando_sogg_fin ON mfinpis_r_bando_sogg_finanziat (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- MFinpis_d_voce_di_spesa
+create table MFinpis_d_voce_di_spesa
+(id_voce_di_spesa           NUMBER(8) not null,
+  id_voce_di_spesa_padre     NUMBER(8),
+  desc_voce_di_spesa         VARCHAR2(255) not null,
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  cod_tipo_voce_di_spesa     VARCHAR2(20) not null,
+  id_voce_di_spesa_monit     NUMBER(3),
+  id_tipologia_voce_di_spesa NUMBER(3),
+  flag_edit                  VARCHAR2(1),
+  ID_VOCE_DI_SPESA_PBAN NUMBER(8),
+  ID_CARICAMENTO number,    
+  DATA_CARICAMENTO date  
+);
+
+-- pk
+alter table MFinpis_d_voce_di_spesa add
+  (constraint PK_MFinpis_d_voce_di_spesa primary key (ID_VOCE_DI_SPESA)
+  using index tablespace PBANDI_RW_TBL);
+
+-- fk
+/*
+alter table MFinpis_d_voce_di_spesa
+  add constraint FK_MFinpis_d_voce_di_spesa_01 foreign key (ID_VOCE_DI_SPESA_PADRE)
+  references MFinpis_d_voce_di_spesa (ID_VOCE_DI_SPESA) on delete set null;
+*/
+-- fk
+ALTER TABLE MFinpis_d_voce_di_spesa ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_12
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_MFinpis_d_voce_di_spesa ON MFinpis_d_voce_di_spesa (ID_VOCE_DI_SPESA_PBAN ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFinpis_d_voce_di_spesa ON MFinpis_d_voce_di_spesa (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+--
+-- MFinpis_r_bando_voce_spesa
+create table MFinpis_R_BANDO_VOCE_SPESA
+(
+  id_bando                    NUMBER(8) not null,
+  id_voce_di_spesa            NUMBER(8) not null,
+  percentuale_imp_ammissibile NUMBER(5,2),
+  massimo_importo_ammissibile NUMBER(17,2),
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  progr_ordinamento           NUMBER(3) not null,
+  id_bando_PBAN               NUMBER(8),
+  ID_VOCE_DI_SPESA_PBAN  NUMBER(8),
+  ID_CARICAMENTO number,    
+  DATA_CARICAMENTO date
+);
+
+-- pk
+alter table MFinpis_R_BANDO_VOCE_SPESA add
+  (constraint PK_MFinpis_R_BANDO_VOCE_SPESA primary key (ID_BANDO,ID_VOCE_DI_SPESA)
+  using index tablespace PBANDI_RW_TBL);
+
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_13
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+   constraint FK_MFINPIS_T_BANDO_05 
+   foreign key (ID_BANDO)
+  references MFINPIS_T_BANDO (ID_BANDO));
+  
+-- fk
+ALTER TABLE MFinpis_R_BANDO_VOCE_SPESA ADD (
+   constraint FK_MFinpis_d_voce_di_spesa_02  
+   foreign key (id_voce_di_spesa)
+  references MFinpis_d_voce_di_spesa (id_voce_di_spesa));
+
+-- idx
+CREATE INDEX IE1_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_VOCE_DI_SPESA) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_VOCE_DI_SPESA_PBAN ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (ID_BANDO_PBAN ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE4_MFinpis_R_BANDO_VOCE_SPESA ON MFinpis_R_BANDO_VOCE_SPESA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- Mfinpis_T_RICHIESTA
+create table Mfinpis_T_RICHIESTA
+(
+  id_richiesta          NUMBER(8) not null,
+  id_domanda            NUMBER(12) not null,
+  id_tipo_richiesta     NUMBER(3) not null,
+  id_stato_richiesta    NUMBER(3) not null,
+  id_utente_richiedente NUMBER(8) not null,
+  dt_invio_richiesta    DATE not null,
+  dt_chiusura_richiesta DATE,
+  flag_urgenza          VARCHAR2(1),
+  id_utente_ins         NUMBER(8) not null,
+  id_utente_agg         NUMBER(8),
+  dt_inizio_validita    DATE not null,
+  dt_fine_validita      DATE,
+  id_richiesta_pban          NUMBER(8),
+  id_domanda_pban            NUMBER(8),
+  ID_CARICAMENTO		         NUMBER,
+  DATA_CARICAMENTO           DATE
+);
+
+-- pk
+alter table Mfinpis_T_RICHIESTA add
+  (constraint PK_Mfinpis_T_RICHIESTA primary key (id_richiesta)
+  using index tablespace PBANDI_RW_TBL); 
+-- fk
+ALTER TABLE Mfinpis_T_RICHIESTA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_14
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));  
+-- fk
+/*
+alter table Mfinpis_T_RICHIESTA
+  add constraint FK_Mfinpis_T_DOMANDA_01 foreign key (ID_DOMANDA)
+  references mfinpis_T_DOMANDA (ID_DOMANDA);
+*/
+
+-- idx  
+CREATE INDEX IE1_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_richiesta_pban ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_domanda_pban ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_domanda ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE4_Mfinpis_T_RICHIESTA ON Mfinpis_T_RICHIESTA (id_caricamento ) TABLESPACE PBANDI_RW_TBL;
+
+-- Mfinpis_T_SOGGETTO_DURC
+create table Mfinpis_T_SOGGETTO_DURC
+(
+  id_soggetto_durc    NUMBER(8) not null,
+  id_soggetto         NUMBER(8) not null,
+  id_tipo_esito_durc  NUMBER(3),
+  dt_emissione_durc   DATE not null,
+  dt_scadenza         DATE not null,
+  num_protocollo_inps VARCHAR2(255),
+  id_utente_ins       NUMBER(8) not null,
+  id_utente_agg       NUMBER(8),
+  dt_inizio_validita  DATE not null,
+  dt_fine_validita    DATE,
+  id_soggetto_durc_pban NUMBER(8),
+  id_soggetto_pban      NUMBER(8),
+  ID_CARICAMENTO		         NUMBER,
+  DATA_CARICAMENTO           DATE
+);
+
+-- pk
+alter table Mfinpis_T_SOGGETTO_DURC add
+  (constraint PK_Mfinpis_T_SOGGETTO_DURC primary key (id_soggetto_durc)
+  using index tablespace PBANDI_RW_TBL);  
+-- fk
+/*
+ALTER TABLE Mfinpis_T_SOGGETTO_DURC ADD (
+  CONSTRAINT FK_Mfinpis_T_SOGGETTO_01
+  FOREIGN KEY (ID_SOGGETTO) 
+  REFERENCES MFINPIS_T_SOGGETTO (ID_SOGGETTO)); 
+*/
+-- fk
+ALTER TABLE Mfinpis_T_SOGGETTO_DURC ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_15
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));  
+  
+-- idx
+CREATE INDEX IE1_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_soggetto ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_soggetto_durc_pban ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_Mfinpis_T_SOGGETTO_DURC ON Mfinpis_T_SOGGETTO_DURC (id_caricamento ) TABLESPACE PBANDI_RW_TBL;
+--
+-- MFINPIS_T_SOGGETTO_ANTIMAFIA
+create table MFINPIS_T_SOGGETTO_ANTIMAFIA
+(
+  id_soggetto_antimafia       NUMBER(8) not null,
+  id_domanda                  NUMBER(8),
+  id_tipo_esito_antimafia     NUMBER(3),
+  dt_ricezione_bdna           DATE not null,
+  numer_protocollo_ricevuta   NUMBER(8) not null,
+  dt_emissione                DATE,
+  esito_liberatoria_antimafia VARCHAR2(255),
+  dt_scadenza_antimafia       DATE,
+  num_protocollo_prefettura   VARCHAR2(50),
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_soggetto_antimafia_pban  NUMBER(8),
+  id_domanda_pban             NUMBER(8),
+  id_caricamento        NUMBER,
+  data_caricamento      DATE  
+);
+
+-- pk
+alter table Mfinpis_T_SOGGETTO_ANTIMAFIA add
+  (constraint PK_Mfinpis_T_SOGGETTO_ANT primary key (id_soggetto_antimafia)
+  using index tablespace PBANDI_RW_TBL);
+-- fk
+ALTER TABLE Mfinpis_T_SOGGETTO_ANTIMAFIA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_16
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* DA FARE
+alter table Mfinpis_T_SOGGETTO_ANTIMAFIA
+  add constraint FK_Mfinpis_T_DOMANDA_02 foreign key (ID_DOMANDA)
+  references mfinpis_T_DOMANDA (ID_DOMANDA);
+*/
+-- idx
+CREATE INDEX IE1_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_domanda_pban ) TABLESPACE PBANDI_RW_TBL; 
+CREATE INDEX IE2_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_soggetto_antimafia_pban ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_caricamento ) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE4_Mfinpis_T_SOGGETTO_ANT ON Mfinpis_T_SOGGETTO_ANTIMAFIA (id_domanda ) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_t_revoca
+create table MFINPIS_T_REVOCA
+(
+  id_revoca                NUMBER(8) not null,
+  importo                  NUMBER(17,2),
+  dt_revoca                DATE not null,
+  id_progetto              NUMBER(17) not null,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  estremi                  VARCHAR2(250),
+  id_motivo_revoca         NUMBER(3),
+  note                     VARCHAR2(4000),
+  id_modalita_agevolazione NUMBER(3) not null,
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  interessi_revoca         NUMBER(17,2),
+  id_causale_disimpegno    NUMBER(3),
+  id_periodo               NUMBER(8),
+  flag_ordine_recupero     VARCHAR2(1),
+  id_mancato_recupero      NUMBER(8),
+  id_revoca_pban           NUMBER(8),
+  id_progetto_pban         NUMBER(8),
+  ID_CARICAMENTO          NUMBER(8),
+  DATA_CARICAMENTO         DATE
+);
+
+-- pk
+alter table MFINPIS_T_REVOCA ADD
+  (constraint PK_MFINPIS_T_REVOCA primary key (id_revoca)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk 
+ALTER TABLE MFINPIS_T_REVOCA ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_17
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+/* DA FARE
+ALTER TABLE MFINPIS_T_REVOCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_01
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+--
+-- IDX
+CREATE INDEX IE1_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_revoca_pban) TABLESPACE PBANDI_RW_TBL; 
+CREATE INDEX IE2_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_progetto_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE4_MFINPIS_T_REVOCA ON MFINPIS_T_REVOCA (id_progetto) TABLESPACE PBANDI_RW_TBL;
+
+-- MFINPIS_T_ESCUSSIONE
+create table MFINPIS_T_ESCUSSIONE
+(
+  id_escussione          NUMBER(20) not null,
+  id_progetto            NUMBER(20) not null,
+  id_tipo_escussione     NUMBER(3) not null,
+  id_stato_escussione    NUMBER(3) not null,
+  dt_ric_rich_escussione DATE not null,
+  dt_notifica            DATE,
+  imp_richiesto          NUMBER(13,2) not null,
+  imp_approvato          NUMBER(13,2),
+  causale_bonifico       VARCHAR2(4000),
+  iban_bonifico          VARCHAR2(40),
+  note                   VARCHAR2(4000),
+  dt_inizio_validita     DATE not null,
+  dt_fine_validita       DATE,
+  id_utente_ins          NUMBER(8),
+  id_utente_agg          NUMBER(8),
+  dt_inserimento         DATE not null,
+  dt_aggiornamento       DATE,
+  ID_ESCUSSIONE_PBAN     NUMBER(8),
+  ID_PROGETTO_PBAN       NUMBER(8),
+  ID_CARICAMENTO         NUMBER(8),			
+  DATA_CARICAMENTO       DATE
+);
+
+-- pk
+alter table MFINPIS_T_ESCUSSIONE ADD
+  (constraint PK_MFINPIS_T_ESCUSSIONE primary key (id_escussione)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk 
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD (
+  CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_18
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- fk
+
+/* DA FARE
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_02
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+-- IDX
+CREATE INDEX IE1_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_escussione_pban) TABLESPACE PBANDI_RW_TBL; 
+CREATE INDEX IE2_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_progetto_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE3_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE4_MFINPIS_T_ESCUSSIONE ON MFINPIS_T_ESCUSSIONE (id_progetto) TABLESPACE PBANDI_RW_TBL;
+------
+
+
+-------------------
+-------------------
+--  AREA CREDITI --
+-------------------
+-------------------
+
+
+-- MFINPIS_R_SOGG_PROG_STA_CRED_FP
+create table MFINPIS_R_SOGG_PROG_STA_CRE_FP
+(
+  id_sogg_prog_stato_credito_fp NUMBER(8) not null,
+  progr_soggetto_progetto       NUMBER(8) not null,
+  id_stato_credito_fp           NUMBER(3) not null,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  dt_inserimento                DATE not null,
+  dt_aggiornamento              DATE,
+  dt_inizio_validita            DATE not null,
+  dt_fine_validita              DATE,
+  id_sogg_prog_stato_cre_fp_pban NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+-- pk
+alter table mfinpis_R_SOGG_PROG_STA_CRE_FP
+  add (constraint PK_mfinpis_R_SOGG_PROG_STA_CRE primary key (ID_SOGG_PROG_STATO_CREDITO_FP)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_19
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+-- idx
+CREATE INDEX IE1_mfinpis_R_SOG_PR_STA_CR_FP ON mfinpis_R_SOGG_PROG_STA_CRE_FP (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_R_SOG_PR_STA_CR_FP ON mfinpis_R_SOGG_PROG_STA_CRE_FP ( id_sogg_prog_stato_cre_fp_pban) TABLESPACE PBANDI_RW_TBL;
+
+
+-- 
+-- mfinpis_T_AZIONE_RECUP_BANCA
+--
+create table mfinpis_T_AZIONE_RECUP_BANCA
+(
+  id_azione_recupero_banca NUMBER(8) not null,
+  id_progetto              NUMBER(8) not null,
+  id_attivita_azione       NUMBER(3) not null,
+  dt_azione                DATE,
+  num_protocollo           VARCHAR2(30),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_azione_recupero_banca_pban NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+  
+-- pk
+alter table mfinpis_T_AZIONE_RECUP_BANCA
+  add (constraint PK_mfinpis_T_AZIONE_REC_BANCA primary key (ID_AZIONE_RECUPERO_BANCA)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+
+/* DA FARE
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_03
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- fk
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_20
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_azione_recupero_banca_pban) TABLESPACE PBANDI_RW_TBL;
+--CREATE INDEX IE3_mfinpis_T_AZIONE_REC_BANCA ON mfinpis_T_AZIONE_RECUP_BANCA (id_progetto) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- mfinpis_T_CESSIONE_QUOTA_FP
+--
+
+Create table mfinpis_T_CESSIONE_QUOTA_FP
+(
+  id_cessione_quota_fp        NUMBER(8) not null,
+  id_progetto                 NUMBER(8) not null,
+  imp_cessione_capitale       NUMBER(13,2),
+  imp_cessione_oneri          NUMBER(13,2),
+  imp_cessione_interessi_mora NUMBER(13,2),
+  imp_cessione_complessiva    NUMBER(13,2),
+  dt_cessione                 DATE,
+  imp_corrisp_cessione        NUMBER(13,2),
+  denom_cessionario           VARCHAR2(400),
+  id_stato_cessione           NUMBER(3),
+  note                        VARCHAR2(4000),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inserimento              DATE not null,
+  dt_aggiornamento            DATE,
+  id_cessione_quota_fp_pban   NUMBER(8),
+  id_caricamento     INTEGER,   -- fk
+  data_caricamento   DATE 
+);
+
+
+-- pk
+alter table mfinpis_T_CESSIONE_QUOTA_FP
+  add (constraint PK_mfinpis_T_CESSIONE_QUOTA_FP primary key (ID_CESSIONE_QUOTA_FP)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+  
+-- fk
+
+/* DA FARE
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_04
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+---- fk
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_21
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_CES_QUOTA_FP ON mfinpis_T_CESSIONE_QUOTA_FP (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_CES_QUOTA_FP ON mfinpis_T_CESSIONE_QUOTA_FP (id_cessione_quota_fp_pban) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- mfinpis_T_ESCUSS_CONFIDI
+--
+create table mfinpis_T_ESCUSS_CONFIDI
+(
+  id_escuss_confidi            NUMBER(8) not null,
+  id_progetto                  NUMBER(8) not null,
+  id_attivita_garanzia_confidi NUMBER(3),
+  denom_confidi                VARCHAR2(400),
+  dt_escuss_confidi            DATE,
+  dt_pagam_confidi             DATE,
+  perc_garanzia                NUMBER(5,2),
+  note                         VARCHAR2(4000),
+  dt_inizio_validita           DATE not null,
+  dt_fine_validita             DATE,
+  id_utente_ins                NUMBER(8) not null,
+  id_utente_agg                NUMBER(8),
+  dt_inserimento               DATE not null,
+  dt_aggiornamento             DATE,
+  id_escuss_confidi_pban       NUMBER(8),
+  id_caricamento               INTEGER,   -- fk
+  data_caricamento             DATE 
+);
+
+-- pk
+alter table mfinpis_T_ESCUSS_CONFIDI
+  add (constraint PK_mfinpis_T_ESCUSS_CONFIDI primary key (ID_ESCUSS_CONFIDI)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+/* DA FARE
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_05
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- fk
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_22
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_ESCUSS_CONFIDI ON mfinpis_T_ESCUSS_CONFIDI (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_ESCUSS_CONFIDI ON mfinpis_T_ESCUSS_CONFIDI(id_escuss_confidi_pban) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- mfinpis_t_iscrizione_ruolo
+--
+create table mfinpis_t_iscrizione_ruolo
+(
+  id_iscrizione_ruolo       NUMBER(8) not null,
+  id_progetto               NUMBER(8) not null,
+  dt_richiesta_iscrizione   DATE,
+  num_protocollo            VARCHAR2(30),
+  dt_richiesta_discarico    DATE,
+  num_protocollo_discarico  VARCHAR2(30),
+  dt_iscrizione_ruolo       DATE,
+  dt_discarico              DATE,
+  num_protocollo_discar_reg VARCHAR2(30),
+  dt_richiesta_sosp         DATE,
+  num_protocollo_sosp       VARCHAR2(30),
+  imp_capitale_ruolo        NUMBER(13,2),
+  imp_agevolaz_ruolo        NUMBER(13,2),
+  dt_iscrizione             DATE,
+  num_protocollo_regione    VARCHAR2(30),
+  tipo_pagamento            VARCHAR2(1),
+  note                      VARCHAR2(4000),
+  dt_inizio_validita        DATE not null,
+  dt_fine_validita          DATE,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  id_iscrizione_ruolo_pban       NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_t_iscrizione_ruolo
+  add (constraint PK_mfinpis_t_iscrizione_ruolo primary key (ID_ISCRIZIONE_RUOLO)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+ALTER TABLE  mfinpis_t_iscrizione_ruolo ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_23
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+/* DA FARE
+ALTER TABLE  mfinpis_T_ESCUSS_CONFIDI ADD (
+  CONSTRAINT FK_mfinpis_t_iscrizione_ruolo_06
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_t_iscrizione_ruolo ON mfinpis_t_iscrizione_ruolo (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_t_iscrizione_ruolo ON mfinpis_t_iscrizione_ruolo (id_iscrizione_ruolo_pban) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- mfinpis_T_PASSAGGIO_PERDITA
+--
+create table mfinpis_T_PASSAGGIO_PERDITA
+(
+  id_passaggio_perdita    NUMBER(8) not null,
+  id_progetto             NUMBER(8) not null,
+  dt_passaggio_perdita    DATE,
+  imp_perdita_complessiva NUMBER(13,2),
+  imp_perdita_capitale    NUMBER(13,2),
+  imp_perdita_interessi   NUMBER(13,2),
+  imp_perdita_agevolaz    NUMBER(13,2),
+  imp_perdita_mora        NUMBER(13,2),
+  note                    VARCHAR2(4000),
+  dt_inizio_validita      DATE not null,
+  dt_fine_validita        DATE,
+  id_utente_ins           NUMBER(8) not null,
+  id_utente_agg           NUMBER(8),
+  dt_inserimento          DATE not null,
+  dt_aggiornamento        DATE,
+  id_passaggio_perdita_pban    NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_T_PASSAGGIO_PERDITA
+  add (constraint PK_mfinpis_T_PASSAGGIO_PERDITA primary key (ID_PASSAGGIO_PERDITA)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+  
+-- fk
+ALTER TABLE  mfinpis_T_PASSAGGIO_PERDITA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_24
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_PASS_PERDITA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_06
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_PASS_PERDITA ON mfinpis_T_PASSAGGIO_PERDITA (ID_PASSAGGIO_PERDITA_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_PASS_PERDITA ON mfinpis_T_PASSAGGIO_PERDITA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+--
+-- mfinpis_T_PIANO_RIENTRO
+--
+create table mfinpis_T_PIANO_RIENTRO
+(
+  id_piano_rientro     NUMBER(8) not null,
+  id_progetto          NUMBER(8) not null,
+  dt_proposta          DATE,
+  imp_quota_capitale   NUMBER(13,2),
+  imp_agevolazione     NUMBER(13,2),
+  id_attivita_esito    NUMBER(3),
+  dt_esito             DATE,
+  id_attivita_recupero NUMBER(3),
+  note                 VARCHAR2(4000),
+  dt_inizio_validita   DATE not null,
+  dt_fine_validita     DATE,
+  id_utente_ins        NUMBER(8) not null,
+  id_utente_agg        NUMBER(8),
+  dt_inserimento       DATE not null,
+  dt_aggiornamento     DATE,
+  id_piano_rientro_pban     NUMBER(8),  
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+
+-- pk
+alter table mfinpis_T_PIANO_RIENTRO
+  add (constraint PK_mfinpis_T_PIANO_RIENTRO primary key (ID_PIANO_RIENTRO)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+ALTER TABLE  mfinpis_T_PIANO_RIENTRO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_25
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_PIANO_RIENTRO ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_07
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_PIANO_RIENTRO ON mfinpis_T_PIANO_RIENTRO (ID_PIANO_RIENTRO_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_PIANO_RIENTRO ON mfinpis_T_PIANO_RIENTRO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_T_REVOCA_BANCARIA
+--
+create table mfinpis_T_REVOCA_BANCARIA
+(
+  id_revoca_bancaria       NUMBER(8) not null,
+  id_progetto              NUMBER(8) not null,
+  dt_ricezione_comunicaz   DATE,
+  dt_revoca                DATE,
+  imp_debito_residuo_banca NUMBER(13,2),
+  imp_debito_residuo_fp    NUMBER(13,2),
+  perc_cofinanz_fp         NUMBER(5,2),
+  num_protocollo           VARCHAR2(30),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_revoca_bancaria_pban    NUMBER(8),
+  id_caricamento                 INTEGER,   -- fk
+  data_caricamento               DATE 
+);
+  
+-- pk
+alter table mfinpis_T_REVOCA_BANCARIA
+  add (constraint PK_mfinpis_T_REVOCA_BANCARIA primary key (ID_REVOCA_BANCARIA)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+  
+-- fk
+ALTER TABLE  mfinpis_T_REVOCA_BANCARIA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_26
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_REVOCA_BANCARIA ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_07
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_REVOCA_BANCARIA ON mfinpis_T_REVOCA_BANCARIA (ID_REVOCA_BANCARIA_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_REVOCA_BANCARIA ON mfinpis_T_REVOCA_BANCARIA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_t_saldo_stralcio
+Create table mfinpis_t_saldo_stralcio
+(
+  id_saldo_stralcio          NUMBER(8) not null,
+  id_progetto                NUMBER(8) not null,
+  id_attivita_saldo_stralcio NUMBER(3),
+  dt_proposta                DATE,
+  dt_accettazione            DATE,
+  imp_debitore               NUMBER(13,2),
+  imp_confidi                NUMBER(13,2),
+  id_attivita_esito          NUMBER(3),
+  dt_esito                   DATE,
+  dt_pagam_debitore          DATE,
+  dt_pagam_confidi           DATE,
+  id_attivita_recupero       NUMBER(3),
+  imp_recuperato             NUMBER(13,2),
+  imp_perdita                NUMBER(13,2),
+  note                       VARCHAR2(4000),
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inserimento             DATE not null,
+  dt_aggiornamento           DATE,
+  id_saldo_stralcio_pban     NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);
+  
+-- pk
+alter table mfinpis_T_SALDO_STRALCIO
+  add (constraint PK_mfinpis_T_SALDO_STRALCIO primary key (ID_SALDO_STRALCIO)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+ALTER TABLE  mfinpis_T_SALDO_STRALCIO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_27
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+
+-- fk
+
+/* DA FARE
+ALTER TABLE  mfinpis_T_SALDO_STRALCIO ADD (
+  CONSTRAINT FK_MFINPIS_T_PROGETTO_08
+  FOREIGN KEY (ID_PROGETTO) 
+  REFERENCES MFINPIS_T_PROGETTO (ID_PROGETTO));
+*/
+
+-- idx
+CREATE INDEX IE1_mfinpis_T_SALDO_STRALCIO ON mfinpis_T_SALDO_STRALCIO (id_saldo_stralcio_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_SALDO_STRALCIO ON mfinpis_T_SALDO_STRALCIO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_T_SOGG_STATO_AZIENDA
+create table mfinpis_T_SOGG_STATO_AZIENDA
+(
+  id_soggetto_stato_azienda NUMBER(8) not null,
+  id_soggetto               NUMBER(8) not null,
+  id_stato_azienda          NUMBER(3) not null,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  dt_inizio_validita        DATE not null,
+  dt_fine_validita          DATE,
+  id_soggetto_stato_az_pban    NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);
+  
+-- pk
+alter table mfinpis_T_SOGG_STATO_AZIENDA
+  add (constraint PK_mfinpis_T_SOGG_STATO_AZ primary key (ID_SOGGETTO_STATO_AZIENDA)
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+
+-- fk
+ALTER TABLE  mfinpis_T_SOGG_STATO_AZIENDA ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_28
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SOGG_STATO_AZ ON mfinpis_T_SOGG_STATO_AZIENDA (id_soggetto_stato_az_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_SOGG_STATO_AZ ON mfinpis_T_SOGG_STATO_AZIENDA (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_T_SOGGETTO_CLA_RISCHIO 
+create table mfinpis_T_SOGGETTO_CLA_RISCHIO
+(
+  id_soggetto_cla_rischio NUMBER(8) not null,
+  id_soggetto             NUMBER(8) not null,
+  id_classe_rischio       NUMBER(3) not null,
+  dt_inizio_validita      DATE not null,
+  dt_fine_validita        DATE,
+  id_utente_ins           NUMBER(8) not null,
+  id_utente_agg           NUMBER(8),
+  dt_inserimento          DATE not null,
+  dt_aggiornamento        DATE,
+  id_soggetto_cla_risc_pban NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);  
+
+-- pk
+alter table mfinpis_T_SOGGETTO_CLA_RISCHIO
+  add (constraint PK_mfinpis_T_SOGG_CLA_RISCHIO primary key (ID_SOGGETTO_CLA_RISCHIO)
+   USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk
+ALTER TABLE  mfinpis_T_SOGGETTO_CLA_RISCHIO ADD (
+  CONSTRAINT fk_pbandi_t_migr_finpis_29
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SOGGETTO_CLA_RIS ON mfinpis_T_SOGGETTO_CLA_RISCHIO (id_soggetto_cla_risc_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_SOGGETTO_CLA_RIS ON mfinpis_T_SOGGETTO_CLA_RISCHIO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_t_soggetto_rating
+create table mfinpis_t_soggetto_rating
+(
+  id_soggetto_rating NUMBER(8) not null,
+  id_soggetto        NUMBER(8) not null,
+  id_rating          NUMBER(3) not null,
+  dt_classificazione DATE not null,
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  dt_inserimento     DATE not null,
+  dt_aggiornamento   DATE,
+  id_soggetto_rating_pban NUMBER(8),
+  id_caricamento             INTEGER,   -- fk
+  data_caricamento           DATE 
+);  
+  
+-- pk
+alter table mfinpis_t_soggetto_rating
+  add (constraint PK_mfinpis_T_SOGGETTO_RATING primary key (ID_SOGGETTO_RATING)  
+  USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- fk
+ALTER TABLE  mfinpis_t_soggetto_rating ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_30
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_t_soggetto_rating ON mfinpis_t_soggetto_rating (id_soggetto_rating_pban) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_t_soggetto_rating ON mfinpis_t_soggetto_rating (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+
+-- Modifica struttura
+-- codice_fondo_finpis
+alter table mfinpis_r_bando_mod_ag_es_ban add  codice_fondo_finpis number(8);
+--alter table pbandi_r_bando_mod_ag_estr_ban add codice_fondo_finpis number(8);
+
+-- MFINPIS_T_ESCUSSIONE
+ALTER TABLE MFINPIS_T_ESCUSSIONE ADD Motivo_rich_integrazione VARCHAR2(200);
+-- MFINPIS_R_BANDO_MODALITA_AGEV
+ALTER TABLE MFINPIS_R_BANDO_MODALITA_AGEV ADD PERIODO_STABILITA NUMBER(2);
+-- mfinpis_t_soggetto_antimafia
+ALTER TABLE mfinpis_t_soggetto_antimafia MODIFY ID_DOMANDA NOT NULL;
+
+-- mfinpis_T_DELIBERA_PROG
+create table mfinpis_T_DELIBERA_PROG
+(
+  id_delibera        NUMBER(8) not null,
+  id_progetto        NUMBER(8),
+  oggetto_delibera   VARCHAR2(4000) not null,
+  dt_delibera        DATE,
+  dt_annullamento    DATE,
+  dt_inizio_validita DATE not null,
+  dt_fine_validita   DATE,
+  id_utente_ins      NUMBER(8) not null,
+  id_utente_agg      NUMBER(8),
+  ID_DELIBERA_PBAN	NUMBER(8),			
+  ID_CARICAMENTO	INTEGER,			
+  DATA_CARICAMENTO	DATE
+);
+
+-- pk
+alter table mfinpis_T_DELIBERA_PROG ADD
+(constraint PK_mfinpis_T_DELIBERA_PROG primary key (id_delibera)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk
+ALTER TABLE mfinpis_T_DELIBERA_PROG ADD (
+CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_31
+FOREIGN KEY (ID_CARICAMENTO)
+REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+);
+-- idx
+CREATE INDEX IE1_mfinpis_T_DELIBERA_PROG ON mfinpis_T_DELIBERA_PROG (ID_DELIBERA_PBAN) TABLESPACE PBANDI_RW_TBL;
+
+
+
+-- MFINPIS_T_AMMORTAMENTO_PROGETTI
+create table MFINPIS_T_AMMORTAMENTO_PROG
+(
+id_ammort_progetti NUMBER(8) not null,
+id_delibera NUMBER(8),
+mm_ammortamento NUMBER(3) not null,
+mm_preammortamento NUMBER(3),
+id_tipo_tasso NUMBER(3),
+perc_spread NUMBER(5,2),
+frequenza NUMBER(3),
+perc_interessi NUMBER(5,2),
+dt_inizio_validita DATE not null,
+dt_fine_validita DATE,
+id_utente_ins NUMBER(8) not null,
+id_utente_agg NUMBER(8),
+id_ammort_progetti_pban NUMBER(8),
+id_caricamento INTEGER,
+data_caricamento DATE
+);
+
+-- pk
+alter table MFINPIS_T_AMMORTAMENTO_PROG ADD
+(constraint PK_MFINPIS_T_AMMORTAMENTO_PROG primary key (id_ammort_progetti)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+-- fk
+ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD (
+CONSTRAINT FK_PBANDI_T_MIGR_FINPIS_30
+FOREIGN KEY (ID_CARICAMENTO)
+REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO)
+);
+-- fk
+ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD (
+CONSTRAINT FK_mfinpis_T_DELIB_PROG_01
+FOREIGN KEY (ID_DELIBERA)
+REFERENCES mfinpis_T_DELIBERA_PROG (ID_DELIBERA)
+);
+-- idx
+CREATE INDEX IE1_MFINPIS_T_AMM_PROG ON MFINPIS_T_AMMORTAMENTO_PROG (id_ammort_progetti_pban) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_t_ammortamento_prog
+alter table mfinpis_t_ammortamento_prog add
+(ID_TIPO_CALC_AMM	NUMBER(3),	
+ID_TASSO_AMM	NUMBER(3)
+);
+-- MFINPIS_T_RNA_PROGETTO
+CREATE TABLE MFINPIS_T_RNA_PROGETTO
+(ID_RNA_PROGETTO  NUMBER(8) NOT NULL,  
+  CODICE_BANDO_RNA  INTEGER ,   
+  ID_PROGETTO  NUMBER(8)   NOT NULL,
+  TIPO_AGEVOLAZIONE VARCHAR2(1),  
+  ID_CONCESSIONE_GEST  VARCHAR2(60)  NOT NULL,   
+  ID_COMP_AIUTO_GEST  VARCHAR2(100)  NOT NULL,   
+  COR  INTEGER NOT NULL,  
+  CODICE_FISCALE_BENEFICIARIO  VARCHAR2(50)  NOT NULL, 
+  COVAR  INTEGER ,   
+  DT_ESITO_VALIDAZIONE  DATE,
+  ID_COSTO_GEST  VARCHAR2(100)   NOT NULL,  
+  ID_STRUM_AIUTO_GEST  VARCHAR2(100)   NOT NULL,  
+  ID_MODALITA_AGEVOLAZIONE  NUMBER(3,0)  NOT NULL,  
+  IMPORTO_NOMINALE  NUMBER(16,2)  NOT NULL,  
+  IMPORTO_AGEVOLAZIONE    NUMBER(16,2)  NOT NULL, 
+  INTENSITA_AIUTO  NUMBER(16,2) NOT NULL,   
+  DT_INIZIO_VALIDITA  Date  NOT NULL,  
+  DT_FINE_VALIDITA  Date,    
+  ID_UTENTE_INS  NUMBER(8)  NOT NULL, 
+  ID_UTENTE_AGG  NUMBER(8),
+  ID_RNA_PROGETTO_PBAN	NUMBER(8),		
+  ID_CARICAMENTO	INTEGER,			
+  DATA_CARICAMENTO	DATE
+ );
+ 
+-- PK
+ALTER TABLE MFINPIS_T_RNA_PROGETTO  ADD 
+(CONSTRAINT PK_MFINPIS_T_RNA_PROGETTO PRIMARY KEY (ID_RNA_PROGETTO)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- FK
+ALTER TABLE  MFINPIS_T_RNA_PROGETTO ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_31
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_MFINPIS_T_RNA_PROGETTO ON MFINPIS_T_RNA_PROGETTO (ID_RNA_PROGETTO_PBAN) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_MFINPIS_T_RNA_PROGETTO ON MFINPIS_T_RNA_PROGETTO (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+--
+--
+-- mfinpis_d_voce_di_spesa
+ALTER TABLE mfinpis_d_voce_di_spesa add
+(FLAG_CANCELLATO      VARCHAR2(1),
+ ID_VOCE_DI_SPESA_NEW  NUMBER(8),      
+ ID_VOCE_DI_SPESA_PADRE_NEW  NUMBER(8)  
+);
+-- mfinpis_r_bando_voce_spesa
+ALTER TABLE mfinpis_r_bando_voce_spesa add
+(ID_VOCE_DI_SPESA_NEW  NUMBER(8)  
+);
+-- FIN QUI RILASCIO PRE-PROD 09112022
+
+ALTER TABLE MFinpis_t_richiesta MODIFY ID_DOMANDA VARCHAR2(10);
+ALTER TABLE MFINPIS_T_SOGGETTO_ANTIMAFIA MODIFY ID_DOMANDA VARCHAR2(10);
+ALTER TABLE MFINPIS_T_ESCUSSIONE MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP MODIFY ID_SOGG_PROG_STATO_CREDITO_FP VARCHAR2(20);
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA MODIFY ID_AZIONE_RECUPERO_BANCA VARCHAR2(17);
+ALTER TABLE mfinpis_T_AZIONE_RECUP_BANCA MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP MODIFY ID_CESSIONE_QUOTA_FP VARCHAR2(17);
+ALTER TABLE mfinpis_T_CESSIONE_QUOTA_FP MODIFY ID_PROGETTO VARCHAR2(17);
+ALTER TABLE mfinpis_T_ESCUSS_CONFIDI MODIFY ID_ESCUSS_CONFIDI VARCHAR2(17);
+ALTER TABLE mfinpis_T_ESCUSS_CONFIDI MODIFY ID_PROGETTO VARCHAR2(15);
+alter table MFINPIS_T_ISCRIZIONE_RUOLO modify id_progetto varchar2(17);
+ alter table MFINPIS_T_PASSAGGIO_PERDITA modify id_passaggio_perdita varchar2(17);
+alter table MFINPIS_T_PASSAGGIO_PERDITA modify id_progetto varchar2(15);
+alter table MFINPIS_T_PIANO_RIENTRO modify ID_PIANO_RIENTRO VARCHAR2(20);
+alter table MFINPIS_T_PIANO_RIENTRO modify ID_PROGETTO VARCHAR2(17);
+alter table mfinpis_t_note modify id_soggetto_beneficiario varchar2(15);
+alter table mfinpis_t_note modify id_progetto varchar2(18);
+alter table mfinpis_t_note modify id_modalita_agevolazione varchar2(1);
+
+-- 
+-- add --> id modalita agevolazione
+alter table mfinpis_t_revoca_bancaria --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_azione_recup_banca --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_escuss_confidi --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_piano_rientro  --
+add id_modalita_agevolazione number(3); 
+alter table mfinpis_t_saldo_stralcio --
+add id_modalita_agevolazione number(3); 
+alter table mfinpis_t_passaggio_perdita --
+add id_modalita_agevolazione number(3);
+alter table  mfinpis_t_iscrizione_ruolo --
+add id_modalita_agevolazione number(3);
+alter table mfinpis_t_cessione_quota_fp --
+add id_modalita_agevolazione number(3);
+ALTER TABLE mfinpis_R_SOGG_PROG_STA_CRE_FP --
+ADD ID_MODALITA_AGEVOLAZIONE NUMBER(3);
+--
+
+-- mfinpis_T_LIBERAZ_GARANTE
+create table mfinpis_T_LIBERAZ_GARANTE
+(
+  id_liberaz_garante       NUMBER(8) not null,
+  id_progetto              varchar2(17) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  dt_liberaz_garante       DATE,
+  imp_liberazione          NUMBER(13,2),
+  denom_garante_liberato   VARCHAR2(400),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_liberaz_garante_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+
+-- PK
+ALTER TABLE mfinpis_T_LIBERAZ_GARANTE  ADD 
+(CONSTRAINT PK_mfinpis_T_LIBERAZ_GARANTE PRIMARY KEY (id_liberaz_garante)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- FK
+ALTER TABLE  mfinpis_T_LIBERAZ_GARANTE ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_32
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_LIBERAZ_GARANTE ON mfinpis_T_LIBERAZ_GARANTE (id_liberaz_garante_PBAN) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_LIBERAZ_GARANTE ON mfinpis_T_LIBERAZ_GARANTE (id_caricamento) TABLESPACE PBANDI_RW_TBL;
+
+-- mfinpis_T_MESSA_IN_MORA
+create table mfinpis_T_MESSA_IN_MORA
+(
+  id_messa_in_mora              NUMBER(8) not null,
+  id_progetto                   varchar2(17) not null,
+  id_modalita_agevolazione      NUMBER(3) not null,
+  id_attivita_mora              NUMBER(3),
+  dt_messa_in_mora              DATE,
+  imp_messa_in_mora_complessiva NUMBER(13,2),
+  imp_quota_capitale_revoca     NUMBER(13,2),
+  imp_agevolaz_revoca           NUMBER(13,2),
+  imp_credito_residuo           NUMBER(13,2),
+  imp_interessi_mora            NUMBER(13,2),
+  dt_notifica                   DATE,
+  id_attivita_recupero_mora     NUMBER(3),
+  dt_pagamento                  DATE,
+  note                          VARCHAR2(4000),
+  dt_inizio_validita            DATE not null,
+  dt_fine_validita              DATE,
+  id_utente_ins                 NUMBER(8) not null,
+  id_utente_agg                 NUMBER(8),
+  dt_inserimento                DATE not null,
+  dt_aggiornamento              DATE,
+  id_messa_in_mora_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+  
+
+-- PK
+ALTER TABLE mfinpis_T_MESSA_IN_MORA  ADD 
+(CONSTRAINT PK_mfinpis_T_MESSA_IN_MORA PRIMARY KEY (id_messa_in_mora)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- FK
+ALTER TABLE  mfinpis_T_MESSA_IN_MORA ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_33
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_MESSA_IN_MORA ON mfinpis_T_MESSA_IN_MORA (id_messa_in_mora_PBAN) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_MESSA_IN_MORA ON mfinpis_T_MESSA_IN_MORA (id_caricamento) TABLESPACE PBANDI_RW_TBL; 
+
+-- mfinpis_T_SEGNALAZ_CORTE_CONTI
+create table mfinpis_T_SEGNALAZ_CORTE_CONTI
+(
+  id_segnalazione_corte_conti NUMBER(8) not null,
+  id_progetto                 varchar2(17) not null,
+  id_modalita_agevolazione    NUMBER(3) not null,
+  dt_segnalazione             DATE,
+  num_protocollo_segn         VARCHAR2(30),
+  imp_cred_res_capitale       NUMBER(13,2),
+  imp_oneri_agevolaz          NUMBER(13,2),
+  imp_quota_segnalaz          NUMBER(13,2),
+  imp_garanzia                NUMBER(13,2),
+  flag_piano_rientro          VARCHAR2(2),
+  dt_piano_rientro            DATE,
+  flag_saldo_stralcio         VARCHAR2(2),
+  dt_saldo_stralcio           DATE,
+  flag_pagam_integrale        VARCHAR2(2),
+  dt_pagamento                DATE,
+  flag_dissegnalazione        VARCHAR2(2),
+  dt_dissegnalazione          DATE,
+  num_protocollo_diss         VARCHAR2(30),
+  flag_decreto_archiv         VARCHAR2(2),
+  dt_archiv                   DATE,
+  num_protocollo_archiv       VARCHAR2(30),
+  flag_comunicaz_regione      VARCHAR2(2),
+  note                        VARCHAR2(4000),
+  dt_inizio_validita          DATE not null,
+  dt_fine_validita            DATE,
+  id_utente_ins               NUMBER(8) not null,
+  id_utente_agg               NUMBER(8),
+  dt_inserimento              DATE not null,
+  dt_aggiornamento            DATE,
+  id_segnalazione_corte_PBAN  NUMBER(8),    
+  ID_CARICAMENTO  INTEGER,      
+  DATA_CARICAMENTO  DATE
+);
+  
+
+-- PK
+ALTER TABLE mfinpis_T_SEGNALAZ_CORTE_CONTI  ADD 
+(CONSTRAINT PK_mfinpis_T_SEGNALAZ_CORTE_C PRIMARY KEY (id_segnalazione_corte_conti)
+USING INDEX TABLESPACE PBANDI_RW_TBL);
+
+-- FK
+ALTER TABLE mfinpis_T_SEGNALAZ_CORTE_CONTI ADD (
+  CONSTRAINT fk_mfinpis_t_migr_finpis_34
+  FOREIGN KEY (ID_CARICAMENTO) 
+  REFERENCES PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO));
+  
+-- idx
+CREATE INDEX IE1_mfinpis_T_SEGNALAZ_CORTE_C ON mfinpis_T_SEGNALAZ_CORTE_CONTI (id_segnalazione_corte_PBAN) TABLESPACE PBANDI_RW_TBL;
+CREATE INDEX IE2_mfinpis_T_SEGNALAZ_CORTE_C ON mfinpis_T_SEGNALAZ_CORTE_CONTI (id_caricamento) TABLESPACE PBANDI_RW_TBL; 
+
+-- mfinpis_t_note
+alter table mfinpis_t_note add 
+(area varchar2(2),
+ fase varchar2(2),
+ tipo varchar2(2)
+);
+-- mfinpis_t_escussione
+alter table mfinpis_t_escussione add data_stato_escussione date;
+
+create table MFINPIS_T_SOGGETTO_DSAN
+(
+  id_soggetto_dsan      NUMBER(8) not null,
+  id_domanda            VARCHAR2(10) not null,
+  id_esito_dsan         NUMBER(3),
+  dt_emissione_dsan     DATE not null,
+  dt_scadenza           DATE not null,
+  num_protocollo        VARCHAR2(20),
+  id_utente_ins         NUMBER(8) not null,
+  id_utente_agg         NUMBER(8),
+  dt_inizio_validita    DATE not null,
+  dt_fine_validita      DATE,
+  id_soggetto_dsan_pban NUMBER(8),
+  id_caricamento        NUMBER,
+  data_caricamento      DATE
+);
+
+alter table MFINPIS_T_SOGGETTO_DSAN
+  add constraint FK_PBANDI_T_MIGR_FINPIS_32 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- Create/Recreate indexes 
+create index IE1_MFINPIS_T_SOGGETTO_DSAN on MFINPIS_T_SOGGETTO_DSAN (ID_SOGGETTO_DSAN_PBAN);
+  
+  
+  alter table mfinpis_T_DELIBERA_PROG modify id_progetto varchar2(20);
+  
+  alter table mfinpis_R_SOGG_PROG_STA_CRE_FP modify PROGR_SOGGETTO_PROGETTO varchar2(20);
+  alter table mfinpis_t_revoca_bancaria modify id_progetto varchar2(20);
+  alter table mfinpis_t_saldo_stralcio modify id_progetto varchar2(20);
+  alter table mfinpis_t_rna_progetto modify id_progetto varchar2(20);
+  
+  
+  -- mfinpis_t_rna_progetto_man
+create table mfinpis_t_rna_progetto_man
+          (id_rna_progetto_man number(8) not null,
+           id_progetto varchar2(20),
+           fondo_finpis number(8),
+           domanda_finpis  number(8),
+           ACOVAR1  number(10),
+           DDATCOVAR1 date,
+           ACOVAR2  number(10),
+           DDATCOVAR2 date,
+           ACOVAR3  number(10),
+           DDATCOVAR3 date,
+           AVERCOR1  number(10),
+           DDTVERCOR1 date,
+           AVERCOR2  number(10),
+           DDTVERCOR2 date,
+           AVERCOR3  number(10),
+           DDTVERCOR3  number(10),
+           ACOR2  number(10),
+           DDATACOR2 date,
+           ACUP varchar2(100),
+           AIDCONC  number(10),
+           AIDRICH  number(10),
+           CODRNA varchar2(100),
+           CODRNA2  number(10),
+           DDATRNA2 date,
+           id_rna_progetto_man_pban  NUMBER(8),    
+           ID_CARICAMENTO  NUMBER,  
+           DATA_CARICAMENTO  DATE
+          );
+  -- pk        
+  alter table mfinpis_t_rna_progetto_man
+  add constraint PK_mfinpis_t_rna_progetto_man primary key (id_rna_progetto_man);
+ -- fk
+alter table  mfinpis_t_rna_progetto_man
+  add constraint FK_MFINPIS_T_MIGR_FINPIS_35 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+ -- idx
+create index IE1_mfinpis_t_rna_progetto_man on mfinpis_t_rna_progetto_man (id_rna_progetto_man_pban)
+  tablespace PBANDI_RW_TBL;
+create index IE2_mfinpis_t_rna_progetto_man on mfinpis_t_rna_progetto_man (ID_CARICAMENTO)
+  tablespace PBANDI_RW_TBL;
+  
+  create table MFINPIS_T_CONTRODEDUZ
+(
+  id_controdeduz       NUMBER(8) not null,
+  numero_controdeduz   NUMBER(8) not null,
+  id_entita            NUMBER(3) not null,
+  id_target            NUMBER(8) not null,
+  id_stato_controdeduz NUMBER(3) not null,
+  dt_stato_controdeduz DATE not null,
+  id_attiv_controdeduz NUMBER(3),
+  dt_attiv_controdeduz DATE,
+  dt_inizio_validita   DATE not null,
+  dt_fine_validita     DATE,
+  id_utente_ins        NUMBER(8) not null,
+  id_utente_agg        NUMBER(8),
+  dt_inserimento       DATE not null,
+  dt_aggiornamento     DATE,
+  id_controdeduz_pban  NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+alter table MFINPIS_T_CONTRODEDUZ
+  add constraint PK_MFINPIS_T_CONTRODEDUZ primary key (ID_CONTRODEDUZ)
+  using index 
+  tablespace PBANDI_RW_TBL;
+
+alter table MFINPIS_T_CONTRODEDUZ
+  add constraint FK_PBANDI_T_MIGR_FINPIS_33 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+create index IE1_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_CONTRODEDUZ_PBAN)
+  tablespace PBANDI_RW_TBL;
+create index IE2_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_CARICAMENTO)
+  tablespace PBANDI_RW_TBL;
+  
+  
+  create table MFINPIS_T_RICHIESTA_INTEGRAZ
+(
+  id_richiesta_integraz      NUMBER(8) not null,
+  id_entita                  NUMBER(3) not null,
+  id_target                  NUMBER(8) not null,
+  dt_richiesta               DATE not null,
+  dt_invio                   DATE,
+  id_utente_richiesta        NUMBER(8) not null,
+  id_utente_invio            NUMBER(8),
+  dt_notifica                DATE,
+  num_giorni_scadenza        NUMBER(4),
+  dt_chiusura_ufficio        DATE,
+  id_stato_richiesta         NUMBER(3) not null,
+  dt_scadenza                DATE,
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inserimento             DATE not null,
+  dt_aggiornamento           DATE,
+  id_richiesta_integraz_pban NUMBER(8),
+  id_caricamento             NUMBER(8),
+  data_caricamento           DATE
+);
+alter table MFINPIS_T_RICHIESTA_INTEGRAZ
+  add constraint PK_MFINPIS_T_RICHIESTA_INTEGR primary key (ID_RICHIESTA_INTEGRAZ)
+  using index 
+  tablespace PBANDI_RW_TBL;
+  alter table MFINPIS_T_RICHIESTA_INTEGRAZ
+  add constraint FK_PBANDI_T_MIGR_FINPIS_36 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+  create index IE1_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_RICHIESTA_INTEGRAZ_PBAN)
+  tablespace PBANDI_RW_TBL;
+  create index IE2_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_CARICAMENTO)
+  tablespace PBANDI_RW_TBL;
+  
+  create table MFINPIS_T_PROROGA
+(
+  id_richiesta_proroga      NUMBER(8) not null,
+  id_entita                 NUMBER(3),
+  id_target                 NUMBER(8) not null,
+  dt_richiesta              DATE not null,
+  num_giorni_rich           NUMBER(3) not null,
+  motivazione               VARCHAR2(2000) not null,
+  num_giorni_approv         NUMBER(3),
+  id_stato_proroga          NUMBER(3),
+  dt_esito_richiesta        DATE,
+  id_utente_ins             NUMBER(8) not null,
+  id_utente_agg             NUMBER(8),
+  dt_inserimento            DATE not null,
+  dt_aggiornamento          DATE,
+  id_richiesta_proroga_pban NUMBER(8),
+  id_caricamento            NUMBER(8),
+  data_caricamento          DATE
+);
+alter table MFINPIS_T_PROROGA
+  add constraint PK_MFINPIS_T_PROROGA primary key (ID_RICHIESTA_PROROGA)
+  using index 
+  tablespace PBANDI_RW_TBL;
+ alter table MFINPIS_T_PROROGA
+  add constraint FK_PBANDI_T_MIGR_FINPIS_34 foreign key (ID_CARICAMENTO)
+  references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+  create index IE1_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_RICHIESTA_PROROGA_PBAN)
+  tablespace PBANDI_RW_TBL;
+  create index IE2_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_CARICAMENTO)
+  tablespace PBANDI_RW_TBL;
+  -- mfinpis_t_revoca
+  alter table mfinpis_t_revoca modify id_progetto varchar2(17);
+  -- MFINPIS_T_AMMORTAMENTO_PROG
+  ALTER TABLE MFINPIS_T_AMMORTAMENTO_PROG ADD ID_TIPO_PERIODO_AMMORTAMENTO INTEGER;
+  
+ --
+ -- mfinpis_t_riassicurazioni
+CREATE TABLE mfinpis_t_riassicurazioni
+     (    id_riassicurazione NUMBER(8),
+          id_sogg_riassicurato VARCHAR2(10),
+          linea_intervento_soggetto VARCHAR2(50),
+          ragione_sociale VARCHAR2(200),
+          forma_giuridica VARCHAR2(255),
+          descr_forma_giuridica VARCHAR2(500),
+          codice_fiscale VARCHAR2(16),
+          indirizzo_sede_destinataria VARCHAR2(255),
+          localita_sede_destinataria VARCHAR2(255),
+          provincia_sede_destinataria VARCHAR2(2),
+          ateco VARCHAR2(8),
+          descrizione_ateco VARCHAR2(500),
+          importo_finanziato NUMBER(17,2),
+          id_progetto VARCHAR2(20),
+          importo_garanzia NUMBER(17,2),
+          importo_ammesso NUMBER(17,2),
+          percentuale_garanzia NUMBER(5,2),
+          percentuale_riassicurato NUMBER(5,2),
+          erogazione_mutuo date,
+          delibera_mutuo date,
+          emissione_garanzia date,
+          scadenza_mutuo date,
+          importo_escusso NUMBER(17,2),
+		  data_escussione date,
+          data_scarico date,
+          data_revoca date,
+          ID_RIASSICURAZIONE_PBAN NUMBER(8),
+          ID_CARICAMENTO number(3),
+          DATA_CARICAMENTO date
+      );
+-- pk     
+alter table mfinpis_t_riassicurazioni
+ add constraint PK_mfinpis_t_riassicurazioni primary key (id_riassicurazione)
+ using index 
+ tablespace PBANDI_RW_TBL;
+-- fk  
+alter table mfinpis_t_riassicurazioni
+ add constraint fk_pbandi_t_migr_finpis_37 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_riassicuraz on mfinpis_t_riassicurazioni (ID_RIASSICURAZIONE_PBAN) tablespace PBANDI_RW_TBL;  
+create index IE2_mfinpis_t_riassicuraz on mfinpis_t_riassicurazioni (ID_CARICAMENTO) tablespace PBANDI_RW_TBL;
+
+
+-- mfinpis_T_CALC_DIM_IMPRESA
+create table mfinpis_T_CALC_DIM_IMPRESA
+          (
+            id_calc_dim_impresa NUMBER(8) not null,
+            codice_visualizzato varchar2(20),
+            fondo               NUMBER,
+            domanda             NUMBER,
+            id_soggetto         NUMBER not null,
+            id_periodo          varchar2(4),
+            ula                 NUMBER(8),
+            imp_fatturato       NUMBER(13,2) not null,
+            tot_bilancio_annuo  NUMBER(13,2),
+            id_utente_ins       NUMBER(8) not null,
+            id_utente_agg       NUMBER(8),
+            dt_inizio_validita  DATE not null,
+            dt_fine_validita    DATE,
+            id_calc_dim_impresa_pban  NUMBER(8),
+            id_caricamento       NUMBER(8),
+            data_caricamento     DATE
+           );
+           
+           alter table mfinpis_T_CALC_DIM_IMPRESA
+             add constraint PK_mfinpis_T_CALC_DIM_IMPRESA primary key (id_calc_dim_impresa)
+             using index 
+             tablespace PBANDI_RW_TBL;
+            -- fk  
+            alter table mfinpis_T_CALC_DIM_IMPRESA
+             add constraint fk_pbandi_t_migr_finpis_38 foreign key (ID_CARICAMENTO)
+             references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+            -- idx  
+            create index IE1_mfinpis_T_CALC_DIM_IMPRESA on mfinpis_T_CALC_DIM_IMPRESA (id_calc_dim_impresa_pban) tablespace PBANDI_RW_TBL;  
+            create index IE2_mfinpis_T_CALC_DIM_IMPRESA on mfinpis_T_CALC_DIM_IMPRESA (ID_CARICAMENTO) tablespace PBANDI_RW_TBL;
+
+-- mfinpis_t_liberaz_banca     
+create table mfinpis_t_liberaz_banca
+(
+  id_liberaz_banca         NUMBER(8) not null,
+  id_progetto              varchar2(17) not null,
+  id_modalita_agevolazione NUMBER(3) not null,
+  id_attivita_liberazione  NUMBER(3),
+  dt_liberaz_banca         DATE,
+  banca_liberata           VARCHAR2(400),
+  note                     VARCHAR2(4000),
+  dt_inizio_validita       DATE not null,
+  dt_fine_validita         DATE,
+  id_utente_ins            NUMBER(8) not null,
+  id_utente_agg            NUMBER(8),
+  dt_inserimento           DATE not null,
+  dt_aggiornamento         DATE,
+  id_liberaz_banca_pban    NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+  
+-- pk  
+alter table mfinpis_t_liberaz_banca
+ add constraint PK_mfinpis_t_liberaz_banca primary key (id_liberaz_banca)
+ using index 
+ tablespace PBANDI_RW_TBL;
+-- fk  
+alter table mfinpis_t_liberaz_banca
+ add constraint fk_pbandi_t_migr_finpis_39 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_liberaz_banca on mfinpis_t_liberaz_banca (id_liberaz_banca_pban) tablespace PBANDI_RW_TBL;  
+create index IE2_mfinpis_t_liberaz_banca on mfinpis_t_liberaz_banca (ID_CARICAMENTO) tablespace PBANDI_RW_TBL;
+
+
+-- mfinpis_T_SOGG_DOMANDA_BLOCCO
+create table mfinpis_T_SOGG_DOMANDA_BLOCCO
+(
+  id_soggetto_domanda_blocco NUMBER(8) not null,
+  id_progetto     varchar2(17) not null,
+  id_causale_blocco          NUMBER(3),
+  dt_inserimento_blocco      DATE,
+  dt_inserimento_sblocco     DATE,
+  id_utente_ins              NUMBER(8) not null,
+  id_utente_agg              NUMBER(8),
+  dt_inizio_validita         DATE not null,
+  dt_fine_validita           DATE,
+  id_sogg_dom_pban    NUMBER(8),
+  id_caricamento       NUMBER(8),
+  data_caricamento     DATE
+);
+
+-- pk  
+alter table mfinpis_T_SOGG_DOMANDA_BLOCCO
+ add constraint PK_mfinpis_T_SOGG_DOM_BLOCCO primary key (id_soggetto_domanda_blocco)
+ using index 
+ tablespace PBANDI_RW_TBL;
+-- fk  
+alter table mfinpis_T_SOGG_DOMANDA_BLOCCO
+ add constraint fk_pbandi_t_migr_finpis_40 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_T_SOGG_DOM_BLOCCO on mfinpis_T_SOGG_DOMANDA_BLOCCO (id_sogg_dom_pban) tablespace PBANDI_RW_TBL;  
+create index IE2_mfinpis_T_SOGG_DOM_BLOCCO on mfinpis_T_SOGG_DOMANDA_BLOCCO (ID_CARICAMENTO) tablespace PBANDI_RW_TBL;
+
+-- mfinpis_t_note
+ALTER TABLE mfinpis_t_note modify ID_NOTA NUMBER(20);
+
+
+--  mfinpis_t_contestaz
+create table mfinpis_t_contestaz
+(
+ID_CONTESTAZ  NUMBER(8) NOT NULL,  
+NUMERO_CONTESTAZ  NUMBER(8),
+ID_ENTITA  NUMBER(3) NOT NULL, 
+ID_TARGET  NUMBER(8) NOT NULL, 
+ID_STATO_CONTESTAZ  NUMBER(3) NOT NULL,  
+DT_STATO_CONTESTAZ  DATE,
+DT_INIZIO_VALIDITA  DATE   NOT NULL,
+DT_FINE_VALIDITA  DATE ,
+ID_UTENTE_INS  NUMBER(8) NOT NULL,  
+ID_UTENTE_AGG  NUMBER(8),
+DT_INSERIMENTO	DATE NOT NULL,	
+DT_AGGIORNAMENTO	DATE,
+ID_CONTESTAZ_PBAN  NUMBER(8),
+ID_CARICAMENTO	INTEGER,	
+DATA_CARICAMENTO	DATE
+);
+
+-- pk  
+alter table mfinpis_t_contestaz
+ add constraint PK_mfinpis_t_contestaz primary key (id_contestaz)
+ using index 
+ tablespace PBANDI_RW_TBL;
+-- fk  
+alter table mfinpis_t_contestaz
+ add constraint fk_pbandi_t_migr_finpis_41 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_contestaz on mfinpis_t_contestaz (ID_CONTESTAZ_PBAN) tablespace PBANDI_RW_TBL;  
+create index IE2_mfinpis_t_contestaz on mfinpis_t_contestaz (ID_CARICAMENTO) tablespace PBANDI_RW_TBL;
+
+CREATE TABLE MFINPIS_T_GESTIONE_REVOCA
+(
+  ID_GESTIONE_REVOCA            NUMBER(15)      NOT NULL,
+  NUMERO_REVOCA                 NUMBER(8)       NOT NULL,
+  ID_TIPOLOGIA_REVOCA           NUMBER(3)       NOT NULL,
+  ID_PROGETTO                   VARCHAR2(17 BYTE) NOT NULL,
+  ID_CAUSALE_BLOCCO             NUMBER(3)       NOT NULL,
+  ID_CATEG_ANAGRAFICA           NUMBER(3),
+  DT_GESTIONE                   DATE,
+  NUM_PROTOCOLLO                VARCHAR2(100 BYTE),
+  FLAG_ORDINE_RECUPERO          VARCHAR2(1 BYTE),
+  ID_MANCATO_RECUPERO           NUMBER(8),
+  ID_STATO_REVOCA               NUMBER(3)       NOT NULL,
+  DT_STATO_REVOCA               DATE            NOT NULL,
+  DT_NOTIFICA                   DATE,
+  GG_RISPOSTA                   NUMBER(3),
+  FLAG_PROROGA                  VARCHAR2(1 BYTE),
+  IMP_DA_REVOCARE_CONTRIB       NUMBER(17,2),
+  IMP_DA_REVOCARE_FINANZ        NUMBER(17,2),
+  IMP_DA_REVOCARE_GARANZIA      NUMBER(17,2),
+  FLAG_DETERMINA                VARCHAR2(1 BYTE),
+  ESTREMI                       VARCHAR2(250 BYTE),
+  DT_DETERMINA                  DATE,
+  NOTE                          VARCHAR2(4000 BYTE),
+  ID_ATTIVITA_REVOCA            NUMBER(3),
+  DT_ATTIVITA                   DATE,
+  ID_MOTIVO_REVOCA              NUMBER(3),
+  FLAG_CONTRIB_REVOCA           VARCHAR2(1 BYTE),
+  FLAG_CONTRIB_MINOR_SPESE      VARCHAR2(1 BYTE),
+  FLAG_CONTRIB_DECURTAZ         VARCHAR2(1 BYTE),
+  FLAG_FINANZ_REVOCA            VARCHAR2(1 BYTE),
+  FLAG_FINANZ_MINOR_SPESE       VARCHAR2(1 BYTE),
+  FLAG_FINANZ_DECURTAZ          VARCHAR2(1 BYTE),
+  FLAG_GARANZIA_REVOCA          VARCHAR2(1 BYTE),
+  FLAG_GARANZIA_MINOR_SPESE     VARCHAR2(1 BYTE),
+  FLAG_GARANZIA_DECURTAZ        VARCHAR2(1 BYTE),
+  IMP_CONTRIB_REVOCA_NO_RECU    NUMBER(17,2),
+  IMP_CONTRIB_REVOCA_RECU       NUMBER(17,2),
+  IMP_CONTRIB_INTERESSI         NUMBER(17,2),
+  IMP_FINANZ_REVOCA_NO_RECU     NUMBER(17,2),
+  IMP_FINANZ_REVOCA_RECU        NUMBER(17,2),
+  IMP_FINANZ_INTERESSI          NUMBER(17,2),
+  IMP_FINANZ_PRERECUPERO        NUMBER(17,2),
+  IMP_GARANZIA_REVOCA_NO_RECU   NUMBER(17,2),
+  IMP_GARANZIA_REVOCA_RECUPERO  NUMBER(17,2),
+  IMP_GARANZIA_INTERESSI        NUMBER(17,2),
+  IMP_GARANZIA_PRERECUPERO      NUMBER(17,2),
+  IMP_IRES                      NUMBER(17,2),
+  IMP_DA_EROGARE_CONTRIBUTO     NUMBER(17,2),
+  ID_DICHIARAZIONE_SPESA        NUMBER(8),
+  DT_INIZIO_VALIDITA            DATE            NOT NULL,
+  DT_FINE_VALIDITA              DATE,
+  ID_UTENTE_INS                 NUMBER(8)       NOT NULL,
+  ID_UTENTE_AGG                 NUMBER(8),
+  DT_INSERIMENTO                DATE            NOT NULL,
+  DT_AGGIORNAMENTO              DATE,
+  ID_GESTIONE_REVOCA_PBAN       NUMBER(8),
+  ID_CARICAMENTO                NUMBER(8),
+  DATA_CARICAMENTO              DATE,
+  IMP_DA_EROGARE_FINANZIAMENTO  NUMBER(17,2)
+)
+TABLESPACE PBANDI_RW_TBL;
+
+
+ALTER TABLE MFINPIS_T_GESTIONE_REVOCA ADD (
+  CONSTRAINT PK_MFINPIS_T_GESTIONE_REVOCA
+ PRIMARY KEY
+ (ID_GESTIONE_REVOCA)
+    USING INDEX 
+    TABLESPACE PBANDI_RW_TBL
+);
+
+
+
+--- nuovi indici
+create index IE3_MFINPIS_T_SOGG_STATO_AZ on MFINPIS_T_SOGG_STATO_AZIENDA (ID_SOGGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_SOGGETTO_RATING on MFINPIS_T_SOGGETTO_RATING (ID_SOGGETTO) tablespace PBANDI_RW_TBL;
+create index IE2_MFINPIS_T_SOGGETTO_DSAN on MFINPIS_T_SOGGETTO_DSAN (ID_DOMANDA)tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_SOGGETTO_CLA_RIS on MFINPIS_T_SOGGETTO_CLA_RISCHIO (ID_SOGGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_SEGNALAZ_CORTE_C on MFINPIS_T_SEGNALAZ_CORTE_CONTI (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_SALDO_STRALCIO on MFINPIS_T_SALDO_STRALCIO (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_RNA_PROGETTO_MAN on MFINPIS_T_RNA_PROGETTO_MAN (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_RNA_PROGETTO on MFINPIS_T_RNA_PROGETTO (ID_PROGETTO)tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_RICHIESTA_INT on MFINPIS_T_RICHIESTA_INTEGRAZ (ID_TARGET) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_RIASSICURAZ on MFINPIS_T_RIASSICURAZIONI (ID_SOGG_RIASSICURATO)  tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_REVOCA_BANCARIA on MFINPIS_T_REVOCA_BANCARIA (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_PROROGA on MFINPIS_T_PROROGA (ID_TARGET) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_PIANO_RIENTRO on MFINPIS_T_PIANO_RIENTRO (ID_PROGETTO)  tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_PASS_PERDITA on MFINPIS_T_PASSAGGIO_PERDITA (ID_PROGETTO)   tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_NOTE on MFINPIS_T_NOTE (ID_SOGGETTO_BENEFICIARIO) tablespace PBANDI_RW_TBL;
+create index IE4_MFINPIS_T_NOTE on MFINPIS_T_NOTE (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_MESSA_IN_MORA on MFINPIS_T_MESSA_IN_MORA (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_LIBERAZ_GARANTE on MFINPIS_T_LIBERAZ_GARANTE (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_LIBERAZ_BANCA on MFINPIS_T_LIBERAZ_BANCA (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_ISCRIZIONE_RUOLO on MFINPIS_T_ISCRIZIONE_RUOLO (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE1_MFINPIS_T_GESTIONE_REVOCA on MFINPIS_T_GESTIONE_REVOCA (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_ESCUSS_CONFIDI on MFINPIS_T_ESCUSS_CONFIDI (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE2_MFINPIS_T_DELIBERA_PROG on MFINPIS_T_DELIBERA_PROG (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_CONTRODEDUZ on MFINPIS_T_CONTRODEDUZ (ID_TARGET) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_CES_QUOTA_FP on MFINPIS_T_CESSIONE_QUOTA_FP (ID_PROGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_CALC_DIM_IMPRESA on MFINPIS_T_CALC_DIM_IMPRESA (ID_SOGGETTO) tablespace PBANDI_RW_TBL;
+create index IE3_MFINPIS_T_AZIONE_REC_BANCA on MFINPIS_T_AZIONE_RECUP_BANCA (ID_PROGETTO)tablespace PBANDI_RW_TBL;
+--
+
+-- mfinpis_t_revoca
+ALTER TABLE mfinpis_t_revoca ADD NUMERO_DISTINTA NUMBER(10);
+ALTER TABLE mfinpis_t_revoca ADD RIGA_DISTINTA NUMBER(10);
+
+-- mfinpis_t_escussione
+alter table mfinpis_t_escussione ADD NUMERO_DISTINTA NUMBER(8);
+alter table mfinpis_t_escussione ADD RIGA_DISTINTA NUMBER(8);
+
+
+-----------------------------------------------------------
+--TABELLE DI APPOGGIO PER SCARICO XML DOMANDA FINPIS
+-----------------------------------------------------------
+create table tmp_mfinpis_dom
+(id_caricamento number,
+ UuidDomanda  varchar2(100),
+ TitoloProgetto varchar2(1000),
+ IdEsterno varchar2(100),
+ tipo_beneficiario  varchar2(100),
+ DataComitato   varchar2(100),
+ DataConcessione varchar2(100),
+ Abi  varchar2(100),
+ Cab varchar2(100),
+ ContoCorrente varchar2(100),
+ Iban varchar2(100),
+ NomeBanca varchar2(100),
+ IndirizzoAgenzia varchar2(100),
+ CapAgenzia  varchar2(100),
+ ComuneAgenzia varchar2(100),
+ DataDomanda varchar2(100));
+
+CREATE UNIQUE INDEX IDX_TMP_MFINPIS_DOM ON TMP_MFINPIS_DOM
+(ID_CARICAMENTO)
+TABLESPACE PBANDI_RW_TBL
+;
+
+create table tmp_mfinpis_agev 
+(id_caricamento number,
+ id_agevolazione varchar2(100),
+ id_domanda  varchar2(100),
+ ImportoRichiesto   varchar2(100),
+ TipoAgevolazione   varchar2(100),
+ ProgrWf            varchar2(100),  
+ ImportoCostoProgetto varchar2(100),
+ ImportoAmmesso  varchar2(100),
+ ImportoFondo  varchar2(100),
+ ImportoBanca  varchar2(100),
+ DataConcessione  varchar2(100),
+ DataComitato  varchar2(100),
+ DataEsito  varchar2(100),
+ Id_Progetto  varchar2(100),
+ ImportoEsl varchar2(100));
+
+CREATE INDEX IDX1_TMP_MFINPIS_AGEV ON TMP_MFINPIS_AGEV
+(ID_CARICAMENTO)
+TABLESPACE PBANDI_RW_TBL
+;
+
+CREATE INDEX IDX2_TMP_MFINPIS_AGEV ON TMP_MFINPIS_AGEV
+(ID_AGEVOLAZIONE)
+TABLESPACE PBANDI_RW_TBL
+;
+
+create table tmp_mfinpis_spese
+(id_caricamento number,
+ UuidTipoSpesa  varchar2(100),
+ IdTipoSpesaEsterno varchar2(100),
+ ImportoSpesa   varchar2(100),
+ ImportoContributo   varchar2(100),
+ ImportoErogato varchar2(100),
+ Id_Agevolazione  varchar2(100),
+ Id_Progetto  varchar2(100)
+);
+
+CREATE INDEX IDX_TMP_MFINPIS_SPESE ON TMP_MFINPIS_SPESE
+(ID_CARICAMENTO)
+TABLESPACE PBANDI_RW_TBL
+;
+
+CREATE INDEX IDX2_TMP_MFINPIS_SPESE ON TMP_MFINPIS_SPESE
+(ID_AGEVOLAZIONE)
+TABLESPACE PBANDI_RW_TBL
+;
+
+CREATE INDEX IDX3_TMP_MFINPIS_SPESE ON TMP_MFINPIS_SPESE
+(IdTipoSpesaEsterno)
+TABLESPACE PBANDI_RW_TBL
+;
+
+create table tmp_mfinpis_anag
+(id_caricamento number,
+ UuidAnagrafica  varchar2(100),
+ RagioneSociale varchar2(500),
+ TipoBeneficiario varchar2(100),
+ NaturaGiuridica varchar2(100),
+ CodiceFiscale  varchar2(100),
+ PartitaIva  varchar2(100),
+ Cognome varchar2(100),
+ Nome varchar2(100),
+ DataNascita varchar2(100),
+ Telefono varchar2(100),
+ Fax  varchar2(100),
+ Email varchar2(100),
+ PEC varchar2(100),
+ FlagPubblicoPrivato  varchar2(1),
+ TipodocumentoRiconoscimento  varchar2(100),
+ NumeroDocumentoRiconosciment varchar2(100),
+ DataRilascioDocumento varchar2(100),
+ DataScadenzaDocumento varchar2(100), 
+ EnteRilascioDocumento  varchar2(100),
+ DataCostituzione   varchar2(100));
+
+CREATE INDEX IDX_TMP_MFINPIS_ANAG ON TMP_MFINPIS_ANAG
+(ID_CARICAMENTO)
+TABLESPACE PBANDI_RW_TBL
+;
+
+create table tmp_mfinpis_anag_comp
+(id_caricamento number,
+ TipoRuolo  varchar2(100),
+ TipoSocio  varchar2(100)
+ );
+
+create table tmp_mfinpis_comp_anag
+(id_caricamento number,
+ UuidAnagrafica  varchar2(100),
+ RagioneSociale varchar2(500),
+ NaturaGiuridica varchar2(100),
+ CodiceFiscale  varchar2(100),
+ PartitaIva  varchar2(100)
+ );
+
+create table tmp_mfinpis_dich 
+(id_caricamento number,
+ id_dichiarazione varchar2(100),
+ TipoAgevolazione   varchar2(100),
+ ProgrWf            varchar2(100),
+ id_agevolazione varchar2(100),
+ StatoDS varchar2(100),
+ AttributoDS varchar2(100),
+ TipoDichiarazione   varchar2(100),
+ ImportoImponibile   varchar2(100),
+ ImportoRendicontato varchar2(100),
+ ImportoAmmesso  varchar2(100),
+ DataConferma   varchar2(100),
+ DataInizioIstruttoria   varchar2(100),
+ DataEsito   varchar2(100),
+ MatricolaIstruttore   varchar2(100),
+ id_pban_dichiarazione varchar2(100),
+ Nr_Protocollo varchar2(100),
+ IdDocDigitale varchar2(100),
+ Id_Progetto  varchar2(100),
+ DataRichiestaIntegrazioni   varchar2(100),
+ UtenteRichiestaIntegrazioni   varchar2(100),
+ DataCreazione   varchar2(100));
+
+CREATE INDEX IDX_tmp_mfinpis_dich ON tmp_mfinpis_dich
+(ID_CARICAMENTO);
+
+create table tmp_mfinpis_dich_spese
+(id_caricamento number,
+ id_dichiarazione varchar2(100),
+ TipoAgevolazione   varchar2(100),
+ ProgrWf            varchar2(100),
+ IdVoceSpesa varchar2(100),
+ ImportoAmmesso   varchar2(100),
+ ImportoRichiesto varchar2(100),
+ FlagIres  varchar2(100),
+ DescrizioneSpesa   varchar2(100),
+ Id_Agevolazione varchar2(100),
+ Id_Progetto  varchar2(100));
+
+CREATE INDEX IDX_tmp_mfinpis_dich_spese ON tmp_mfinpis_dich_spese
+(ID_CARICAMENTO)
+;
+
+CREATE INDEX IDX2_tmp_mfinpis_dich_spese ON tmp_mfinpis_dich_spese
+(ID_DICHIARAZIONE)
+;
+
+create table tmp_mfinpis_sedi
+(id_caricamento number,
+ Indirizzo varchar2(500),
+ NumeroCivico   varchar2(100),
+ Cap            varchar2(100),
+ CodiceComune varchar2(100),
+ PaeseEsteroOAltroComune   varchar2(100),
+ SiglaProvincia varchar2(100),
+ TipoSede  varchar2(100),
+ FlagAmministrativa   varchar2(100));
+
+CREATE INDEX IDX_TMP_TMP_MFINPIS_SEDI ON TMP_MFINPIS_SEDI
+(ID_CARICAMENTO)
+;
+
+create table tmp_mfinpis_erogazioni
+(id_caricamento number,
+ IdErogazione varchar2(100),
+ DataErogazione   varchar2(100),
+ ImportoErogazione varchar2(100),
+ ImportoIres varchar2(100),
+ Causale   varchar2(100),
+ TipoAgevolazione varchar2(100),
+ ModalitaErogazione  varchar2(100));
+
+CREATE INDEX IDX_tmp_mfinpis_erogazioni ON tmp_mfinpis_erogazioni
+(ID_CARICAMENTO)
+;
+
+create table mfinpis_w_sogg_finanz
+(cod_fondo varchar2(4),
+ descr_fondo varchar2(200),
+ descr_soggetto_finanz varchar2(20),
+ id_soggetto_finanziatore number(3));
+
+
+
+create or replace view TMP_MFINPIS_MULTI_AGEV as
+   WITH agev AS (  SELECT   id_caricamento,
+                            MIN (id_agevolazione) agev_min,
+                            MAX (id_agevolazione) agev_max,
+                            COUNT ( * ) num_agev
+                     FROM   TMP_MFINPIS_AGEV
+                    WHERE   IMPORTOAMMESSO != '0'
+                 GROUP BY   id_caricamento
+                   HAVING   COUNT ( * ) > 1),
+        spese AS (select *
+                   from TMP_MFINPIS_SPESE a
+                   where importospesa != '0'
+                   and exists
+                     (select null
+                     from TMP_MFINPIS_SPESE
+                     where id_agevolazione != a.id_agevolazione
+                     and id_caricamento = a.id_caricamento
+                     and importospesa != '0')
+                     )
+   SELECT   a."ID_CARICAMENTO",
+            a."UUIDTIPOSPESA",
+            a."IDTIPOSPESAESTERNO",
+            a."IMPORTOSPESA",
+            a."IMPORTOCONTRIBUTO",
+            a."IMPORTOEROGATO",
+            a."ID_AGEVOLAZIONE",
+            b.id_progetto,
+            b.tipoagevolazione,
+            c.file_xml,
+            c.nome_file,
+            c.numero_domanda,
+            c.fonte,
+            c.flag_clonato,
+            c.flag_caricato,
+            TO_DATE (SUBSTR (b.dataconcessione, 1, 10), 'yyyy-mm-dd')
+               AS DT_CONCESSIONE_AGEV,
+            TO_DATE (SUBSTR (b.dataesito, 1, 10), 'yyyy-mm-dd')
+               AS DT_COMITATO_AGEV
+     FROM         spese a
+               JOIN
+                  TMP_MFINPIS_AGEV b
+               ON a.id_caricamento = b.id_caricamento
+                  AND a.id_agevolazione = b.id_agevolazione
+            JOIN
+               MFINPIS_W_CARICAMENTO_XML c
+            ON c.id_caricamento = a.id_caricamento
+    WHERE   a.id_agevolazione IS NOT NULL
+            AND EXISTS
+                  (SELECT   NULL
+                     FROM   TMP_MFINPIS_SPESE
+                    WHERE   NVL (id_agevolazione, a.id_agevolazione) !=
+                               a.id_agevolazione
+                            AND id_caricamento = a.id_caricamento)
+            AND EXISTS
+                  (SELECT   NULL
+                     FROM   agev
+                    WHERE       id_caricamento = a.id_caricamento
+                            AND NVL (agev_min, '0') != NVL (agev_max, '0')
+                            AND agev_min != agev_max)
+UNION ALL -- Agevolazioni della stessa tipologia
+   SELECT   a."ID_CARICAMENTO",
+            a."UUIDTIPOSPESA",
+            a."IDTIPOSPESAESTERNO",
+            a."IMPORTOSPESA",
+            a."IMPORTOCONTRIBUTO",
+            a."IMPORTOEROGATO",
+            a."ID_AGEVOLAZIONE",
+            b.id_progetto,
+            b.tipoagevolazione,
+            c.file_xml,
+            c.nome_file,
+            c.numero_domanda,
+            c.fonte,
+            c.flag_clonato,
+            c.flag_caricato,
+            TO_DATE (SUBSTR (b.dataconcessione, 1, 10), 'yyyy-mm-dd')
+               AS DT_CONCESSIONE_AGEV,
+            TO_DATE (SUBSTR (b.dataesito, 1, 10), 'yyyy-mm-dd')
+               AS DT_COMITATO_AGEV
+	FROM TMP_MFINPIS_SPESE a
+	   JOIN
+		  TMP_MFINPIS_AGEV b
+	   ON a.id_caricamento = b.id_caricamento
+		  AND a.id_agevolazione = b.id_agevolazione
+	JOIN
+	   MFINPIS_W_CARICAMENTO_XML c
+	ON c.id_caricamento = a.id_caricamento	WHERE a.id_caricamento in
+	(select id_caricamento from
+		(	
+		select id_caricamento, TIPOAGEVOLAZIONE
+		from TMP_MFINPIS_AGEV a
+		where A.importoammesso != '0'
+		group by id_caricamento, TIPOAGEVOLAZIONE
+		having count(*) > 1));					
+
+-- AGIORNAMENTO NDG
+-- 
+CREATE TABLE TMP_LOAD_NDG
+(
+  CODICE_FISCALE_SOGGETTO  VARCHAR2(100),
+  NDG                      VARCHAR2(9)
+);
+
+
+CREATE INDEX IDX_TMP_LOAD_NDG ON TMP_LOAD_NDG
+(CODICE_FISCALE_SOGGETTO)
+;
+
+CREATE TABLE TMP_LOAD_PROGETTO_AGEV
+(
+  CODICE_FONDO       VARCHAR2(4),
+  TIPO_AGEVOLAZIONE  VARCHAR2(1),
+  CODICE_PROGETTO    VARCHAR2(20),
+  ID_PROGETTO        VARCHAR2(100)
+);
+
+CREATE TABLE MFINPIS_FONDI_MIGR_ESISTENTI
+(
+  COD_FONDO          VARCHAR2(4 BYTE),
+  DESCRIZIONE_FONDO  VARCHAR2(255 BYTE)
+);
+
+CREATE TABLE MFINPIS_T_CONTATORI
+(
+  COD_FONDO           VARCHAR2(4 BYTE),
+  DES_FONDO           VARCHAR2(500 BYTE),
+  PROGRESSIVO_FINPIS  INTEGER,
+  DESC_CONTATORE      VARCHAR2(500 BYTE),
+  CONTEGGIO           INTEGER,
+  FVELENFAT           VARCHAR2(20 BYTE),
+  FVELEDATA           VARCHAR2(8 BYTE)
+);
+
+CREATE TABLE MFINPIS_T_CONTATORI_RACCORDO
+(
+  PROGRESSIVO_FINPIS         INTEGER,
+  DESCRIZIONE_FINPIS         VARCHAR2(500 BYTE),
+  COL_MFINPIS_V_FONDI_BANDI  VARCHAR2(30 BYTE)
+);
+
+CREATE TABLE PBANDI_W_CONTO_ECONOMICO_AGEV
+(
+  FONDO                NUMBER,
+  DOMANDA              NUMBER,
+  TIPO_AGEVOLAZIONE    VARCHAR2(1 BYTE),
+  PROGRESSIVO_WF       NUMBER,
+  CODICE_VISUALIZZATO  VARCHAR2(20 BYTE),
+  ID_PROGETTO          VARCHAR2(20 BYTE),
+  ID_PROGETTO_PBAN     NUMBER,
+  ID_PK                NUMBER,
+  ID_CONTO_ECONOMICO   NUMBER
+);
+
+CREATE OR REPLACE FUNCTION FN_MFINPIS_CONTATORE (P_COD_FONDO IN VARCHAR2, P_COL_MFINPIS_V_FONDI_BANDI IN VARCHAR2)  RETURN NUMBER IS
+
+   cursor c1 (C_COD_FONDO IN VARCHAR2, C_COL_MFINPIS_V_FONDI_BANDI IN VARCHAR2) is
+      select conteggio
+      from MFINPIS_T_CONTATORI a
+      join MFINPIS_T_CONTATORI_RACCORDO b on b.PROGRESSIVO_FINPIS = a.PROGRESSIVO_FINPIS
+      where a.cod_fondo = C_COD_FONDO
+        and b.COL_MFINPIS_V_FONDI_BANDI = C_COL_MFINPIS_V_FONDI_BANDI;
+
+   v_return NUMBER;
+   
+BEGIN
+   open c1(P_COD_FONDO, P_COL_MFINPIS_V_FONDI_BANDI);
+   fetch c1 into v_return;
+   if c1%notfound then
+      v_return := 0;
+   end if;
+   close c1;
+   RETURN V_RETURN;
+END;
+
+CREATE OR REPLACE FORCE VIEW MFINPIS_V_FONDI_BANDI
+(
+   STATO_MIGRAZIONE,
+   COD_FONDO,
+   DESCRIZIONE_FONDO,
+   PROGR_BANDO_LINEA_INTERV,
+   ID_BANDO,
+   FLAG_CARICATO,
+   NUM_XML_FINPIS_ORIG,
+   NUM_XML_FINPIS_CLONE,
+   --NUM_XML_FINPIS,
+   NUM_PROGETTI_PBAN,
+   NUM_BENEFICIARI_PROGETTI,
+   NUM_BENEF_PG_PROGETTI,
+   NUM_BENEF_PF_PROGETTI,
+   NUM_RAPPR_LEG_PROGETTI,
+   NUM_NO_RAPPR_LEG_XNOCF,
+   NUM_SOCI_PROGETTI,
+   NUM_RECAPITI_PF_PROGETTI,
+   NUM_RECAPITI_RL_PROGETTI,
+   NUM_SEDI_LEGALE_PROGETTI,
+   NUM_SEDI_INTERV_PROGETTI,
+   NUM_SOGGETTI_DURC,
+   NUM_SOGGETTI_DSAN,
+   NUM_SOGGETTI_ANTIMAFIA,
+   NUM_SOGGETTI_STATO_AZIENDA,
+   NUM_SOGGETTI_RATING,
+   NUM_SOGGETTI_CLA_RISCHIO,
+   NUM_SEGN_CORTE_CONTI,
+   NUM_SALDO_STRALCIO,
+   NUM_RNA_PROGETTO,
+   NUM_RNA_PROGETTO_MAN,
+   NUM_RICHIESTE_INTEGRAZ,
+   NUM_REVOCHE_BANCARIE,
+   NUM_PROROGHE,
+   NUM_PIANO_RIENTRO,
+   NUM_PASSAGGIO_PERDITA,
+   NUM_NOTE,
+   NUM_MESSA_IN_MORA,
+   NUM_LIBERAZIONE_GARANTE,
+   NUM_ISCRIZIONE_RUOLO,
+   NUM_DELIBERA_PROG,
+   NUM_CESSIONE_QUOTA_FP,
+   NUM_AZIONE_RECUP_BANCA,
+   NUM_AMMORTAMENTO_PROG,
+   NUM_SOGG_PROG_STATO_CREDITO_FP,
+   NUM_BANDI_CONF_BANDO,
+   NUM_ESTREMI_BANCARI_CONF_BANDO,
+   NUM_AGENZIE_CONF_BANDO,
+   NUM_VOCI_SPESA_CONF_BANDO,
+   NUM_SOGG_FINANZIAT_CONF_BANDO,
+   NUM_MOD_AGEV_CONF_BANDO,
+   NUM_IND_AG_ESTR_CONF_BANDO,
+   NUM_BANDI_LINEA_INT_CONF_BANDO,
+   NUM_ENTI_COMP_CONF_BANDO,
+   NUM_RICHIESTE,
+   NUM_REVOCHE,
+   NUM_GEST_REVOCHE,
+   NUM_PROCED_REVOCHE,
+   NUM_PROVVED_REVOCHE,
+   NUM_CONTRODEDUZ_REVOCHE,
+   NUM_PROROGHE_CONTRODEDUZ,
+   NUM_PROROGHE_INTEGRAZ,
+   NUM_INTEGRAZ_REVOCHE,
+   NUM_RECUPERI,
+   NUM_ESCUSSIONI,
+   NUM_ESCUSSIONI_CONFIDI,
+   NUM_ESTREMI_BANCARI,
+   NUM_NO_ESTREMI_BANCARI_XNOIBAN,
+   NUM_EROGAZIONI,
+   NUM_DICHIARAZIONI_DI_SPESA,
+   NUM_DICH_APERTE_INTERMEDIE,
+   NUM_DICH_APERTE_FINALI,
+   NUM_DICH_APERTE_INTEGRATIVE,
+   NUM_DICH_CHIUSE_INTERMEDIE,
+   NUM_DICH_CHIUSE_FINALI,
+   NUM_DICH_CHIUSE_INTEGRATIVE,
+   NUM_PROG_AGEV_SOLO_C,
+   NUM_PROG_AGEV_SOLO_F,
+   NUM_PROG_AGEV_SOLO_G,
+   NUM_PROG_AGEV_C_F,
+   NUM_PROG_AGEV_C_G,
+   NUM_PROG_AGEV_F_G,
+   NUM_PROG_AGEV_C_F_G,
+   NUM_PROG_AGEV_NON_ACQ_INC_DATI,
+   NUM_PROG_MOD_AGEV_DUP
+)
+AS
+  WITH DICH_SPESA AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_dich_spesa,
+		                     COUNT(case when id_tipo_dichiaraz_spesa = 1 and dt_chiusura_validazione is null then 1 else null end) as NUM_DICH_APERTE_INTERMEDIE,
+		                     COUNT(case when id_tipo_dichiaraz_spesa = 1 and dt_chiusura_validazione is not null then 1 else null end) as NUM_DICH_CHIUSE_INTERMEDIE,
+		                     COUNT(case when id_tipo_dichiaraz_spesa in (2,3) and dt_chiusura_validazione is null then 1 else null end) as NUM_DICH_APERTE_FINALI,
+		                     COUNT(case when id_tipo_dichiaraz_spesa in (2,3) and dt_chiusura_validazione is not null then 1 else null end) as NUM_DICH_CHIUSE_FINALI,
+		                     COUNT(case when id_tipo_dichiaraz_spesa in (4) and dt_chiusura_validazione is null then 1 else null end) as NUM_DICH_APERTE_INTEGRATIVE,
+		                     COUNT(case when id_tipo_dichiaraz_spesa in (4) and dt_chiusura_validazione is not null then 1 else null end) as NUM_DICH_CHIUSE_INTEGRATIVE
+			FROM PBANDI_T_DICHIARAZIONE_SPESA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      EROGAZIONI AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_erogazioni
+			FROM PBANDI_T_EROGAZIONE
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      REVOCHE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_revoche
+			FROM PBANDI_T_REVOCA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      GEST_REVOCHE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_gest_revoche
+			FROM PBANDI_T_GESTIONE_REVOCA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      PROCED_REVOCHE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_proced_revoche
+			FROM PBANDI_T_GESTIONE_REVOCA
+			WHERE ID_UTENTE_INS = -14
+			  AND id_tipologia_revoca = 2
+			GROUP BY ID_PROGETTO),
+      PROVVED_REVOCHE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_provved_revoche
+			FROM PBANDI_T_GESTIONE_REVOCA
+			WHERE ID_UTENTE_INS = -14
+			  AND id_tipologia_revoca = 3
+			GROUP BY ID_PROGETTO),
+      CONTRODEDUZ_REVOCHE AS
+		 (SELECT c.ID_PROGETTO,COUNT(*) as num_controdeduz_revoche
+			FROM PBANDI_T_CONTRODEDUZ a
+			JOIN PBANDI_T_GESTIONE_REVOCA b on b.id_gestione_revoca = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 516 -- PBANDI_T_GESTIONE_REVOCA
+			AND a.ID_UTENTE_INS = -14
+			GROUP BY c.ID_PROGETTO),
+      PROROGHE_CONTRODEDUZ AS
+		 (SELECT c.ID_PROGETTO,COUNT(*) as num_proroghe_controdeduz
+		    FROM PBANDI_T_PROROGA p
+			JOIN PBANDI_T_CONTRODEDUZ a on a.id_controdeduz = p.id_target
+			JOIN PBANDI_T_GESTIONE_REVOCA b on b.id_gestione_revoca = a.id_target and a.id_entita = 516 -- PBANDI_T_GESTIONE_REVOCA
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE p.ID_ENTITA = 609 -- PBANDI_T_CONTRODEDUZ
+			AND p.ID_UTENTE_INS = -14
+			GROUP BY c.ID_PROGETTO),
+      PROROGHE_INTEGRAZ AS
+		 (SELECT c.ID_PROGETTO,COUNT(*) as num_proroghe_integraz
+		    FROM PBANDI_T_PROROGA p
+			JOIN PBANDI_T_RICHIESTA_INTEGRAZ a on a.id_richiesta_integraz = p.id_target
+			JOIN PBANDI_T_GESTIONE_REVOCA b on b.id_gestione_revoca = a.id_target and a.id_entita = 516 -- PBANDI_T_GESTIONE_REVOCA
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE p.ID_ENTITA = 569 -- PBANDI_T_RICHIESTA_INTEGRAZ
+			AND p.ID_UTENTE_INS = -14
+			GROUP BY c.ID_PROGETTO),
+      INTEGRAZ_REVOCHE AS
+		 (SELECT c.ID_PROGETTO,COUNT(*) as num_integraz_revoche
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_T_GESTIONE_REVOCA b on b.id_gestione_revoca = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 516 -- PBANDI_T_GESTIONE_REVOCA
+			AND a.ID_UTENTE_INS = -14
+			GROUP BY c.ID_PROGETTO),
+      RICHIESTE_INTEGRAZ AS
+	     (SELECT ID_PROGETTO,COUNT(*) as num_richieste_integraz
+		 FROM
+		 (SELECT c.ID_PROGETTO
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_T_GESTIONE_REVOCA b on b.id_gestione_revoca = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 516 -- PBANDI_T_GESTIONE_REVOCA
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_T_DICHIARAZIONE_SPESA b on b.id_dichiarazione_spesa = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 63 -- PBANDI_T_DICHIARAZIONE_SPESA
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_T_ESCUSSIONE b on b.id_escussione = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 605 -- PBANDI_T_ESCUSSIONE
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_R_CAMP_CONTR_LOCO b on b.id_controllo_loco = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 570 -- PBANDI_T_CONTROLLO_LOCO
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_RICHIESTA_INTEGRAZ a
+			JOIN PBANDI_T_CONTROLLO_LOCO_ALTRI b on b.id_controllo = a.id_target
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = b.id_progetto
+			WHERE a.ID_ENTITA = 608 -- PBANDI_T_CONTROLLO_LOCO_ALTRI
+			AND a.ID_UTENTE_INS = -14)
+			GROUP BY ID_PROGETTO),
+      PROROGHE AS
+	     (SELECT ID_PROGETTO,COUNT(*) as num_proroghe
+		 FROM
+		 (SELECT c.ID_PROGETTO
+			FROM PBANDI_T_PROROGA a
+			JOIN PBANDI_T_INTEGRAZIONE_SPESA b on b.id_integrazione_spesa = a.id_target
+			JOIN PBANDI_T_DICHIARAZIONE_SPESA ds on ds.id_dichiarazione_spesa = b.id_dichiarazione_spesa
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = ds.id_progetto
+			WHERE a.ID_ENTITA = 453 -- PBANDI_T_INTEGRAZIONE_SPESA
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_PROROGA a
+			JOIN PBANDI_T_RICHIESTA_INTEGRAZ b on b.id_richiesta_integraz = a.id_target
+			JOIN PBANDI_T_GESTIONE_REVOCA gr on gr.id_gestione_revoca = b.id_target and b.id_entita = 516 -- PBANDI_T_GESTIONE_REVOCA
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = gr.id_progetto
+			WHERE a.ID_ENTITA = 569 -- PBANDI_T_RICHIESTA_INTEGRAZ
+			AND a.ID_UTENTE_INS = -14
+		  UNION ALL
+		  SELECT c.ID_PROGETTO
+			FROM PBANDI_T_PROROGA a
+			JOIN PBANDI_T_CONTRODEDUZ b on b.id_controdeduz = a.id_target
+			JOIN PBANDI_T_GESTIONE_REVOCA gr on gr.id_gestione_revoca = b.id_target and b.id_entita = 516 -- PBANDI_T_GESTIONE_REVOCA
+			JOIN PBANDI_T_PROGETTO c on c.id_progetto = gr.id_progetto
+			WHERE a.ID_ENTITA = 609 -- PBANDI_T_CONTRODEDUZ
+			AND a.ID_UTENTE_INS = -14)
+			GROUP BY ID_PROGETTO),
+	  RECUPERI AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_recuperi
+			FROM PBANDI_T_RECUPERO
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  ESCUSSIONI AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_escussioni
+			FROM PBANDI_T_ESCUSSIONE
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  ESCUSSIONI_CONFIDI AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_escussioni_confidi
+			FROM PBANDI_T_ESCUSS_CONFIDI
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  RAPPLEG AS
+		 (select sp.id_progetto,COUNT(*) as num_rappr_leg
+			from pbandi.pbandi_R_SOGGETTO_PROGETTO     sp,
+				 pbandi.pbandi_R_SOGG_PROG_SOGG_CORREL psc,
+				 pbandi.pbandi_R_SOGGETTI_CORRELATI sc
+		   where psc.progr_soggetto_progetto = sp.progr_soggetto_progetto
+			 and sc.id_tipo_soggetto_correlato = 1
+			 and sc.progr_soggetti_correlati = psc.progr_soggetti_correlati
+			 and psc.dt_fine_validita is null
+			 and sp.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  NO_RAPPLEG AS
+		 (select a.id_progetto
+		    from pbandi_t_progetto a
+			     join pbandi_R_SOGGETTO_PROGETTO b on b.id_progetto = a.id_progetto and b.id_ente_giuridico is not null AND b.id_tipo_anagrafica = 1 AND b.id_tipo_beneficiario != 4
+			WHERE a.ID_UTENTE_INS = -14
+			AND not exists
+			(
+		  select NULL
+			from pbandi.pbandi_R_SOGGETTO_PROGETTO     sp
+			JOIN pbandi.pbandi_R_SOGG_PROG_SOGG_CORREL psc ON psc.progr_soggetto_progetto = sp.progr_soggetto_progetto
+			JOIN pbandi.pbandi_R_SOGGETTI_CORRELATI sc ON sc.progr_soggetti_correlati = psc.progr_soggetti_correlati and sc.id_tipo_soggetto_correlato = 1
+			 where sp.id_progetto = a.id_progetto
+			 and psc.dt_fine_validita is null)),
+	  RECAP_RAPPLEG AS
+		 (select a.id_progetto, count(*) as num_recap_rappleg
+		    from pbandi_t_progetto a
+			     join pbandi_R_SOGGETTO_PROGETTO b on b.id_progetto = a.id_progetto AND b.id_tipo_anagrafica = 16
+			WHERE a.ID_UTENTE_INS = -14
+			AND  exists
+			(
+		  select NULL
+			from pbandi.pbandi_R_SOGGETTO_PROGETTO     sp
+			JOIN pbandi.pbandi_R_SOGG_PROG_SOGG_CORREL psc ON psc.progr_soggetto_progetto = sp.progr_soggetto_progetto
+			JOIN pbandi.pbandi_R_SOGGETTI_CORRELATI sc ON sc.progr_soggetti_correlati = psc.progr_soggetti_correlati and sc.id_tipo_soggetto_correlato = 1
+			 where sp.id_progetto = a.id_progetto
+			 and psc.dt_fine_validita is null)
+			 GROUP BY a.id_progetto),
+	  SEDE_LEGALE AS
+		 (select sp.id_progetto,COUNT(*) as num_sedi_leg
+			from pbandi_R_SOGGETTO_PROGETTO sp,
+				 PBANDI_R_SOGG_PROGETTO_SEDE sps
+		   where sps.progr_soggetto_progetto = sp.progr_soggetto_progetto
+		     AND sps.id_tipo_sede = 1
+			and sp.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SEDE_INTERV AS
+		 (select sp.id_progetto,COUNT(*) as num_sedi_interv
+			from pbandi_R_SOGGETTO_PROGETTO sp,
+				 PBANDI_R_SOGG_PROGETTO_SEDE sps
+		   where sps.progr_soggetto_progetto = sp.progr_soggetto_progetto
+		     AND sps.id_tipo_sede = 2
+			and sp.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOCI AS
+		 (select sp.id_progetto,COUNT(*) as num_soci
+			from pbandi.pbandi_R_SOGGETTO_PROGETTO     sp,
+				 pbandi.pbandi_R_SOGG_PROG_SOGG_CORREL psc,
+				 pbandi.pbandi_R_SOGGETTI_CORRELATI sc
+		   where psc.progr_soggetto_progetto = sp.progr_soggetto_progetto
+			 and sc.id_tipo_soggetto_correlato in (2,19,18)
+			 and sc.progr_soggetti_correlati = psc.progr_soggetti_correlati
+			 and psc.dt_fine_validita is null
+			 and sp.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_DURC AS
+	      (select b.id_progetto, count(*) as num_soggetti_durc
+		     from PBANDI_T_SOGGETTO_DURC a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.id_soggetto = a.id_soggetto
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_DSAN AS
+	      (select c.id_progetto, count(*) as num_soggetti_dsan
+		     from PBANDI_T_SOGGETTO_DSAN a
+			 join PBANDI_T_DOMANDA b on b.id_domanda = a.id_domanda 
+             join pbandi_T_PROGETTO c on c.id_domanda = b.id_domanda
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_ANTIMAFIA AS
+	      (select c.id_progetto, count(*) as num_soggetti_antimafia
+		     from PBANDI_T_SOGGETTO_ANTIMAFIA a
+			 join PBANDI_T_DOMANDA b on b.id_domanda = a.id_domanda 
+             join pbandi_T_PROGETTO c on c.id_domanda = b.id_domanda
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_STATO_AZIENDA AS
+	      (select b.id_progetto, count(*) as num_soggetti_stato_azienda
+		     from PBANDI_T_SOGG_STATO_AZIENDA a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.id_soggetto = a.id_soggetto
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_RATING AS
+	      (select b.id_progetto, count(*) as num_soggetti_rating
+		     from PBANDI_T_SOGGETTO_RATING a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.id_soggetto = a.id_soggetto
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  SOGGETTI_CLA_RISCHIO AS
+	      (select b.id_progetto, count(*) as num_soggetti_cla_rischio
+		     from PBANDI_T_SOGGETTO_CLA_RISCHIO a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.id_soggetto = a.id_soggetto
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      SEGN_CORTE_CONTI AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_segn_corte_conti
+			FROM PBANDI_T_SEGNALAZ_CORTE_CONTI
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      SALDO_STRALCIO AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_saldo_stralcio
+			FROM PBANDI_T_SALDO_STRALCIO
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      RNA_PROGETTO AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_rna_progetto
+			FROM PBANDI_T_RNA_PROGETTO
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      RNA_PROGETTO_MAN AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_rna_progetto_man
+			FROM PBANDI_T_RNA_PROGETTO_MAN
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      REVOCHE_BANCARIE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_revoche_bancarie
+			FROM PBANDI_T_REVOCA_BANCARIA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      PIANO_RIENTRO AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_piano_rientro
+			FROM PBANDI_T_PIANO_RIENTRO
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      PASSAGGIO_PERDITA AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_passaggio_perdita
+			FROM PBANDI_T_PASSAGGIO_PERDITA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  NOTE AS
+	      (
+		  select id_progetto,  count(*) as num_note
+		  FROM
+		  (
+		  select b.id_progetto
+		     from PBANDI_T_NOTE a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.id_soggetto = a.id_soggetto_beneficiario
+			 WHERE a.ID_UTENTE_INS = -14
+			 UNION ALL
+		  select a.id_progetto
+		     from PBANDI_T_NOTE a
+			 WHERE id_progetto IS NOT NULL
+			 AND ID_UTENTE_INS = -14)
+			GROUP BY ID_PROGETTO
+			),
+      MESSA_IN_MORA AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_messa_in_mora
+			FROM PBANDI_T_MESSA_IN_MORA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      LIBERAZIONE_GARANTE AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_liberazione_garante
+			FROM PBANDI_T_LIBERAZ_GARANTE
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      ISCRIZIONE_RUOLO AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_iscrizione_ruolo
+			FROM PBANDI_T_ISCRIZIONE_RUOLO
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      DELIBERA_PROG AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_delibera_prog
+			FROM PBANDI_T_DELIBERA_PROGETTI
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      CESSIONE_QUOTA_FP AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_cessione_quota_fp
+			FROM PBANDI_T_CESSIONE_QUOTA_FP
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      AZIONE_RECUP_BANCA AS
+		 (SELECT ID_PROGETTO,COUNT(*) as num_azione_recup_banca
+			FROM PBANDI_T_AZIONE_RECUP_BANCA
+			WHERE ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+      AMMORTAMENTO_PROG AS
+		 (SELECT b.ID_PROGETTO,COUNT(*) as num_ammortamento_prog
+			FROM PBANDI_T_AMMORTAMENTO_PROGETTI a
+            JOIN PBANDI_T_DELIBERA_PROGETTI b on b.id_delibera = a.id_delibera
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY b.ID_PROGETTO),
+	  SOGGETTI_STA_CRED AS
+	      (select b.id_progetto, count(*) as num_sogg_prog_stato_credito_fp
+		     from PBANDI_R_SOGG_PROG_STA_CRED_FP a
+             join pbandi_R_SOGGETTO_PROGETTO b on b.progr_soggetto_progetto = a.progr_soggetto_progetto
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY b.ID_PROGETTO),
+	  ESTREMI_BANCARI_CONF_BANDO AS
+	      (select a.id_bando, count(distinct id_estremi_bancari) as num_estremi_bancari_conf_bando
+		     from PBANDI_R_BANDO_MOD_AG_ESTR_BAN a
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),	
+	  ESTREMI_BANC_IND_AG_CONF_BANDO AS
+	      (select a.id_bando, count(distinct c.id_indirizzo) as NUM_IND_AG_ESTR_CONF_BANDO
+		     from PBANDI_R_BANDO_MOD_AG_ESTR_BAN a
+			 join PBANDI_T_ESTREMI_BANCARI b on b.id_estremi_bancari = a.id_estremi_bancari
+			 join PBANDI_T_AGENZIA c on c.id_agenzia = b.id_agenzia
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),	
+	  AGENZIE_CONF_BANDO AS
+	      (select a.id_bando, count(distinct b.id_agenzia) as num_agenzie_conf_bando
+		     from PBANDI_R_BANDO_MOD_AG_ESTR_BAN a
+			 join PBANDI_T_ESTREMI_BANCARI b on b.id_estremi_bancari = a.id_estremi_bancari
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),	
+	  VOCI_SPESA_CONF_BANDO AS
+	      (select a.id_bando, count(*) as num_voci_spesa_conf_bando
+		     from PBANDI_R_BANDO_VOCE_SPESA a
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),	
+	  SOGG_FINANZIAT_CONF_BANDO AS
+	      (select a.id_bando, count(*) as num_sogg_finanziat_conf_bando
+		     from PBANDI_R_BANDO_SOGG_FINANZIAT a
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),
+	  MOD_AGEV_CONF_BANDO AS
+	      (select a.id_bando, count(*) as num_mod_agev_conf_bando
+		     from PBANDI_R_BANDO_MODALITA_AGEVOL a
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY a.id_bando),
+	  ENTI_COMP_CONF_BANDO AS
+	      (select b.id_bando, count(*) as num_enti_comp_conf_bando
+		     from PBANDI_R_BANDO_LINEA_ENTE_COMP a
+			 join PBANDI_R_BANDO_LINEA_INTERVENT b on b.progr_bando_linea_intervento = a.progr_bando_linea_intervento
+			WHERE a.ID_UTENTE_INS = -14
+            GROUP BY b.id_bando),
+	  RICHIESTE AS
+	      (select c.id_progetto, count(*) as num_richieste
+		     from PBANDI_T_RICHIESTA a
+			 join PBANDI_T_DOMANDA b on b.id_domanda = a.id_domanda 
+             join pbandi_T_PROGETTO c on c.id_domanda = b.id_domanda
+			WHERE a.ID_UTENTE_INS = -14
+			GROUP BY ID_PROGETTO),
+	  PROGETTI_AGEV AS
+	      (select cod_fondo, comb_agev,count(*) as num_comb from
+			(
+				  --select substr(d.codice_visualizzato,1,10),
+				  select d.id_progetto,
+							  min(d.codice_fondo_finpis) as cod_fondo,
+							  LISTAGG((case when a.ID_MODALITA_AGEVOLAZIONE = 1 then 'C' end)||
+							  (case when a.ID_MODALITA_AGEVOLAZIONE in(5,9) then 'F' end)||
+							  (case when a.ID_MODALITA_AGEVOLAZIONE = 10 then 'G' end),'')  WITHIN GROUP (ORDER BY a.ID_MODALITA_AGEVOLAZIONE) as comb_agev
+						 from PBANDI_R_CONTO_ECONOM_MOD_AGEV a
+						 join PBANDI_T_CONTO_ECONOMICO b  on b.id_conto_economico = a.id_conto_economico and b.dt_fine_validita is null and b.id_utente_ins = -14
+						 join PBANDI_T_DOMANDA c on c.id_domanda = b.id_domanda 
+						 join pbandi_T_PROGETTO d on d.id_domanda = c.id_domanda
+						 --GROUP BY substr(d.codice_visualizzato,1,10)
+						 WHERE a.ID_UTENTE_INS = -14
+						 GROUP BY id_progetto
+			)
+			group by cod_fondo, comb_agev),
+	   DUP_MOD_AGEV AS
+			(
+				select e.id_progetto, a.id_caricamento, b.numero_domanda, a.id_agevolazione, b.cod_fondo, count(*)
+				from TMP_MFINPIS_AGEV a
+				join MFINPIS_W_CARICAMENTO_XML b on b.id_caricamento = a.id_caricamento
+                JOIN PBANDI_T_PROGETTO e ON e.codice_visualizzato = b.numero_domanda
+				where flag_caricato = 'SI'
+				group by e.id_progetto, a.id_caricamento,b.numero_domanda,a.id_agevolazione, b.cod_fondo
+				having count(*) > 1
+			)
+	-- MAIN
+	(
+     SELECT   'MIGRATO' as stato_migrazione,
+			  a.cod_fondo,
+              d.nome_bando_linea AS descrizione_fondo,
+              PROGR_BANDO_LINEA_INTERV_PBAN AS PROGR_BANDO_LINEA_INTERV,
+              d.id_bando,
+              flag_caricato,
+             -- COUNT (a.id_caricamento) - COUNT (a.id_caricamento_clonato) + COUNT (case when a.flag_caricato = 'CL' then 1 else null end) as num_xml_finpis_orig,
+              COUNT (a.id_caricamento) - COUNT (a.id_caricamento_clonato) as num_xml_finpis_orig,
+              COUNT (a.id_caricamento_clonato) num_xml_finpis_clone,
+              --COUNT (a.id_caricamento) num_xml_finpis,
+              COUNT (e.id_progetto) NUM_PROGETTI_PBAN,
+              COUNT (h.id_soggetto) NUM_BENEFICIARI_PROGETTI,
+              COUNT (h.id_ente_giuridico) NUM_BENEF_PG_PROGETTI,
+              COUNT (h.id_persona_fisica) NUM_BENEF_PF_PROGETTI,
+              NVL(SUM (i.num_rappr_leg),0) AS NUM_RAPPR_LEG_PROGETTI,
+              COUNT (m.id_progetto) AS NUM_NO_RAPPR_LEG_XNOCF,
+              NVL(SUM (l.num_soci),0) AS NUM_SOCI_PROGETTI,
+			  COUNT(h.id_recapiti_persona_fisica) AS NUM_RECAPITI_PF_PROGETTI,
+			  NVL(SUM(n.num_recap_rappleg),0) AS NUM_RECAPITI_RL_PROGETTI,
+			  NVL(SUM(o.num_sedi_leg),0) AS NUM_SEDI_LEGALE_PROGETTI,
+			  NVL(SUM(p.num_sedi_interv),0) AS NUM_SEDI_INTERV_PROGETTI,
+              NVL(SUM(q.num_soggetti_durc),0) AS NUM_SOGGETTI_DURC,
+              NVL(SUM(r.num_soggetti_dsan),0) AS NUM_SOGGETTI_DSAN,
+              NVL(SUM(s.num_soggetti_antimafia),0) AS NUM_SOGGETTI_ANTIMAFIA,
+              NVL(SUM(a7.num_soggetti_stato_azienda),0) AS NUM_SOGGETTI_STATO_AZIENDA,
+              NVL(SUM(a8.num_soggetti_rating),0) AS NUM_SOGGETTI_RATING,
+              NVL(SUM(a9.num_soggetti_cla_rischio),0) AS NUM_SOGGETTI_CLA_RISCHIO,
+              NVL(SUM(a10.num_segn_corte_conti),0) AS NUM_SEGN_CORTE_CONTI,
+              NVL(SUM(a11.num_saldo_stralcio),0) AS NUM_SALDO_STRALCIO,
+              NVL(SUM(a12.num_rna_progetto),0) AS NUM_RNA_PROGETTO,
+              NVL(SUM(a13.num_rna_progetto_man),0) AS NUM_RNA_PROGETTO_MAN,
+              NVL(SUM(a14.num_richieste_integraz),0) AS NUM_RICHIESTE_INTEGRAZ,
+              NVL(SUM(a15.num_revoche_bancarie),0) AS NUM_REVOCHE_BANCARIE,
+              NVL(SUM(a16.num_proroghe),0) AS NUM_PROROGHE,
+              NVL(SUM(a17.num_piano_rientro),0) AS NUM_PIANO_RIENTRO,
+              NVL(SUM(a18.num_passaggio_perdita),0) AS NUM_PASSAGGIO_PERDITA,
+              NVL(SUM(a19.num_note),0) AS NUM_NOTE,
+              NVL(SUM(a20.num_messa_in_mora),0) AS NUM_MESSA_IN_MORA,
+              NVL(SUM(a21.num_liberazione_garante),0) AS NUM_LIBERAZIONE_GARANTE,
+              NVL(SUM(a22.num_iscrizione_ruolo),0) AS NUM_ISCRIZIONE_RUOLO,
+              NVL(SUM(a23.num_delibera_prog),0) AS NUM_DELIBERA_PROG,
+              NVL(SUM(a24.num_cessione_quota_fp),0) AS NUM_CESSIONE_QUOTA_FP,
+              NVL(SUM(a25.num_azione_recup_banca),0) AS NUM_AZIONE_RECUP_BANCA,
+              NVL(SUM(a26.num_ammortamento_prog),0) AS NUM_AMMORTAMENTO_PROG,
+              NVL(SUM(a27.num_sogg_prog_stato_credito_fp),0) AS NUM_SOGG_PROG_STATO_CREDITO_FP,
+			  COUNT(distinct d.id_bando) as NUM_BANDI_CONF_BANDO,
+              NVL(MIN(a28.num_estremi_bancari_conf_bando),0) AS NUM_ESTREMI_BANCARI_CONF_BANDO,
+              NVL(MIN(a29.num_agenzie_conf_bando),0) AS NUM_AGENZIE_CONF_BANDO,
+              NVL(MIN(a30.num_voci_spesa_conf_bando),0) AS NUM_VOCI_SPESA_CONF_BANDO,
+              NVL(MIN(a31.num_sogg_finanziat_conf_bando),0) AS NUM_SOGG_FINANZIAT_CONF_BANDO,
+              NVL(MIN(a32.num_mod_agev_conf_bando),0) AS NUM_MOD_AGEV_CONF_BANDO,
+              NVL(MIN(a33.num_ind_ag_estr_conf_bando),0) AS NUM_IND_AG_ESTR_CONF_BANDO,
+			  COUNT(distinct d.progr_bando_linea_intervento) as NUM_BANDI_LINEA_INT_CONF_BANDO,
+              NVL(MIN(a34.num_enti_comp_conf_bando),0) AS NUM_ENTI_COMP_CONF_BANDO,
+              NVL(SUM(t.num_richieste),0) AS NUM_RICHIESTE,
+              NVL(SUM(v.num_revoche),0) AS NUM_REVOCHE,
+              NVL(SUM(x.num_gest_revoche),0) AS NUM_GEST_REVOCHE,
+              NVL(SUM(a2.num_proced_revoche),0) AS NUM_PROCED_REVOCHE,
+              NVL(SUM(a3.num_provved_revoche),0) AS NUM_PROVVED_REVOCHE,
+              NVL(SUM(y.num_controdeduz_revoche),0) AS NUM_CONTRODEDUZ_REVOCHE,
+              NVL(SUM(a4.num_proroghe_controdeduz),0) AS NUM_PROROGHE_CONTRODEDUZ,
+              NVL(SUM(a5.num_proroghe_integraz),0) AS NUM_PROROGHE_INTEGRAZ,
+              NVL(SUM(a6.num_integraz_revoche),0) AS NUM_INTEGRAZ_REVOCHE,
+              NVL(SUM(z.num_recuperi),0) AS NUM_RECUPERI,
+              NVL(SUM(w.num_escussioni),0) AS NUM_ESCUSSIONI,
+              NVL(SUM(a1.num_escussioni_confidi),0) AS NUM_ESCUSSIONI_CONFIDI,
+              COUNT (h.id_estremi_bancari) AS NUM_ESTREMI_BANCARI,
+              COUNT (h.id_progetto) - COUNT (h.id_estremi_bancari) as NUM_NO_ESTREMI_BANCARI_XNOIBAN,
+              NVL(SUM (f.num_erogazioni),0) AS num_erogazioni,
+              SUM(NVL(g.num_dich_spesa,0))  AS num_dichiarazioni_di_spesa,
+              SUM(NVL(g.NUM_DICH_APERTE_INTERMEDIE,0))  AS NUM_DICH_APERTE_INTERMEDIE,
+              SUM(NVL(g.NUM_DICH_APERTE_FINALI,0))  AS NUM_DICH_APERTE_FINALI,
+              SUM(NVL(g.NUM_DICH_APERTE_INTEGRATIVE,0))  AS NUM_DICH_APERTE_INTEGRATIVE,
+              SUM(NVL(g.NUM_DICH_CHIUSE_INTERMEDIE,0))  AS NUM_DICH_CHIUSE_INTERMEDIE,
+              SUM(NVL(g.NUM_DICH_CHIUSE_FINALI,0))  AS NUM_DICH_CHIUSE_FINALI,
+              SUM(NVL(g.NUM_DICH_CHIUSE_INTEGRATIVE,0))  AS NUM_DICH_CHIUSE_INTEGRATIVE,
+			  NVL(MIN(prog_agev_C.num_comb),0) AS num_prog_agev_solo_C,
+			  NVL(MIN(prog_agev_F.num_comb),0) AS num_prog_agev_solo_F,
+			  NVL(MIN(prog_agev_G.num_comb),0) AS num_prog_agev_solo_G,
+			  NVL(MIN(prog_agev_CF.num_comb),0) AS num_prog_agev_C_F,
+			  NVL(MIN(prog_agev_CG.num_comb),0) AS num_prog_agev_C_G,
+			  NVL(MIN(prog_agev_FG.num_comb),0) AS num_prog_agev_F_G,
+			  NVL(MIN(prog_agev_CFG.num_comb),0) AS num_prog_agev_C_F_G,
+			  COUNT (e.id_progetto) - (NVL(MIN(prog_agev_C.num_comb),0) +
+			                           NVL(MIN(prog_agev_F.num_comb),0) +
+									   NVL(MIN(prog_agev_G.num_comb),0) +
+									   NVL(MIN(prog_agev_CF.num_comb),0) +
+									   NVL(MIN(prog_agev_CG.num_comb),0) +
+									   NVL(MIN(prog_agev_FG.num_comb),0) +
+									   NVL(MIN(prog_agev_CFG.num_comb),0)) AS NUM_PROG_AGEV_NON_ACQ_INC_DATI,
+              NVL(COUNT (u.id_progetto),0) as NUM_PROG_MOD_AGEV_DUP
+     FROM  mfinpis_w_caricamento_xml a
+	 LEFT JOIN  BANDI_FONDI b ON b.codice_fondo_finpis = a.cod_fondo
+	 LEFT JOIN	MFINPIS_R_BANDO_LINEA_INTER c ON c.id_bando = b.id_bando
+	 LEFT JOIN PBANDI_R_BANDO_LINEA_INTERVENT d ON d.progr_bando_linea_intervento = c.PROGR_BANDO_LINEA_INTERV_PBAN
+     LEFT JOIN PBANDI_T_PROGETTO e ON e.codice_visualizzato = a.numero_domanda
+	 LEFT JOIN EROGAZIONI f ON f.id_progetto = e.id_progetto
+	 LEFT JOIN DICH_SPESA g ON g.id_progetto = e.id_progetto
+	 LEFT JOIN PBANDI_R_SOGGETTO_PROGETTO h ON  h.id_progetto = e.id_progetto AND h.id_tipo_anagrafica = 1 AND h.id_tipo_beneficiario != 4
+	 LEFT JOIN RAPPLEG i ON i.id_progetto = e.id_progetto
+	 LEFT JOIN SOCI l ON l.id_progetto = e.id_progetto
+	 LEFT JOIN NO_RAPPLEG m ON m.id_progetto = e.id_progetto
+	 LEFT JOIN RECAP_RAPPLEG n ON n.id_progetto = e.id_progetto
+	 LEFT JOIN SEDE_LEGALE o ON o.id_progetto = e.id_progetto
+	 LEFT JOIN SEDE_INTERV p ON p.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_DURC q ON q.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_DSAN r ON r.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_ANTIMAFIA s ON s.id_progetto = e.id_progetto
+	 LEFT JOIN RICHIESTE t ON t.id_progetto = e.id_progetto
+	 LEFT JOIN PROGETTI_AGEV prog_agev_C ON prog_agev_C.cod_fondo = a.cod_fondo and prog_agev_C.comb_agev = 'C' -- Progetti solo contributo
+	 LEFT JOIN PROGETTI_AGEV prog_agev_F ON prog_agev_F.cod_fondo = a.cod_fondo and prog_agev_F.comb_agev = 'F' -- Progetti solo fimanziamento
+	 LEFT JOIN PROGETTI_AGEV prog_agev_G ON prog_agev_G.cod_fondo = a.cod_fondo and prog_agev_G.comb_agev = 'G' -- Progetti solo garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CF ON prog_agev_CF.cod_fondo = a.cod_fondo and prog_agev_CF.comb_agev = 'CF' -- Progetti contributo+finanziamento
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CG ON prog_agev_CG.cod_fondo = a.cod_fondo and prog_agev_CG.comb_agev = 'CG' -- Progetti contributo+garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_FG ON prog_agev_FG.cod_fondo = a.cod_fondo and prog_agev_FG.comb_agev = 'FG' -- Progetti finanziamento+garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CFG ON prog_agev_CFG.cod_fondo = a.cod_fondo and prog_agev_CFG.comb_agev = 'CFG' -- Progetti contributo+finanziamento+garanzia
+     LEFT JOIN DUP_MOD_AGEV u ON u.id_progetto = e.id_progetto
+	 LEFT JOIN REVOCHE v ON v.id_progetto = e.id_progetto
+	 LEFT JOIN RECUPERI z ON z.id_progetto = e.id_progetto
+	 LEFT JOIN GEST_REVOCHE x ON x.id_progetto = e.id_progetto
+	 LEFT JOIN CONTRODEDUZ_REVOCHE y ON y.id_progetto = e.id_progetto
+	 LEFT JOIN ESCUSSIONI w ON w.id_progetto = e.id_progetto
+	 LEFT JOIN ESCUSSIONI_CONFIDI a1 ON a1.id_progetto = e.id_progetto
+	 LEFT JOIN PROCED_REVOCHE a2 ON a2.id_progetto = e.id_progetto
+	 LEFT JOIN PROVVED_REVOCHE a3 ON a3.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE_CONTRODEDUZ a4 ON a4.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE_INTEGRAZ a5 ON a5.id_progetto = e.id_progetto
+	 LEFT JOIN INTEGRAZ_REVOCHE a6 ON a6.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_STATO_AZIENDA a7 ON a7.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_RATING a8 ON a8.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_CLA_RISCHIO a9 ON a9.id_progetto = e.id_progetto
+	 LEFT JOIN SEGN_CORTE_CONTI a10 ON a10.id_progetto = e.id_progetto
+	 LEFT JOIN SALDO_STRALCIO a11 ON a11.id_progetto = e.id_progetto
+	 LEFT JOIN RNA_PROGETTO a12 ON a12.id_progetto = e.id_progetto
+	 LEFT JOIN RNA_PROGETTO_MAN a13 ON a13.id_progetto = e.id_progetto
+	 LEFT JOIN RICHIESTE_INTEGRAZ a14 ON a14.id_progetto = e.id_progetto
+	 LEFT JOIN REVOCHE_BANCARIE a15 ON a15.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE a16 ON a16.id_progetto = e.id_progetto
+	 LEFT JOIN PIANO_RIENTRO a17 ON a17.id_progetto = e.id_progetto
+	 LEFT JOIN PASSAGGIO_PERDITA a18 ON a18.id_progetto = e.id_progetto
+	 LEFT JOIN NOTE a19 ON a19.id_progetto = e.id_progetto
+	 LEFT JOIN MESSA_IN_MORA a20 ON a20.id_progetto = e.id_progetto
+	 LEFT JOIN LIBERAZIONE_GARANTE a21 ON a21.id_progetto = e.id_progetto
+	 LEFT JOIN ISCRIZIONE_RUOLO a22 ON a22.id_progetto = e.id_progetto
+	 LEFT JOIN DELIBERA_PROG a23 ON a23.id_progetto = e.id_progetto
+	 LEFT JOIN CESSIONE_QUOTA_FP a24 ON a24.id_progetto = e.id_progetto
+	 LEFT JOIN AZIONE_RECUP_BANCA a25 ON a25.id_progetto = e.id_progetto
+	 LEFT JOIN AMMORTAMENTO_PROG a26 ON a26.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_STA_CRED a27 ON a27.id_progetto = e.id_progetto
+	 LEFT JOIN ESTREMI_BANCARI_CONF_BANDO a28 ON a28.id_bando = d.id_bando
+	 LEFT JOIN AGENZIE_CONF_BANDO a29 ON a29.id_bando = d.id_bando
+	 LEFT JOIN VOCI_SPESA_CONF_BANDO a30 ON a30.id_bando = d.id_bando
+	 LEFT JOIN SOGG_FINANZIAT_CONF_BANDO a31 ON a31.id_bando = d.id_bando
+	 LEFT JOIN MOD_AGEV_CONF_BANDO a32 ON a32.id_bando = d.id_bando
+	 LEFT JOIN ESTREMI_BANC_IND_AG_CONF_BANDO a33 ON a33.id_bando = d.id_bando
+	 LEFT JOIN ENTI_COMP_CONF_BANDO a34 ON a34.id_bando = d.id_bando
+     --WHERE   NVL (FLAG_CARICATO, '*') IN ('SI', 'NO', '*')
+     WHERE   NVL (FLAG_CARICATO, '*') IN ('SI', 'NO', 'CL','*')
+   GROUP BY   a.cod_fondo,
+              d.nome_bando_linea,
+              PROGR_BANDO_LINEA_INTERV_PBAN,
+              d.id_bando,
+              flag_caricato
+	)
+	UNION ALL
+	(
+     SELECT   'PRESENTE SU PBAN' as stato_migrazione,
+			  a.cod_fondo_gefo as cod_fondo,
+              d.nome_bando_linea AS descrizione_fondo,
+              a.PROGR_BANDO_LINEA_INTERVENTO AS PROGR_BANDO_LINEA_INTERV,
+              d.id_bando,
+              'SI' as flag_caricato,
+              0 as num_xml_finpis_orig,
+              0 as num_xml_finpis_clone,
+              --0 as num_xml_finpis,
+              COUNT (e.id_progetto) NUM_PROGETTI_PBAN,
+              0 as NUM_BENEFICIARI_PROGETTI,
+              0 as NUM_BENEF_PG_PROGETTI,
+              0 as NUM_BENEF_PF_PROGETTI,
+              0 as NUM_RAPPR_LEG_PROGETTI,
+              0 as NUM_NO_RAPPR_LEG_XNOCF,
+              0 as NUM_SOCI_PROGETTI,
+			  0 AS NUM_RECAPITI_PF_PROGETTI,
+			  0 as NUM_RECAPITI_RL_PROGETTI,
+			  0 as NUM_SEDI_LEGALE_PROGETTI,
+			  0 as NUM_SEDI_INTERV_PROGETTI,
+              NVL(SUM(q.num_soggetti_durc),0) AS NUM_SOGGETTI_DURC,
+              NVL(SUM(r.num_soggetti_dsan),0) AS NUM_SOGGETTI_DSAN,
+              NVL(SUM(s.num_soggetti_antimafia),0) AS NUM_SOGGETTI_ANTIMAFIA,
+              NVL(SUM(a7.num_soggetti_stato_azienda),0) AS NUM_SOGGETTI_STATO_AZIENDA,
+              NVL(SUM(a8.num_soggetti_rating),0) AS NUM_SOGGETTI_RATING,
+              NVL(SUM(a9.num_soggetti_cla_rischio),0) AS NUM_SOGGETTI_CLA_RISCHIO,
+              NVL(SUM(a10.num_segn_corte_conti),0) AS NUM_SEGN_CORTE_CONTI,
+              NVL(SUM(a11.num_saldo_stralcio),0) AS NUM_SALDO_STRALCIO,
+              NVL(SUM(a12.num_rna_progetto),0) AS NUM_RNA_PROGETTO,
+              NVL(SUM(a13.num_rna_progetto_man),0) AS NUM_RNA_PROGETTO_MAN,
+              NVL(SUM(a14.num_richieste_integraz),0) AS NUM_RICHIESTE_INTEGRAZ,
+              NVL(SUM(a15.num_revoche_bancarie),0) AS NUM_REVOCHE_BANCARIE,
+              NVL(SUM(a16.num_proroghe),0) AS NUM_PROROGHE,
+              NVL(SUM(a17.num_piano_rientro),0) AS NUM_PIANO_RIENTRO,
+              NVL(SUM(a18.num_passaggio_perdita),0) AS NUM_PASSAGGIO_PERDITA,
+              NVL(SUM(a19.num_note),0) AS NUM_NOTE,
+              NVL(SUM(a20.num_messa_in_mora),0) AS NUM_MESSA_IN_MORA,
+              NVL(SUM(a21.num_liberazione_garante),0) AS NUM_LIBERAZIONE_GARANTE,
+              NVL(SUM(a22.num_iscrizione_ruolo),0) AS NUM_ISCRIZIONE_RUOLO,
+              NVL(SUM(a23.num_delibera_prog),0) AS NUM_DELIBERA_PROG,
+              NVL(SUM(a24.num_cessione_quota_fp),0) AS NUM_CESSIONE_QUOTA_FP,
+              NVL(SUM(a25.num_azione_recup_banca),0) AS NUM_AZIONE_RECUP_BANCA,
+              NVL(SUM(a26.num_ammortamento_prog),0) AS NUM_AMMORTAMENTO_PROG,
+              NVL(SUM(a27.num_sogg_prog_stato_credito_fp),0) AS NUM_SOGG_PROG_STATO_CREDITO_FP,
+			  0 as NUM_BANDI_CONF_BANDO,
+              NVL(MIN(a28.num_estremi_bancari_conf_bando),0) AS NUM_ESTREMI_BANCARI_CONF_BANDO,
+              NVL(MIN(a29.num_agenzie_conf_bando),0) AS NUM_AGENZIE_CONF_BANDO,
+			  0 as NUM_VOCI_SPESA_CONF_BANDO,
+			  0 as NUM_SOGG_FINANZIAT_CONF_BANDO,
+			  0 as NUM_MOD_AGEV_CONF_BANDO,
+              NVL(MIN(a33.num_ind_ag_estr_conf_bando),0) AS NUM_IND_AG_ESTR_CONF_BANDO,
+			  0 as NUM_BANDI_LINEA_INT_CONF_BANDO,
+			  0 as NUM_ENTI_COMP_CONF_BANDO,
+              NVL(SUM(t.num_richieste),0) AS NUM_RICHIESTE,
+              NVL(SUM(v.num_revoche),0) AS NUM_REVOCHE,
+              NVL(SUM(x.num_gest_revoche),0) AS NUM_GEST_REVOCHE,
+              NVL(SUM(a2.num_proced_revoche),0) AS NUM_PROCED_REVOCHE,
+              NVL(SUM(a3.num_provved_revoche),0) AS NUM_PROVVED_REVOCHE,
+              NVL(SUM(y.num_controdeduz_revoche),0) AS NUM_CONTRODEDUZ_REVOCHE,
+              NVL(SUM(a4.num_proroghe_controdeduz),0) AS NUM_PROROGHE_CONTRODEDUZ,
+              NVL(SUM(a5.num_proroghe_integraz),0) AS NUM_PROROGHE_INTEGRAZ,
+              NVL(SUM(a6.num_integraz_revoche),0) AS NUM_INTEGRAZ_REVOCHE,
+              NVL(SUM(z.num_recuperi),0) AS NUM_RECUPERI,
+              NVL(SUM(w.num_escussioni),0) AS NUM_ESCUSSIONI,
+              NVL(SUM(a1.num_escussioni_confidi),0) AS NUM_ESCUSSIONI_CONFIDI,
+              0 AS NUM_ESTREMI_BANCARI,
+              0 as NUM_NO_ESTREMI_BANCARI_XNOIBAN,
+              NVL(SUM (f.num_erogazioni),0) AS num_erogazioni,
+              0  AS num_dichiarazioni_di_spesa,
+              0  AS NUM_DICH_APERTE_INTERMEDIE,
+              0  AS NUM_DICH_APERTE_FINALI,
+              0  AS NUM_DICH_APERTE_INTEGRATIVE,
+              0  AS NUM_DICH_CHIUSE_INTERMEDIE,
+              0  AS NUM_DICH_CHIUSE_FINALI,
+              0  AS NUM_DICH_CHIUSE_INTEGRATIVE,
+			  0  AS num_prog_agev_solo_C,
+			  0  AS num_prog_agev_solo_F,
+			  0  AS num_prog_agev_solo_G,
+			  0  AS num_prog_agev_C_F,
+			  0  AS num_prog_agev_C_G,
+			  0  AS num_prog_agev_F_G,
+			  0  AS num_prog_agev_C_F_G,
+			  0  AS NUM_PROG_AGEV_NON_ACQ_INC_DATI,
+              0  as NUM_PROG_MOD_AGEV_DUP
+     FROM  TMP_NUM_DOMANDA_GEFO a
+	 --LEFT JOIN  BANDI_FONDI b ON b.codice_fondo_finpis = a.cod_fondo
+	 --LEFT JOIN	MFINPIS_R_BANDO_LINEA_INTER c ON c.id_bando = b.id_bando
+	 LEFT JOIN PBANDI_R_BANDO_LINEA_INTERVENT d ON d.progr_bando_linea_intervento = a.PROGR_BANDO_LINEA_INTERVENTO
+	 LEFT JOIN PBANDI_T_DOMANDA b on b.PROGR_BANDO_LINEA_INTERVENTO = d.PROGR_BANDO_LINEA_INTERVENTO
+     LEFT JOIN PBANDI_T_PROGETTO e ON e.id_domanda = b.id_domanda
+	 LEFT JOIN EROGAZIONI f ON f.id_progetto = e.id_progetto
+	 LEFT JOIN DICH_SPESA g ON g.id_progetto = e.id_progetto
+	 LEFT JOIN PBANDI_R_SOGGETTO_PROGETTO h ON  h.id_progetto = e.id_progetto AND h.id_tipo_anagrafica = 1 AND h.id_tipo_beneficiario != 4
+	 LEFT JOIN RAPPLEG i ON i.id_progetto = e.id_progetto
+	 LEFT JOIN SOCI l ON l.id_progetto = e.id_progetto
+	 LEFT JOIN NO_RAPPLEG m ON m.id_progetto = e.id_progetto
+	 LEFT JOIN RECAP_RAPPLEG n ON n.id_progetto = e.id_progetto
+	 LEFT JOIN SEDE_LEGALE o ON o.id_progetto = e.id_progetto
+	 LEFT JOIN SEDE_INTERV p ON p.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_DURC q ON q.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_DSAN r ON r.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_ANTIMAFIA s ON s.id_progetto = e.id_progetto
+	 LEFT JOIN RICHIESTE t ON t.id_progetto = e.id_progetto
+	 LEFT JOIN PROGETTI_AGEV prog_agev_C ON prog_agev_C.cod_fondo = a.cod_fondo_gefo and prog_agev_C.comb_agev = 'C' -- Progetti solo contributo
+	 LEFT JOIN PROGETTI_AGEV prog_agev_F ON prog_agev_F.cod_fondo = a.cod_fondo_gefo and prog_agev_F.comb_agev = 'F' -- Progetti solo fimanziamento
+	 LEFT JOIN PROGETTI_AGEV prog_agev_G ON prog_agev_G.cod_fondo = a.cod_fondo_gefo and prog_agev_G.comb_agev = 'G' -- Progetti solo garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CF ON prog_agev_CF.cod_fondo = a.cod_fondo_gefo and prog_agev_CF.comb_agev = 'CF' -- Progetti contributo+finanziamento
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CG ON prog_agev_CG.cod_fondo = a.cod_fondo_gefo and prog_agev_CG.comb_agev = 'CG' -- Progetti contributo+garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_FG ON prog_agev_FG.cod_fondo = a.cod_fondo_gefo and prog_agev_FG.comb_agev = 'FG' -- Progetti finanziamento+garanzia
+	 LEFT JOIN PROGETTI_AGEV prog_agev_CFG ON prog_agev_CFG.cod_fondo = a.cod_fondo_gefo and prog_agev_CFG.comb_agev = 'CFG' -- Progetti contributo+finanziamento+garanzia
+     LEFT JOIN DUP_MOD_AGEV u ON u.id_progetto = e.id_progetto
+	 LEFT JOIN REVOCHE v ON v.id_progetto = e.id_progetto
+	 LEFT JOIN RECUPERI z ON z.id_progetto = e.id_progetto
+	 LEFT JOIN GEST_REVOCHE x ON x.id_progetto = e.id_progetto
+	 LEFT JOIN CONTRODEDUZ_REVOCHE y ON y.id_progetto = e.id_progetto
+	 LEFT JOIN ESCUSSIONI w ON w.id_progetto = e.id_progetto
+	 LEFT JOIN ESCUSSIONI_CONFIDI a1 ON a1.id_progetto = e.id_progetto
+	 LEFT JOIN PROCED_REVOCHE a2 ON a2.id_progetto = e.id_progetto
+	 LEFT JOIN PROVVED_REVOCHE a3 ON a3.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE_CONTRODEDUZ a4 ON a4.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE_INTEGRAZ a5 ON a5.id_progetto = e.id_progetto
+	 LEFT JOIN INTEGRAZ_REVOCHE a6 ON a6.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_STATO_AZIENDA a7 ON a7.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_RATING a8 ON a8.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_CLA_RISCHIO a9 ON a9.id_progetto = e.id_progetto
+	 LEFT JOIN SEGN_CORTE_CONTI a10 ON a10.id_progetto = e.id_progetto
+	 LEFT JOIN SALDO_STRALCIO a11 ON a11.id_progetto = e.id_progetto
+	 LEFT JOIN RNA_PROGETTO a12 ON a12.id_progetto = e.id_progetto
+	 LEFT JOIN RNA_PROGETTO_MAN a13 ON a13.id_progetto = e.id_progetto
+	 LEFT JOIN RICHIESTE_INTEGRAZ a14 ON a14.id_progetto = e.id_progetto
+	 LEFT JOIN REVOCHE_BANCARIE a15 ON a15.id_progetto = e.id_progetto
+	 LEFT JOIN PROROGHE a16 ON a16.id_progetto = e.id_progetto
+	 LEFT JOIN PIANO_RIENTRO a17 ON a17.id_progetto = e.id_progetto
+	 LEFT JOIN PASSAGGIO_PERDITA a18 ON a18.id_progetto = e.id_progetto
+	 LEFT JOIN NOTE a19 ON a19.id_progetto = e.id_progetto
+	 LEFT JOIN MESSA_IN_MORA a20 ON a20.id_progetto = e.id_progetto
+	 LEFT JOIN LIBERAZIONE_GARANTE a21 ON a21.id_progetto = e.id_progetto
+	 LEFT JOIN ISCRIZIONE_RUOLO a22 ON a22.id_progetto = e.id_progetto
+	 LEFT JOIN DELIBERA_PROG a23 ON a23.id_progetto = e.id_progetto
+	 LEFT JOIN CESSIONE_QUOTA_FP a24 ON a24.id_progetto = e.id_progetto
+	 LEFT JOIN AZIONE_RECUP_BANCA a25 ON a25.id_progetto = e.id_progetto
+	 LEFT JOIN AMMORTAMENTO_PROG a26 ON a26.id_progetto = e.id_progetto
+	 LEFT JOIN SOGGETTI_STA_CRED a27 ON a27.id_progetto = e.id_progetto
+	 LEFT JOIN ESTREMI_BANCARI_CONF_BANDO a28 ON a28.id_bando = d.id_bando
+	 LEFT JOIN AGENZIE_CONF_BANDO a29 ON a29.id_bando = d.id_bando
+	 LEFT JOIN ESTREMI_BANC_IND_AG_CONF_BANDO a33 ON a33.id_bando = d.id_bando
+     --WHERE  a.cod_fondo_gefo IN ('0302','0323','0337','0351','0756')  -- Fondi presenti su PBAN di cui si migrano i dati aggiuntivi del progetto
+     WHERE  a.cod_fondo_gefo IN (SELECT COD_FONDO FROM MFINPIS_FONDI_MIGR_ESISTENTI)  -- Fondi presenti su PBAN di cui si migrano i dati aggiuntivi del progetto
+   GROUP BY   a.cod_fondo_gefo,
+              d.nome_bando_linea,
+              a.PROGR_BANDO_LINEA_INTERVENTO,
+              d.id_bando,
+              'SI'
+	)
+	
+ order by cod_fondo;
+
+CREATE OR REPLACE FUNCTION FN_MFINPIS_CONTATORE (P_COD_FONDO IN VARCHAR2, P_COL_MFINPIS_V_FONDI_BANDI IN VARCHAR2)  RETURN NUMBER IS
+
+   cursor c1 (C_COD_FONDO IN VARCHAR2, C_COL_MFINPIS_V_FONDI_BANDI IN VARCHAR2) is
+      select conteggio
+	  from MFINPIS_T_CONTATORI a
+	  join MFINPIS_T_CONTATORI_RACCORDO b on b.PROGRESSIVO_FINPIS = a.PROGRESSIVO_FINPIS
+      where a.cod_fondo = C_COD_FONDO
+	    and b.COL_MFINPIS_V_FONDI_BANDI = C_COL_MFINPIS_V_FONDI_BANDI;
+
+   v_return NUMBER;
+   
+BEGIN
+   open c1(P_COD_FONDO, P_COL_MFINPIS_V_FONDI_BANDI);
+   fetch c1 into v_return;
+   if c1%notfound then
+      v_return := 0;
+   end if;
+   close c1;
+   RETURN V_RETURN;
+END;
+
+
+
+
+CREATE OR REPLACE FORCE VIEW PBANDI.MFINPIS_V_CONFR_CONT_PBANDI
+AS
+   SELECT   STATO_MIGRAZIONE,
+            COD_FONDO,
+            DESCRIZIONE_FONDO,
+            PROGR_BANDO_LINEA_INTERV,
+            ID_BANDO,
+            NUM_XML_FINPIS_CLONE,
+            '|#|' AS F1,
+            NUM_XML_FINPIS_ORIG AS XML_FINPIS_ORIG,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_XML_FINPIS_ORIG')
+               AS XML_FINPIS_ORIG_MF,
+            NUM_XML_FINPIS_ORIG
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_XML_FINPIS_ORIG')
+               AS DIF_XML_FINPIS_ORIG,
+            '|#|' AS F2,
+            NUM_PROGETTI_PBAN AS PROGETTI_PBAN,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROGETTI_PBAN')
+               AS PROGETTI_PBAN_MF,
+            NUM_PROGETTI_PBAN
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROGETTI_PBAN')
+               AS DIF_PROGETTI_PBAN,
+            '|#|' AS F3,
+            NUM_ESTREMI_BANCARI AS ESTREMI_BANCARI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ESTREMI_BANCARI')
+               AS ESTREMI_BANCARI_MF,
+            NUM_ESTREMI_BANCARI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ESTREMI_BANCARI')
+               AS DIF_ESTREMI_BANCARI_PBAN,
+            '|#|' AS F4,
+            NUM_NO_ESTREMI_BANCARI_XNOIBAN AS NO_ESTREMI_BANCARI_XNOIBAN,
+            FN_MFINPIS_CONTATORE (COD_FONDO,
+                                  'NUM_NO_ESTREMI_BANCARI_XNOIBAN')
+               AS NO_ESTREMI_BANCARI_XNOIBAN_MF,
+            NUM_NO_ESTREMI_BANCARI_XNOIBAN
+            - FN_MFINPIS_CONTATORE (COD_FONDO,
+                                    'NUM_NO_ESTREMI_BANCARI_XNOIBAN')
+               AS DIF_NO_ESTREMI_BANCARI_XNOIBAN,
+            '|#|' AS F5,
+            NUM_EROGAZIONI AS EROGAZIONI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_EROGAZIONI')
+               AS EROGAZIONI_MF,
+            NUM_EROGAZIONI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_EROGAZIONI')
+               AS DIF_EROGAZIONI,
+            '|#|' AS F6,
+            NUM_DICHIARAZIONI_DI_SPESA AS DICHIARAZIONI_DI_SPESA,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICHIARAZIONI_DI_SPESA')
+               AS DICHIARAZIONI_DI_SPESA_MF,
+            NUM_DICHIARAZIONI_DI_SPESA
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICHIARAZIONI_DI_SPESA')
+               AS DIF_DICHIARAZIONI_DI_SPESA,
+            '|#|' AS F7,
+            NUM_PROG_AGEV_SOLO_C AS PROG_AGEV_SOLO_C,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_C')
+               AS PROG_AGEV_SOLO_C_MF,
+            NUM_PROG_AGEV_SOLO_C
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_C')
+               AS DIF_PROG_AGEV_SOLO_C,
+            '|#|' AS F8,
+            NUM_PROG_AGEV_SOLO_F AS PROG_AGEV_SOLO_F,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_F')
+               AS PROG_AGEV_SOLO_F_MF,
+            NUM_PROG_AGEV_SOLO_F
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_F')
+               AS DIF_PROG_AGEV_SOLO_F,
+            '|#|' AS F9,
+            NUM_PROG_AGEV_SOLO_G AS PROG_AGEV_SOLO_G,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_G')
+               AS PROG_AGEV_SOLO_G_MF,
+            NUM_PROG_AGEV_SOLO_G
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_SOLO_G')
+               AS DIF_PROG_AGEV_SOLO_G,
+            '|#|' AS F10,
+            NUM_PROG_AGEV_C_F AS PROG_AGEV_C_F,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_F')
+               AS PROG_AGEV_C_F_MF,
+            NUM_PROG_AGEV_C_F
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_F')
+               AS DIF_PROG_AGEV_C_F,
+            '|#|' AS F11,
+            NUM_PROG_AGEV_F_G AS PROG_AGEV_F_G,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_F_G')
+               AS PROG_AGEV_F_G_MF,
+            NUM_PROG_AGEV_F_G
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_F_G')
+               AS DIF_PROG_AGEV_F_G,
+            '|#|' AS F12,
+            NUM_PROG_AGEV_C_G AS PROG_AGEV_C_G,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_G')
+               AS PROG_AGEV_C_G_MF,
+            NUM_PROG_AGEV_C_G
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_G')
+               AS DIF_PROG_AGEV_C_G,
+            '|#|' AS F13,
+            NUM_PROG_AGEV_C_F_G AS PROG_AGEV_C_F_G,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_F_G')
+               AS PROG_AGEV_C_F_G_MF,
+            NUM_PROG_AGEV_C_F_G
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROG_AGEV_C_F_G')
+               AS DIF_PROG_AGEV_C_F_G,
+            '|#|' AS F14,
+            NUM_BENEFICIARI_PROGETTI AS BENEFICIARI_PROGETTI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEFICIARI_PROGETTI')
+               AS BENEFICIARI_PROGETTI_MF,
+            NUM_BENEFICIARI_PROGETTI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEFICIARI_PROGETTI')
+               AS DIF_BENEFICIARI_PROGETTI,
+            '|#|' AS F15,
+            NUM_BENEF_PG_PROGETTI AS BENEF_PG_PROGETTI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEF_PG_PROGETTI')
+               AS BENEF_PG_PROGETTI_MF,
+            NUM_BENEF_PG_PROGETTI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEF_PG_PROGETTI')
+               AS DIF_BENEF_PG_PROGETTI,
+            '|#|' AS F16,
+            NUM_BENEF_PF_PROGETTI AS BENEF_PF_PROGETTI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEF_PF_PROGETTI')
+               AS BENEF_PF_PROGETTI_MF,
+            NUM_BENEF_PF_PROGETTI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BENEF_PF_PROGETTI')
+               AS DIF_BENEF_PF_PROGETTI,
+            '|#|' AS F17,
+            NUM_RAPPR_LEG_PROGETTI AS RAPPR_LEG_PROGETTI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RAPPR_LEG_PROGETTI')
+               AS RAPPR_LEG_PROGETTI_MF,
+            NUM_RAPPR_LEG_PROGETTI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RAPPR_LEG_PROGETTI')
+               AS DIF_RAPPR_LEG_PROGETTI,
+            '|#|' AS F18,
+            NUM_NO_RAPPR_LEG_XNOCF AS NO_RAPPR_LEG_XNOCF,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_NO_RAPPR_LEG_XNOCF')
+               AS NO_RAPPR_LEG_XNOCF_MF,
+            NUM_NO_RAPPR_LEG_XNOCF
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_NO_RAPPR_LEG_XNOCF')
+               AS DIF_NO_RAPPR_LEG_XNOCF,
+            '|#|' AS F19,
+            NUM_SOGGETTI_DURC AS SOGGETTI_DURC,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_DURC')
+               AS SOGGETTI_DURC_MF,
+            NUM_SOGGETTI_DURC
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_DURC')
+               AS DIF_SOGGETTI_DURC,
+            '|#|' AS F20,
+            NUM_SOGGETTI_ANTIMAFIA AS SOGGETTI_ANTIMAFIA,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_ANTIMAFIA')
+               AS SOGGETTI_ANTIMAFIA_MF,
+            NUM_SOGGETTI_ANTIMAFIA
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_ANTIMAFIA')
+               AS DIF_SOGGETTI_ANTIMAFIA,
+            '|#|' AS F21,
+            NUM_SOGGETTI_DSAN AS SOGGETTI_DSAN,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_DSAN')
+               AS SOGGETTI_DSAN_MF,
+            NUM_SOGGETTI_DSAN
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_DSAN')
+               AS DIF_SOGGETTI_DSAN,
+            '|#|' AS F22,
+            NUM_REVOCHE AS REVOCHE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_REVOCHE') AS REVOCHE_MF,
+            NUM_REVOCHE - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_REVOCHE')
+               AS DIF_REVOCHE,
+            '|#|' AS F23,
+            NUM_GEST_REVOCHE AS GEST_REVOCHE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_GEST_REVOCHE')
+               AS GEST_REVOCHE_MF,
+            NUM_GEST_REVOCHE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_GEST_REVOCHE')
+               AS DIF_GEST_REVOCHE,
+            '|#|' AS F24,
+            NUM_PROCED_REVOCHE AS PROCED_REVOCHE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROCED_REVOCHE')
+               AS PROCED_REVOCHE_MF,
+            NUM_PROCED_REVOCHE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROCED_REVOCHE')
+               AS DIF_PROCED_REVOCHE,
+            '|#|' AS F25,
+            NUM_PROVVED_REVOCHE AS PROVVED_REVOCHE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROVVED_REVOCHE')
+               AS PROVVED_REVOCHE_MF,
+            NUM_PROVVED_REVOCHE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PROVVED_REVOCHE')
+               AS DIF_PROVVED_REVOCHE,
+            '|#|' AS F26,
+            NUM_ESCUSSIONI AS ESCUSSIONI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ESCUSSIONI')
+               AS ESCUSSIONI_MF,
+            NUM_ESCUSSIONI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ESCUSSIONI')
+               AS DIF_ESCUSSIONI,
+            '|#|' AS F27,
+            NUM_REVOCHE_BANCARIE AS REVOCHE_BANCARIE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_REVOCHE_BANCARIE')
+               AS REVOCHE_BANCARIE_MF,
+            NUM_REVOCHE_BANCARIE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_REVOCHE_BANCARIE')
+               AS DIF_REVOCHE_BANCARIE,
+            '|#|' AS F28,
+            NUM_PIANO_RIENTRO AS PIANO_RIENTRO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PIANO_RIENTRO')
+               AS PIANO_RIENTRO_MF,
+            NUM_PIANO_RIENTRO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_PIANO_RIENTRO')
+               AS DIF_PIANO_RIENTRO,
+            '|#|' AS F29,
+            NUM_MESSA_IN_MORA AS MESSA_IN_MORA,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_MESSA_IN_MORA')
+               AS MESSA_IN_MORA_MF,
+            NUM_MESSA_IN_MORA
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_MESSA_IN_MORA')
+               AS DIF_MESSA_IN_MORA,
+            '|#|' AS F30,
+            NUM_LIBERAZIONE_GARANTE AS LIBERAZIONE_GARANTE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_LIBERAZIONE_GARANTE')
+               AS LIBERAZIONE_GARANTE_MF,
+            NUM_LIBERAZIONE_GARANTE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_LIBERAZIONE_GARANTE')
+               AS DIF_LIBERAZIONE_GARANTE,
+            '|#|' AS F31,
+            NUM_ISCRIZIONE_RUOLO AS ISCRIZIONE_RUOLO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ISCRIZIONE_RUOLO')
+               AS ISCRIZIONE_RUOLO_MF,
+            NUM_ISCRIZIONE_RUOLO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ISCRIZIONE_RUOLO')
+               AS DIF_ISCRIZIONE_RUOLO,
+            '|#|' AS F32,
+            NUM_AMMORTAMENTO_PROG AS AMMORTAMENTO_PROG,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_AMMORTAMENTO_PROG')
+               AS AMMORTAMENTO_PROG_MF,
+            NUM_AMMORTAMENTO_PROG
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_AMMORTAMENTO_PROG')
+               AS DIF_AMMORTAMENTO_PROG,
+            '|#|' AS F33,
+            NUM_SOGG_PROG_STATO_CREDITO_FP AS SOGG_PROG_STATO_CREDITO,
+            FN_MFINPIS_CONTATORE (COD_FONDO,
+                                  'NUM_SOGG_PROG_STATO_CREDITO_FP')
+               AS SOGG_PROG_STATO_CREDITO_MF,
+            NUM_SOGG_PROG_STATO_CREDITO_FP
+            - FN_MFINPIS_CONTATORE (COD_FONDO,
+                                    'NUM_SOGG_PROG_STATO_CREDITO_FP')
+               AS DIF_SOGG_PROG_STATO_CREDITO,
+            '|#|' AS F34,
+            NUM_ESTREMI_BANCARI_CONF_BANDO AS ESTREMI_BANCARI_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO,
+                                  'NUM_ESTREMI_BANCARI_CONF_BANDO')
+               AS ESTREMI_BANCARI_CONF_BANDO_MF,
+            NUM_ESTREMI_BANCARI_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO,
+                                    'NUM_ESTREMI_BANCARI_CONF_BANDO')
+               AS DIF_ESTREMI_BANCARI_CONF_BANDO,
+            '|#|' AS F35,
+            NUM_BANDI_CONF_BANDO AS BANDI_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BANDI_CONF_BANDO')
+               AS BANDI_CONF_BANDO_MF,
+            NUM_BANDI_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_BANDI_CONF_BANDO')
+               AS DIF_BANDI_CONF_BANDO,
+            '|#|' AS F36,
+            NUM_AGENZIE_CONF_BANDO AS AGENZIE_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_AGENZIE_CONF_BANDO')
+               AS AGENZIE_CONF_BANDO_MF,
+            NUM_AGENZIE_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_AGENZIE_CONF_BANDO')
+               AS DIF_AGENZIE_CONF_BANDO,
+            '|#|' AS F37,
+            NUM_MOD_AGEV_CONF_BANDO AS MOD_AGEV_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_MOD_AGEV_CONF_BANDO')
+               AS MOD_AGEV_CONF_BANDO_MF,
+            NUM_MOD_AGEV_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_MOD_AGEV_CONF_BANDO')
+               AS DIF_MOD_AGEV_CONF_BANDO,
+            '|#|' AS F38,
+            NUM_BANDI_LINEA_INT_CONF_BANDO AS BANDI_LINEA_INT_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO,
+                                  'NUM_BANDI_LINEA_INT_CONF_BANDO')
+               AS BANDI_LINEA_INT_CONF_BANDO_MF,
+            NUM_BANDI_LINEA_INT_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO,
+                                    'NUM_BANDI_LINEA_INT_CONF_BANDO')
+               AS DIF_BANDI_LINEA_INT_CONF_BANDO,
+            '|#|' AS F39,
+            NUM_ENTI_COMP_CONF_BANDO AS ENTI_COMP_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ENTI_COMP_CONF_BANDO')
+               AS ENTI_COMP_CONF_BANDO_MF,
+            NUM_ENTI_COMP_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_ENTI_COMP_CONF_BANDO')
+               AS DIF_ENTI_COMP_CONF_BANDO,
+            '|#|' AS F40,
+            NUM_VOCI_SPESA_CONF_BANDO AS VOCI_SPESA_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_VOCI_SPESA_CONF_BANDO')
+               AS VOCI_SPESA_CONF_BANDO_MF,
+            NUM_VOCI_SPESA_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_VOCI_SPESA_CONF_BANDO')
+               AS DIF_VOCI_SPESA_CONF_BANDO,
+            '|#|' AS F41,
+            NUM_IND_AG_ESTR_CONF_BANDO AS IND_AG_ESTR_CONF_BANDO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_IND_AG_ESTR_CONF_BANDO')
+               AS IND_AG_ESTR_CONF_BANDO_MF,
+            NUM_IND_AG_ESTR_CONF_BANDO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_IND_AG_ESTR_CONF_BANDO')
+               AS DIF_IND_AG_ESTR_CONF_BANDO,
+            '|#|' AS F42,
+            NUM_DICH_APERTE_INTERMEDIE AS DICH_APERTE_INTERMEDIE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_APERTE_INTERMEDIE')
+               AS DICH_APERTE_INTERMEDIE_MF,
+            NUM_DICH_APERTE_INTERMEDIE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_APERTE_INTERMEDIE')
+               AS DIF_DICH_APERTE_INTERMEDIE,
+            '|#|' AS F43,
+            NUM_DICH_APERTE_FINALI AS DICH_APERTE_FINALI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_APERTE_FINALI')
+               AS DICH_APERTE_FINALI_MF,
+            NUM_DICH_APERTE_FINALI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_APERTE_FINALI')
+               AS DIF_DICH_APERTE_FINALI,
+            '|#|' AS F44,
+            NUM_DICH_CHIUSE_FINALI AS DICH_CHIUSE_FINALI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_CHIUSE_FINALI')
+               AS DICH_CHIUSE_FINALI_MF,
+            NUM_DICH_CHIUSE_FINALI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_CHIUSE_FINALI')
+               AS DIF_DICH_CHIUSE_FINALI,
+            '|#|' AS F45,
+            NUM_CONTRODEDUZ_REVOCHE AS CONTRODEDUZ_REVOCHE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_CONTRODEDUZ_REVOCHE')
+               AS CONTRODEDUZ_REVOCHE_MF,
+            NUM_CONTRODEDUZ_REVOCHE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_CONTRODEDUZ_REVOCHE')
+               AS DIF_CONTRODEDUZ_REVOCHE,
+            '|#|' AS F46,
+            NUM_SOGGETTI_STATO_AZIENDA AS SOGGETTI_STATO_AZIENDA,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_STATO_AZIENDA')
+               AS SOGGETTI_STATO_AZIENDA_MF,
+            NUM_SOGGETTI_STATO_AZIENDA
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_STATO_AZIENDA')
+               AS DIF_SOGGETTI_STATO_AZIENDA,
+            '|#|' AS F47,
+            NUM_SOGGETTI_RATING AS SOGGETTI_RATING,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_RATING')
+               AS SOGGETTI_RATING_MF,
+            NUM_SOGGETTI_RATING
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_RATING')
+               AS DIF_SOGGETTI_RATING,
+            '|#|' AS F48,
+            NUM_SOGGETTI_CLA_RISCHIO AS SOGGETTI_CLA_RISCHIO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_CLA_RISCHIO')
+               AS SOGGETTI_CLA_RISCHIO_MF,
+            NUM_SOGGETTI_CLA_RISCHIO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SOGGETTI_CLA_RISCHIO')
+               AS DIF_SOGGETTI_CLA_RISCHIO,
+            '|#|' AS F49,
+            NUM_SEGN_CORTE_CONTI AS SEGN_CORTE_CONTI,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SEGN_CORTE_CONTI')
+               AS SEGN_CORTE_CONTI_MF,
+            NUM_SEGN_CORTE_CONTI
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SEGN_CORTE_CONTI')
+               AS DIF_SEGN_CORTE_CONTI,
+            '|#|' AS F50,
+            NUM_SALDO_STRALCIO AS SALDO_STRALCIO,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SALDO_STRALCIO')
+               AS SALDO_STRALCIO_MF,
+            NUM_SALDO_STRALCIO
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_SALDO_STRALCIO')
+               AS DIF_SALDO_STRALCIO,
+            '|#|' AS F51,
+            NUM_RNA_PROGETTO_MAN AS RNA_PROGETTO_MAN,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RNA_PROGETTO_MAN')
+               AS RNA_PROGETTO_MAN_MF,
+            NUM_RNA_PROGETTO_MAN
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RNA_PROGETTO_MAN')
+               AS DIF_RNA_PROGETTO_MAN,
+            '|#|' AS F52,
+            NUM_CESSIONE_QUOTA_FP AS CESSIONE_QUOTA_FP,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_CESSIONE_QUOTA_FP')
+               AS CESSIONE_QUOTA_FP_MF,
+            NUM_CESSIONE_QUOTA_FP
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_CESSIONE_QUOTA_FP')
+               AS DIF_CESSIONE_QUOTA_FP,
+            '|#|' AS F53,
+            NUM_RICHIESTE AS RICHIESTE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RICHIESTE') AS RICHIESTE_MF,
+            NUM_RICHIESTE - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_RICHIESTE')
+               AS DIF_RICHIESTE,
+            '|#|' AS F54,
+            NUM_NOTE AS NOTE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_NOTE') AS NOTE_MF,
+            NUM_NOTE - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_NOTE')
+               AS DIF_NOTE,
+            '|#|' AS F55,
+            NUM_DELIBERA_PROG AS DELIBERA_PROG,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DELIBERA_PROG')
+               AS DELIBERA_PROG_MF,
+            NUM_DELIBERA_PROG
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DELIBERA_PROG')
+               AS DIF_DELIBERA_PROG,
+            '|#|' AS F56,
+            NUM_DICH_CHIUSE_INTEGRATIVE AS DICH_CHIUSE_INTEGRATIVE,
+            FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_CHIUSE_INTEGRATIVE')
+               AS DICH_CHIUSE_INTEGRATIVE_MF,
+            NUM_DICH_CHIUSE_INTEGRATIVE
+            - FN_MFINPIS_CONTATORE (COD_FONDO, 'NUM_DICH_CHIUSE_INTEGRATIVE')
+               AS DIF_DICH_CHIUSE_INTEGRATIVE
+     FROM   MFINPIS_V_FONDI_BANDI;
+
+	CREATE OR REPLACE PROCEDURE prc_migraz_dich_spese (p_cod_fondo in varchar2 default null) AS
+	--DECLARE
+		  CURSOR curDomanda
+		  IS
+			 SELECT dom.id_domanda,
+			 md.id_dichiarazione,
+					prog.id_progetto,
+					xmlBandind.id_caricamento,
+					xmlBandind.id_agevolazione,
+					xmlBandind.codice_progetto_agev
+			   FROM pbandi_t_domanda dom,
+					pbandi_t_progetto prog,
+					pbandi_d_stato_invio_domanda stato,
+					PBANDI_R_BANDO_LINEA_INTERVENT bli,
+					pbandi_t_bando b,
+					pbandi_d_linea_di_intervento li,
+					mfinpis_w_caricamento_xml xmlBandind,
+					TMP_MFINPIS_DICH md
+			  WHERE dom.ID_STATO_INVIO_DOMANDA = stato.ID_STATO_INVIO_DOMANDA
+					AND stato.DESC_BREVE_STATO_INVIO_DOMANDA = '3'
+					AND dom.PROGR_BANDO_LINEA_INTERVENTO =
+						   bli.PROGR_BANDO_LINEA_INTERVENTO
+					AND b.id_bando = bli.id_bando
+					AND md.id_caricamento = xmlBandind.id_caricamento
+					--AND nvl(MD.ID_AGEVOLAZIONE,0) = nvl(xmlBandind.id_agevolazione,0)
+					AND li.id_linea_di_intervento = bli.id_linea_di_intervento
+					AND xmlBandind.FONTE = 'MFINPIS'
+					AND xmlBandind.NUMERO_DOMANDA = dom.NUMERO_DOMANDA
+					AND prog.id_domanda = dom.id_domanda
+					AND xmlBandind.flag_caricato = 'SI'
+					AND xmlBandind.cod_fondo = nvl(p_cod_fondo,xmlBandind.cod_fondo)
+					--AND xmlBandind.cod_fondo = '0084'
+					--AND xmlBandind.id_caricamento = 10292
+					AND xmlBandind.id_dichiarazione_spesa IS NULL
+					ORDER BY xmlBandind.id_caricamento;
+
+            cursor c_doppie	IS				
+				-- A parita di tipo 3 (finale con comunicazione) nello stesso progetto, prendo solo le dichiarazioni si spesa 
+				-- scartando l'id minore per lasciarlo alla dichiarazione di spesa finale
+				-- Le DS selezionate sono trasformate in Integrative (tipo 4) e a queste viene eliminata la comunicazione di fine progetto
+              select a.id_dichiarazione_spesa, a.id_progetto
+				from pbandi_t_dichiarazione_spesa a
+				join pbandi_t_progetto b on b.id_progetto = a.id_progetto
+				where b.id_utente_ins = -14
+				and a.id_tipo_dichiaraz_spesa = 3
+				and exists
+				(select null
+				from pbandi_t_dichiarazione_spesa
+				where id_progetto = a.id_progetto
+				and id_dichiarazione_spesa != a.id_dichiarazione_spesa
+				and id_tipo_dichiaraz_spesa = 3)
+				and a.id_dichiarazione_spesa != (select min(id_dichiarazione_spesa)
+												   from pbandi_t_dichiarazione_spesa
+												  where id_progetto = a.id_progetto)
+				order by a.id_progetto,a.id_dichiarazione_spesa desc;
+
+	  v_id_processo  PBANDI_T_PROCESSO.id_processo%Type;
+	  v_endattivita        INTEGER;
+
+	  FUNCTION ValorizzaDichDoc (pIdDocumentoDiSpesa        PBANDI_T_DOCUMENTO_DI_SPESA.ID_DOCUMENTO_DI_SPESA%TYPE,
+								   pIdDichiarazioneDiSpesa    PBANDI_T_DICHIARAZIONE_SPESA.ID_DICHIARAZIONE_SPESA%TYPE) RETURN NUMBER IS
+		-- Popolamento PBANDI_S_DICH_DOC_SPESA
+		 
+		 CURSOR c1 (C_ID_DICHIARAZIONE_SPESA NUMBER,
+				 C_ID_DOCUMENTO_DI_SPESA NUMBER) IS
+		  SELECT A.ID_PAGAMENTO
+		  FROM PBANDI_R_PAGAMENTO_DICH_SPESA A,
+			   PBANDI_R_PAGAMENTO_DOC_SPESA B
+			   WHERE A.ID_PAGAMENTO = B.ID_PAGAMENTO
+			   AND ID_DICHIARAZIONE_SPESA = C_ID_DICHIARAZIONE_SPESA
+			   AND ID_DOCUMENTO_DI_SPESA = C_ID_DOCUMENTO_DI_SPESA;
+				   
+			v_id_pagamento_nt T_NUMBER_ARRAY := T_NUMBER_ARRAY();
+			v_x  NUMBER;
+		 
+
+		BEGIN
+			  V_ID_PAGAMENTO_NT.DELETE;
+				v_x  := 0;
+
+			  FOR r1 IN c1 (pIdDichiarazioneDiSpesa, pIdDocumentoDiSpesa) LOOP
+				 v_x  := v_x+1;
+				 v_id_pagamento_nt.EXTEND;
+				 v_id_pagamento_nt(v_x) := r1.id_pagamento;
+			  END LOOP;
+			  
+			  BEGIN
+				 INSERT INTO PBANDI_S_DICH_DOC_SPESA 
+					(ID_DICHIARAZIONE_SPESA,ID_DOCUMENTO_DI_SPESA,ID_PAGAMENTO_NT)
+					VALUES (pIdDichiarazioneDiSpesa, pIdDocumentoDiSpesa, v_id_pagamento_nt);
+			  EXCEPTION
+				 WHEN DUP_VAL_ON_INDEX THEN
+					UPDATE PBANDI_S_DICH_DOC_SPESA
+					   SET ID_PAGAMENTO_NT = v_id_pagamento_nt
+					 WHERE ID_DICHIARAZIONE_SPESA = pIdDichiarazioneDiSpesa
+					   AND ID_DOCUMENTO_DI_SPESA = pIdDocumentoDiSpesa;
+			  END;
+		   
+		  RETURN 0;
+		EXCEPTION
+		  WHEN OTHERS THEN
+			DBMS_OUTPUT.PUT_LINE('ERRORE OTHERS '||SQLERRM||' RIGA = '||DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+			RETURN 1;
+	   END ValorizzaDichDoc;
+
+
+
+	   /************************************************************************
+		CREA DICHIARAZIONE SPESA
+	   *************************************************************************/
+		PROCEDURE  crea_dichiarazione_spesa (p_id_caricamento MFINPIS_W_CARICAMENTO_XML.id_caricamento%TYPE ,
+											 p_id_progetto PBANDI_T_PROGETTO.id_progetto%TYPE,
+											 p_id_domanda PBANDI_T_DOMANDA.id_domanda%TYPE,
+											 p_id_agevolazione_split NUMBER,
+											 p_id_dichiarazione varchar2,
+											 p_codice_progetto_agev_split varchar2) IS
+
+		   CURSOR c1 (c_id_caricamento MFINPIS_W_CARICAMENTO_XML.id_caricamento%TYPE,
+					  c_id_agevolazione_split NUMBER,
+					  c_id_dichiarazione varchar2,
+					  c_codice_progetto_agev_split varchar2) IS
+			  SELECT a.id_dichiarazione,
+					 a.tipodichiarazione,
+					 case when a.tipodichiarazione = 1
+							 then 	1  --Intermedia	
+						  when a.tipodichiarazione = 2
+							 then 3 -- Finale con comunicazione di fine progetto
+						  when a.tipodichiarazione = 6
+							 then 4 -- Integrativa
+						  when a.tipodichiarazione = 4
+							 then 0 -- Anticipi
+						  when a.tipodichiarazione = 5
+							 then 0 -- Dichiarazione tecnica
+						  when a.tipodichiarazione = 7
+							 then 0 -- Monitoraggio
+						  when a.tipodichiarazione = 3	
+							 then 0 -- Fidejussioni
+						  else 0
+					 end as id_tipo_dichiaraz_spesa,					  
+					 NVL(TO_NUMBER(a.importoimponibile,'999999999999999.99'),0) importoimponibile,
+					 NVL(TO_NUMBER(a.importorendicontato,'999999999999999.99'),0) importorendicontato,
+					 NVL(TO_NUMBER(a.importoammesso,'999999999999999.99'),0) importoammesso,
+					 to_date(SUBSTR(decode(a.datainizioistruttoria,'0',null,a.datainizioistruttoria),1,10),'yyyy-mm-dd') datainizioistruttoria,
+					 to_date(SUBSTR(decode(a.dataesito,'0',null,a.dataesito),1,10),'yyyy-mm-dd') dataesito,
+					 tipoAgevolazione,ProgrWf,Id_Agevolazione,StatoDS,AttributoDS,
+					 to_date(SUBSTR(decode(a.DataConferma,'0',null,a.DataConferma),1,10),'yyyy-mm-dd') DataConferma,
+					 MatricolaIstruttore,id_pban_dichiarazione,Nr_Protocollo,IdDocDigitale,Id_Progetto,
+					 to_date(SUBSTR(decode(a.DataRichiestaIntegrazioni,'0',null,a.DataRichiestaIntegrazioni),1,10),'yyyy-mm-dd') DataRichiestaIntegrazioni,
+					 UtenteRichiestaIntegrazioni,
+					 --DataCreazione -- Data dichiarazione spesa
+					 to_date(SUBSTR(decode(a.DataCreazione,'0',null,a.DataCreazione),1,10),'yyyy-mm-dd') DataCreazione
+					 FROM TMP_MFINPIS_DICH a
+				WHERE a.id_caricamento = c_id_caricamento
+				AND nvl(id_agevolazione,'0') = nvl(c_id_agevolazione_split,nvl(id_agevolazione,'0'))
+				AND nvl(id_progetto,'0') = nvl(c_codice_progetto_agev_split,id_progetto)
+				AND id_dichiarazione = c_id_dichiarazione;
+				
+			CURSOR c2 (c_id_caricamento MFINPIS_W_CARICAMENTO_XML.id_caricamento%TYPE,
+					   c_id_dichiarazione VARCHAR2,
+					   c_cod_voce_spesa VARCHAR2,
+					   c_id_agevolazione_split NUMBER,
+					   c_codice_progetto_agev_split varchar2) IS
+				SELECT NVL(TO_NUMBER(a.importorichiesto,'999999999999999.99'),0) importorichiesto,
+					   NVL(TO_NUMBER(a.importoammesso,'999999999999999.99'),0) importoammesso,
+					   flagires,IdVoceSpesa,DescrizioneSpesa
+				  FROM TMP_MFINPIS_DICH_SPESE a
+				WHERE a.id_caricamento = c_id_caricamento
+				  AND id_dichiarazione = c_id_dichiarazione
+				  AND idvocespesa = c_cod_voce_spesa
+				  AND nvl(id_agevolazione,'0') = nvl(c_id_agevolazione_split,nvl(id_agevolazione,'0'))
+				  AND nvl(id_progetto,'0') = nvl(c_codice_progetto_agev_split,id_progetto);
+				  
+			r2 c2%ROWTYPE;
+			
+
+			CURSOR c3 (c_id_caricamento MFINPIS_W_CARICAMENTO_XML.id_caricamento%TYPE,
+					   c_id_dichiarazione VARCHAR2,
+					   c_id_agevolazione_split NUMBER,
+					   c_codice_progetto_agev_split varchar2) IS
+				SELECT NVL(TO_NUMBER(a.importorichiesto,'999999999999999.99'),0) importorichiesto,
+					   flagires,IdVoceSpesa,DescrizioneSpesa
+				  FROM TMP_MFINPIS_DICH_SPESE a
+				WHERE a.id_caricamento = c_id_caricamento
+				  AND id_dichiarazione = c_id_dichiarazione
+				  AND nvl(id_agevolazione,'0') = nvl(c_id_agevolazione_split,nvl(id_agevolazione,'0'))
+				  AND nvl(id_progetto,'0') = nvl(c_codice_progetto_agev_split,id_progetto);
+				  
+			r3 c3%ROWTYPE;
+			
+		 TYPE recPagQuota IS RECORD
+		  (
+			 Importo   PBANDI_R_PAG_QUOT_PARTE_DOC_SP.IMPORTO_QUIETANZATO%TYPE,
+			 IdQuota   PBANDI_R_PAG_QUOT_PARTE_DOC_SP.ID_QUOTA_PARTE_DOC_SPESA%TYPE
+		  );
+
+		  TYPE recTbPagQuota IS TABLE OF recPagQuota
+								   INDEX BY PLS_INTEGER;
+
+		  vTbPagQuota             recTbPagQuota;
+
+		  nBen                    PBANDI_R_SOGGETTO_PROGETTO.ID_SOGGETTO%TYPE;
+		  nIdDoc                  PBANDI_T_DOCUMENTO_DI_SPESA.ID_DOCUMENTO_DI_SPESA%TYPE;
+		  nIdPag                  PBANDI_T_PAGAMENTO.ID_PAGAMENTO%TYPE;
+		  nIdQuotaParteDocSpesa   PBANDI_T_QUOTA_PARTE_DOC_SPESA.ID_QUOTA_PARTE_DOC_SPESA%TYPE;
+		  nIdic                   PBANDI_T_DICHIARAZIONE_SPESA.ID_DICHIARAZIONE_SPESA%TYPE;
+		  nIddocx                 PBANDI_T_DOCUMENTO_INDEX.ID_DOCUMENTO_INDEX%TYPE;
+		  nIdfil				  PBANDI_T_FILE.ID_FILE%TYPE;
+		  nIdFaseMonit            PBANDI_R_PROGETTO_FASE_MONIT.ID_FASE_MONIT%TYPE;
+		  dDtInizioPrevista       PBANDI_R_PROGETTO_FASE_MONIT.DT_INIZIO_PREVISTA%TYPE;
+		  dDtFinePrevista         PBANDI_R_PROGETTO_FASE_MONIT.DT_FINE_PREVISTA%TYPE;
+		  dDtInizioEffettiva      PBANDI_R_PROGETTO_FASE_MONIT.DT_INIZIO_EFFETTIVA%TYPE;
+		  dDtFineEffettiva        PBANDI_R_PROGETTO_FASE_MONIT.DT_FINE_EFFETTIVA%TYPE;
+		  v_id_stato_documento_spesa PBANDI_D_TIPO_DOCUMENTO_SPESA.ID_TIPO_DOCUMENTO_SPESA%TYPE;
+		  nCont                   PLS_INTEGER := 0;
+		  vReturn                 PLS_INTEGER;
+		  v_cod_voce_spesa        VARCHAR2(100);
+		  V_ID_RICHIESTA_EROGAZIONE PBANDI_T_RICHIESTA_EROGAZIONE.ID_RICHIESTA_EROGAZIONE%TYPE;
+		  V_ID_ESITO_VALID_SPESA PBANDI_D_ESITO_VALID_SPESA.ID_ESITO_VALID_SPESA%TYPE;
+		  V_ID_ATTRIB_VALID_SPESA PBANDI_D_ATTRIBUTO_VALID_SPESA.ID_ATTRIB_VALID_SPESA%TYPE;
+		  
+		  v_esito_valid VARCHAR2(10);
+		  v_id_stato_documento   PBANDI_T_DOCUMENTO_INDEX.ID_STATO_DOCUMENTO%TYPE;
+		  nIcom                  PBANDI_T_COMUNICAZ_FINE_PROG.ID_COMUNICAZ_FINE_PROG%TYPE;
+		  v_id_folder            PBANDI_T_FOLDER.id_folder%TYPE;
+		  
+		  v_id_tipo_dichiaraz_spesa  PBANDI_T_DICHIARAZIONE_SPESA.ID_TIPO_DICHIARAZ_SPESA%TYPE;
+		  
+		  v_importo              NUMBER(17,2);
+
+		BEGIN
+		FOR r1 IN c1 (p_id_caricamento,p_id_agevolazione_split,p_id_dichiarazione,p_codice_progetto_agev_split) LOOP
+		   --DBMS_OUTPUT.PUT_LINE('id_tipo_dichiaraz_spesa '||r1.id_tipo_dichiaraz_spesa);
+		
+		 --IF r1.id_tipo_dichiaraz_spesa > 0   and r1.datainizioistruttoria IS NOT NULL THEN
+		 IF r1.id_tipo_dichiaraz_spesa > 0   THEN
+			v_id_tipo_dichiaraz_spesa := r1.id_tipo_dichiaraz_spesa;
+			
+		   --DBMS_OUTPUT.PUT_LINE('inizio '||r1.id_dichiarazione);
+
+          -- Usiamo l'importo "imponibile" per il pagamento se > 0 altrimenti "importorendicontato"
+	      IF r1.importoimponibile > 0 THEN
+		     v_importo := r1.importoimponibile;
+          ELSE
+		     v_importo := r1.importorendicontato;
+          END IF;		  
+		 
+	  
+		  vTbPagQuota.DELETE;
+		  nCont := 0;
+
+		  SELECT ID_SOGGETTO
+			INTO nBen
+			FROM PBANDI_R_SOGGETTO_PROGETTO
+		   WHERE     ID_PROGETTO = p_id_progetto
+				 AND ID_TIPO_ANAGRAFICA = 1
+				 AND ID_TIPO_BENEFICIARIO != 4
+				 AND DT_FINE_VALIDITA IS NULL;
+				 
+
+		  SELECT SEQ_PBANDI_T_DOCUMENTO_SPESA.NEXTVAL INTO nIdDoc FROM DUAL;
+
+		  INSERT INTO PBANDI_T_DOCUMENTO_DI_SPESA (ID_DOCUMENTO_DI_SPESA,
+												   DT_EMISSIONE_DOCUMENTO,
+												   IMPORTO_TOTALE_DOCUMENTO,
+												   IMPONIBILE,
+												   ID_UTENTE_INS,
+												   ID_TIPO_DOCUMENTO_SPESA,
+												   ID_SOGGETTO,
+												   DESC_DOCUMENTO,
+												   NUMERO_DOCUMENTO)
+			   VALUES (
+						 nIdDoc,
+						 r1.DataCreazione,  -- Dichiarazione.DataInizioIstruttoria 
+						 v_importo,  -- Dichiarazione.Imponibile 
+						 v_importo,  -- Dichiarazione.Imponibile 
+						-14, -- Migrazione Finpis
+						 (SELECT ID_TIPO_DOCUMENTO_SPESA
+							FROM PBANDI_D_TIPO_DOCUMENTO_SPESA
+						   WHERE DESC_BREVE_TIPO_DOC_SPESA = 'MIF'),
+						 nBen,
+						 'Documento creato automaticamente da migrazione Finpis',
+						 nIdDoc);
+
+	--  Calcolo stato documento spesa
+		  IF r1.importoammesso IS NULL THEN
+			 v_id_stato_documento_spesa := 2; --In validazione
+		  ELSIF r1.importoammesso = 0 THEN 
+			 v_id_stato_documento_spesa := 6; --Non validato
+		  ELSIF r1.importoammesso < r1.importorendicontato THEN
+			 v_id_stato_documento_spesa := 4; --Parzialmente validato
+		  ELSE
+			 v_id_stato_documento_spesa := 5; --Validato
+		  END IF;	  
+		  
+		  
+		  INSERT INTO PBANDI_R_DOC_SPESA_PROGETTO (ID_DOCUMENTO_DI_SPESA,
+												   ID_PROGETTO,
+												   IMPORTO_RENDICONTAZIONE,
+												   ID_UTENTE_INS,
+												   ID_STATO_DOCUMENTO_SPESA,
+												   ID_STATO_DOCUMENTO_SPESA_VALID)
+			   VALUES (nIdDoc,
+					   p_id_progetto,
+					   r1.importorendicontato,   -- Dichiarazione.Rendicontato
+					   -14, -- Migrazione Finpis
+						v_id_stato_documento_spesa,
+						v_id_stato_documento_spesa);
+
+	--DettaglioSpese
+		  FOR recConto
+			 IN (SELECT RCE.ID_RIGO_CONTO_ECONOMICO,
+						RCE.ID_VOCE_DI_SPESA,
+						VDS.COD_TIPO_VOCE_DI_SPESA,
+						VDS_P.COD_TIPO_VOCE_DI_SPESA as COD_TIPO_VOCE_DI_SPESA_PADRE,
+						ROWNUM NUM_REC
+				   FROM PBANDI_T_PROGETTO P,
+						PBANDI_T_CONTO_ECONOMICO CE,
+						PBANDI_T_DOMANDA D,
+						PBANDI_T_RIGO_CONTO_ECONOMICO RCE,
+						PBANDI_D_STATO_CONTO_ECONOMICO SCE,
+						PBANDI_D_TIPOLOGIA_CONTO_ECON TCE,
+						PBANDI_D_VOCE_DI_SPESA VDS,
+						PBANDI_D_VOCE_DI_SPESA VDS_P
+				  WHERE     P.ID_PROGETTO = p_id_progetto
+						AND D.ID_DOMANDA = P.ID_DOMANDA
+						AND CE.ID_DOMANDA = D.ID_DOMANDA
+						AND CE.ID_STATO_CONTO_ECONOMICO =
+							   SCE.ID_STATO_CONTO_ECONOMICO
+						AND SCE.ID_TIPOLOGIA_CONTO_ECONOMICO =
+							   TCE.ID_TIPOLOGIA_CONTO_ECONOMICO
+						AND UPPER (TCE.DESC_BREVE_TIPOLOGIA_CONTO_ECO) = 'MASTER'
+						AND CE.DT_FINE_VALIDITA IS NULL
+						AND RCE.ID_CONTO_ECONOMICO = CE.ID_CONTO_ECONOMICO
+						AND VDS.ID_VOCE_DI_SPESA = RCE.ID_VOCE_DI_SPESA
+						AND VDS_P.ID_VOCE_DI_SPESA(+) = VDS.ID_VOCE_DI_SPESA_PADRE
+						AND RCE.DT_FINE_VALIDITA IS NULL
+					   -- AND RCE.IMPORTO_SPESA != 0
+						)
+		  LOOP
+			 -------------------------------
+			 -- Valorizzare v_cod_voce_spesa
+			 --------------------------------
+			 v_cod_voce_spesa := RTRIM(recConto.COD_TIPO_VOCE_DI_SPESA||'|'||recConto.COD_TIPO_VOCE_DI_SPESA_PADRE,'|');
+			 OPEN c2 (p_id_caricamento, r1.id_dichiarazione, v_cod_voce_spesa,p_id_agevolazione_split,p_codice_progetto_agev_split);
+			 FETCH c2 INTO r2;
+			 IF c2%NOTFOUND THEN
+				r2.importorichiesto := '';
+				--RAISE_APPLICATION_ERROR(-20000,'Errore accesso spesa su dichiarazione '||r1.id_dichiarazione||' Id caricamento ='||p_id_caricamento);
+				--DBMS_OUTPUT.PUT_LINE('Manca spesa su dichiarazione '||r1.id_dichiarazione||' Id caricamento ='||p_id_caricamento);
+	--			ROLLBACK;
+	--			EXIT;
+	--		 END IF;
+	--		 CLOSE c2;
+			 ELSE
+		  -- Aggiungere la colonna FLAG_IRES e valorizzarla con DettaglioSpese.flagires
+			 INSERT
+			   INTO PBANDI_T_QUOTA_PARTE_DOC_SPESA (ID_QUOTA_PARTE_DOC_SPESA,
+													IMPORTO_QUOTA_PARTE_DOC_SPESA,
+													ID_UTENTE_INS,
+													ID_DOCUMENTO_DI_SPESA,
+													ID_PROGETTO,
+													ID_RIGO_CONTO_ECONOMICO,
+													FLAG_IRES)
+			 VALUES (SEQ_PBANDI_T_QUOT_PARTE_DOC_SP.NEXTVAL,
+					 r2.importorichiesto,  --DettaglioSpese.ImportoRichiesto
+					 -14, -- Migrazione Finpis
+					 nIdDoc,
+					 p_id_progetto,
+					 recConto.ID_RIGO_CONTO_ECONOMICO,
+					 r2.flagires)
+			 RETURN ID_QUOTA_PARTE_DOC_SPESA
+			   INTO nIdQuotaParteDocSpesa;
+
+			  --DBMS_OUTPUT.PUT_LINE('Valorizzo array '||r1.id_dichiarazione||' nIdQuotaParteDocSpesa ='||nIdQuotaParteDocSpesa);
+			nCont := nCont + 1;
+
+			-- vTbPagQuota (recConto.NUM_REC).Importo := r2.importorichiesto;  --DettaglioSpese.ImportoRichiesto
+			-- vTbPagQuota (recConto.NUM_REC).IdQuota := nIdQuotaParteDocSpesa;
+			 vTbPagQuota (nCont).Importo := r2.importoammesso;  --DettaglioSpese.importoammesso
+			 vTbPagQuota (nCont).IdQuota := nIdQuotaParteDocSpesa;
+			 END IF;
+			 CLOSE c2;
+		  END LOOP;
+		  
+	--	  IF r2.importorichiesto IS NULL THEN
+	--	     EXIT;
+	--	  END IF;
+		  
+
+		  INSERT INTO PBANDI_T_PAGAMENTO (ID_PAGAMENTO,
+										  IMPORTO_PAGAMENTO,
+										  ID_UTENTE_INS,
+										  ID_MODALITA_PAGAMENTO,
+										  DT_VALUTA)
+			   VALUES (SEQ_PBANDI_T_PAGAMENTO.NEXTVAL,
+					   v_importo,  -- Dichiarazione.Imponibile 
+					   -14, -- Migrazione Finpis
+					   (SELECT ID_MODALITA_PAGAMENTO
+						  FROM PBANDI_D_MODALITA_PAGAMENTO
+						 WHERE DESC_BREVE_MODALITA_PAGAMENTO = 'AUT'),
+					   r1.DataCreazione)  -- Dichiarazione.DataInizioIstruttoria 
+			RETURNING ID_PAGAMENTO
+				 INTO nIdPag;
+
+		  INSERT INTO PBANDI_R_PAGAMENTO_DOC_SPESA (ID_PAGAMENTO,
+													ID_DOCUMENTO_DI_SPESA,
+													ID_UTENTE_INS)
+			   VALUES (nIdPag,
+					   nIdDoc,
+					   -14 -- Migrazione Finpis
+					   );
+			-- Folder
+			SELECT id_folder
+			  INTO v_id_folder
+			  FROM PBANDI_T_FOLDER
+			 WHERE id_progetto = p_id_progetto;
+
+					
+			-- Esito validazione				
+			IF r1.StatoDS IS NOT NULL THEN
+				BEGIN
+				  SELECT ID_ESITO_VALID_SPESA
+					INTO V_ID_ESITO_VALID_SPESA
+					FROM PBANDI_D_ESITO_VALID_SPESA
+				   WHERE COD_FINPIS = r1.StatoDS;
+				EXCEPTION
+				   WHEN NO_DATA_FOUND THEN
+				   V_ID_ESITO_VALID_SPESA := '';
+				END;
+			END IF;
+
+			-- Attributo validazione				
+			IF r1.AttributoDS IS NOT NULL THEN
+				BEGIN
+				  SELECT ID_ATTRIB_VALID_SPESA
+					INTO V_ID_ATTRIB_VALID_SPESA
+					FROM PBANDI_D_ATTRIBUTO_VALID_SPESA
+				   WHERE COD_FINPIS = r1.AttributoDS;
+				EXCEPTION
+				   WHEN NO_DATA_FOUND THEN
+				   V_ID_ATTRIB_VALID_SPESA := '';
+				END;
+			END IF;
+		   
+
+		  INSERT INTO PBANDI_T_DICHIARAZIONE_SPESA (ID_DICHIARAZIONE_SPESA,
+													DT_DICHIARAZIONE,
+													PERIODO_DAL,
+													PERIODO_AL,
+													ID_PROGETTO,
+													ID_UTENTE_INS,
+													ID_TIPO_DICHIARAZ_SPESA,
+													DT_CHIUSURA_VALIDAZIONE,
+													ID_ESITO_VALID_SPESA,
+													ID_ATTRIB_VALID_SPESA,
+													ID_DICHIARAZIONE_FINP)
+			   VALUES (SEQ_PBANDI_T_DICHIARAZIONE_SPE.NEXTVAL,
+					   r1.DataCreazione, 
+					   r1.DataCreazione,
+					   r1.DataCreazione,
+					   p_id_progetto,
+					   -14, -- Migrazione Finpis
+					   r1.id_tipo_dichiaraz_spesa,
+						r1.dataesito, -- Dichiarazione.DataEsito  
+						V_ID_ESITO_VALID_SPESA,
+						V_ID_ATTRIB_VALID_SPESA,
+						to_number(p_id_dichiarazione)
+						 )  
+			RETURNING ID_DICHIARAZIONE_SPESA
+				 INTO nIdic;
+				 
+			-- Calcolo dell stato del documento
+			IF r1.StatoDS = '24' THEN
+			   v_esito_valid := 'NEGATIVO';
+			else
+			   v_esito_valid := 'POSITIVO';
+			END IF;
+			
+			IF r1.dataesito IS NOT NULL THEN
+			   IF v_esito_valid = 'POSITIVO' THEN
+				  v_id_stato_documento := 3; -- Validato
+			   ELSE
+				  v_id_stato_documento := 5;  -- Non validato
+			   END IF;
+			ELSE
+				  v_id_stato_documento := 1;  -- Generato
+			END IF;
+
+			INSERT INTO PBANDI_T_DOCUMENTO_INDEX
+			(
+			  ID_DOCUMENTO_INDEX,
+			  ID_TARGET,
+			  UUID_NODO,
+			  REPOSITORY,
+			  DT_INSERIMENTO_INDEX,
+			  ID_TIPO_DOCUMENTO_INDEX,
+			  ID_ENTITA,
+			  ID_UTENTE_INS,
+			  NOME_FILE,
+			  ID_PROGETTO,
+			  ID_STATO_DOCUMENTO,
+			  NOME_DOCUMENTO
+			)
+			VALUES
+			(SEQ_PBANDI_T_DOCUMENTO_INDEX.nextval,
+			 nIdic,
+			 'UUID',
+			-- 'DS',
+			 'DS2',
+			 SYSDATE,
+			 1, -- Dichiarazione spesa
+			 63, --PBANDI_T_DICHIARAZIONE_SPESA
+			 -14,
+			 'DICHIARAZIONEDISPESA_MIGRAZIONE_v2.pdf', -- NOME_FILE
+			 p_id_progetto,
+			 v_id_stato_documento,
+			 'DICHIARAZIONEDISPESA_MIGRAZIONE_v2.pdf' -- NOME_DOCUMENTO
+			)  
+			RETURNING ID_DOCUMENTO_INDEX
+				 INTO nIddocx;
+	--/*
+				 
+			BEGIN
+			
+			   SELECT ID_FILE
+				  INTO 	nIdfil
+				  FROM 	PBANDI_T_FILE
+				 WHERE NOME_FILE = 'DICHIARAZIONEDISPESA_MIGRAZIONE_v2.pdf'
+				   AND 	ID_FOLDER = v_id_folder;
+				   
+			EXCEPTION
+			   WHEN NO_DATA_FOUND THEN		
+				 
+				INSERT INTO PBANDI_T_FILE
+				(			 
+				  ID_FILE,
+				  ID_FOLDER,
+				  ID_DOCUMENTO_INDEX,
+				  NOME_FILE,
+				  ID_UTENTE_INS,
+				  DT_INSERIMENTO
+				)
+				VALUES
+				  (
+				   SEQ_PBANDI_T_FILE.nextval,
+				   v_id_folder,
+				   nIddocx,
+				   'DICHIARAZIONEDISPESA_MIGRAZIONE_v2.pdf',
+				   -14,
+				   sysdate
+				  )  
+				   RETURNING ID_FILE
+					 INTO nIdfil;
+			  END;
+			  
+			  INSERT INTO PBANDI_T_FILE_ENTITA
+				(
+				  ID_FILE_ENTITA,
+				  ID_FILE,
+				  ID_ENTITA,
+				  ID_TARGET,
+				  ID_PROGETTO
+				)
+				VALUES
+				  (
+				   SEQ_PBANDI_T_FILE_ENTITA.nextval,
+				   nIdfil,
+				   63, --PBANDI_T_DICHIARAZIONE_SPESA,
+				   nIdic,
+				   p_id_progetto
+				  );
+	--*/			  
+				 
+			UPDATE MFINPIS_W_CARICAMENTO_XML
+			   SET ID_DICHIARAZIONE_SPESA = nIdic
+			  WHERE id_caricamento = p_id_caricamento;
+				 
+		  INSERT
+			INTO PBANDI_R_PAGAMENTO_DICH_SPESA (ID_PAGAMENTO,
+												ID_DICHIARAZIONE_SPESA)
+		  VALUES (nIdPag, nIdic);
+		  
+		  vReturn := ValorizzaDichDoc (nIdDoc, nIdic);
+		  IF vReturn != 0 THEN
+			 RAISE_APPLICATION_ERROR(-20000,'Errore valorizzazione tabella PBANDI_S_DICH_DOC_SPESA)');
+		  END IF;
+		  
+		  -- Richiesta integrazione
+		  IF r1.DataRichiestaIntegrazioni IS NOT NULL 
+		     OR r1.StatoDS = '22'  --Sospesa
+		                                                    THEN
+		  
+			 INSERT INTO PBANDI_T_INTEGRAZIONE_SPESA
+				(
+				  ID_INTEGRAZIONE_SPESA,
+				  ID_DICHIARAZIONE_SPESA,
+				  DESCRIZIONE,
+				  DATA_RICHIESTA,
+				  ID_UTENTE_RICHIESTA,
+				  ID_STATO_RICHIESTA
+				)	
+				VALUES
+				(			
+				  SEQ_PBANDI_T_INTEGRAZ_SPESA.NEXTVAL,
+				  nIdic,
+				  NVL(r1.UtenteRichiestaIntegrazioni,'MIGRAZIONE_FINPIS'),
+				  NVL(r1.DataRichiestaIntegrazioni,TRUNC(sysdate)),
+				  -14,
+				  case when r1.StatoDS = '22'
+				       then 4 -- in autorizzazione
+			           else null
+				  end
+				);
+		 
+		  END IF;
+
+		   --DBMS_OUTPUT.PUT_LINE('Cerco array '||r1.id_dichiarazione);
+		   
+	      -- Ripartizione pagamenti
+	      PCK_PBANDI_UTILITY_ONLINE.RipartizionePagamenti(p_id_progetto,nIdDoc||',',nIdic,-14);
+
+	--/*  Aggiornamento del validato  
+		  IF vTbPagQuota.FIRST IS NOT NULL
+		  THEN
+			 FOR i IN vTbPagQuota.FIRST .. vTbPagQuota.LAST
+			 LOOP
+			  --DBMS_OUTPUT.PUT_LINE('Insert PBANDI_R_PAG_QUOT_PARTE_DOC_SP ');
+			    UPDATE PBANDI_R_PAG_QUOT_PARTE_DOC_SP
+				   SET IMPORTO_VALIDATO = vTbPagQuota (i).Importo, --DettaglioSpese.IportoAmmesso
+				       DT_INSERIMENTO = r1.DataCreazione,
+					   DT_AGGIORNAMENTO = r1.dataesito  -- Dichiarazione.DataEsito 
+				 WHERE ID_QUOTA_PARTE_DOC_SPESA = vTbPagQuota (i).IdQuota
+				   AND ID_PAGAMENTO = nIdPag
+				   AND ID_DICHIARAZIONE_SPESA = nIdic;
+				/*
+				INSERT
+				  INTO PBANDI_R_PAG_QUOT_PARTE_DOC_SP (ID_PAGAMENTO,
+													   ID_QUOTA_PARTE_DOC_SPESA,
+													   IMPORTO_QUIETANZATO,
+													   IMPORTO_VALIDATO,
+													   ID_UTENTE_INS,
+													   PROGR_PAG_QUOT_PARTE_DOC_SP,
+													   DT_INSERIMENTO,
+													   DT_AGGIORNAMENTO,
+													   ID_DICHIARAZIONE_SPESA)
+				VALUES (nIdPag,
+						vTbPagQuota (i).IdQuota,
+						vTbPagQuota (i).Importo, --DettaglioSpese.IportoAmmesso
+						vTbPagQuota (i).Importo, --DettaglioSpese.IportoAmmesso
+						-14, -- Migrazione Finpis
+						SEQ_PBANDI_R_PAG_QU_PAR_DOC_SP.NEXTVAL,
+						r1.DataCreazione,
+						r1.dataesito,-- Dichiarazione.DataEsito 
+						nIdic);
+			  */
+			 END LOOP;
+		  END IF;
+	--*/
+
+	--
+		  --Se FC-----Finale con comunicazione di fine progetto -----------------
+		  IF r1.id_tipo_dichiaraz_spesa = 3 THEN
+			  INSERT INTO PBANDI_T_COMUNICAZ_FINE_PROG (ID_COMUNICAZ_FINE_PROG,
+														ID_PROGETTO,
+														DT_COMUNICAZIONE,
+														ID_UTENTE_INS)
+				   VALUES (SEQ_PBANDI_T_COMUNIC_FINE_PROG.NEXTVAL,
+						   p_id_progetto,
+						   r1.DataCreazione,
+						   -14 -- Migrazione Finpis
+						   )
+						   RETURNING ID_COMUNICAZ_FINE_PROG
+						   INTO nIcom;
+
+					INSERT INTO PBANDI_T_DOCUMENTO_INDEX
+					(
+					  ID_DOCUMENTO_INDEX,
+					  ID_TARGET,
+					  UUID_NODO,
+					  REPOSITORY,
+					  DT_INSERIMENTO_INDEX,
+					  ID_TIPO_DOCUMENTO_INDEX,
+					  ID_ENTITA,
+					  ID_UTENTE_INS,
+					  NOME_FILE,
+					  ID_PROGETTO,
+					  ID_STATO_DOCUMENTO,
+					  NOME_DOCUMENTO
+					)
+					VALUES
+					(SEQ_PBANDI_T_DOCUMENTO_INDEX.nextval,
+					 nIcom,
+					 'UUID',
+					 --'CFP',
+					 'CFP2',
+					 SYSDATE,
+					 17, -- Comunicazione fine progetto
+					 270, --PBANDI_T_COMUNICAZ_FINE_PROG
+					 -14,
+					 'COMUNICAZIONEFINEPROGETTO_MIGRAZIONE_v2.pdf', -- NOME_FILE
+					 p_id_progetto,
+					 v_id_stato_documento,
+					 'COMUNICAZIONEFINEPROGETTO_MIGRAZIONE_v2.pdf' -- NOME_DOCUMENTO
+					)  
+					RETURNING ID_DOCUMENTO_INDEX
+						 INTO nIddocx;
+	--/*
+					BEGIN
+					
+					   SELECT ID_FILE
+						  INTO 	nIdfil
+						  FROM 	PBANDI_T_FILE
+						 WHERE NOME_FILE = 'COMUNICAZIONEFINEPROGETTO_MIGRAZIONE_v2.pdf'
+						   AND 	ID_FOLDER = v_id_folder;
+						   
+					EXCEPTION
+					   WHEN NO_DATA_FOUND THEN
+					   
+						INSERT INTO PBANDI_T_FILE
+						(			 
+						  ID_FILE,
+						  ID_FOLDER,
+						  ID_DOCUMENTO_INDEX,
+						  NOME_FILE,
+						  ID_UTENTE_INS,
+						  DT_INSERIMENTO
+						)
+						VALUES
+						  (
+						   SEQ_PBANDI_T_FILE.nextval,
+						   v_id_folder,
+						   nIddocx,
+						   'COMUNICAZIONEFINEPROGETTO_MIGRAZIONE_v2.pdf',
+						   -14,
+						   sysdate
+						  )  
+						   RETURNING ID_FILE
+							 INTO nIdfil;
+					END;
+				  
+				  INSERT INTO PBANDI_T_FILE_ENTITA
+					(
+					  ID_FILE_ENTITA,
+					  ID_FILE,
+					  ID_ENTITA,
+					  ID_TARGET,
+					  ID_PROGETTO
+					)
+					VALUES
+					  (
+					   SEQ_PBANDI_T_FILE_ENTITA.nextval,
+					   nIdfil,
+					   270, --PBANDI_T_COMUNICAZ_FINE_PROG
+					   nIcom,
+					   p_id_progetto
+					  );
+	--*/ 				   
+			  -- PROCESSO INTERNO
+			  v_id_processo := pck_pbandi_processo.GetProcesso(p_id_progetto);
+	  
+			  IF  v_id_processo IS NOT NULL  THEN  -- Gestione nuovo processo interno
+			  ------------************************************-------------------
+				  -- Verificare con le ultime implementazioni
+				  ---------------------------------------------
+				  --v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'DICH-DI-SPESA',-14,'S');  --mc 07062022 -- jira3500
+				  v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'COMUNIC-FINE-PROG',-14,'S'); 
+
+				  IF pck_pbandi_processo.Regola(p_id_progetto,'BR34')  THEN  
+					  v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'CRONOPROG-AVVIO',-14,'S'); 
+					  v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'CRONOPROGRAMMA',-14,'S'); 
+				  END IF;
+
+				  IF pck_pbandi_processo.Regola(p_id_progetto,'BR35')  THEN  
+					  v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'CARICAM-INDIC-AVVIO',-14,'S'); 
+					  v_endattivita := PCK_PBANDI_PROCESSO.EndAttivita(p_id_progetto,'CARICAM-INDIC-PROG',-14,'S'); 
+				  END IF;
+				  
+			  END IF;
+			END IF; -- Test su Finale con comunicazione di fine progetto
+		  ELSE 
+			-- Gestione extra dichiarazione (Valorizzo tabella di appoggio )
+			 IF r1.tipodichiarazione IN (5,7)   --5 – Dichiarazione tecnica e 7 – Monitoraggio
+										   THEN
+				 OPEN c3 (p_id_caricamento, r1.id_dichiarazione, p_id_agevolazione_split,p_codice_progetto_agev_split);
+				 FETCH c3 INTO r3;
+				 IF c3%NOTFOUND THEN
+					r3:= NULL;
+				 END IF;
+				 CLOSE c3;
+
+
+				INSERT INTO	PBANDI_W_MFINPIS_DICH
+					(ID_PROGETTO,
+					 TIPO_DICHIARAZIONE_MFINPIS,
+					 DESC_TIPO_DICH_MFINPIS,
+					 id_dichiarazione_mfinpis,
+					 TipoAgevolazione_mfinpis,
+					 ProgrWf,
+					 id_agevolazione_mfinpis,
+					 StatoDS_mfinpis,
+					 AttributoDS_mfinpis,
+					 ImportoImponibile,
+					 ImportoRendicontato,
+					 ImportoAmmesso,
+					 DataConferma,
+					 DataInizioIstruttoria,
+					 DataEsito,
+					 MatricolaIstruttore,
+					 id_pban_dichiarazione,
+					 Nr_Protocollo,
+					 IdDocDigitale,
+					 Id_Progetto_mfinpis,
+					 IdVoceSpesa,
+					 ImportoRichiesto,
+					 FlagIres,
+					 DescrizioneSpesa_mfinpis)
+				VALUES
+				(p_id_progetto,
+				r1.TipoDichiarazione,
+				case when r1.TipoDichiarazione = 5 
+					 then 'DICHIARAZIONE TECNICA'
+					 else
+						  'MONITORAGGIO'
+				end,
+				r1.Id_Dichiarazione,
+				r1.TipoAgevolazione,
+				r1.ProgrWf,
+				r1.Id_Agevolazione,
+				r1.StatoDS,
+				r1.AttributoDS,
+				v_importo, --ImportoImponibile,
+				r1.ImportoRendicontato,
+				r1.ImportoAmmesso,
+				r1.DataConferma,
+				r1.DataInizioIstruttoria,
+				r1.DataEsito,
+				r1.MatricolaIstruttore,
+				r1.id_pban_dichiarazione,
+				r1.Nr_Protocollo,
+				r1.IdDocDigitale,
+				r1.Id_Progetto,
+				r3.IdVoceSpesa,
+				r3.ImportoRichiesto,
+				r3.FlagIres,
+				r3.DescrizioneSpesa
+				);
+			
+			ELSIF	r1.tipodichiarazione = 4   THEN --4 Anticipi
+			
+			   SELECT SEQ_PBANDI_T_RICHIESTA_EROGAZ.NEXTVAL
+				 INTO 	V_ID_RICHIESTA_EROGAZIONE
+				 FROM dual;
+				 
+			  INSERT INTO PBANDI_T_RICHIESTA_EROGAZIONE
+													   (ID_RICHIESTA_EROGAZIONE,
+														NUMERO_RICHIESTA_EROGAZIONE,
+														DT_RICHIESTA_EROGAZIONE,
+														IMPORTO_EROGAZIONE_RICHIESTO,
+														ID_PROGETTO,
+														ID_CAUSALE_EROGAZIONE,
+														ID_UTENTE_INS)
+				   VALUES (V_ID_RICHIESTA_EROGAZIONE,
+						   V_ID_RICHIESTA_EROGAZIONE,
+						   r1.DataCreazione, -- Dichiarazione.DataInizioIstruttoria ,
+						   r1.ImportoRendicontato,  -- Dichiarazione.Rendicontato
+						   p_id_progetto,
+						   1, -- Primo acconto
+						   -14 -- Migrazione Finpis
+							 );
+			END IF; --  test su r1.tipodichiarazione				   
+		  END IF;  --test su r1.id_tipo_dichiaraz_spesa
+	   END LOOP;	  
+
+
+	   EXCEPTION
+		  WHEN OTHERS
+		  THEN
+			 ROLLBACK;
+			 RAISE_APPLICATION_ERROR(-20000,'ID CARICAMENTO '||p_id_caricamento||' '||'id_progetto '||p_id_progetto||' tipo dichiarazione '||v_id_tipo_dichiaraz_spesa||SQLERRM|| ' riga = ' || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+		END crea_dichiarazione_spesa;
+
+
+
+	BEGIN
+		   --DBMS_OUTPUT.PUT_LINE('FONDO '||p_cod_fondo);
+
+	   FOR recdomanda in curDomanda LOOP
+		   --DBMS_OUTPUT.PUT_LINE('inizio Progetto '||recdomanda.id_progetto);
+		   crea_dichiarazione_spesa(recdomanda.id_caricamento, recdomanda.id_progetto, recdomanda.id_domanda, recdomanda.id_agevolazione, recdomanda.id_dichiarazione, recdomanda.codice_progetto_agev);
+		   COMMIT;
+	   END LOOP;
+	   
+	   -- Trasformo le DS doppie da Finali a Integrative
+	   FOR r_doppi in c_doppie LOOP
+	   
+	      UPDATE pbandi_t_dichiarazione_spesa
+		     SET id_tipo_dichiaraz_spesa = 4
+			WHERE id_dichiarazione_spesa = r_doppi.id_dichiarazione_spesa;
+			
+		  FOR r1 in (select id_comunicaz_fine_prog
+		               from PBANDI_T_COMUNICAZ_FINE_PROG
+                       where id_progetto = r_doppi.id_progetto
+					     and id_comunicaz_fine_prog != (select min(id_comunicaz_fine_prog)
+						                                  from  PBANDI_T_COMUNICAZ_FINE_PROG
+                                                         where id_progetto = r_doppi.id_progetto)														  
+					)  
+		  LOOP
+			  delete PBANDI_T_FILE_ENTITA
+			   where ID_ENTITA = 270  -- Comunicazione di fine progetto
+			     and ID_TARGET = r1.id_comunicaz_fine_prog
+				 and ID_PROGETTO = r_doppi.id_progetto;
+				 
+			  delete PBANDI_T_DOCUMENTO_INDEX
+			   where ID_ENTITA = 270  -- Comunicazione di fine progetto
+			     and ID_TARGET = r1.id_comunicaz_fine_prog
+				 and ID_PROGETTO = r_doppi.id_progetto;
+				 
+			  delete PBANDI_T_COMUNICAZ_FINE_PROG
+			   where id_comunicaz_fine_prog = r1.id_comunicaz_fine_prog;
+			  
+		  END LOOP;
+		  
+	   END LOOP;
+	   COMMIT;
+	END prc_migraz_dich_spese;
+	
+	-- mfinpis_t_richiesta_integraz
+	alter table mfinpis_t_richiesta_integraz modify id_target number(15);
+	
+	-- mfinpis_t_confidi
+	create table mfinpis_t_confidi
+	(id_progetto varchar2(20),
+	 denominazione_confidi varchar2(500)
+	);
+
+	-- idx
+	CREATE INDEX IDX_mfinpis_t_confidi_01 ON mfinpis_t_confidi (id_progetto );
+	
+	alter table mfinpis_t_confidi add DATA_CARICAMENTO date;
+	
+	-- mfinpis_t_erogazione 
+ create table mfinpis_t_erogazione
+ (ID_EROGAZIONE  VARCHAR2(20), --
+  IMPORTO_EROGAZIONE  NUMBER(13,2) NOT NULL,	
+  COD_RIFERIMENTO_EROGAZIONE	VARCHAR2(30),
+  DT_CONTABILE	DATE	NOT NULL,
+  NOTE_EROGAZIONE	VARCHAR2(4000),
+  ID_CAUSALE_EROGAZIONE	NUMBER(3) NOT NULL,	
+  ID_MODALITA_AGEVOLAZIONE	NUMBER(3) NOT NULL,	
+  ID_PROGETTO	VARCHAR2(20) NOT NULL,	
+  ID_UTENTE_INS	NUMBER(8) NOT NULL,	
+  ID_UTENTE_AGG	NUMBER(8),
+  ID_MODALITA_EROGAZIONE	NUMBER(3) NOT NULL,	
+  ID_ENTE_COMPETENZA	NUMBER(8),
+  DT_INSERIMENTO	DATE	NOT NULL,
+  DT_AGGIORNAMENTO	DATE,
+  ID_FIDEIUSSIONE	NUMBER(8),
+  FLAG_ABBUONO	VARCHAR2(1),
+  CODICE_DISTINTA VARCHAR2(20),
+  RIGA_DISTINTA   VARCHAR2(20),
+  IMP_IRES	NUMBER(17,2),
+  ID_EROGAZIONE_PBAN NUMBER,
+  ID_CARICAMENTO NUMBER,
+  DATA_CARICAMENTO DATE
+ );
+ 
+ -- pk  
+alter table mfinpis_t_erogazione
+ add constraint PK_mfinpis_t_erogazione primary key (id_erogazione,id_progetto);
+
+-- fk  
+alter table mfinpis_t_erogazione
+ add constraint fk_pbandi_t_migr_finpis_42 foreign key (ID_CARICAMENTO)
+ references PBANDI_T_MIGRAZIONE_FINPIS (ID_CARICAMENTO);
+-- idx  
+create index IE1_mfinpis_t_erogazione on mfinpis_t_erogazione (ID_EROGAZIONE_PBAN); 
+create index IE2_mfinpis_t_erogazione on mfinpis_t_erogazione(ID_CARICAMENTO) ;
+create index IE3_mfinpis_t_erogazione on mfinpis_t_erogazione (ID_PROGETTO) ; 
+
+-- 18122023
+alter table mfinpis_r_bando_linea_inter modify FONDO_FINPIS null;
+alter table mfinpis_t_controdeduz modify id_target number(15);
+ALTER TABLE MFINPIS_T_RNA_PROGETTO_MAN MODIFY AIDCONC VARCHAR2(30);
+ALTER TABLE MFINPIS_T_RNA_PROGETTO_MAN MODIFY AIDRICH VARCHAR2(30);
+ALTER TABLE Mfinpis_t_Soggetto_Antimafia MODIFY NUMER_PROTOCOLLO_RICEVUTA VARCHAR2(50);
+
+-- Tabella per gestire l'elenco delle domande migrate di fondi già presenti su PBANDI
+CREATE TABLE TMP_DOMANDE_FGP (
+    NUM_DOMANDA_FGP VARCHAR2(100) NOT NULL,
+    CONSTRAINT PK_TMP_DOMANDE_FGP PRIMARY KEY (NUM_DOMANDA_FGP) USING INDEX TABLESPACE PBANDI_IDX
+);
+
+
+CREATE OR REPLACE PROCEDURE PR_LINK_METADATA_ACTIVINFO as
+--DECLARE
+   cursor c1 IS
+      SELECT *
+	    FROM PBANDI_T_ACTIVEINFO_METADATA
+       WHERE ID_PROGETTO IS NULL
+	   AND CODICE_VISUALIZZATO IS NOT NULL;
+	   
+   cursor c2 (c_codice_visualizzato varchar2) is
+      SELECT id_progetto,codice_visualizzato
+	    FROM PBANDI_T_PROGETTO
+	   WHERE codice_visualizzato like c_codice_visualizzato||'%';
+
+
+    rec_am   c1%rowtype;
+	v_dummy  VARCHAR2(1);
+BEGIN
+   FOR r1 in c1 LOOP
+      rec_am := r1;
+      FOR r2 in c2(r1.codice_visualizzato) LOOP
+	  IF c2%ROWCOUNT = 1 THEN
+	     --Aggiornamento METADATA ACTIVINFO
+		 UPDATE PBANDI_T_ACTIVEINFO_METADATA
+		    SET id_progetto = r2.id_progetto,
+			    codice_visualizzato = r2.codice_visualizzato
+		   WHERE id_metadata = r1.id_metadata;
+	  ELSE
+	     -- Inserimento  METADATA ACTIVINFO
+		 SELECT SEQ_PBANDI_T_ACTIVEINFO_METADA.nextval INTO rec_am.id_metadata from dual;
+		 rec_am.id_progetto := r2.id_progetto;
+		 rec_am.codice_visualizzato := r2.codice_visualizzato;
+		 INSERT INTO PBANDI_T_ACTIVEINFO_METADATA VALUES rec_am;
+	  END IF;
+	  
+	  BEGIN
+	     SELECT NULL
+		    INTO v_dummy
+		    FROM PBANDI_T_DOCUMENTO_INDEX
+		  WHERE id_target = r1.id_metadata
+		    AND ID_ENTITA = 714
+			AND REPOSITORY = 'AFAI';
+		 EXCEPTION
+		   WHEN TOO_MANY_ROWS THEN NULL;
+		   WHEN NO_DATA_FOUND THEN
+			  INSERT INTO PBANDI_T_DOCUMENTO_INDEX
+				(
+				  ID_DOCUMENTO_INDEX       ,
+				  ID_TARGET                ,
+				  UUID_NODO                ,
+				  REPOSITORY               ,
+				  DT_INSERIMENTO_INDEX     ,
+				  ID_TIPO_DOCUMENTO_INDEX  ,
+				  ID_ENTITA                ,
+				  ID_UTENTE_INS            ,
+				  NOME_FILE                ,
+				  ID_PROGETTO			   ,
+				  NOME_DOCUMENTO           
+				)
+				VALUES
+				(
+				  SEQ_PBANDI_T_DOCUMENTO_INDEX.nextval,
+				  r1.ID_METADATA,
+				  'UUID',
+				  'AFAI',
+				  sysdate,
+				  61,
+				  714,
+				  -14,
+				  r1.nome_file,
+				  r2.id_progetto,
+				  r1.nome_file
+				);
+			
+			END;
+	  
+	  END LOOP;
+   COMMIT;
+   END LOOP;
+END;

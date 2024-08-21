@@ -1,0 +1,228 @@
+/*******************************************************************************
+* Copyright Regione Piemonte - 2024
+* SPDX-License-Identifier: EUPL-1.2
+******************************************************************************/
+
+SET DEFINE OFF;
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('W047', 'Impossibile risalire al tipo aiuto per il flusso BANDIND');
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('W048', 'Tipo aiuto non associato al bando linea per il flusso BANDIND');
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('W049', 'Impossibile risalire al tipo aiuto per il flusso GEBARIC');
+Insert into PBANDI_D_ERRORE_BATCH
+   (CODICE_ERRORE, DESCRIZIONE)
+ Values
+   ('E099', 'Errore nel recupero del conto economico per la tipologia MAIN per il flusso GEFO');
+COMMIT;
+
+
+SET DEFINE OFF;
+Insert into PBANDI_T_UTENTE
+   (ID_UTENTE, CODICE_UTENTE, ID_TIPO_ACCESSO)
+ Values
+   (-3, 'GESTIONE_INCARICHI', 5);
+COMMIT;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_TIPOLOGIA_CONTO_ECON
+   (ID_TIPOLOGIA_CONTO_ECONOMICO, DESC_BREVE_TIPOLOGIA_CONTO_ECO, DESC_TIPOLOGIA_CONTO_ECONOMICO, DT_INIZIO_VALIDITA)
+ Values
+   (1, 'MAIN', 'Gestione Iniziale', TO_DATE('11/23/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_D_TIPOLOGIA_CONTO_ECON
+   (ID_TIPOLOGIA_CONTO_ECONOMICO, DESC_BREVE_TIPOLOGIA_CONTO_ECO, DESC_TIPOLOGIA_CONTO_ECONOMICO, DT_INIZIO_VALIDITA)
+ Values
+   (2, 'MASTER', 'Gestione Operativa', TO_DATE('11/23/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_D_TIPOLOGIA_CONTO_ECON
+   (ID_TIPOLOGIA_CONTO_ECONOMICO, DESC_BREVE_TIPOLOGIA_CONTO_ECO, DESC_TIPOLOGIA_CONTO_ECONOMICO, DT_INIZIO_VALIDITA)
+ Values
+   (3, 'COPY_IST', 'In Rimodulazione', TO_DATE('11/23/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+Insert into PBANDI_D_TIPOLOGIA_CONTO_ECON
+   (ID_TIPOLOGIA_CONTO_ECONOMICO, DESC_BREVE_TIPOLOGIA_CONTO_ECO, DESC_TIPOLOGIA_CONTO_ECONOMICO, DT_INIZIO_VALIDITA)
+ Values
+   (4, 'COPY_BEN', 'In Proposta', TO_DATE('11/23/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'));
+COMMIT;
+
+update PBANDI_D_STATO_CONTO_ECONOMICO set ID_TIPOLOGIA_CONTO_ECONOMICO = 1 where ID_STATO_CONTO_ECONOMICO = 1;
+update PBANDI_D_STATO_CONTO_ECONOMICO set ID_TIPOLOGIA_CONTO_ECONOMICO = 2 where ID_STATO_CONTO_ECONOMICO = 2;
+update PBANDI_D_STATO_CONTO_ECONOMICO set ID_TIPOLOGIA_CONTO_ECONOMICO = 2 where ID_STATO_CONTO_ECONOMICO = 3;
+
+SET DEFINE OFF;
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (4, 'ID', 'In Domanda', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 1);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (5, 'IPD', 'In Proposta per Domanda', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 1);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (6, 'II', 'In Istruttoria', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 1);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (7, 'AI', 'Approvato in Istruttoria', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 1);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (8, 'IR', 'In Rimodulazione', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 2);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (9, 'IPG', 'In Proposta per Gestione Operativa', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 2);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (10, 'NR', 'Nuova Rimodulazione', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 3);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (11, 'NRC', 'Nuova Rimodulazione Conclusa', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 3);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (12, 'NP', 'Nuova Proposta', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 4);
+Insert into PBANDI_D_STATO_CONTO_ECONOMICO
+   (ID_STATO_CONTO_ECONOMICO, DESC_BREVE_STATO_CONTO_ECONOM, DESC_STATO_CONTO_ECONOMICO, DT_INIZIO_VALIDITA, ID_TIPOLOGIA_CONTO_ECONOMICO)
+ Values
+   (13, 'NPI', 'Nuova Proposta Inviata', TO_DATE('01/01/2009 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 4);
+COMMIT;
+
+alter table PBANDI_D_STATO_CONTO_ECONOMICO
+modify ID_TIPOLOGIA_CONTO_ECONOMICO not null;
+
+update PBANDI_R_BANDO_CAUSALE_EROGAZ
+set ID_CAUSALE_EROGAZIONE = 3
+where id_bando in (2,3,4,7,14)
+and ID_CAUSALE_EROGAZIONE = 2;
+
+COMMIT;
+
+update PBANDI_R_BANDO_CAUSALE_EROGAZ
+set    PERC_SOGLIA_SPESA_QUIETANZATA = 35,
+	   PERC_EROGAZIONE				 = 35,
+	   PERC_LIMITE					 = 0
+where  ID_BANDO 					 = 7
+and    ID_CAUSALE_EROGAZIONE		 = 1;
+
+update PBANDI_R_BANDO_CAUSALE_EROGAZ
+set    PERC_SOGLIA_SPESA_QUIETANZATA = 0,
+	   PERC_EROGAZIONE				 = 0,
+	   PERC_LIMITE					 = 45
+where  ID_BANDO 					 = 7
+and    ID_CAUSALE_EROGAZIONE		 = 3;
+
+update PBANDI_R_BANDO_CAUSALE_EROGAZ
+set    PERC_SOGLIA_SPESA_QUIETANZATA = 100,
+	   PERC_EROGAZIONE				 = 20,
+	   PERC_LIMITE					 = 0
+where  ID_BANDO 					 = 7
+and    ID_CAUSALE_EROGAZIONE		 = 4;
+
+commit;
+
+
+update PBANDI_T_ENTE_GIURIDICO	
+set ID_FORMA_GIURIDICA = null
+where ID_FORMA_GIURIDICA = 0;
+
+delete pbandi_d_FORMA_GIURIDICA
+where ID_FORMA_GIURIDICA = 0;
+
+
+update pbandi_d_causale_erogazione
+set flag_iter_standard  = 'N'
+where desc_breve_causale in ('PA-INS', 'SA-INS', 'SAL-INS');
+
+update pbandi_d_causale_erogazione
+set flag_iter_standard  = 'S'
+where desc_breve_causale not in ('PA-INS', 'SA-INS', 'SAL-INS');
+
+commit;
+
+alter TABLE pbandi_d_causale_erogazione
+modify flag_iter_standard not null;
+
+Insert into PBANDI_C_TIPO_DOCUMENTO_INDEX
+   (ID_TIPO_DOCUMENTO_INDEX, DESC_BREVE_TIPO_DOC_INDEX, DESC_TIPO_DOC_INDEX)
+ Values
+   (6, 'RE', 'RICHIESTA DI EROGAZIONE');
+COMMIT;
+
+insert into PBANDI_C_DEFINIZIONE_PROCESSO
+(ID_DEFINIZIONE_PROCESSO,UUID_PROCESSO)
+values
+(SEQ_PBANDI_C_DEFINIZ_PROCESSO.nextval,'PROCESSO PBANDI-1.3-PROCESSO_PBANDI-1.3');
+
+update PBANDI_R_BANDO_LINEA_INTERVENT
+set ID_DEFINIZIONE_PROCESSO = SEQ_PBANDI_C_DEFINIZ_PROCESSO.currval;
+
+insert into PBANDI_C_RUOLO_PROCESSO
+(ID_RUOLO_PROCESSO, CODICE_RUOLO, ID_TIPO_ANAGRAFICA, ID_TIPO_BENEFICIARIO, ID_DEFINIZIONE_PROCESSO)
+(select ID_RUOLO_PROCESSO+200, CODICE_RUOLO, ID_TIPO_ANAGRAFICA, ID_TIPO_BENEFICIARIO, SEQ_PBANDI_C_DEFINIZ_PROCESSO.currval
+ from PBANDI_C_RUOLO_PROCESSO
+ where  ID_DEFINIZIONE_PROCESSO = 8);
+
+insert into PBANDI_C_ENTITA
+(ID_ENTITA, NOME_ENTITA, FLAG_DA_TRACCIARE) 
+(select seq_PBANDI_C_ENTITA.nextval,tabs.TABLE_NAME,'S'
+from all_tables tabs
+where tabs.OWNER = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+and tabs.TABLE_NAME like 'PBANDI_%'
+and not exists (select 'x' from pbandi_c_entita where tabs.TABLE_NAME = NOME_ENTITA));
+
+commit;
+
+declare
+  cursor curAttr is select col.COLUMN_NAME,en.id_ENTITA,col.TABLE_NAME
+                    from all_tab_cols col,PBANDI_C_ENTITA en
+                    where col.owner = (select decode(instr(user,'_RW'),0,user,replace(user,'_RW',null)) from dual)
+                    and col.TABLE_NAME like 'PBANDI_%'
+                    and col.COLUMN_NAME not like 'SYS_%'
+                    and col.TABLE_NAME = en.NOME_ENTITA
+                    and not exists (select 'x' from PBANDI_C_ATTRIBUTO att 
+                                    where col.COLUMN_NAME = att.NOME_ATTRIBUTO
+                                    and att.id_entita = en.id_ENTITA);
+                                    
+  nPosiz  PLS_INTEGER := NULL;                                                                          
+begin
+  for recAttr in curAttr loop
+
+    BEGIN
+      SELECT POSITION
+      INTO   nPosiz 
+      FROM   all_CONSTRAINTS A,all_CONS_COLUMNS B
+      WHERE  A.CONSTRAINT_TYPE = 'P'
+      AND    A.TABLE_NAME      = recAttr.TABLE_NAME
+      AND    A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+      AND    COLUMN_NAME       = recAttr.COLUMN_NAME;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        nPosiz := NULL;
+    END;
+    
+    insert into PBANDI_C_ATTRIBUTO
+    (ID_ATTRIBUTO, 
+     NOME_ATTRIBUTO, 
+     FLAG_DA_TRACCIARE, 
+     ID_ENTITA,
+     KEY_POSITION_ID) 
+    values
+    (SEQ_PBANDI_C_ATTRIBUTO.NEXTVAL,
+     recAttr.COLUMN_NAME,
+     'N',
+     recAttr.id_ENTITA,
+     nPosiz);
+  end loop;
+  COMMIT;
+end;
+/
+
