@@ -1,0 +1,38 @@
+<domanda_di_agevolazione version="1.0.0"																
+	xmlns="http://www.csi.it/interscambio/finaziamenti">															
+	<progetti>															
+		<progetto>														
+			<norma_incentivazione>POR-FSE 2014/2020</norma_incentivazione>													
+			<id_progetto>WSD150692</id_progetto>													
+			<codice_asse>WS</codice_asse>													
+			<descrizione_asse>BUONO DOMICILIARITA</descrizione_asse>													
+			<codice_misura>WS</codice_misura>													
+			<descrizione_misura>BUONO DOMICILIARITA</descrizione_misura>													
+			<descrizione_bando>SOSTEGNO ALLE FAMIGLIE PER O-SANITARIO</descrizione_bando>													
+			<destinatario_descrizione>REGIONE PIEMONTE</destinatario_descrizione>													
+			<destinatario_direzione>A1400A - SANITA E WELFARE</destinatario_direzione>													
+			<codice_intervento>BUONO DOMICILIARITA</codice_intervento>													
+			<descrizione_intervento>BUONO DOMICILIARITA</descrizione_intervento>													
+			<progetto_di_agevolazione>													
+				<data_presentazione>02/11/2021</data_presentazione>												
+				<ora_presentazione>13:06:26</ora_presentazione>												
+				<partitaiva_unitalocale/>												
+				<sede_non_attivata_in_piemonte/>												
+				<codice_ateco></codice_ateco>												
+				<descrizione_attivita_unitalocale></descrizione_attivita_unitalocale>												
+				<codice_settore_unitalocale></codice_settore_unitalocale>												
+				<comune_unitalocale>Torino</comune_unitalocale>												
+				<provincia_unitalocale>Torino</provincia_unitalocale>												
+				<modalita_registrazione>Manuale</modalita_registrazione> 												
+				<indirizzo_unitalocale></indirizzo_unitalocale>												
+				<titolo_progetto/>												
+				<descrizione_progetto/>												
+				<abstract_progetto/>												
+				<contributo_richiesto>35000,00</contributo_richiesto>												
+				<finanziamento_richiesto/>												
+				<spesa_ammessa/>												
+				<finanziamento_bancario/>												
+			</progetto_di_agevolazione>													
+		</progetto>														
+	</progetti>															
+</domanda_di_agevolazione>																

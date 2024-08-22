@@ -1,0 +1,1047 @@
+swagger: "2.0"
+info:
+  description: "API per pbandi"
+  version: "1.0.0"
+  title: "pbservwelfare"
+host: "localhost:8080"
+basePath: "/pbservwelfare/api"
+tags:
+- name: "Servizi per il welfare"
+schemes:
+- "http"
+paths:
+  /abilitazioneRendiconto/getAbilitaRendicontazione:
+    get:
+      operationId: getAbilitaRendicontazione
+      description: Visualizza abilitazione a rendicontare
+      produces:
+        - application/json
+      tags:
+        - getAbilitaRendicontazione
+      parameters:
+        - in: query
+          name: numeroDomanda
+          type: string
+        - in: query
+          name: codiceFiscaleUtente
+          type: string
+      responses:
+        '200':
+          description: Restituisce l'informazione se si è abilitati a rendicontare
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/AbilitaRendicontazioneResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /soggettoDelegato/setSoggettoDelegato:
+    post:
+      operationId: setSoggettoDelegato
+      description: Modifica/Inserisce soggetto delegato alla domanda/progetto
+      produces:
+        - application/json
+      tags:
+        - setSoggettoDelegato
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: true
+          name: nome
+          type: string
+        - in: query
+          required: true
+          name: cognome
+          type: string
+        - in: query
+          required: true
+          name: codiceFiscale
+          type: string
+        - in: query
+          required: false
+          name: codiceComuneNascita
+          type: string
+        - in: query
+          required: false
+          name: descrizioneComuneNascita
+          type: string
+        - in: query
+          required: false
+          name: descrizioneComuneEsteroNascita
+          type: string
+        - in: query
+          required: false
+          name: dataNascita
+          type: string
+        - in: query
+          required: false
+          name: mail
+          type: string
+        - in: query
+          required: false
+          name: telefono
+          type: string
+        - in: query
+          required: false
+          name: codiceComuneResidenza
+          type: string
+        - in: query
+          required: false
+          name: descrizioneComuneResidenza
+          type: string
+        - in: query
+          required: false
+          name: descrizioneComuneEsteroResidenza
+          type: string
+        - in: query
+          required: false
+          name: indirizzo
+          type: string
+        - in: query
+          required: false
+          name: cap
+          type: string
+      responses:
+        '200':
+          description: Dati soggetto delegato
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/SoggettoDelegatoResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /trasmissioneDocumentazionePerControdeduzioni/getTrasmissioneDocControdeduzioni:
+    get:
+      operationId: getTrasmissioneDocControdeduzioni
+      description: Riceve uno o più file inviati dal beneficiario per controdedurre
+      produces:
+        - application/json
+      tags:
+        - getTrasmissioneDocControdeduzioni
+      parameters:
+        - in: body
+          name: requestDocControdeduzioni
+          schema:
+            $ref: '#/definitions/RequestDocControdeduzioni'
+      responses:
+        '200':
+          description: Esito generico chiamata
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DocControdeduzioniResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /trasmissioneDocumentazioneIntegrativaRevoca/getTrasmissioneDocIntRevoca:
+    get:
+      operationId: getTrasmissioneDocIntRevoca
+      description: Trasmette documentazione integrativa revoca
+      produces:
+        - application/json
+      tags:
+        - getTrasmissioneDocIntRevoca
+      parameters:
+        - in: body
+          name: requestDocIntRevoca
+          schema:
+            $ref: '#/definitions/RequestDocIntRevoca'
+      responses:
+        '200':
+          description: Esito generico chiamata
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DocIntRevocaResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /trasmissioneDocumentazioneIntegrativaDocSpesa/setTrasmissioneDocIntegrativaSpesa:
+    post:
+      operationId: setTrasmissioneDocIntegrativaSpesa
+      description: Trasmette documentazione integrativa ai documenti di spesa
+      produces:
+        - application/json
+      tags:
+        - setTrasmissioneDocIntegrativaSpesa
+      parameters:
+        - in: body
+          name: requestDocIntegrativaSpesa
+          schema:
+            $ref: '#/definitions/RequestDocIntegrativaSpesa'
+      responses:
+        '200':
+          description: Esito generico chiamata
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DocIntegrativaSpesaResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /trasmissioneDocumentazioneContestazioni/getTrasmissioneDocContestazione:
+    get:
+      operationId: getTrasmissioneDocContestazione
+      description: Trasmette documentazione contestazione
+      produces:
+        - application/json
+      tags:
+        - getTrasmissioneDocContestazione
+      parameters:
+        - in: body
+          name: requestDocContestazione
+          schema:
+            $ref: '#/definitions/RequestDocContestazione'
+      responses:
+        '200':
+          description: Esito generico chiamata
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DocContestazioneResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /elencoSoggettiCorrelati/getSoggettoCorrelato:
+    get:
+      operationId: getSoggettoCorrelato
+      description: A partire dal codice progetto recupera la lista di soggetti ad esso collegati col relativo ruolo
+      produces:
+        - application/json
+      tags:
+        - getSoggettoCorrelato
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+      responses:
+        '200':
+          description: Lista dei soggetti correlati al progetto
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/SoggettiCorrelatiListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /elencoDocumentiSpesa/getElencoDocumentiSpesa:
+    get:
+      operationId: getElencoDocumentiSpesa
+      description: Recupera l'elenco dei documenti di spesa con relative info a partire dal codice progetto
+      produces:
+        - application/json
+      tags:
+        - getElencoDocumentiSpesa
+      parameters:
+        - in: query
+          required: false
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: false
+          name: identificativoDichiarazioneDiSpesa
+          type: integer
+        - in: query
+          required: false
+          name: identificativoDocumentoDiSpesa
+          type: integer
+      responses:
+        '200':
+          description: Lista dei documenti di spesa
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DocumentiSpesaListResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /gestioneFornitori/setFornitore:
+    post:
+      operationId: setFornitore
+      description: A partire dal numero di domanda permette di modificare (o eventualmente inserire) il fornitore associato ad una domanda / progetto
+      produces:
+        - application/json
+      tags:
+        - setFornitore
+      parameters:
+        - in: body
+          name: requestInserisciFornitore
+          schema:
+            $ref: '#/definitions/RequestInserisciFornitore'
+      responses:
+        default:
+          description: Esito inserimento / modifica
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoResponse'
+  /gestioneFornitori/elencoFornitori:
+    get:
+      operationId: elencoFornitori
+      description: A partire dal numero di domanda restituisce la lista di fornitori associati alla domanda
+      produces:
+        - application/json
+      tags:
+        - elencoFornitori
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+      responses:
+        default:
+          description: Esito operazione e lista fornitori
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoFornitoriResponse'
+  /trasmissioneVociDiSpesa/getTrasmissioneVociDiSpesa:
+    get:
+      operationId: getTrasmissioneVociDiSpesa
+      description: A partire dal numero di domanda restituisce la lista delle voci di spesa configurate per il bando della domanda
+      produces:
+        - application/json
+      tags:
+        - getTrasmissioneVociDiSpesa
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+      responses:
+        default:
+          description: Esito operazione e lista voci di spesa
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoVociDiSpesaResponse'
+  /gestioneProroghe/richiediProrogaControdeduzione:
+    post:
+      operationId: richiediProroga
+      description: Il servizio permette di richiedere una proroga per la controdeduzione del procedimento di revoca passato in input
+      produces:
+        - application/json
+      tags:
+        - richiediProroga
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: true
+          name: numeroRevoca
+          type: number
+        - in: query
+          required: true
+          name: numeroGiorni
+          type: integer
+        - in: query
+          required: true
+          name: motivazione
+          type: string
+      responses:
+        default:
+          description: Esito inserimento richiesta proroga
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoResponse'
+  /acquisizioneDomande/getDomandeConcesse:
+    post:
+      operationId: getDomandeConcesse
+      description: Acquisisce il file XML coi dati relativi alle domande concesse
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      tags:
+        - getDomandeConcesse
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+        - in: formData
+          required: true
+          name: file
+          type: file
+        - in: query
+          required: true
+          name: codiceBando
+          type: string
+      responses:
+        '200':
+          description: Generic response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DomandeConcesseResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /dichiarazioneSpesa/acquisisciDichiarazioneSpesa:
+    post:
+      operationId: acquisisciDichiarazioneSpesa
+      description: Invia la dichiarazione di spesa associata ad una domanda/progetto
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      tags:
+        - acquisisciDichiarazioneSpesa
+      parameters:
+        - in: formData
+          required: true
+          name: dati
+          type: string
+        - in: formData
+          required: true
+          name: file
+          type: file
+      responses:
+        '200':
+          description: Generic response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/DichiarazioneSpesaResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /esposizioneMensilita/getElencoMensilita:
+    get:
+      operationId: getElencoMensilita
+      description: Espone l'elenco delle mensilità rendicontate e delle relative informazioni
+      produces:
+        - application/json
+      tags:
+        - getElencoMensilita
+      parameters:
+        - in: query
+          required: true
+          name: numeroDomanda
+          type: string
+        - in: query
+          required: false
+          name: identificativoDichiarazioneDiSpesa
+          type: integer
+      responses:
+        '200':
+          description: Lista mensilità rendicontate
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ElencoMensilitaResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /ricezioneSegnalazioni/setRicezioneSegnalazioni:
+    post:
+      operationId: setRicezioneSegnalazioni
+      description: Invio segnalazioni sui controlli effettuati dagli istruttori per il mantenimento dei voucher
+      produces:
+        - application/json
+      tags:
+        - setRicezioneSegnalazioni
+      parameters:
+        - in: body
+          name: requestRicezioneSegnalazioni
+          schema:
+            $ref: '#/definitions/RequestRicezioneSegnalazioni'
+      responses:
+        '200':
+          description: Generic response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/RicezioneSegnalazioniResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /gestioneBeneficiario/getRicezioneIban:
+    post:
+      operationId: getRicezioneIban
+      description: L’operazione permette di aggiornare o ricevere un nuovo iban di un beneficiario.
+      produces:
+        - application/json
+      tags:
+        - getRicezioneIban
+      parameters:
+        - in: body
+          name: requestRicezioneIban
+          schema:
+            $ref: '#/definitions/RequestRicezioneIban'
+      responses:
+        '200':
+          description: Generic response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+  /gestioneStrutture/setInfoStrutture:
+    post:
+      operationId: setInfoStrutture
+      description: L’operazione permette di aggiornare le informazioni delle strutture
+      produces:
+        - application/json
+      tags:
+        - setInfoStrutture
+      parameters:
+        - in: body
+          name: requestInfoStrutture
+          schema:
+            $ref: '#/definitions/RequestInfoStrutture'
+      responses:
+        '200':
+          description: Generic response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/EsitoResponse'
+        default:
+          description: Errore generico.
+          schema:
+            $ref: '#/definitions/ApiError'
+definitions:
+  AbilitaRendicontazioneResponse:
+    type: object
+    properties:
+      codiceFiscaleBeneficiario:
+        type: string
+      codiceProgetto:
+        type: string
+      idSoggettoBeneficiario:
+        type: integer
+      abilitato:
+        type: boolean
+      esito:
+        type: string
+      messaggio:
+        type: string
+      codiceMessaggio:
+        type: string
+  SoggettoDelegatoResponse:
+    type: object
+    properties:
+      identificativoSoggettoCorrelato:
+        type: integer
+      messaggio:
+        type: string
+      esito:
+        type: string
+      codiceErrore:
+        type: string
+  RequestDocControdeduzioni:
+    type: object
+    properties: 
+      numeroDomanda:
+        type: string
+      identificativoControdeduzione:
+        type: integer
+      listaDocControdeduzioni:
+        type: array
+        items: 
+          $ref: '#/definitions/DocControdeduzioni'
+  DocControdeduzioni:
+    type: object
+    properties:
+      documento:
+        type: string
+        format: byte
+      nomeDocumento:
+        type: string
+  DocControdeduzioniResponse:
+    type: object
+    properties:
+      esito:
+        type: string
+      messaggioErrore:
+        type: string
+      codiceErrore:
+        type: string
+  RequestDocIntRevoca:
+    type: object
+    properties: 
+      numeroDomanda:
+        type: string
+      identificativoProcedimentoDiRevoca:
+        type: integer
+      listaDocIntRevoca:
+        type: array
+        items: 
+          $ref: '#/definitions/DocIntRevoca'
+  DocIntRevoca:
+    type: object
+    properties:
+      documento:
+        type: string
+        format: byte
+      nomeDocumento:
+        type: string
+  DocIntRevocaResponse:
+    type: object
+    properties:
+      esito:
+        type: string
+      messaggioErrore:
+        type: string
+      codiceErrore:
+        type: string
+  RequestDocIntegrativaSpesa:
+    type: object
+    properties: 
+      identificativoRichiestaDiIntegrazione:
+        type: integer
+      listaDocIntegrazioneSpesa:
+        type: array
+        items: 
+          $ref: '#/definitions/DocIntegrazioneSpesa'
+  DocIntegrazioneSpesa:
+    type: object
+    properties:
+      documento:
+        type: string
+        format: byte
+      nomeDocumento:
+        type: string
+  DocIntegrativaSpesaResponse:
+    type: object
+    properties:
+      esito:
+        type: string
+      messaggioErrore:
+        type: string
+      codiceErrore:
+        type: string
+  RequestDocContestazione:
+    type: object
+    properties: 
+      numeroDomanda:
+        type: string
+      identificativoContestazione:
+        type: integer
+      listaDocContestazione:
+        type: array
+        items: 
+          $ref: '#/definitions/DocContestazione'
+  DocContestazione:
+    type: object
+    properties:
+      documento:
+        type: string
+        format: byte
+      nomeDocumento:
+        type: string
+  RequestInserisciFornitore:
+    type: object
+    properties:
+      numeroDomanda:
+        type: string
+      codiceFiscale:
+        type: string
+      cognome:
+        type: string
+      nome:
+        type: string
+      denominazione:
+        type: string
+      partitaIva:
+        type: string
+      codiceFormaGiuridica:
+        type: string
+      dataInizio:
+        type: string
+        format: date
+      dataFine:
+        type: string
+        format: date
+      files:
+        type: array
+        items:
+          $ref: '#/definitions/FileAllegato'
+  FileAllegato:
+    type: object
+    properties:
+      file:
+        type: string
+        format: byte
+      nomeFile:
+        type: string
+  DocContestazioneResponse:
+    type: object
+    properties:
+      esito:
+        type: string
+      messaggioErrore:
+        type: string
+      codiceErrore:
+        type: string
+  SoggettiCorrelatiListResponse:
+    properties:
+      esitoServizio:
+        type: string
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      soggettiCorrelatiList:
+        type: array
+        items:
+          $ref: '#/definitions/SoggettoCorrelato'
+  SoggettoCorrelato:
+    type: object
+    properties:
+      identificativoSoggettoCorrelato:
+        type: integer
+      tipoSoggetto:
+        type: string
+      nome:
+        type: string
+      cognome:
+        type: string
+      codiceFiscale:
+        type: string
+      codiceComuneNascita:
+        type: string
+      descrizioneComuneNascita:
+        type: string
+      descrizioneComuneEsteroNascita:
+        type: string
+      dataNascita:
+        type: string
+      mail:
+        type: string
+      telefono:
+        type: string
+      codiceComuneResidenza:
+        type: string
+      descrizioneComuneResidenza:
+        type: string
+      descrizioneComuneEsteroResidenza:
+        type: string
+      indirizzo:
+        type: string
+      cap:
+        type: string
+  EsitoResponse:
+    type: object
+    properties:
+      messaggio:
+        type: string
+      esitoServizio:
+        type: string
+      codiceErrore:
+        type: string
+  DocumentiSpesaListResponse:
+    properties:
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      documentiSpesaList:
+        type: array
+        items:
+          $ref: '#/definitions/DocumentoSpesa'
+  DocumentoSpesa:
+    type: object
+    properties:
+      identificativoDocumentoDiSpesa:
+        type: integer
+      noteValidazione:
+        type: string
+      statoDocumento:
+        type: string
+      importoTotaleDocumento:
+        type: integer
+      importoRendicontato:
+        type: integer
+      importoQuietanzato:
+        type: integer
+      importoValidato:
+        type: integer
+      codiceFiscaleFornitore:
+        type: string
+      denominazioneFornitore:
+        type: string
+      cognome:
+        type: string
+      nome:
+        type: string
+      dataInizioContratto:
+        type: string
+        format: date
+      dataFineContratto:
+        type: string
+        format: date
+  EsitoFornitoriResponse:
+    type: object
+    properties:
+      fornitori:
+        type: array
+        items:
+          $ref: '#/definitions/Fornitori'
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+  Fornitori:
+    type: object
+    properties:
+      idFornitore:
+        type: integer
+      codiceFiscaleFornitore:
+        type: string
+      denominazione:
+        type: string
+      nome:
+        type: string
+      cognome:
+        type: string
+      codiceFormaGiuridica:
+        type: string
+      dataInizio:
+        type: string
+        format: date
+      dataFine:
+        type: string
+        format: date
+      file:
+        type: array
+        items:
+          $ref: '#/definitions/FileInfo'
+  FileInfo:
+    type: object
+    properties:
+      idDocumentoIndex:
+        type: integer
+      nomeFile:
+        type: string
+  EsitoVociDiSpesaResponse:
+    type: object
+    properties:
+      vociDiSpesa:
+        type: array
+        items:
+          $ref: '#/definitions/VociDiSpesa'
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      esitoServizio:
+        type: string
+  VociDiSpesa:
+    type: object
+    properties:
+      codiceBando:
+        type: string
+      idVoceDiSpesa:
+        type: string
+      descrizioneVoceDiSpesa:
+        type: string
+      codTipoVoceDiSpesa:
+        type: string
+  DomandeConcesseResponse:
+    type: object
+    properties:
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      esitoServizio:
+        type: string
+      UUID:
+        type: string
+  DichiarazioneSpesaResponse:
+    type: object
+    properties:
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      esitoServizio:
+        type: string
+      UUID:
+        type: string
+  DichiarazioneSpesa:
+    type: object
+    properties:
+      Numero_domanda:
+        type: string
+      Codice_bando:
+        type: string
+      Data_Dichiarazione_di_spesa:
+        type: string
+      Cod_struttura:
+        type: string
+      id_dichiarazione_buonodom:
+        type: string
+      Nome_file: 
+        type: string
+      Mensilita:
+        type: array
+        items:
+          $ref: '#/definitions/Mensilita'
+      Documenti_di_spesa:
+        type: array
+        items:
+          $ref: '#/definitions/Documenti_di_spesa'
+      Fornitori:
+        type: array
+        items:
+          $ref: '#/definitions/ModelInvioFornitori'
+  Mensilita:
+    type: object
+    properties:
+      Valore:
+        type: string
+      Sabbatico:
+        type: string
+  Documenti_di_spesa:
+    type: object
+    properties:
+      Data_documento:
+        type: string
+      Numero_documento:
+        type: string
+      id_documento_buono_dom:
+        type: string
+      Importo_totale_documento:
+        type: string
+      Importo_quietanziato:
+        type: string
+      Descrizione_documento:
+        type: string
+      Codice_voce_di_spesa:
+        type: string
+      Codice_fiscale_fornitore:
+        type: string
+      Tipologia_documento:
+        type: string
+      Documenti:
+        type: array
+        items:
+          $ref: '#/definitions/Documenti'
+  Documenti:
+    type: object
+    properties:
+      Nomefile:
+        type: string
+      Tipologia:
+        type: string
+  ModelInvioFornitori:
+    type: object
+    properties:
+      Codice_fiscale_fornitore:
+        type: string
+      Documenti:
+        type: array
+        items:
+          $ref: '#/definitions/Documenti'
+  ElencoMensilitaResponse:
+    type: object
+    properties:
+      messaggio:
+        type: string
+      codiceErrore:
+        type: string
+      esitoServizio:
+        type: string
+      elencoMensilita:
+        type: array
+        items:
+          $ref: '#/definitions/ElencoMensilita'
+  ElencoMensilita:
+    type: object
+    properties:
+      dichiarazioneSpesa:
+        type: integer
+      anno:
+        type: integer
+      mese:
+        type: string
+      esitoValidazione:
+        type: string
+      sabbatico:
+        type: boolean
+      importoRendicontato:
+        type: number
+        format: double
+      importoValidato:
+        type: number
+        format: double
+      importoInErogazione:
+        type: number
+        format: double
+      dataAggiornamento:
+        type: string
+        format: date
+  RequestRicezioneSegnalazioni:
+    type: object
+    properties:
+      numeroDomanda:
+        type: string
+      codiceNotifica:
+        type: string
+      data:
+        type: string
+        format: date
+      descrizioneNotifica:
+        type: string
+  RicezioneSegnalazioniResponse:
+    type: object
+    properties:
+      messaggio:
+        type: string
+      esitoServizio:
+        type: string
+      codiceErrore:
+        type: string
+  RequestRicezioneIban:
+    type: object
+    properties:
+      numeroDomanda:
+        type: string
+      iban:
+        type: string
+      codiceStruttura:
+        type: string
+      denominazioneStruttura:
+        type: string
+      intestatario:
+        type: string
+  RequestInfoStrutture:
+    type: object
+    properties:
+      codiceStruttura:
+        type: string
+      email:
+        type: string
+  ApiError:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string

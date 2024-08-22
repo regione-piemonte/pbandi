@@ -1,0 +1,109 @@
+<domanda_di_agevolazione version="1.0.0"																
+	xmlns="http://www.csi.it/interscambio/finaziamenti">															
+	<progetti>															
+		<progetto>														
+			<norma_incentivazione>POR-FSE 2014/2020</norma_incentivazione>													
+			<id_progetto>WSD150692</id_progetto>													
+			<codice_asse>WS</codice_asse>													
+			<descrizione_asse>BUONO DOMICILIARITA</descrizione_asse>													
+			<codice_misura>WS</codice_misura>													
+			<descrizione_misura>BUONO DOMICILIARITA</descrizione_misura>													
+			<descrizione_bando>SOSTEGNO ALLE FAMIGLIE PER LINSERIMENTO DI SOGGETTI NON AUTOSUFFICIENTI IN STRUTTURE RESIDENZIALI A CARATTERE SOCIO-SANITARIO</descrizione_bando>													
+			<destinatario_descrizione>REGIONE PIEMONTE</destinatario_descrizione>													
+			<destinatario_direzione>A1400A - SANITA E WELFARE</destinatario_direzione>													
+			<codice_intervento>BUONO DOMICILIARITA</codice_intervento>													
+			<descrizione_intervento>BUONO DOMICILIARITA</descrizione_intervento>													
+			<progetto_di_agevolazione>													
+				<data_presentazione>02/11/2021</data_presentazione>												
+				<ora_presentazione>13:06:26</ora_presentazione>												
+				<partitaiva_unitalocale/>												
+				<sede_non_attivata_in_piemonte/>												
+				<codice_ateco></codice_ateco>												
+				<descrizione_attivita_unitalocale></descrizione_attivita_unitalocale>												
+				<codice_settore_unitalocale></codice_settore_unitalocale>												
+				<descrizione_settore_unitalocale></descrizione_settore_unitalocale> 												
+				<stato_unitalocale>ITALIA</stato_unitalocale>												
+				<cod_stato_unitalocale>000</cod_stato_unitalocale>												
+				<cap_unitalocale>10100</cap_unitalocale>												
+				<codice_comune_unitalocale>001272</codice_comune_unitalocale>												
+				<comune_unitalocale>Torino</comune_unitalocale>												
+				<provincia_unitalocale>Torino</provincia_unitalocale>												
+				<modalita_registrazione>Manuale</modalita_registrazione> 												
+				<indirizzo_unitalocale></indirizzo_unitalocale>												
+				<titolo_progetto/>												
+				<descrizione_progetto/>												
+				<abstract_progetto/>												
+				<contributo_richiesto>35000,00</contributo_richiesto>												
+				<finanziamento_richiesto/>												
+				<spesa_ammessa/>												
+				<finanziamento_bancario/>												
+			</progetto_di_agevolazione>													
+			<anagrafica_beneficiario>													
+				<cod_tipo_utente>1</cod_tipo_utente>												
+				<tipo_utente>Beneficiario</tipo_utente>												
+				<tipologia_ente>Persona fisica</tipologia_ente>												
+				<codice_dipartimento/>
+				<descrizione_dipartimento/>
+				<forma_giuridica_impresa/>												
+				<cod_forma_giuridica_impresa/>
+				<codice_fiscale_impresa>CMDVNC92S68D205S</codice_fiscale_impresa>												
+				<ragione_sociale_impresa>Veronica Comodo</ragione_sociale_impresa>												
+				<partitaiva_sedelegale/>												
+				<codice_ateco/>												
+				<stato_sedelegale>ITALIA</stato_sedelegale>												
+				<cod_stato_sedelegale>00</cod_stato_sedelegale>												
+				<tipologia_registro_iscrizione>CCIAA</tipologia_registro_iscrizione>												
+				<iscrizione_incorso/>												
+				<cin>N</cin>												
+				<abi>03069</abi>												
+				<cab>46210</cab>												
+				<iban>IT64N0306946210100000000315</iban>												
+				<bic/>												
+				<n_contocorrente>100000000315</n_contocorrente>												
+				<ruolo_beneficiario>singolo</ruolo_beneficiario>												
+				<classificazione_ente>Soggetto privato / Cittadino</classificazione_ente>												
+				<cognome_persona_fisica>Comodo</cognome_persona_fisica>												
+				<nome_persona_fisica>Veronica</nome_persona_fisica>												
+				<stato_nascita_persona_fisica>Italia</stato_nascita_persona_fisica>												
+				<provincia_nascita_persona_fisica>004</provincia_nascita_persona_fisica>												
+				<provincia_nascita_descrizione_persona_fisica>CUNEO</provincia_nascita_descrizione_persona_fisica>												
+				<codice_comune_nascita_persona_fisica>004078</codice_comune_nascita_persona_fisica>												
+				<comune_nascita_persona_fisica>CUNEO</comune_nascita_persona_fisica>												
+				<stato_estero_nascita_persona_fisica/>												
+				<data_nascita_persona_fisica>28/11/1992</data_nascita_persona_fisica>												
+				<codice_comune_sedelegale>004016</codice_comune_sedelegale>												
+				<comune_sedelegale>BEINETTE</comune_sedelegale>												
+				<indirizzo_sedelegale>Via Emanuele Filiberto , 17 A</indirizzo_sedelegale>												
+				<cap_sedelegale>12081</cap_sedelegale>												
+				<telefono_sedelegale>3387195360</telefono_sedelegale>												
+				<email_sedelegale>verocomodo@gmail.com</email_sedelegale>												
+				<pec_sedelegale>veronica.comodo@legalmail.it</pec_sedelegale>												
+			</anagrafica_beneficiario>													
+			<anagrafica_persona_fisica>													
+				<codice_fiscale_impresa>MAIGPP44D29E808Q</codice_fiscale_impresa>												
+				<tipo_personafisica>Soggetto Delegato</tipo_personafisica>												
+				<codice_fiscale_soggetto>MAIGPP44D29E808Q</codice_fiscale_soggetto>												
+				<cognome>AIMO</cognome>												
+				<nome>GIUSEPPE</nome>												
+				<data_nascita>29/04/1944</data_nascita>												
+				<stato_nascita>Italia</stato_nascita>												
+				<codice_comune_nascita>004114</codice_comune_nascita>												
+				<comune_nascita>MAGLIANO ALPI</comune_nascita>												
+				<stato_indirizzo>Italia</stato_indirizzo>												
+				<cod_stato_indirizzo>000</cod_stato_indirizzo>												
+				<codice_comune_indirizzo>004114</codice_comune_indirizzo>												
+				<comune_indirizzo>MAGLIANO ALPI</comune_indirizzo>												
+				<cap_indirizzo>12060</cap_indirizzo>												
+				<indirizzo>VIA VERDINO, 2</indirizzo>												
+			</anagrafica_persona_fisica>													
+			<spese_progetto>													
+				<codice_tipologia_spesa>BD1</codice_tipologia_spesa>												
+				<descr_tipologia_spesa>Spese per servizio di assistenza</descr_tipologia_spesa>												
+				<importo_spesa_richiesta_finanziata>20000</importo_spesa_richiesta_finanziata>												
+				<importo_spesa_richiesta_non_finanziata/>												
+				<cod_dett_intervento/>
+				<flag_iva_costo>no</flag_iva_costo>
+			</spese_progetto>
+		</progetto>														
+	</progetti>															
+</domanda_di_agevolazione>																

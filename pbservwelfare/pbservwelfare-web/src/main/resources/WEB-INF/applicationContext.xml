@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbservwelfare.business.SpringApplicationContextHelper"></bean>
+	
+	<bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+ 
+ <!-- 
+	// OracleLobHandler, the Oracle-specific implementation of Spring's LobHandler interface,
+	// requires a NativeJdbcExtractor for obtaining the native OracleConnection: 
+	// it is an interface for extracting native JDBC objects from wrapped objects coming from connection pools.
+	-->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" >
+		<property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	</bean>
+ 
+ 	<bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" />
+
+
+	<!-- bean di utility -->
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+	    <constructor-arg ref="dataSource" />
+	  </bean>
+	
+	<!-- bean usati dai servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbservwelfare.business.impl" />
+
+	
+	<!-- bean dei servizi REST -->
+	<context:component-scan base-package="it.csi.pbandi.pbservwelfare.business.service.impl" />
+	
+	
+    <!-- DATABASE di TEST -->	
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+      	<property name="jndiName" value="jdbc/pbservwelfareDS" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- bean DAO -->
+	<bean class="it.csi.pbandi.pbservwelfare.integration.dao.BaseDAO"/>
+	<context:component-scan base-package="it.csi.pbandi.pbservwelfare.integration.dao" />
+
+	<bean id="AbilitazioneRendicontoDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.AbilitazioneRendicontoDAOImpl">
+	</bean>
+	<bean id="SoggettoDelegatoDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.SoggettoDelegatoDAOImpl">
+	</bean>
+	<bean id="TrasmissioneDocumentazioniPerControdeduzioniDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.TrasmissioneDocumentazioniPerControdeduzioniDAOImpl">
+	</bean>
+	<bean id="TrasmissioneDocumentazioneIntegrativaRevocaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.TrasmissioneDocumentazioneIntegrativaRevocaDAOImpl">
+	</bean>
+	<bean id="TrasmissioneDocumentazioneIntegrativaDocSpesaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.TrasmissioneDocumentazioneIntegrativaDocSpesaDAOImpl">
+	</bean>
+	<bean id="TrasmissioneDocumentazioneContestazioniDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.TrasmissioneDocumentazioneContestazioniDAOImpl">
+	</bean>
+	<bean id="ElencoSoggettiCorrelatiDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.ElencoSoggettiCorrelatiDAOImpl">
+	</bean>
+	<bean id="ElencoDocumentiSpesaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.ElencoDocumentiSpesaDAOImpl">
+	</bean>
+	<bean id="GestioneFornitoriDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.GestioneFornitoriDAOImpl">
+	</bean>
+	<bean id="TrasmissioneVociDiSpesaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.TrasmissioneVociDiSpesaDAOImpl">
+	</bean>
+	<bean id="AcquisizioneDomandeDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.AcquisizioneDomandeDAOImpl">
+	</bean>
+	<bean id="GestioneProrogheDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.GestioneProrogheDAOImpl">
+	</bean>
+	<bean id="DichiarazioneSpesaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.DichiarazioneSpesaDAOImpl">
+	</bean>
+	<bean id="EsposizioneMensilitaDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.EsposizioneMensilitaDAOImpl">
+	</bean>
+	<bean id="RicezioneSegnalazioniDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.RicezioneSegnalazioniDAOImpl">
+	</bean>
+	<bean id="GestioneBeneficiarioDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.GestioneBeneficiarioDAOImpl">
+	</bean>
+	<bean id="GestioneStruttureDAO" class="it.csi.pbandi.pbservwelfare.integration.dao.impl.GestioneStruttureDAOImpl">
+	</bean>
+
+</beans>

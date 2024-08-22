@@ -39,7 +39,7 @@ una componente trasversale per le componenti Angular
 - [PBCOMMONWCL](https://github.com/regione-piemonte/pbandi/tree/main/pbcommonwcl)     Componente funzionalità comuni per BPM (Angular)
 
 tre componenti di esposizione servizi:
-- [PBSERVWELFARE](https://github.com/regione-piemonte/pbandi/pbservwelfare)   Componente di esposizione servizi per i bandi welfare 
+- [PBSERVWELFARE](https://github.com/regione-piemonte/pbandi/tree/main/pbservwelfare)   Componente di esposizione servizi per i bandi welfare 
 - [PBSERVIZIT](https://github.com/regione-piemonte/pbandi/tree/main/pbservizit)  	Servizi REST trasversali  	
 - [PBSERVREST](https://github.com/regione-piemonte/pbandi/tree/main/pbservrest)  	Servizi esposti verso fruitori esterni 	
 
@@ -47,8 +47,8 @@ una componente trasversale di utility per la gesione dei file da archiviare
 - [FILESTORAGE](https://github.com/regione-piemonte/pbandi/tree/main/filestorage)  	Componente trasversale (jar) per la gestione degli storage su fileSystem
 
 due componenti di utilizi per le componenti online e batch
-- [UTILITYBATCH](https://github.com/regione-piemonte/pbandi/utilitybatch)    Package plSql di utility batch 
-- [UTILITIONLINE](https://github.com/regione-piemonte/pbandi/utilityonline)   Componente logica plsql usata dall'online 
+- [UTILITYBATCH](https://github.com/regione-piemonte/pbandi/tree/main/utilitybatch)    Package plSql di utility batch 
+- [UTILITIONLINE](https://github.com/regione-piemonte/pbandi/tree/main/utilityonline)   Componente logica plsql usata dall'online 
 
 tre componenti Sql-Schema DB
 - [PBANDIDB](https://github.com/regione-piemonte/pbandi/tree/main/pbandidb)        Componente schema pbandi
@@ -56,10 +56,10 @@ tre componenti Sql-Schema DB
 - [PBANDIDBRW](https://github.com/regione-piemonte/pbandi/tree/main/pbandidbrw)      Componente schema pbandi_rw
 
 sei componenti ORACLE/PLSQL
-- [PROCESSO](https://github.com/regione-piemonte/pbandi/processo)  	    Gestione del nuovo processo interno  	
-- [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi/restituzionecup) Componente pl/sql per procedura restituzione cup  	
-- [RETTIFICAFORF](https://github.com/regione-piemonte/pbandirettificaforf)  	Calcolo importo validato rettificato  	
-- [RICHIESTACUP](https://github.com/regione-piemonte/pbandi/richiestacup)  	Procedura PLSQL di richiesta CUP  	
+- [PROCESSO](https://github.com/regione-piemonte/pbandi/tree/main/processo)  	    Gestione del nuovo processo interno  	
+- [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi/tree/main/restituzionecup) Componente pl/sql per procedura restituzione cup  	
+- [RETTIFICAFORF](https://github.com/regione-piemonte/tree/main/pbandirettificaforf)  	Calcolo importo validato rettificato  	
+- [RICHIESTACUP](https://github.com/regione-piemonte/pbandi/tree/main/richiestacup)  	Procedura PLSQL di richiesta CUP  	
 - [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi/tree/main/campionamento)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
 - [CARICAMENTOUTENTI](https://github.com/regione-piemonte/pbandi/tree/main/caricamentoutenti)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
 # Configurazioni iniziali

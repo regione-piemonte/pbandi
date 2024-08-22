@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util 
+	   http://www.springframework.org/schema/util/spring-util.xsd"
+>
+	<bean class="it.csi.pbandi.pbservwelfare.business.SpringApplicationContextHelper"></bean>
+	
+ 	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+ 	
+	
+	<bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+ 
+ <!-- 
+	// OracleLobHandler, the Oracle-specific implementation of Spring's LobHandler interface,
+	// requires a NativeJdbcExtractor for obtaining the native OracleConnection: 
+	// it is an interface for extracting native JDBC objects from wrapped objects coming from connection pools.
+	-->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" >
+		<property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	</bean>
+ 
+ 	<bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" />
+		
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!--
+	<bean id="attivitaDAOImpl"
+		class="it.csi.pbandi.pbworkspace.integration.dao.impl.AttivitaDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	-->
+	<!-- bean DAO -->
+	<bean class="it.csi.pbandi.pbservwelfare.integration.dao.BaseDAO"/>
+	<context:component-scan base-package="it.csi.pbandi.pbservwelfare.integration.dao" />
+	
+	
+	<context:property-placeholder location="classpath:/enviromentTest.properties" />
+
+</beans>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="rettificaforf">
+      <description>Build file del componente</description>
+ 
+      <property file="buildfiles/build.properties"/>
+ 
+	<target name="init" description="Inizializza lo script Ant">
+		<tstamp/>
+		<mkdir dir="${build}/temp" />
+		<mkdir dir="${dist}" />
+		<echo message="target: ${target}" />
+		<loadproperties srcFile="buildfiles/${target}.properties"/>
+	</target>
+
+    <target name="environment-config" description="Predispone le configurazioni dipendenti dall'ambiente" depends="init">
+          <copy todir="${build}/temp">
+            <fileset file="${src}/**" />
+          </copy>
+          <antcall target="replace-token" />
+
+      </target>
+
+      <target name="replace-token" if="environment.config">
+        <echo message="eseguo le parsificazioni necessarie sui file sorgenti se nel build.properties e' settata environment.config" />
+        <!-- replace file="${build}/temp/Pck_Flussi_Dtt/PCK_FLUSSI_DTT.pkb.SQL" token="@linea.cliente@" value="${linea.cliente}"/>
+
+        <replace file="${build}/temp/Pck_Flussi_Dtt/PCK_FLUSSI_DTT.pks.SQL" token="@linea.cliente@" value="${linea.cliente}"/-->
+      </target>
+
+
+	<target name="distribution" depends="environment-config" description="crea la distribution per un dato target">
+	    <mkdir dir="${build}/temp" />
+	    <mkdir dir="${dist}/${target}" />	
+	  
+	    <zip destfile="${dist}/${target}/${project}-${version}.zip" basedir="${build}/temp/plsql/package" />
+            <delete dir="${build}/temp" />
+      </target>
+
+      <target name="clean-all" description="Rimuove le cartelle temporanee." depends="clean-dist, clean-temp"/>
+
+      <target name="clean-temp" description="Rimuove la cartella dei files temporanei di build.">
+            <delete dir="${build}/temp" />
+      </target>
+
+      <target name="clean-dist" description="Rimuove la cartella delle distribuzioni.">
+            <delete dir="${dist}"/>
+      </target>
+
+</project>
