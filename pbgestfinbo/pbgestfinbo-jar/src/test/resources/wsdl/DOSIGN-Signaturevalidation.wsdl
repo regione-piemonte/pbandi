@@ -863,7 +863,7 @@
   </wsdl:binding>
   <wsdl:service name="DosignSignatureValidation">
     <wsdl:port binding="tns:DosignSignatureValidationSoapBinding" name="DosignSignatureValidationBeanPort">
-      <soap:address location="http://tst-<VH_esposizione_servizi>/dosignmanager/DosignSignatureValidation/DosignSignatureValidationBean"/>
+      <soap:address location="http://tst-<VH_ESPOSIZIONE_SERVIZI>/dosignmanager/DosignSignatureValidation/DosignSignatureValidationBean"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -166,7 +166,7 @@
   </wsdl:binding>
   <wsdl:service name="DosignTimestamping">
     <wsdl:port binding="tns:DosignTimestampingSoapBinding" name="DosignTimestampingBeanPort">
-      <soap:address location="http://tst-<VH_esposizione_servizi>/dosignmanager/DosignTimestamping/DosignTimestampingBean"/>
+      <soap:address location="http://tst-<VH_ESPOSIZIONE_SERVIZI>/dosignmanager/DosignTimestamping/DosignTimestampingBean"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

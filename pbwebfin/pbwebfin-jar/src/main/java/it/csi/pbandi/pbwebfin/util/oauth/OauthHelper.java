@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * Esempio:
  * <pre>
- *         OauthHelper oauth = new OauthHelper("https://<VH_test_Oauth>/wso/api/token",
+ *         OauthHelper oauth = new OauthHelper("https://tst-<VH_OAUTH>/wso/api/token",
  *                                             "**************************",
  *                                             "**************************",
  *                                             10000);

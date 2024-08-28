@@ -250,7 +250,7 @@ public class InvocazioneServiziActaTest extends TestBaseService {
 		LOG.info(prf + " BEGIN");
 		
 		try {
-//			URL url = new URL("http://tst-<VH_esposizione_servizi>/actasrv/objectWS?wsdl");
+//			URL url = new URL("http://tst-<VH_ESPOSIZIONE_SERVIZI>/actasrv/objectWS?wsdl");
 			URL url = this.getClass().getClassLoader().getResource("wsdl/ACARISWS-ObjectService.wsdl");
 			LOG.info(prf + ">><< url="+url);
  
@@ -351,7 +351,7 @@ public class InvocazioneServiziActaTest extends TestBaseService {
 		
 		try {
 			//TODO PK : riga qui sotto solo per TEST JUNIT, commentarla e scommentare la seguente
-			URL url = new URL("http://tst-<VH_esposizione_servizi>/actasrv/backofficeWS?wsdl");
+			URL url = new URL("http://tst-<VH_ESPOSIZIONE_SERVIZI>/actasrv/backofficeWS?wsdl");
 			//URL url = this.getClass().getClassLoader().getResource("/wsdl/ACARISWS-BackOfficeService.wsdl");
 			LOG.info(prf + ">><< url="+url);
 			

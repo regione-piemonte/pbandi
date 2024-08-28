@@ -17,7 +17,7 @@ export const environment = {
   pbwebrceURL: 'http://localhost:4260/pbwebrce',
   pbgestfinboURL: "http://localhost:4300/pbgestfinbo",
   pbwebfinURL: "http://localhost:4290/pbwebfin",
-  shibbolethSSOLogoutURL: "https://<VH_Secure_dev>//ssp_liv3_sisp_liv2_spid_GASP_REGIONE/logout.do",
+  shibbolethSSOLogoutURL: "https://dev-<VH_SECURE>//ssp_liv3_sisp_liv2_spid_GASP_REGIONE/logout.do",
   timeout: 120
 };
 

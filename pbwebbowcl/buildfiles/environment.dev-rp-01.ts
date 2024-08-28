@@ -5,14 +5,14 @@
 
 export const environment = {
   production: true,
-  apiURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbwebbo",
-  pbworkspaceURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbworkspace",
-  pbwebURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbweb",
-  pbweberogURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbweberog",
-  pbwebcertURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbwebcert",
-  pbwebrceURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbwebrce",
-  pbgestfinboURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbgestfinbo",
-  pbwebfinURL: "https://<VH_Secure_dev>//finanziamenti/bandi/pbwebfin",
-  shibbolethSSOLogoutURL: "https://<VH_Secure_dev>//ssp_liv3_sisp_liv2_spid_GASP_REGIONE/logout.do",
+  apiURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbwebbo",
+  pbworkspaceURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbworkspace",
+  pbwebURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbweb",
+  pbweberogURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbweberog",
+  pbwebcertURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbwebcert",
+  pbwebrceURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbwebrce",
+  pbgestfinboURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbgestfinbo",
+  pbwebfinURL: "https://dev-<VH_SECURE>//finanziamenti/bandi/pbwebfin",
+  shibbolethSSOLogoutURL: "https://dev-<VH_SECURE>//ssp_liv3_sisp_liv2_spid_GASP_REGIONE/logout.do",
   timeout: 60
 };

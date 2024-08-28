@@ -37,7 +37,7 @@ import java.lang.reflect.Proxy;
  * Esempio di uso:
  * <pre>
  *      GenericWrapperFactoryBean gwfb = new GenericWrapperFactoryBean();
- *      gwfb.setEndPoint("http://<VH_TEST_Oauth>/api/ITT_QSP_echo/1.0");
+ *      gwfb.setEndPoint("http://tst-<VH_OAUTH>/api/ITT_QSP_echo/1.0");
  *      gwfb.setWrappedInterface(EipMockServiceAxisPortType.class);
  *      gwfb.setPort(port);
  *      gwfb.setTokenRetryManager(trm);

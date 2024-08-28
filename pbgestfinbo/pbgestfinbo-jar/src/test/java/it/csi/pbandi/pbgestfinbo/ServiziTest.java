@@ -35,7 +35,7 @@ public class ServiziTest {
 //		Assert.assertSame("Name is not the same as expected: ", "Default Random Number Generator", randomGenerator.name());
 		
 		
-		String url = "http://dev-<VH_esposizione_servizi>/finservrest"+ "/api/ricezioneBloccoSbloccoAnagrafico/ricezione";
+		String url = "http://dev-<VH_ESPOSIZIONE_SERVIZI>/finservrest"+ "/api/ricezioneBloccoSbloccoAnagrafico/ricezione";
 		
 		Client client = ClientBuilder.newBuilder().build(); 
 		WebTarget target = client.target(url);
