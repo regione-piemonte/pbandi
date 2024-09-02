@@ -28,11 +28,11 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWORKSPACE](../pbworkspace), effettuare i seguenti step:
 
-0. Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <VH> con  il Virtual Host Apache su cui saranno presenti le locations
+0. Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <VH_APACHE> con  il Virtual Host Apache su cui saranno presenti le locations
 1. cd pbworkspacewcl
 2. npm install
 3. npm run build-prod

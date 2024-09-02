@@ -26,7 +26,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbweb\pbweb-tar\src\pbweb-ds.xml:
 	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>

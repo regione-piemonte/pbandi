@@ -24,7 +24,7 @@ Questa componente deve essere installata come libreria trasversale delle compone
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 1. mvn clean package -P prod-rp-01 -Dpostfix="" -Dmaven.test.skip=true
 
 ## Deployment

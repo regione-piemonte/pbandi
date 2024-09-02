@@ -64,7 +64,7 @@ public class InizializzazioneDAOImpl extends JdbcDaoSupport implements Inizializ
 		LOG.info(prf + " role=" + role + ", taskIdentity=" + taskIdentity + ", taskName=" + taskName + ", wkfAction="
 				+ wkfAction);
 
-//		miniAppUrl: ----> http://dev-<VH>/finanziamenti/bandijp/pbandiwebbosrv2/shib/HomePage.do?
+//		miniAppUrl: ----> http://dev-<VH_APACHE>/finanziamenti/bandijp/pbandiwebbosrv2/shib/HomePage.do?
 		// idSg=2139302 & --> pbandi_t_soggetto
 		// idSgBen=5570 &
 		// role=CSI-ASSISTENZA &

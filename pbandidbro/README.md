@@ -24,7 +24,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 0. Esecuzione del file che si trova sotto la cartella src\sql\init:
 

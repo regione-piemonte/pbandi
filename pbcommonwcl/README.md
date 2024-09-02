@@ -25,7 +25,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 0. Assicurarsi di avere installato il modulo angular-devkit (npm i @angular-devkit/build-angular)
 1. cd pbcommonwcl

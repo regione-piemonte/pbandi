@@ -25,7 +25,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 mvn clean package -P prod-rp-01 -Dpostfix="" -Dmaven.test.skip=true
 

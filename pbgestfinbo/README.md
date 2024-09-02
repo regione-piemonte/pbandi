@@ -33,7 +33,7 @@ Per generare i pacchetti effettuare i seguenti step:
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 1. cd pbworkspace
 2. generare il file pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip come indicato nel README.md della componete [PBGESTFINBOWCL](../pbgestfinbowcl)
 2. unzip -o pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip -d pbgestfinbo-web\src\main\webapp\

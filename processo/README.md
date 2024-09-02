@@ -24,7 +24,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 Esecuzione dei file che si trovano sotto la cartella src\plsql\package nel seguente ordine:
 * CREATE_GRANT_PROCESSO.sql

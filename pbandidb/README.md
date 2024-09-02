@@ -24,7 +24,7 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 
 0. Esecuzione dei file che si trovano sotto la cartella src\sql\init nel corretto ordine (creazione_db, creazione_sinonimi ....);
 1. Esecuzione dei seguenti file contenuti nela cartella src\sql\incr nell'ordine indicato:

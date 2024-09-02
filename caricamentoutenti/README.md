@@ -24,7 +24,7 @@ Per procedere all'installazione dei packages contenuti nella componente, bisogna
 * <VH_DB>
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
-* <VH>
+* <VH_APACHE>
 1. Esecuzione dei file che si trovano sotto la cartella src\plsql\package nel seguente ordine:
 * CREATE_GRANT_CARICAMENTO_UTENTI.sql
 * PCK_PBANDI_CARICAMENTO_UTENTI.pks
