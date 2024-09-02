@@ -29,9 +29,9 @@ Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli oppo
 * <VH_APACHE>
 
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbweb\pbweb-tar\src\pbweb-ds.xml:
-	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
-	Line  9: 		<user-name>@@DB_USER@@</user-name>
-	Line 10: 		<password>@@DB_PWD@@</password>
+*	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
+*	Line  9: 		<user-name>@@DB_USER@@</user-name>
+*	Line 10: 		<password>@@DB_PWD@@</password>
 
 Per generare i pacchetti effettuare i seguenti step:
 

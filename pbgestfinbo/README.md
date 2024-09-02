@@ -20,9 +20,9 @@ Questa componente deve essere installata dopo la componente PBANDIWORKSPACE.
 
 ## Installazione
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbgestfinbo\pbgestfinbo-tar\src\pbgestfinbo-ds.xml:
-	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
-	Line  9: 		<user-name>@@DB_USER@@</user-name>
-	Line 10: 		<password>@@DB_PWD@@</password>
+*	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
+*	Line  9: 		<user-name>@@DB_USER@@</user-name>
+*	Line 10: 		<password>@@DB_PWD@@</password>
 
 Per generare i pacchetti effettuare i seguenti step:
 
@@ -34,6 +34,7 @@ Per generare i pacchetti effettuare i seguenti step:
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
 * <VH_APACHE>
+
 1. cd pbworkspace
 2. generare il file pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip come indicato nel README.md della componete [PBGESTFINBOWCL](../pbgestfinbowcl)
 2. unzip -o pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip -d pbgestfinbo-web\src\main\webapp\
