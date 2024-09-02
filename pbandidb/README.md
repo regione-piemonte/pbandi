@@ -17,15 +17,24 @@ Definire l'utente "pbandi" su una istanza DBMS Oracle 11 proprietario dello sche
 * [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.com/java)
 
 ## Installazione
-* Esecuzione dei file che si trovano sotto la cartella src\sql\init nel corretto ordine (creazione_db, creazione_sinonimi ....);
-* Esecuzione dei seguenti file contenuti nela cartella src\sql\incr nell'ordine indicato:
+Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
 
-1. create_database_area_crediti.sql
-2. create_grant.sql
+0. Esecuzione dei file che si trovano sotto la cartella src\sql\init nel corretto ordine (creazione_db, creazione_sinonimi ....);
+1. Esecuzione dei seguenti file contenuti nela cartella src\sql\incr nell'ordine indicato:
 
-* Esecuzione dei file che si trovano sotto la cartella src\sql\incr nell'ordine indicato dal progressivo (xxx) contenuto nel nome del file:
+* create_database_area_crediti.sql
+* create_grant.sql
 
-1. INCR-xxx-create_db.sql
+2. Esecuzione dei file che si trovano sotto la cartella src\sql\incr nell'ordine indicato dal progressivo (xxx) contenuto nel nome del file:
+
+* INCR-xxx-create_db.sql
 
 ## Versioning
 Per il versionamento del software si usa la tecnica Semantic Versioning (http://semver.org).

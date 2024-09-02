@@ -26,6 +26,14 @@ I parametri di configurazione per l'accesso al DB da parametrizzare in base agli
 
 Per generare i pacchetti effettuare i seguenti step:
 
+0. Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
 1. cd pbworkspace
 2. generare il file pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip come indicato nel README.md della componete [PBGESTFINBOWCL](../pbgestfinbowcl)
 2. unzip -o pbgestfinbo-web\src\main\webapp\dist_wcl_prod_rp_01.zip -d pbgestfinbo-web\src\main\webapp\

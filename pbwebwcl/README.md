@@ -21,9 +21,18 @@ Questa deve essere compilata prima della componente PBWEB. I file da configurare
 * [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
+Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
+
 Per generare i pacchetti, che dovranno poi essere inglobati nella compoennte java [PBWEB](../pbweb), effettuare i seguenti step:
 
-0. Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <vh-di prod> con  il Virtual Host Apache su cui saranno presenti le locations
+0. Modificare i parametri di configurazione che sono contenuti nei file pbworkspacewcl\buildfiles\environment.prod-rp-01.ts sostituendo <VH> con  il Virtual Host Apache su cui saranno presenti le locations
 1. cd pbwebwcl
 2. npm install
 3. npm run build-prod

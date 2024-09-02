@@ -17,13 +17,22 @@ Definire l'utente "pbandi" su una istanza DBMS Oracle 11 proprietario dello sche
 * [RDBMS: Oracle Database - 11.2.0.4.](https://www.oracle.com/java)
 
 ## Installazione
-* Esecuzione del file che si trova sotto la cartella src\sql\init:
+Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
+
+0. Esecuzione del file che si trova sotto la cartella src\sql\init:
 
 1. INIT-001-create_sinonimi_pbandiro.sql
 
 * Esecuzione dei file che si trovano sotto la cartella src\sql\incr nell'ordine indicato dal progressivo (xxx) contenuto nel nome del file:
 
-1. INCR-xxx-create_sinonimi_pbandiro.sql
+2. INCR-xxx-create_sinonimi_pbandiro.sql
 
 ## Versioning
 Per il versionamento del software si usa la tecnica Semantic Versioning (http://semver.org).

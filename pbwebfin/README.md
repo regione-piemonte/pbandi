@@ -19,6 +19,15 @@ Questa componente deve essere installata dopo la componente PBANDIWORKSPACE.
 * [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
+Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
+
 I parametri di configurazione per l'accesso al DB da parametrizzare in base agli ambienti, sono contenuti nel file pbwebfin\pbwebfin-tar\src\pbwebfin-ds.xml:
 	Line  5: 		<connection-url>@@CONNECTION_URL@@</connection-url>
 	Line  9: 		<user-name>@@DB_USER@@</user-name>

@@ -17,7 +17,15 @@ Questa componente deve essere installata come libreria trasversale delle compone
 [Maven: 3.2.5](https://maven.apache.org)
 
 ## Installazione
-mvn clean package -P prod-rp-01 -Dpostfix="" -Dmaven.test.skip=true
+0. Sostituire in tutto il codice, se presenti, i seguenti placeholders con gli opportuni VH dedicati:
+* <VH_ESPOSIZIONE_SERVIZI>
+* <VH_API_MANAGER>
+* <VH_SECURE>
+* <VH_DB>
+* <VH_DOMICILIARITA_RESIDENZIALITA>
+* <VH_OAUTH>
+* <VH>
+1. mvn clean package -P prod-rp-01 -Dpostfix="" -Dmaven.test.skip=true
 
 ## Deployment
 Inserire il jar tra le librerie utilizzate della componenti
