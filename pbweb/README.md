@@ -8,7 +8,7 @@ PBWEB
 Questa componente si occupa della gestione della fase di rendicontazione.
 
 ## Configurazioni iniziali
-Questa componente deve essere installata dopo la componente PBANDIWORKSPACE.
+Questa componente deve essere installata dopo la componente PBWORKSPACE.
 
 ## Prerequisiti di sistema
 * [Web Server: Apache WebServer - 2.4.53](https://www.apache.org)

@@ -1,20 +1,12 @@
 # Prodotto
 PBANDI
 # Descrizione del prodotto
-Il prodotto ha come obiettivo generale quello di mettere a disposizione una 
-serie di moduli applicativi atti alla gestione del ciclo di vita dei 
-finanziamenti, fornendo all’utente (PA e utenti finali definiti come Beneficiari) 
-tutte le funzioni necessarie al controllo e monitoraggio degli iter amministrativi.
-In particolare  tali moduli avranno come obiettivo primario quello di generalizzare 
-il più possibile le diverse fasi del ciclo di vita del Bando nel rispetto delle 
-specificità delle singole materie coinvolte; la presenza di un unico sistema per 
-la gestione dei Bandi e posto come un insieme di moduli applicativi configurabili 
-favorisce una serie di aspetti, tra cui:
+Il prodotto ha come obiettivo generale quello di mettere a disposizione una serie di moduli applicativi per la gestione del ciclo di vita delle agevolazioni pubbliche, come finanziamenti, contributi o altre agevolazioni, concesse dall'ente gestore, fornendo all’utente (PA e beneficiari) tutte le funzioni necessarie al controllo e monitoraggio degli iter amministrativi. In particolare, tali moduli avranno come obiettivo primario quello di generalizzare il più possibile le diverse fasi del ciclo di vita della procedura di attuazione, rispettando le specificità delle singole materie coinvolte. La presenza di un unico sistema, costituito da un insieme di moduli applicativi configurabili, favorisce una serie di aspetti, tra cui:
 
-- la centralizzazione delle logiche e delle regole legate ai finanziamenti pubblici;
-- riduzione del tempo di operatività legato alla gestione di nuove linee di finanziamento;
-- focalizzazione dei sistemi applicativi esterni sulle funzionalità specifiche del proprio business;
-- generale economia di scala e maggiore sinergia e coesione all’interno del Sistema Informativo regionale.
+La centralizzazione delle logiche e delle regole legate alle agevolazioni pubbliche;
+La riduzione del tempo di operatività legato alla gestione di nuove linee di finanziamento;
+La focalizzazione dei sistemi applicativi esterni sulle funzionalità specifiche del proprio business;
+Una generale economia di scala e maggiore sinergia e coesione all’interno del Sistema Informativo regionale.
 
 Il prodotto si compone sostanzialmente di otto componenti web con i rispettivi moduli angular:
 

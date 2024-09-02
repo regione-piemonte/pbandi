@@ -1,5 +1,5 @@
 # Componente di Prodotto
-PBWORKSPACEWCL
+PBWORKSPACE
 
 ## Versione
 1.8.0
