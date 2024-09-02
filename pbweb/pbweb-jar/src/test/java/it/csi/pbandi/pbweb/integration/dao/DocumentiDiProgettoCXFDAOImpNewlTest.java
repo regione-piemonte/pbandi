@@ -102,8 +102,8 @@ public class DocumentiDiProgettoCXFDAOImpNewlTest  extends TestBaseService {
 	private String actaUtenteAppkey = null;
 	private String actaRepositoryName = null;
 	
-	static String CONSUMER_KEY = "<da_sostiture_consumer_key>";
-	static String CONSUMER_SECRET = "<da_sostituire_consumer_secret>";
+	static String CONSUMER_KEY = <CONSUMER_KEY>;
+	static String CONSUMER_SECRET = <CONSUMER_SECRET>;
 	static String OAUTH_URL = "http://tst-<da sostiure con il VH di esposizione API>/api/token";
 	static String endpointBackOfficeService = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_backoffice-T/1.0";
 	static String endpointRepositoryService = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_repository-T/1.0";

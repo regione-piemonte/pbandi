@@ -54,8 +54,8 @@ public class InvocazioneServiziActaTest extends TestBaseService {
 	
 	protected static Logger LOG = Logger.getLogger(InvocazioneServiziActaTest.class);
 	
-	private static final String CONSUMER_KEY = "eccM1dwlfgBLae05KFnPFzf0lV4a";
-	private static final String CONSUMER_SECRET = "OgJacFR0CV7MiDTZMBOEAYPQXrQa";
+	private static final String CONSUMER_KEY = <CONSUMER_KEY>;
+	private static final String CONSUMER_SECRET = <CONSUMER_SECRET>;
 	private static final String OAUTH_URL = "http://tst-<VH_API_MANAGER>/api/token";
 	String endpointObjectService = "http://tst-<VH_API_MANAGER>/api/DOC_ACTA_object-T/1.0";
 	String endpointRepositoryService = "http://tst-<VH_API_MANAGER>/api/DOC_ACTA_repository-T/1.0";

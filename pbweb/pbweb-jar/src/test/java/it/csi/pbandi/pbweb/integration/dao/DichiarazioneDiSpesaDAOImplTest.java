@@ -360,8 +360,8 @@ public class DichiarazioneDiSpesaDAOImplTest extends TestBaseService {
 			DosignSignatureValidation_PortType dosignWS = dosignLocator.getDosignSignatureValidationBeanPort(url);
 		
 			//applications: PBANDI-REGP
-			String CONSUMER_KEY = "eccM1dwlfgBLae05KFnPFzf0lV4a";
-			String CONSUMER_SECRET = "OgJacFR0CV7MiDTZMBOEAYPQXrQa";
+			String CONSUMER_KEY = <CONSUMER_KEY>;
+			String CONSUMER_SECRET = <CONSUMER_SECRET>;
 			String OAUTH_URL = "http://tst-<da sostiure con il VH di esposizione API>/api/token";
 			
 			OauthHelper oauthHelper = new OauthHelper(OAUTH_URL,CONSUMER_KEY,CONSUMER_SECRET,10000); // time out in ms

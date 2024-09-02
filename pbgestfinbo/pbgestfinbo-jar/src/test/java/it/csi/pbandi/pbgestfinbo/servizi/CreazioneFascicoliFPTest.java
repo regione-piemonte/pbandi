@@ -126,8 +126,8 @@ public class CreazioneFascicoliFPTest extends TestBaseService {
     	
     	/////////////////////////////////////////////////////////////////
     	// TODO valori dipendenti dall' ACTA da utilizzare
-    	CONSUMER_KEY = "eccM1dwlfgBLae05KFnPFzf0lV4a";
-    	CONSUMER_SECRET = "OgJacFR0CV7MiDTZMBOEAYPQXrQa";
+    	CONSUMER_KEY = <CONSUMER_KEY>;
+    	CONSUMER_SECRET = <CONSUMER_SECRET>;
     	OAUTH_URL = "http://tst-<VH_API_MANAGER>/api/token";
     	endpointBackOfficeService = "http://tst-<VH_API_MANAGER>/api/DOC_ACTA_backoffice-T/1.0";
     	endpointRepositoryService = "http://tst-<VH_API_MANAGER>/api/DOC_ACTA_repository-T/1.0";
@@ -146,17 +146,6 @@ public class CreazioneFascicoliFPTest extends TestBaseService {
     	PAROLA_CHIAVE_FINDOM = "FD"; //FD+numero domanda se arriva da mondo FINDOM, PB+numero progetto se arriva da scheda progetto
 
 		//TODO bandi da configurare su doqui
-//		INFO_BANDO.put(354, "FINDOMPOR-FESR1420ASSEI-I1B12PRISMEPERCETTORI");
-//		INFO_BANDO.put(355, "FINDOMPOR-FESR1420ASSEI-I1B12PRISMECONTRIBUTO");
-//		INFO_BANDO.put(544, "FINDOMLR1204-FONDOGARANZIAFEMMINILE");
-//		INFO_BANDO.put(545, "FINDOMLR2304-COOPERAZIONE");
-//		INFO_BANDO.put(546, "FINDOMCITTADITORINO-FONDOUNICOGARANZIA");
-//		INFO_BANDO.put(547, "FINDOMLR2302-RISPARMIOENERGETICOED2013");
-//		INFO_BANDO.put(548, "FINDOMLR3404-SOSTINV-LINEAAARIGIANATO");
-//		INFO_BANDO.put(550, "FINDOMDCR364-6854GENERATORIBIOMASSA");
-//		INFO_BANDO.put(549, "FINDOMLR2304-CONTRIBUTI");
-//		INFO_BANDO.put(227, "FINDOMPOR-FESR1420ASSEIII-BANDOFONDOMPMIPERCETTORI");
-//		INFO_BANDO.put(276, "FINDOMPOR-FESR1420ASSEIII-BANDOFONDOMTRANCHEDCOVER");
 		INFO_BANDO.put(1637, "FINDOMLR3404-SOSTINV-LINEAAARIGIANATO");
 
 		initialCodiceFiscaleType.setValue(UtenteCodfiscale);

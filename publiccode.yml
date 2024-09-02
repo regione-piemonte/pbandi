@@ -1,0 +1,92 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+categories:
+  - application-development
+dependsOn:
+  proprietary:
+    - name: Oracle
+      optional: false
+      version: 11.2.0.4
+      versionMax: '19'
+      versionMin: '11'
+    - name: WildFly
+      optional: false
+      version: '17.0'
+      versionMax: '17'
+      versionMin: '17'
+description:
+  it:
+    features:
+      - |-
+        la centralizzazione delle logiche e delle regole legate ai finanziamenti
+        pubblici
+      - |-
+        riduzione del tempo di operatività legato alla gestione di nuove linee
+        di finanziamento
+      - |-
+        focalizzazione dei sistemi applicativi esterni sulle funzionalità
+        specifiche del proprio business
+      - |-
+        generale economia di scala e maggiore sinergia e coesione all’interno
+        del Sistema Informativo region
+    genericName: Piattaforma gestione bandi
+    localisedName: PBANDI
+    longDescription: |+
+      Una volta autenticati alla procedura, l'utente  (PA e utenti finali
+      definiti come Beneficiari)  avrà a disposizione tutte le funzioni
+      necessarie al controllo e monitoraggio degli iter amministrativi. In
+      particolare  i moduli configurati avranno come obiettivo primario quello
+      di generalizzare il più possibile le diverse fasi del ciclo di vita del
+      Bando nel rispetto delle specificità delle singole materie coinvolte.  
+
+
+      La presenza di un unico sistema per la gestione dei Bandi configurato come
+      insieme di moduli applicativi gestibili in maniera indipendente,  
+
+      favorisce la manutenzione e l'evoluzione funzionale.
+
+
+
+    shortDescription: |-
+      Il prodotto mette a disposizione una serie di funzionalità atte alla
+      gestione del ciclo di vita dei finanziamenti pubblici.
+developmentStatus: stable
+it:
+  conforme:
+    gdpr: true
+    lineeGuidaDesign: false
+    misureMinimeSicurezza: true
+    modelloInteroperabilita: false
+  countryExtensionVersion: '0.2'
+  piattaforme:
+    anpr: false
+    cie: true
+    pagopa: false
+    spid: true
+  riuso:
+    codiceIPA: r_piemon
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: Regione Piemonte
+  repoOwner: Regione Piemonte
+localisation:
+  availableLanguages:
+    - it
+  localisationReady: false
+maintenance:
+  contacts:
+    - email: claudio.zamboni@csi.it
+      name: Claudio Zamboni
+  type: community
+name: PBANDI
+platforms:
+  - web
+releaseDate: '2024-09-02'
+softwareType: standalone/web
+softwareVersion: 15.5.0
+url: 'https://github.com/regione-piemonte/pbandi'
+usedBy:
+  - Regione Piemonte

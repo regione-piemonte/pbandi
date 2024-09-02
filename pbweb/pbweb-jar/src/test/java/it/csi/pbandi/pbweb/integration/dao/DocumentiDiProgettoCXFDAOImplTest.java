@@ -106,8 +106,8 @@ public class DocumentiDiProgettoCXFDAOImplTest  extends TestBaseService {
 	
 	
 	//applications: PBANDI-REGP --> TODO vanno lette da configurazione
-	static String CONSUMER_KEY = "eccM1dwlfgBLae05KFnPFzf0lV4a";
-	static String CONSUMER_SECRET = "OgJacFR0CV7MiDTZMBOEAYPQXrQa";
+	static String CONSUMER_KEY = <CONSUMER_KEY>;
+	static String CONSUMER_SECRET = <CONSUMER_SECRET>;
 	static String OAUTH_URL = "http://tst-<da sostiure con il VH di esposizione API>/api/token";
 	static String endpointBackOfficeService = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_backoffice-T/1.0";
 	static String endpointRepositoryService = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_repository-T/1.0";
@@ -770,9 +770,9 @@ public class DocumentiDiProgettoCXFDAOImplTest  extends TestBaseService {
 //		String wsdlLocation5 = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_navigation-T/1.0";
 //		String wsdlLocation6 = "http://tst-<da sostiure con il VH di esposizione API>/api/DOC_ACTA_relationships-T/1.0";
 		
-		//applications: PBANDI-REGP
-//		String CONSUMER_KEY = "********************";
-//		String CONSUMER_SECRET = "**********************";
+//applications: PBANDI-REGP
+//			String CONSUMER_KEY = <CONSUMER_KEY>;
+//			String CONSUMER_SECRET = <CONSUMER_SECRET>;
 //		String OAUTH_URL = "http://tst-<da sostiure con il VH di esposizione API>/api/token";
 //		
 //		OauthHelper oauthHelper = new OauthHelper(OAUTH_URL,CONSUMER_KEY,CONSUMER_SECRET,10000); // time out in ms
