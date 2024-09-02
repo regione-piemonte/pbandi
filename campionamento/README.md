@@ -25,6 +25,7 @@ Per procedere all'installazione dei packages contenuti nella componente, bisogna
 * <VH_DOMICILIARITA_RESIDENZIALITA>
 * <VH_OAUTH>
 * <VH>
+
 1. Esecuzione dei file che si trovano sotto la cartella src\plsql\package nel seguente ordine:
 * CREATE_GRANT_CAMPIONAMENTO.sql
 * PCK_PBANDI_CAMPIONAMENTO.pks
