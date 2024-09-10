@@ -50,7 +50,7 @@ tre componenti Sql-Schema DB
 sei componenti ORACLE/PLSQL
 - [PROCESSO](https://github.com/regione-piemonte/pbandi/tree/main/processo)  	    Gestione del nuovo processo interno  	
 - [RESTITUZIONECUP](https://github.com/regione-piemonte/pbandi/tree/main/restituzionecup) Componente pl/sql per procedura restituzione cup  	
-- [RETTIFICAFORF](https://github.com/regione-piemonte/tree/main/pbandirettificaforf)  	Calcolo importo validato rettificato  	
+- [RETTIFICAFORF](https://github.com/regione-piemonte/pbandi/tree/main/rettificaforf)  	Calcolo importo validato rettificato  	
 - [RICHIESTACUP](https://github.com/regione-piemonte/pbandi/tree/main/richiestacup)  	Procedura PLSQL di richiesta CUP  	
 - [CAMPIONAMENTO](https://github.com/regione-piemonte/pbandi/tree/main/campionamento)  	Procedura di campionamento che estrae un campione delle operazioni (progetti certificati) da controllare per FSE, FESR e FSC in modo automatico e di tenerne traccia  	
 - [CARICAMENTOUTENTI](https://github.com/regione-piemonte/pbandi/tree/main/caricamentoutenti)  Package plsql per caricamento utenti da csv proveniente da frontend applicativo  
