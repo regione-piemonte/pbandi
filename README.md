@@ -76,4 +76,4 @@ Per il versionamento del software si usa la tecnica Semantic Versioning (http://
 # Copyrights
 (C) Copyright 2024 Regione Piemonte
 # License
-European Union Public License 1.2
+AGPL-3.0
