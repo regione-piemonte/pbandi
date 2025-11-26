@@ -63,7 +63,7 @@ it:
   riuso:
     codiceIPA: r_piemon
 legal:
-  license: EUPL-1.2
+  license: AGPL-3.0
   mainCopyrightOwner: Regione Piemonte
   repoOwner: Regione Piemonte
 localisation:
